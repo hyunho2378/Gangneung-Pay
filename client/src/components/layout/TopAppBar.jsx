@@ -2,6 +2,7 @@ import { Search, Menu } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext'
 import { colors, typography, layout } from '../../tokens/tokens'
+import LogoBlue from '../../assets/logos/강릉페이로고_블루.svg'
 
 export default function TopAppBar() {
   const navigate = useNavigate()
@@ -22,15 +23,7 @@ export default function TopAppBar() {
       borderBottom: `1px solid ${colors.gray[200]}`,
     }}>
       {/* 로고 */}
-      <span style={{
-        fontSize: typography.size.appTitle,
-        fontWeight: typography.weight.black,
-        color: colors.primary[700],
-        letterSpacing: '-0.03em',
-        fontFamily: typography.fontFamily,
-      }}>
-        강릉페이
-      </span>
+      <img src={LogoBlue} alt="강릉페이" style={{ height: '22px' }} />
 
       {/* 우측 액션 */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>

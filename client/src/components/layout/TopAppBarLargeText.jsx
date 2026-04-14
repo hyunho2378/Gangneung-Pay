@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext'
 import { colors, typography, layout } from '../../tokens/tokens'
+import LogoBlue from '../../assets/logos/강릉페이로고_블루.svg'
 
 export default function TopAppBarLargeText() {
   const navigate = useNavigate()
@@ -21,15 +22,7 @@ export default function TopAppBarLargeText() {
       borderBottom: `1px solid ${colors.gray[200]}`,
     }}>
       {/* 로고 — 큰글씨 모드에서 더 크게 */}
-      <span style={{
-        fontSize: '26px',
-        fontWeight: typography.weight.black,
-        color: colors.primary[700],
-        letterSpacing: '-0.03em',
-        fontFamily: typography.fontFamily,
-      }}>
-        강릉페이
-      </span>
+      <img src={LogoBlue} alt="강릉페이" style={{ height: '28px' }} />
 
       {/* 우측: 큰글씨 끄기 pill + 메뉴 */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

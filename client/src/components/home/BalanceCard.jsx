@@ -1,4 +1,5 @@
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
+import LogoWhite from '../../assets/logos/강릉페이로고_화이트.svg'
 
 export default function BalanceCard({
   balance = { cashback: 3200, card: 120000, charge: 0 },
@@ -119,20 +120,11 @@ export default function BalanceCard({
         style={{
           position: 'absolute',
           right: spacing[4],
-          bottom: spacing[4],
-          opacity: 0.18,
+          top: spacing[4],
+          opacity: 0.7,
         }}
       >
-        <svg width="60" height="36" viewBox="0 0 60 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="0" y="8" width="60" height="28" rx="5" fill="#FFFFFF" />
-          <rect x="0" y="0" width="60" height="16" rx="5" fill="#FFFFFF" />
-          <text x="4" y="13" fontSize="9" fontWeight="700" fill="#1B4FD8" fontFamily="sans-serif">강릉페이</text>
-          <rect x="4" y="18" width="16" height="10" rx="2" fill="#D0D0D0" />
-          <rect x="4" y="30" width="8" height="3" rx="1.5" fill="#E0E0E0" />
-          <rect x="16" y="30" width="8" height="3" rx="1.5" fill="#E0E0E0" />
-          <rect x="28" y="30" width="8" height="3" rx="1.5" fill="#E0E0E0" />
-          <rect x="40" y="30" width="8" height="3" rx="1.5" fill="#E0E0E0" />
-        </svg>
+        <img src={LogoWhite} alt="강릉페이" style={{ height: '18px' }} />
       </div>
 
       {/* 펼침 토글 화살표 */}
