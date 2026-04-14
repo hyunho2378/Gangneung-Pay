@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand primary */
+  --color-primary-50: #EFF6FF;
+  --color-primary-100: #DBEAFE;
+  --color-primary-500: #3B82F6;
+  --color-primary-600: #2563EB;
+  --color-primary-700: #1D4ED8;
+  --color-primary-800: #1E3A8A;
+  --color-primary-900: #1E2D6B;
+
+  /* Teal */
+  --color-teal-400: #2DD4BF;
+  --color-teal-500: #14B8A6;
+
+  /* Semantic */
+  --color-error: #EF4444;
+  --color-warning: #F59E0B;
+  --color-success: #10B981;
+
+  /* Gray */
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+
+  /* Surface */
+  --color-surface-bg: #F2F4F8;
+  --color-surface-card: #FFFFFF;
+  --color-surface-dark-card: #1B4FD8;
+
+  /* Special banners */
+  --color-kakao-bg: #FEF3C7;
+  --color-donation-bg: #FFF0F3;
+  --color-tour-bg: #FFF3E0;
+  --color-chat-bg: #EFF6FF;
+
+  /* Font */
+  --font-family-app: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Pretendard', 'Noto Sans KR', sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Pretendard', 'Noto Sans KR', sans-serif;
+  background-color: #F2F4F8;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* 스크롤바 숨김 (모바일 앱 느낌) */
+::-webkit-scrollbar {
+  display: none;
+}
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
