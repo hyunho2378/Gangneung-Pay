@@ -303,7 +303,7 @@ export default function MenuPage() {
                       style={{
                         height: '1px',
                         backgroundColor: colors.gray[100],
-                        margin: '0 16px',
+                        margin: `0 ${layout.margin}`,
                       }}
                     />
                   )}

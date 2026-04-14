@@ -209,7 +209,6 @@ export default function UsageGuidePage() {
         style={{
           flex: 1,
           overflowY: 'auto',
-          paddingBottom: '24px',
           backgroundColor: colors.surface.background,
           padding: `${layout.margin} ${layout.margin} 24px`,
         }}
@@ -228,7 +227,7 @@ export default function UsageGuidePage() {
               <div key={faq.id}>
                 <AccordionItem question={faq.question} answer={faq.answer} />
                 {index < chargeFaqs.length - 1 && (
-                  <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: '0 16px' }} />
+                  <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: `0 ${layout.margin}` }} />
                 )}
               </div>
             ))}
@@ -337,7 +336,7 @@ export default function UsageGuidePage() {
                 <div key={faq.id}>
                   <AccordionItem question={faq.question} answer={faq.answer} />
                   {index < etcFaqs.length - 1 && (
-                    <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: '0 16px' }} />
+                    <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: `0 ${layout.margin}` }} />
                   )}
                 </div>
               ))}

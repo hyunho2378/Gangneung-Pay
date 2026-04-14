@@ -228,15 +228,13 @@ export default function LifePage() {
         </div>
 
         {/* 교통카드 안내 프로모 카드 */}
-        <div style={{ padding: `0 ${layout.margin} ${layout.margin}` }}>
-          <PromoHorizontalCard
-            bgColor={colors.primary[100]}
-            textColor={colors.primary[700]}
-            title="교통카드로도 사용하세요"
-            description="강릉페이 카드는 교통카드 기능을 지원합니다"
-            onClick={() => navigate('/transport-card')}
-          />
-        </div>
+        <PromoHorizontalCard
+          bgColor={colors.primary[100]}
+          textColor={colors.primary[700]}
+          title="교통카드로도 사용하세요"
+          description="강릉페이 카드는 교통카드 기능을 지원합니다"
+          onClick={() => navigate('/transport-card')}
+        />
       </div>
 
       <QRFloatingBar />

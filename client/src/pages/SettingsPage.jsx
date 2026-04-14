@@ -33,7 +33,7 @@ export default function SettingsPage() {
         <div
           style={{
             backgroundColor: colors.surface.card,
-            margin: `16px ${layout.margin} 0`,
+            margin: `${layout.margin} ${layout.margin} 0`,
             borderRadius: layout.radiusCard,
             overflow: 'hidden',
             boxShadow: shadow.card,
@@ -45,21 +45,21 @@ export default function SettingsPage() {
             value={notifications}
             onChange={setNotifications}
           />
-          <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: '0 16px' }} />
+          <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: `0 ${layout.margin}` }} />
           <SettingsToggleRow
             label="마케팅 알림"
             description="이벤트, 혜택 정보 알림"
             value={marketingNotif}
             onChange={setMarketingNotif}
           />
-          <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: '0 16px' }} />
+          <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: `0 ${layout.margin}` }} />
           <SettingsToggleRow
             label="생체인증"
             description="지문 또는 얼굴 인식으로 로그인"
             value={biometric}
             onChange={setBiometric}
           />
-          <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: '0 16px' }} />
+          <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: `0 ${layout.margin}` }} />
           <SettingsToggleRow
             label="큰글씨 모드"
             description="텍스트 크기를 크게 표시"
@@ -111,7 +111,7 @@ export default function SettingsPage() {
               </svg>
             </div>
           </button>
-          <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: '0 16px' }} />
+          <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: `0 ${layout.margin}` }} />
           <div
             style={{
               display: 'flex',

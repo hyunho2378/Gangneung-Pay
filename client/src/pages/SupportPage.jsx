@@ -135,7 +135,6 @@ export default function SupportPage() {
       <div
         style={{
           overflowY: 'auto',
-          paddingBottom: '139px',
           flex: 1,
           backgroundColor: colors.surface.background,
           padding: `12px ${layout.margin} 139px`,

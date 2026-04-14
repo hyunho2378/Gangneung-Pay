@@ -48,7 +48,6 @@ export default function NewsListPage() {
         style={{
           flex: 1,
           overflowY: 'auto',
-          paddingBottom: '24px',
           backgroundColor: colors.surface.background,
           padding: `${layout.margin} ${layout.margin} 24px`,
         }}
@@ -129,7 +128,7 @@ export default function NewsListPage() {
                 </svg>
               </button>
               {index < mockNews.length - 1 && (
-                <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: '0 16px' }} />
+                <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: `0 ${layout.margin}` }} />
               )}
             </div>
           ))}

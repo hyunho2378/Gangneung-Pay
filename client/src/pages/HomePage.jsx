@@ -61,17 +61,11 @@ export default function HomePage() {
 
         <OnboardingStepper currentStep={3} />
 
-        <div style={{ padding: `0 ${layout.margin}` }}>
-          <BalanceCardExpanded balance={mockBalance} />
-        </div>
+        <BalanceCardExpanded balance={mockBalance} />
 
-        <div style={{ padding: `0 ${layout.margin}` }}>
-          <CashbackProgressCard current={3200} max={30000} percent={10.7} />
-        </div>
+        <CashbackProgressCard current={3200} max={30000} percent={10.7} />
 
-        <div style={{ padding: `0 ${layout.margin}` }}>
-          <ServiceShortcutGrid />
-        </div>
+        <ServiceShortcutGrid />
 
         <div
           style={{
@@ -81,52 +75,38 @@ export default function HomePage() {
           }}
         />
 
-        <div style={{ padding: `0 ${layout.margin}` }}>
-          <SectionHeader
-            title="최근 결제 내역"
-            onViewAll={() => navigate('/history')}
-          />
-          <RecentPaymentEmpty />
-        </div>
+        <SectionHeader
+          title="최근 결제 내역"
+          onViewAll={() => navigate('/history')}
+        />
+        <RecentPaymentEmpty />
 
-        <div style={{ padding: `0 ${layout.margin}` }}>
-          <SectionHeader
-            title="결제 가능 매장"
-            onViewAll={() => navigate('/store')}
-          />
-          <StoreRecommendCard stores={mockStores} />
-        </div>
+        <SectionHeader
+          title="결제 가능 매장"
+          onViewAll={() => navigate('/store')}
+        />
+        <StoreRecommendCard stores={mockStores} />
 
-        <div style={{ padding: `0 ${layout.margin}` }}>
-          <ExploreScrollCard />
-        </div>
+        <ExploreScrollCard />
 
-        <div style={{ padding: `0 ${layout.margin}` }}>
-          <SectionHeader
-            title="지원금 랭킹"
-            onViewAll={() => navigate('/support')}
-            showViewAll={true}
-          />
-          <SupportRankingList items={mockRanking} />
-        </div>
+        <SectionHeader
+          title="지원금 랭킹"
+          onViewAll={() => navigate('/support')}
+          showViewAll={true}
+        />
+        <SupportRankingList items={mockRanking} />
 
-        <div style={{ padding: `0 ${layout.margin}` }}>
-          <PromoHorizontalCard
-            bgColor={colors.kakaoBg}
-            textColor={colors.gray[900]}
-            title="카카오페이로도 결제하세요"
-            description="강릉페이를 카카오페이와 연결하면 더 편리하게"
-            onClick={() => navigate('/kakao-guide')}
-          />
-        </div>
+        <PromoHorizontalCard
+          bgColor={colors.kakaoBg}
+          textColor={colors.gray[900]}
+          title="카카오페이로도 결제하세요"
+          description="강릉페이를 카카오페이와 연결하면 더 편리하게"
+          onClick={() => navigate('/kakao-guide')}
+        />
 
-        <div style={{ padding: `0 ${layout.margin}` }}>
-          <B2BPromoCard variant="register" />
-        </div>
+        <B2BPromoCard variant="register" />
 
-        <div style={{ padding: `0 ${layout.margin}` }}>
-          <B2BPromoCard variant="portal" />
-        </div>
+        <B2BPromoCard variant="portal" />
 
         <div style={{ height: layout.margin }} />
       </div>

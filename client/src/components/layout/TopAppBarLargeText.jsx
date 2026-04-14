@@ -21,8 +21,19 @@ export default function TopAppBarLargeText() {
       paddingRight: layout.margin,
       borderBottom: `1px solid ${colors.gray[200]}`,
     }}>
-      {/* 로고 — 큰글씨 모드에서 더 크게 */}
-      <img src={LogoBlue} alt="강릉페이" style={{ height: '28px' }} />
+      {/* 로고 + 텍스트 — 큰글씨 모드에서 더 크게 */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', paddingLeft: '4px' }}>
+        <img src={LogoBlue} alt="강릉페이" style={{ height: '28px' }} />
+        <span style={{
+          fontSize: '20px',
+          fontWeight: typography.weight.bold,
+          color: colors.primary[700],
+          fontFamily: typography.fontFamily,
+          lineHeight: 1,
+        }}>
+          강릉페이
+        </span>
+      </div>
 
       {/* 우측: 큰글씨 끄기 pill + 메뉴 */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

@@ -1,6 +1,6 @@
 # 강릉페이 AS-IS 복제 — 진행 상황
 
-업데이트: 2026-04-14 (세션 5 — 코드 QA 완료, border 토큰 2개 추가)
+업데이트: 2026-04-14 (세션 6 — 스페이싱 전체 감사 완료, 로고·파비콘 적용, 빌드 0 오류)
 
 ---
 
@@ -8,7 +8,7 @@
 
 | 항목 | 상태 |
 |------|------|
-| `npm run build` | **0 오류** (1796 모듈, 304ms) |
+| `npm run build` | **0 오류** (1797 모듈, 216ms) |
 | dev 서버 | `http://localhost:5173/` |
 | 페이지 파일 | **30개** 완성 |
 | 하드코딩 색상 | **완전 해소** (SVG 장식 제외) |
@@ -50,6 +50,40 @@ pages/
   NewsListPage, NewsDetailPage, PlaceDetailPage
   ServiceEditPage, KakaoPayGuidePage, TransportCardPage, UsageGuidePage
 ```
+
+---
+
+## 세션 6에서 수정된 항목
+
+### 로고 및 파비콘 적용
+- `client/index.html` — `<title>` → "강릉페이", `apple-touch-icon` 링크 추가
+- `client/public/favicon.svg` — 강릉페이로고_블루.svg 복사
+- `SplashPage.jsx` — 흰 배경 + 블루 로고 이미지 (180px) + 회색 부제목
+- `TopAppBar.jsx` — 블루 로고 이미지(22px) + "강릉페이" 텍스트 (bold 20px primary[700])
+- `TopAppBarLargeText.jsx` — 블루 로고 이미지(28px) + 동일 텍스트
+- `BalanceCard.jsx` — 화이트 로고 워터마크 (우상단, opacity 0.7)
+
+### 스페이싱 전면 감사 — HomePage
+- `HomePage.jsx` — 모든 컴포넌트를 감싸던 `padding: \`0 ${layout.margin}\`` 래퍼 div 전부 제거
+- 원인: 컴포넌트 자체 `margin: layout.margin` + 래퍼 16px = 이중 수평 마진(32px)
+
+### 스페이싱 전면 감사 — 기타 페이지
+- `LifePage.jsx` — PromoHorizontalCard 주변 `<div style={{ padding: \`0 ${layout.margin} ${layout.margin}\` }}>` 래퍼 제거
+- `CommunityPage.jsx` — 소식/함께만들기 섹션 래퍼를 `paddingTop: layout.margin` 전용으로 변경, 카드 목록에 `padding: \`0 ${layout.margin}\`` 추가 → SectionHeader(자체 16px) 정렬 통일
+- `WishSupportPage.jsx` — `paddingBottom: '24px'` + `padding: layout.margin` 충돌 해소 → `padding: \`${layout.margin} ${layout.margin} 24px\``
+- `SupportPage.jsx` — 중복 `paddingBottom: '139px'` 제거 (shorthand `padding` 이미 포함)
+- `DonationPage.jsx` — 중복 `paddingBottom: '24px'` 제거
+- `NewsListPage.jsx` — 중복 `paddingBottom: '24px'` 제거
+- `UsageGuidePage.jsx` — 중복 `paddingBottom: '24px'` 제거
+- `SettingsPage.jsx` — 첫 카드 그룹 `margin: \`16px ${layout.margin} 0\`` → `\`${layout.margin} ${layout.margin} 0\``
+
+### 하드코딩 margin `'0 16px'` 전면 교체 (7개 파일)
+- `SettingsPage.jsx`, `UsageGuidePage.jsx`, `NewsListPage.jsx`, `ServiceEditPage.jsx`
+- `CustomerCenterPage.jsx`, `NotificationPage.jsx`, `MenuPage.jsx`
+- 모두 `margin: \`0 ${layout.margin}\`` 으로 교체 (divider 구분선 등)
+
+### 빌드 결과
+- `npm run build` — **0 오류**, 1797 모듈, 216ms
 
 ---
 
@@ -95,10 +129,10 @@ pages/
 | QR 충전 결제 컴포넌트 | ✅ |
 | 토큰 import 일관성 | ✅ |
 
-### 발견된 잠재적 레이아웃 이슈 (시각 QA 시 확인 필요)
-- `ServiceShortcutGrid`, `CashbackProgressCard`, `BalanceCardExpanded`는 내부에 `margin: layout.margin`이 있으나, `HomePage.jsx`에서 `padding: \`0 ${layout.margin}\`` 래퍼로 한 번 더 감쌈 → 이중 수평 마진(32px) 가능성
-  - BannerCarousel은 자체 `margin: \`0 ${layout.margin}\`` 사용 (16px), 래퍼 없음
-  - 실제 브라우저에서 확인 필요, 스크린샷 기준 맞으면 유지
+### 스페이싱 이슈 — 세션 6에서 전면 수정 완료
+- HomePage 이중 마진 해소 (래퍼 div 전부 제거)
+- 7개 페이지 divider `margin: '0 16px'` 토큰화
+- 6개 페이지 paddingBottom 충돌/중복 해소
 
 ---
 
@@ -115,7 +149,6 @@ pages/
 - [ ] 기부 화면 `/donation`
 - [ ] 챗봇 화면 `/chatbot`
 - [ ] 390px / 375px 레이아웃 깨짐 없음
-- [ ] 이중 마진 이슈 확인 및 필요 시 수정
 
 ---
 
@@ -125,7 +158,6 @@ pages/
 - `npm run dev` 실행 후 각 화면 직접 확인
 - CLAUDE.md QA 체크리스트 항목별 검증
 - 발견된 시각 버그 수정
-- 특히 이중 마진 이슈 (`ServiceShortcutGrid`, `BalanceCardExpanded`, `CashbackProgressCard`) 확인
 
 ---
 

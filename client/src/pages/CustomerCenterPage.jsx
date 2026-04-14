@@ -235,7 +235,7 @@ export default function CustomerCenterPage() {
                   </svg>
                 </button>
                 {index < faqItems.length - 1 && (
-                  <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: '0 16px' }} />
+                  <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: `0 ${layout.margin}` }} />
                 )}
               </div>
             ))}

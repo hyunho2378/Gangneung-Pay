@@ -86,7 +86,6 @@ export default function DonationPage() {
         style={{
           flex: 1,
           overflowY: 'auto',
-          paddingBottom: '24px',
           backgroundColor: colors.surface.background,
           padding: `${layout.margin} ${layout.margin} 24px`,
         }}

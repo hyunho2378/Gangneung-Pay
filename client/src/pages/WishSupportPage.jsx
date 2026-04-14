@@ -19,8 +19,7 @@ export default function WishSupportPage() {
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: colors.surface.background,
-          paddingBottom: '24px',
-          padding: layout.margin,
+          padding: `${layout.margin} ${layout.margin} 24px`,
         }}
       >
         {/* 별 SVG 아이콘 */}

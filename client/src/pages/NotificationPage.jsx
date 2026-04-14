@@ -179,7 +179,7 @@ export default function NotificationPage() {
                     )}
                   </div>
                   {itemIndex < group.items.length - 1 && (
-                    <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: '0 16px' }} />
+                    <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: `0 ${layout.margin}` }} />
                   )}
                 </div>
               ))}

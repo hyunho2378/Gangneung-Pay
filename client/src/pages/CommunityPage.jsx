@@ -87,12 +87,12 @@ export default function CommunityPage() {
         </div>
 
         {/* 소식 섹션 */}
-        <div style={{ padding: `${layout.margin} ${layout.margin} 0` }}>
+        <div style={{ paddingTop: layout.margin }}>
           <SectionHeader
             title="강릉이 소식"
             onViewAll={() => navigate('/news')}
           />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: `0 ${layout.margin}` }}>
             {mockNews.map((news) => (
               <div
                 key={news.id}
@@ -147,9 +147,9 @@ export default function CommunityPage() {
         </div>
 
         {/* 함께 만들기 섹션 */}
-        <div style={{ padding: `${layout.margin} ${layout.margin} 0` }}>
+        <div style={{ paddingTop: layout.margin }}>
           <SectionHeader title="함께 만들기" showViewAll={false} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: `0 ${layout.margin}` }}>
             {communityMenus.map((menu) => (
               <div
                 key={menu.id}

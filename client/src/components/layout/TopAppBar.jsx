@@ -22,8 +22,19 @@ export default function TopAppBar() {
       paddingRight: '8px',
       borderBottom: `1px solid ${colors.gray[200]}`,
     }}>
-      {/* 로고 */}
-      <img src={LogoBlue} alt="강릉페이" style={{ height: '22px' }} />
+      {/* 로고 + 텍스트 */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', paddingLeft: '4px' }}>
+        <img src={LogoBlue} alt="강릉페이" style={{ height: '22px' }} />
+        <span style={{
+          fontSize: '20px',
+          fontWeight: typography.weight.bold,
+          color: colors.primary[700],
+          fontFamily: typography.fontFamily,
+          lineHeight: 1,
+        }}>
+          강릉페이
+        </span>
+      </div>
 
       {/* 우측 액션 */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
