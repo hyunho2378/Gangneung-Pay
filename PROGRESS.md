@@ -1,6 +1,6 @@
 # 강릉페이 AS-IS 복제 — 진행 상황
 
-업데이트: 2026-04-14 (세션 6 — 스페이싱 전체 감사 완료, 로고·파비콘 적용, 빌드 0 오류)
+업데이트: 2026-04-15 (세션 7 — Naver Maps API 연동, StoreMapScreen 실제 지도 구현)
 
 ---
 
@@ -8,7 +8,7 @@
 
 | 항목 | 상태 |
 |------|------|
-| `npm run build` | **0 오류** (1797 모듈, 216ms) |
+| `npm run build` | **0 오류** (1797 모듈, 278ms) |
 | dev 서버 | `http://localhost:5173/` |
 | 페이지 파일 | **30개** 완성 |
 | 하드코딩 색상 | **완전 해소** (SVG 장식 제외) |
@@ -50,6 +50,35 @@ pages/
   NewsListPage, NewsDetailPage, PlaceDetailPage
   ServiceEditPage, KakaoPayGuidePage, TransportCardPage, UsageGuidePage
 ```
+
+---
+
+## 세션 7에서 수정된 항목
+
+### Naver Maps API 연동
+- `client/.env` 생성 — `VITE_NAVER_MAP_CLIENT_ID=mjplt3dqpl`
+- `client/.env.example` — Naver Maps 환경 변수 예시 추가
+- `client/index.html` — `<script src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=%VITE_NAVER_MAP_CLIENT_ID%">` 추가 (Vite 빌드 시 치환)
+- `client/src/components/store/StoreMapScreen.jsx` — 회색 placeholder → 실제 네이버 지도
+  - 지도 중심: 강릉시 (lat 37.7519, lng 128.8761), zoom 13
+  - 샘플 스토어 4개에 위도/경도 추가 (중앙시장, 테라로사, GS25 경포, 쏠비치)
+  - 커스텀 마커 (primary[700] 원형, 흰색 테두리), 마커 클릭 시 상세 바텀시트 오픈
+  - 필터 변경 시 마커 재렌더링
+  - 지도 로딩 중 스피너 표시 (`mapReady` 상태)
+
+### Vercel 환경 변수 설정 안내
+Vercel 프로젝트 Settings > Environment Variables에 다음 항목 추가:
+- **Key**: `VITE_NAVER_MAP_CLIENT_ID`
+- **Value**: `mjplt3dqpl`
+- **Environment**: Production, Preview, Development 모두 체크
+
+설정 후 Vercel에서 재배포(Redeploy)해야 반영됩니다.
+
+### Naver Cloud Console 설정 확인 (배포 전 필수)
+- ncloud.com > Maps > Application > Web Service URL에 다음 도메인 등록 필요:
+  - `http://localhost:5173` (dev)
+  - Vercel 배포 도메인 (e.g. `https://gangneungpay.vercel.app`)
+- 등록되지 않은 도메인에서는 지도가 표시되지 않음 (Authentication Failed)
 
 ---
 

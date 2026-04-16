@@ -35,7 +35,7 @@ export default function CommunityPage() {
           backgroundColor: colors.surface.background,
         }}
       >
-        {/* 강릉이 소식 배너 */}
+        {/* 강릉시 소식 배너 */}
         <div
           style={{
             backgroundColor: colors.primary[700],
@@ -72,7 +72,7 @@ export default function CommunityPage() {
                 margin: 0,
               }}
             >
-              강릉이 소식
+              강릉시 소식
             </p>
             <p
               style={{
@@ -89,7 +89,7 @@ export default function CommunityPage() {
         {/* 소식 섹션 */}
         <div style={{ paddingTop: layout.margin }}>
           <SectionHeader
-            title="강릉이 소식"
+            title="강릉시 소식"
             onViewAll={() => navigate('/news')}
           />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: `0 ${layout.margin}` }}>

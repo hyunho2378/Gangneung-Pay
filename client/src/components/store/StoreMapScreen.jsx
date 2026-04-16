@@ -1,7 +1,7 @@
 // StoreMapScreen.jsx — M01 (p.24,43,44)
 // 지도 + 검색 + 필터 전체 화면
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Search } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 import CategoryFilterChip from './CategoryFilterChip'
@@ -9,6 +9,8 @@ import StoreListItem from './StoreListItem'
 import StoreDetailSheet from './StoreDetailSheet'
 
 const CATEGORIES = ['전체', '음식점', '카페', '편의점', '숙박', '관광', '마트']
+
+const GANGNEUNG_CENTER = { lat: 37.7519, lng: 128.8761 }
 
 const SAMPLE_STORES = [
   {
@@ -19,6 +21,8 @@ const SAMPLE_STORES = [
     phone: '033-640-1234',
     address: '강원특별자치도 강릉시 금성로 21',
     hours: '09:00 ~ 21:00 (매주 월요일 휴무)',
+    lat: 37.7527,
+    lng: 128.8759,
   },
   {
     id: 2,
@@ -28,6 +32,8 @@ const SAMPLE_STORES = [
     phone: '033-648-2327',
     address: '강원특별자치도 강릉시 구정면 현천길 25',
     hours: '09:00 ~ 22:00',
+    lat: 37.7096,
+    lng: 128.8572,
   },
   {
     id: 3,
@@ -37,6 +43,8 @@ const SAMPLE_STORES = [
     phone: '033-641-0001',
     address: '강원특별자치도 강릉시 경포로 365',
     hours: '24시간 운영',
+    lat: 37.7923,
+    lng: 128.8992,
   },
   {
     id: 4,
@@ -46,6 +54,8 @@ const SAMPLE_STORES = [
     phone: '1588-4888',
     address: '강원특별자치도 강릉시 해안로 307',
     hours: '체크인 15:00 / 체크아웃 11:00',
+    lat: 37.7944,
+    lng: 128.9078,
   },
 ]
 
@@ -53,6 +63,11 @@ export default function StoreMapScreen() {
   const [activeCategory, setActiveCategory] = useState('전체')
   const [selectedStore, setSelectedStore] = useState(null)
   const [sheetOpen, setSheetOpen] = useState(false)
+  const [mapReady, setMapReady] = useState(false)
+
+  const mapContainerRef = useRef(null)
+  const mapRef = useRef(null)
+  const markersRef = useRef([])
 
   const filteredStores =
     activeCategory === '전체'
@@ -62,7 +77,71 @@ export default function StoreMapScreen() {
   const handleStoreClick = (store) => {
     setSelectedStore(store)
     setSheetOpen(true)
+    if (mapRef.current && window.naver) {
+      mapRef.current.setCenter(new window.naver.maps.LatLng(store.lat, store.lng))
+      mapRef.current.setZoom(15)
+    }
   }
+
+  // 네이버 지도 초기화
+  useEffect(() => {
+    console.log('[Naver Maps] VITE_NAVER_MAP_CLIENT_ID =', import.meta.env.VITE_NAVER_MAP_CLIENT_ID)
+    console.log('[Naver Maps] window.naver =', window.naver)
+
+    const initMap = () => {
+      if (!window.naver || !window.naver.maps || !mapContainerRef.current) return
+      if (mapRef.current) return
+
+      mapRef.current = new window.naver.maps.Map(mapContainerRef.current, {
+        center: new window.naver.maps.LatLng(GANGNEUNG_CENTER.lat, GANGNEUNG_CENTER.lng),
+        zoom: 13,
+        minZoom: 10,
+        zoomControl: false,
+        scaleControl: false,
+        logoControl: true,
+        mapDataControl: false,
+      })
+      setMapReady(true)
+    }
+
+    if (window.naver && window.naver.maps) {
+      initMap()
+    } else {
+      const interval = setInterval(() => {
+        if (window.naver && window.naver.maps) {
+          clearInterval(interval)
+          initMap()
+        }
+      }, 100)
+      return () => clearInterval(interval)
+    }
+  }, [])
+
+  // 필터 변경 시 마커 업데이트
+  useEffect(() => {
+    if (!mapReady || !window.naver || !mapRef.current) return
+
+    markersRef.current.forEach((m) => m.setMap(null))
+    markersRef.current = []
+
+    filteredStores.forEach((store) => {
+      const marker = new window.naver.maps.Marker({
+        position: new window.naver.maps.LatLng(store.lat, store.lng),
+        map: mapRef.current,
+        title: store.name,
+        icon: {
+          content: `<div style="width:28px;height:28px;background:${colors.primary[700]};border:2px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;"><div style="width:8px;height:8px;background:#fff;border-radius:50%;"></div></div>`,
+          anchor: new window.naver.maps.Point(14, 14),
+        },
+      })
+
+      window.naver.maps.Event.addListener(marker, 'click', () => {
+        handleStoreClick(store)
+      })
+
+      markersRef.current.push(marker)
+    })
+  }, [mapReady, activeCategory])
 
   return (
     <div
@@ -83,41 +162,44 @@ export default function StoreMapScreen() {
           flex: 1,
           backgroundColor: colors.gray[200],
           position: 'relative',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
         }}
       >
-        {/* 지도 격자 패턴 */}
-        <svg
+        {/* 네이버 지도 컨테이너 */}
+        <div
+          ref={mapContainerRef}
           style={{
             position: 'absolute',
             inset: 0,
             width: '100%',
             height: '100%',
-            opacity: 0.35,
           }}
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <defs>
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke={colors.gray[300]} strokeWidth="1" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" />
-        </svg>
+        />
 
-        {/* 중앙 안내 텍스트 */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: spacing[2], zIndex: 1 }}>
-          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-            <path
-              d="M18 3 C12.477 3 8 7.477 8 13 C8 21 18 33 18 33 C18 33 28 21 28 13 C28 7.477 23.523 3 18 3 Z"
-              fill={colors.gray[400]}
-            />
-            <circle cx="18" cy="13" r="4" fill="#FFFFFF" />
-          </svg>
-          <span style={{ fontSize: typography.size.xs, color: colors.gray[500] }}>지도 로딩 중</span>
-        </div>
+        {/* 로딩 인디케이터 */}
+        {!mapReady && (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: spacing[2],
+              zIndex: 1,
+              pointerEvents: 'none',
+            }}
+          >
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <path
+                d="M18 3 C12.477 3 8 7.477 8 13 C8 21 18 33 18 33 C18 33 28 21 28 13 C28 7.477 23.523 3 18 3 Z"
+                fill={colors.gray[400]}
+              />
+              <circle cx="18" cy="13" r="4" fill="#FFFFFF" />
+            </svg>
+            <span style={{ fontSize: typography.size.xs, color: colors.gray[500] }}>지도 로딩 중</span>
+          </div>
+        )}
 
         {/* 검색바 (absolute — 지도 위) */}
         <div

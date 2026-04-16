@@ -48,7 +48,6 @@ export default function B2BPromoCard({ variant = 'register', onClick }) {
         flexDirection: 'row',
         alignItems: 'center',
         gap: spacing[3],
-        borderLeft: `4px solid ${colors.primary[700]}`,
         cursor: onClick ? 'pointer' : 'default',
       }}
     >
