@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
-import { colors, layout, typography, shadow } from '../tokens/tokens'
+import { colors, layout } from '../tokens/tokens'
+import CoachMarkOverlay from '../components/common/CoachMarkOverlay'
 
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBar from '../components/layout/TopAppBar'
@@ -9,10 +10,11 @@ import TopAppBarLargeText from '../components/layout/TopAppBarLargeText'
 import BottomNavBar from '../components/layout/BottomNavBar'
 import QRFloatingBar from '../components/layout/QRFloatingBar'
 
+import WidgetAddBanner from '../components/home/WidgetAddBanner'
+import AnnouncementBanner from '../components/home/AnnouncementBanner'
+import BalanceCardExpanded from '../components/home/BalanceCardExpanded'
 import BannerCarousel from '../components/home/BannerCarousel'
 import OnboardingStepper from '../components/home/OnboardingStepper'
-import BalanceCardExpanded from '../components/home/BalanceCardExpanded'
-import CashbackProgressCard from '../components/home/CashbackProgressCard'
 import ServiceShortcutGrid from '../components/home/ServiceShortcutGrid'
 import SectionHeader from '../components/home/SectionHeader'
 import RecentPaymentEmpty from '../components/home/RecentPaymentEmpty'
@@ -20,8 +22,6 @@ import StoreRecommendCard from '../components/home/StoreRecommendCard'
 import ExploreScrollCard from '../components/home/ExploreScrollCard'
 import SupportRankingList from '../components/home/SupportRankingList'
 import PromoHorizontalCard from '../components/home/PromoHorizontalCard'
-import B2BPromoCard from '../components/home/B2BPromoCard'
-import AnnouncementModal from '../components/common/AnnouncementModal'
 
 const mockBalance = { cashback: 3200, card: 120000, charge: 0 }
 
@@ -41,13 +41,20 @@ export default function HomePage() {
   const navigate = useNavigate()
   const { isLargeText, showAnnouncement, closeAnnouncement } = useApp()
 
+  // S7 코치마크 — 홈 step 1 (충전 버튼 하이라이트)
+  const chargeButtonRef = useRef(null)
+  const [showCoach, setShowCoach] = useState(true)
+  const [chargeButtonRect, setChargeButtonRect] = useState(null)
+
+  useEffect(() => {
+    if (chargeButtonRef.current && showCoach) {
+      setChargeButtonRect(chargeButtonRef.current.getBoundingClientRect())
+    }
+  }, [showCoach])
+
   return (
     <ScreenContainer>
       {isLargeText ? <TopAppBarLargeText /> : <TopAppBar />}
-
-      {showAnnouncement && (
-        <AnnouncementModal onClose={closeAnnouncement} />
-      )}
 
       <div
         style={{
@@ -57,13 +64,25 @@ export default function HomePage() {
           backgroundColor: colors.surface.background,
         }}
       >
-        <BannerCarousel />
+        {/* H-01: S1 위젯 추가 배너 */}
+        <WidgetAddBanner />
+
+        {/* H-05: 인라인 공지 배너 (AnnouncementModal 대체) */}
+        <AnnouncementBanner show={showAnnouncement} onClose={closeAnnouncement} />
+
+        {/* H-03: 잔액 카드 최상단으로 이동 */}
+        {/* CashbackProgressCard는 BalanceCardExpanded 내부로 통합됨 (Phase 2 H-04) */}
+        <BalanceCardExpanded
+          balance={mockBalance}
+          cashbackMax={30000}
+          cashbackPercent={10.7}
+          chargeButtonRef={chargeButtonRef}
+        />
 
         <OnboardingStepper currentStep={3} />
 
-        <BalanceCardExpanded balance={mockBalance} />
-
-        <CashbackProgressCard current={3200} max={30000} percent={10.7} />
+        {/* H-03: BannerCarousel 잔액카드 아래로 이동 */}
+        <BannerCarousel />
 
         <ServiceShortcutGrid />
 
@@ -104,15 +123,28 @@ export default function HomePage() {
           onClick={() => navigate('/kakao-guide')}
         />
 
-        <B2BPromoCard variant="register" />
-
-        <B2BPromoCard variant="portal" />
+        {/* H-06: B2BPromoCard 제거 */}
 
         <div style={{ height: layout.margin }} />
       </div>
 
       <QRFloatingBar />
       <BottomNavBar />
+
+      {/* S7: 코치마크 Step 1 — 충전 버튼 안내 */}
+      {showCoach && (
+        <CoachMarkOverlay
+          targetRect={chargeButtonRect}
+          message="[충전] 버튼을 눌러 강릉페이 잔액을 충전할 수 있습니다. 다음을 눌러 충전 화면으로 이동해보세요."
+          step={1}
+          totalSteps={2}
+          onNext={() => {
+            setShowCoach(false)
+            navigate('/charge', { state: { fromCoach: true } })
+          }}
+          onSkip={() => setShowCoach(false)}
+        />
+      )}
     </ScreenContainer>
   )
 }

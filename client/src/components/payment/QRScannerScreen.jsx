@@ -1,14 +1,107 @@
-// QRScannerScreen.jsx — P01 (p.10)
-// QR 스캔 전체 화면
+/**
+ * QRScannerScreen (Sprint 1 — 실제 카메라 연동)
+ * Strategy: S4, S5
+ * Nielsen: #1 visibility, #4 closure, #5 error prevention, #9 error recovery
+ * Shneiderman: #3 informative feedback, #4 design for closure, #5 simple error handling
+ */
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { ArrowLeft, CreditCard, Zap, ZapOff } from 'lucide-react'
+import { Html5Qrcode } from 'html5-qrcode'
+import { useNavigate } from 'react-router-dom'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 
-export default function QRScannerScreen({ onClose, balance = 120000 }) {
-  const [flashOn, setFlashOn] = useState(false)
+const LOW_BALANCE = 10000
+const MOCK_PAYMENT_AMOUNT = 12000
 
+export default function QRScannerScreen({ onClose, balance = 120000, onCharge, cardCount = 1 }) {
+  const navigate = useNavigate()
+  const [flashOn, setFlashOn] = useState(false)
+  const [scanPulse, setScanPulse] = useState(true)
+  // 'init' | 'scanning' | 'permission_denied'
+  const [cameraState, setCameraState] = useState('init')
+  const [scannedData, setScannedData] = useState(null)
+  const [paymentDone, setPaymentDone] = useState(false)
+
+  const html5QrCodeRef = useRef(null)
+  const scannedRef = useRef(false)
+
+  // Q-03: 스캔 상태 펄스 피드백 (Nielsen #1)
+  useEffect(() => {
+    const interval = setInterval(() => setScanPulse((p) => !p), 750)
+    return () => clearInterval(interval)
+  }, [])
+
+  // 카메라 초기화 — Cleanup on unmount
+  useEffect(() => {
+    const html5QrCode = new Html5Qrcode('qr-reader')
+    html5QrCodeRef.current = html5QrCode
+
+    html5QrCode
+      .start(
+        { facingMode: 'environment' },
+        { fps: 10, qrbox: { width: 200, height: 200 } },
+        (decodedText) => {
+          if (scannedRef.current) return
+          scannedRef.current = true
+          setScannedData({ amount: MOCK_PAYMENT_AMOUNT, raw: decodedText })
+        },
+        () => {}
+      )
+      .then(() => setCameraState('scanning'))
+      .catch(() => setCameraState('permission_denied'))
+
+    return () => {
+      html5QrCode.stop().catch(() => {})
+    }
+  }, [])
+
+  const handlePay = () => {
+    setPaymentDone(true)
+    setTimeout(() => navigate('/'), 1200)
+  }
+
+  const handleCharge = onCharge ?? (() => {})
+  const cardName = cardCount === 1 ? '내 카드' : '강릉페이 1'
+  const hasNoBalance = balance === 0
+  const hasLowBalance = balance > 0 && balance < LOW_BALANCE
   const formattedBalance = balance.toLocaleString('ko-KR') + '원'
+  const afterBalance = balance - MOCK_PAYMENT_AMOUNT
+
+  // Shneiderman #4: 결제 완료 화면
+  if (paymentDone) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: colors.primary[700],
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: typography.fontFamily,
+          zIndex: 100,
+          gap: spacing[4],
+        }}
+      >
+        <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+          <circle cx="36" cy="36" r="36" fill="rgba(255,255,255,0.12)" />
+          <circle cx="36" cy="36" r="26" fill="rgba(255,255,255,0.18)" />
+          <path d="M20 36L30 46L52 24" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <p style={{ margin: 0, color: '#FFFFFF', fontSize: typography.size.xl, fontWeight: typography.weight.bold }}>
+          결제 완료
+        </p>
+        <p style={{ margin: 0, color: 'rgba(255,255,255,0.85)', fontSize: typography.size.md }}>
+          {MOCK_PAYMENT_AMOUNT.toLocaleString('ko-KR')}원
+        </p>
+        <p style={{ margin: 0, color: 'rgba(255,255,255,0.6)', fontSize: typography.size.sm }}>
+          잔액 {afterBalance.toLocaleString('ko-KR')}원
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div
@@ -41,7 +134,6 @@ export default function QRScannerScreen({ onClose, balance = 120000 }) {
             padding: spacing[1],
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
           }}
         >
           <ArrowLeft size={24} color="#FFFFFF" />
@@ -62,69 +154,138 @@ export default function QRScannerScreen({ onClose, balance = 120000 }) {
         style={{
           flex: 1,
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          gap: spacing[4],
         }}
       >
         <div style={{ position: 'relative', width: '250px', height: '250px' }}>
-          {/* 회색 placeholder 영역 */}
+          {/* html5-qrcode 마운트 대상 */}
           <div
+            id="qr-reader"
             style={{
               width: '250px',
               height: '250px',
-              backgroundColor: 'rgba(255,255,255,0.08)',
               borderRadius: layout.radiusSmall,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              overflow: 'hidden',
+              backgroundColor: 'rgba(255,255,255,0.06)',
             }}
-          >
-            <span
+          />
+
+          {/* Nielsen #1: 카메라 초기화 로딩 인디케이터 */}
+          {cameraState === 'init' && (
+            <div
               style={{
-                color: 'rgba(255,255,255,0.5)',
-                fontSize: typography.size.xs,
-                fontWeight: typography.weight.medium,
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: spacing[2],
+                zIndex: 3,
+                pointerEvents: 'none',
               }}
             >
-              카메라 준비 중
-            </span>
-          </div>
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <circle cx="14" cy="14" r="11" stroke="rgba(255,255,255,0.2)" strokeWidth="2.5" fill="none" />
+                <path d="M14 3 A11 11 0 0 1 25 14" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" strokeLinecap="round" fill="none">
+                  <animateTransform attributeName="transform" type="rotate" from="0 14 14" to="360 14 14" dur="0.9s" repeatCount="indefinite" />
+                </path>
+              </svg>
+              <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: typography.size.xxs }}>카메라 준비 중</span>
+            </div>
+          )}
 
-          {/* L자형 코너 브래킷 — 좌상단 */}
+          {/* Nielsen #9: 카메라 권한 거부 오버레이 — 한국어 평문 */}
+          {cameraState === 'permission_denied' && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundColor: 'rgba(0,0,0,0.85)',
+                borderRadius: layout.radiusSmall,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: spacing[3],
+                padding: spacing[4],
+                zIndex: 3,
+              }}
+            >
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                <circle cx="18" cy="18" r="16" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" fill="none" />
+                <path d="M12 12 L24 24 M24 12 L12 24" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+              <span
+                style={{
+                  color: '#FFFFFF',
+                  fontSize: typography.size.xs,
+                  textAlign: 'center',
+                  lineHeight: 1.6,
+                }}
+              >
+                카메라 접근을 허용해주세요
+              </span>
+              <span
+                style={{
+                  color: 'rgba(255,255,255,0.5)',
+                  fontSize: typography.size.xxs,
+                  textAlign: 'center',
+                  lineHeight: 1.5,
+                }}
+              >
+                설정 → 앱 → 카메라 권한 허용 후{'\n'}다시 시도해주세요
+              </span>
+            </div>
+          )}
+
+          {/* L자형 코너 브래킷 — 보존 (Phase 1 시각 품질) */}
           <svg
-            style={{ position: 'absolute', top: 0, left: 0 }}
+            style={{ position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'none' }}
             width="32" height="32" viewBox="0 0 32 32" fill="none"
           >
             <path d="M2 26 L2 2 L26 2" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
           </svg>
-
-          {/* L자형 코너 브래킷 — 우상단 */}
           <svg
-            style={{ position: 'absolute', top: 0, right: 0 }}
+            style={{ position: 'absolute', top: 0, right: 0, zIndex: 2, pointerEvents: 'none' }}
             width="32" height="32" viewBox="0 0 32 32" fill="none"
           >
             <path d="M6 2 L30 2 L30 26" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
           </svg>
-
-          {/* L자형 코너 브래킷 — 좌하단 */}
           <svg
-            style={{ position: 'absolute', bottom: 0, left: 0 }}
+            style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 2, pointerEvents: 'none' }}
             width="32" height="32" viewBox="0 0 32 32" fill="none"
           >
             <path d="M2 6 L2 30 L26 30" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
           </svg>
-
-          {/* L자형 코너 브래킷 — 우하단 */}
           <svg
-            style={{ position: 'absolute', bottom: 0, right: 0 }}
+            style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 2, pointerEvents: 'none' }}
             width="32" height="32" viewBox="0 0 32 32" fill="none"
           >
             <path d="M6 30 L30 30 L30 6" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
           </svg>
         </div>
+
+        {/* Q-03: 스캔 상태 문구 펄스 (Nielsen #1, Shneiderman #3) */}
+        <span
+          style={{
+            color: 'rgba(255,255,255,0.8)',
+            fontSize: typography.size.xs,
+            fontWeight: typography.weight.medium,
+            opacity: scanPulse ? 1 : 0.35,
+            transition: 'opacity 0.4s ease',
+          }}
+        >
+          {cameraState === 'permission_denied'
+            ? '카메라 접근을 허용해주세요'
+            : 'QR 코드를 화면에 맞춰주세요'}
+        </span>
       </div>
 
-      {/* 하단 흰색 카드 패널 */}
+      {/* 하단 카드 패널 */}
       <div
         style={{
           backgroundColor: colors.surface.card,
@@ -134,7 +295,83 @@ export default function QRScannerScreen({ onClose, balance = 120000 }) {
           boxShadow: shadow.modal,
         }}
       >
-        {/* 현재 카드 정보 */}
+        {/* Q-01: 잔액 없음 경고 — S5, Nielsen #5 */}
+        {hasNoBalance && (
+          <div
+            style={{
+              backgroundColor: colors.alertBg,
+              border: `1px solid ${colors.alertBorder}`,
+              borderRadius: layout.radiusSmall,
+              padding: `${spacing[3]} ${spacing[4]}`,
+              marginBottom: spacing[4],
+              display: 'flex',
+              flexDirection: 'column',
+              gap: spacing[2],
+            }}
+          >
+            <p style={{ margin: 0, fontSize: typography.size.sm, fontWeight: typography.weight.semibold, color: colors.errorDark }}>
+              잔액이 없습니다
+            </p>
+            <p style={{ margin: 0, fontSize: typography.size.xs, color: colors.error }}>
+              충전 후 결제해주세요.
+            </p>
+            <button
+              onClick={handleCharge}
+              style={{
+                alignSelf: 'flex-start',
+                backgroundColor: colors.error,
+                border: 'none',
+                borderRadius: layout.radiusButton,
+                color: '#FFFFFF',
+                fontSize: typography.size.xs,
+                fontWeight: typography.weight.semibold,
+                padding: `${spacing[1]} ${spacing[3]}`,
+                cursor: 'pointer',
+                fontFamily: typography.fontFamily,
+              }}
+            >
+              충전하러 가기
+            </button>
+          </div>
+        )}
+
+        {/* S5, Nielsen #5: 잔액 부족 경고 */}
+        {hasLowBalance && (
+          <div
+            style={{
+              backgroundColor: colors.warningBg,
+              border: `1px solid ${colors.warningBorder}`,
+              borderRadius: layout.radiusSmall,
+              padding: `${spacing[3]} ${spacing[4]}`,
+              marginBottom: spacing[4],
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <p style={{ margin: 0, fontSize: typography.size.xs, fontWeight: typography.weight.medium, color: colors.warning }}>
+              잔액이 부족할 수 있습니다 ({formattedBalance})
+            </p>
+            <button
+              onClick={handleCharge}
+              style={{
+                backgroundColor: 'transparent',
+                border: `1px solid ${colors.warning}`,
+                borderRadius: layout.radiusButton,
+                color: colors.warning,
+                fontSize: typography.size.xs,
+                fontWeight: typography.weight.semibold,
+                padding: `2px ${spacing[2]}`,
+                cursor: 'pointer',
+                fontFamily: typography.fontFamily,
+              }}
+            >
+              충전
+            </button>
+          </div>
+        )}
+
+        {/* 카드 정보 — Q-02, Nielsen #1 */}
         <div
           style={{
             display: 'flex',
@@ -158,27 +395,22 @@ export default function QRScannerScreen({ onClose, balance = 120000 }) {
               <CreditCard size={20} color="#FFFFFF" />
             </div>
             <div>
+              <div style={{ fontSize: typography.size.sm, fontWeight: typography.weight.semibold, color: colors.gray[900] }}>
+                {cardName}
+              </div>
               <div
                 style={{
                   fontSize: typography.size.sm,
                   fontWeight: typography.weight.semibold,
-                  color: colors.gray[900],
-                }}
-              >
-                강릉페이(1)
-              </div>
-              <div
-                style={{
-                  fontSize: typography.size.xs,
-                  color: colors.gray[500],
+                  color: hasNoBalance ? colors.error : hasLowBalance ? colors.warning : colors.primary[700],
                   marginTop: '2px',
+                  transition: 'color 0.2s ease',
                 }}
               >
-                잔액 {formattedBalance}
+                {formattedBalance}
               </div>
             </div>
           </div>
-
           <button
             style={{
               backgroundColor: 'transparent',
@@ -195,18 +427,11 @@ export default function QRScannerScreen({ onClose, balance = 120000 }) {
           </button>
         </div>
 
-        {/* 구분선 */}
-        <div
-          style={{
-            height: '1px',
-            backgroundColor: colors.gray[100],
-            marginBottom: spacing[4],
-          }}
-        />
+        <div style={{ height: '1px', backgroundColor: colors.gray[100], marginBottom: spacing[4] }} />
 
-        {/* 플래시 토글 버튼 */}
+        {/* 플래시 토글 */}
         <button
-          onClick={() => setFlashOn((prev) => !prev)}
+          onClick={() => setFlashOn((p) => !p)}
           style={{
             width: '100%',
             display: 'flex',
@@ -228,6 +453,95 @@ export default function QRScannerScreen({ onClose, balance = 120000 }) {
           {flashOn ? '플래시 켜짐' : '플래시'}
         </button>
       </div>
+
+      {/* 결제 확인 바텀시트 — Shneiderman #4 closure */}
+      {scannedData && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.6)',
+            display: 'flex',
+            alignItems: 'flex-end',
+            zIndex: 200,
+          }}
+        >
+          <div
+            style={{
+              width: '100%',
+              backgroundColor: colors.surface.card,
+              borderTopLeftRadius: layout.radiusModal,
+              borderTopRightRadius: layout.radiusModal,
+              padding: spacing[5],
+              boxShadow: shadow.modal,
+            }}
+          >
+            {/* 핸들 */}
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: spacing[4] }}>
+              <div style={{ width: '32px', height: '4px', borderRadius: layout.radiusPill, backgroundColor: colors.gray[300] }} />
+            </div>
+
+            <p style={{ margin: `0 0 ${spacing[5]}`, fontSize: typography.size.lg, fontWeight: typography.weight.bold, color: colors.gray[900] }}>
+              결제 확인
+            </p>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: spacing[3] }}>
+              <span style={{ fontSize: typography.size.sm, color: colors.gray[500] }}>결제 금액</span>
+              <span style={{ fontSize: typography.size.sm, fontWeight: typography.weight.semibold, color: colors.gray[900] }}>
+                {scannedData.amount.toLocaleString('ko-KR')}원
+              </span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: spacing[5] }}>
+              <span style={{ fontSize: typography.size.sm, color: colors.gray[500] }}>잔액</span>
+              <span style={{ fontSize: typography.size.sm, color: colors.gray[500] }}>
+                {balance.toLocaleString('ko-KR')}원 →{' '}
+                <span style={{ fontWeight: typography.weight.semibold, color: colors.primary[700] }}>
+                  {afterBalance.toLocaleString('ko-KR')}원
+                </span>
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', gap: spacing[3] }}>
+              <button
+                onClick={() => {
+                  scannedRef.current = false
+                  setScannedData(null)
+                }}
+                style={{
+                  flex: 1,
+                  height: '48px',
+                  backgroundColor: 'transparent',
+                  border: `1.5px solid ${colors.gray[200]}`,
+                  borderRadius: layout.radiusButton,
+                  fontSize: typography.size.sm,
+                  fontWeight: typography.weight.semibold,
+                  color: colors.gray[700],
+                  cursor: 'pointer',
+                }}
+              >
+                취소
+              </button>
+              <button
+                onClick={handlePay}
+                style={{
+                  flex: 2,
+                  height: '48px',
+                  backgroundColor: colors.primary[700],
+                  border: 'none',
+                  borderRadius: layout.radiusButton,
+                  fontSize: typography.size.sm,
+                  fontWeight: typography.weight.semibold,
+                  color: '#FFFFFF',
+                  cursor: 'pointer',
+                  boxShadow: shadow.button,
+                }}
+              >
+                결제하기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

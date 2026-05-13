@@ -14,7 +14,7 @@ export default function HistoryPage() {
       <TopAppBarBack title="이용내역" onBack={() => navigate(-1)} />
 
       <div style={{ flex: 1, overflowY: 'auto', paddingBottom: '24px' }}>
-        <TransactionHistory tab={tab} onTabChange={setTab} />
+        <TransactionHistory tab={tab} onTabChange={setTab} balance={120000} onRefund={() => navigate('/charge')} />
       </div>
     </ScreenContainer>
   )

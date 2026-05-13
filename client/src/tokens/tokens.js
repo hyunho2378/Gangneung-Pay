@@ -75,6 +75,8 @@ export const colors = {
   successBg: '#F0FDF4',  // 성공/완료 화면 배경 (green-50)
   successBorder: '#BBF7D0', // 성공/완료 화면 테두리 (green-200)
   wishBg: '#FFFBEB',    // 원하는 지원금 별 아이콘 배경 (amber-50)
+  warningBg: '#FFFBEB',     // Phase 2 — S5 잔액 부족 경고 배경 (amber-50)
+  warningBorder: '#FDE68A', // Phase 2 — S5 잔액 부족 경고 테두리 (amber-200)
 
   // 배너 캐러셀 슬라이드 텍스트 색상
   banner: {
@@ -135,6 +137,7 @@ export const typography = {
   fontFamily: "-apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Pretendard', 'Noto Sans KR', sans-serif",
 
   size: {
+    largeTitle: '34px',   // Phase 2 — S1,S3 잔액 Large Title (Nielsen #1, Shneiderman #3)
     balance: '28px',
     balanceLarge: '36px',
     appTitle: '22px',

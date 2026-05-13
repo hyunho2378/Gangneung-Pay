@@ -1,89 +1,69 @@
+/**
+ * BalanceCardExpanded (Phase 2 redesigned)
+ * Strategy: S1, S2, S3
+ * Nielsen: #1 visibility, #2 match real world, #3 user control
+ * Shneiderman: #3 informative feedback, #7 locus of control, #8 reduce memory load
+ * Phase 1 ref: components/home/BalanceCardExpanded.jsx + CashbackProgressCard.jsx
+ * Preserved: dark blue card background, glass button style, watermark SVG, brand colors
+ * Changed: balance Large Title 34px (H-08), cashback bar integrated (H-04),
+ *          3-button row [충전][환불][QR결제] (H-02), watermark moved top-right
+ */
+
+import { useNavigate } from 'react-router-dom'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
+
+const LOW_BALANCE = 10000
+
+// S3: 혜택 체감 문구 — 금액 구간별 (Nielsen #1 visibility, Shneiderman #3 feedback)
+function getCashbackMessage(amount) {
+  if (amount >= 30000) return '이번 달 한도 달성! 🎉'
+  if (amount >= 10000) return '점심 한 끼 값 아꼈어요 🍱'
+  if (amount >= 3200) return '커피 한 잔 값 아꼈어요 ☕'
+  return null
+}
 
 export default function BalanceCardExpanded({
   balance = { cashback: 3200, card: 120000, charge: 0 },
-  onCardManage,
+  cashbackMax = 30000,
+  cashbackPercent = 10,
   onCharge,
+  onRefund,
   onQR,
+  cardCount = 1,
+  cardIndex = 1,
+  chargeButtonRef,
 }) {
+  const navigate = useNavigate()
+  const handleCharge = onCharge ?? (() => navigate('/charge'))
+  const handleRefund = onRefund ?? (() => navigate('/usage-guide'))
+  const handleQR = onQR ?? (() => navigate('/qr'))
+  // H-07: 카드명 로직 (Nielsen #2, #6)
+  const cardName = cardCount === 1 ? '내 카드' : `강릉페이 ${cardIndex}`
+
   const fmt = (n) => n.toLocaleString('ko-KR') + '원'
+  const clampedPercent = Math.min(100, Math.max(0, cashbackPercent))
+  const isLowBalance = balance.card < LOW_BALANCE
 
   return (
     <div style={{ margin: layout.margin }}>
-      {/* 다크 블루 카드 */}
       <div
         style={{
           backgroundColor: colors.surface.darkCard,
           borderRadius: layout.radiusCard,
-          padding: spacing[4],
+          padding: spacing[5],
           boxShadow: shadow.button,
           position: 'relative',
           overflow: 'hidden',
         }}
       >
-        {/* 카드 번호 */}
-        <p
-          style={{
-            margin: `0 0 ${spacing[4]} 0`,
-            color: colors.onDark.secondary,
-            fontSize: typography.size.xs,
-            fontWeight: typography.weight.regular,
-            letterSpacing: '1px',
-          }}
-        >
-          &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 1234
-        </p>
-
-        {/* 잔액 정보 */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[2] }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-            <span style={{ color: colors.onDark.secondary, fontSize: typography.size.xs }}>캐시백</span>
-            <span style={{ color: colors.onDark.secondary, fontSize: typography.size.sm, fontWeight: typography.weight.medium }}>
-              {fmt(balance.cashback)}
-            </span>
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'baseline',
-              justifyContent: 'space-between',
-              borderTop: '1px solid rgba(255,255,255,0.15)',
-              borderBottom: '1px solid rgba(255,255,255,0.15)',
-              paddingTop: spacing[2],
-              paddingBottom: spacing[2],
-            }}
-          >
-            <span style={{ color: colors.onDark.primary, fontSize: typography.size.sm, fontWeight: typography.weight.medium }}>
-              강릉페이(1)
-            </span>
-            <span
-              style={{
-                color: colors.onDark.primary,
-                fontSize: typography.size.balance,
-                fontWeight: typography.weight.bold,
-                lineHeight: 1,
-              }}
-            >
-              {fmt(balance.card)}
-            </span>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-            <span style={{ color: colors.onDark.secondary, fontSize: typography.size.xs }}>충전잔액</span>
-            <span style={{ color: colors.onDark.secondary, fontSize: typography.size.sm, fontWeight: typography.weight.medium }}>
-              {fmt(balance.charge)}
-            </span>
-          </div>
-        </div>
-
-        {/* 강릉페이 로고 워터마크 */}
+        {/* 워터마크 — 우상단 절대 배치, 비파괴 SVG 보존 */}
         <div
           style={{
             position: 'absolute',
-            right: spacing[4],
-            bottom: spacing[4],
-            opacity: 0.18,
+            right: spacing[5],
+            top: spacing[5],
+            opacity: 0.15,
+            pointerEvents: 'none',
           }}
         >
           <svg width="60" height="36" viewBox="0 0 60 36" fill="none">
@@ -94,33 +74,144 @@ export default function BalanceCardExpanded({
           </svg>
         </div>
 
-        {/* 하단 버튼 2개 */}
-        <div
-          style={{
-            display: 'flex',
-            gap: spacing[2],
-            marginTop: spacing[4],
-          }}
-        >
-          <button
-            onClick={onCardManage}
+        {/* 카드명 + 카드 번호 */}
+        <div style={{ marginBottom: spacing[4] }}>
+          <p
             style={{
-              flex: 1,
-              backgroundColor: 'rgba(255,255,255,0.2)',
-              border: '1px solid rgba(255,255,255,0.3)',
-              borderRadius: layout.radiusButton,
+              margin: `0 0 3px 0`,
               color: colors.onDark.primary,
-              fontSize: typography.size.sm,
+              fontSize: typography.size.xs,
               fontWeight: typography.weight.semibold,
-              padding: `${spacing[2]} 0`,
-              cursor: 'pointer',
-              transition: 'background-color 0.2s',
             }}
           >
-            카드관리
-          </button>
+            {cardName}
+          </p>
+          <p
+            style={{
+              margin: 0,
+              color: colors.onDark.secondary,
+              fontSize: typography.size.xs,
+              fontWeight: typography.weight.regular,
+              letterSpacing: '1px',
+            }}
+          >
+            &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 1234
+          </p>
+        </div>
+
+        {/* 잔액 레이블 + 금액 — Nielsen #1 visibility, S1·S3 */}
+        <div style={{ marginBottom: spacing[4] }}>
+          <p
+            style={{
+              margin: `0 0 4px 0`,
+              color: colors.onDark.secondary,
+              fontSize: typography.size.xs,
+            }}
+          >
+            잔액
+          </p>
+          <p
+            style={{
+              margin: 0,
+              color: isLowBalance ? colors.warning : colors.onDark.primary,
+              fontSize: typography.size.largeTitle,
+              fontWeight: typography.weight.bold,
+              lineHeight: 1.1,
+              letterSpacing: '-0.02em',
+              transition: 'color 0.3s ease',
+            }}
+          >
+            {fmt(balance.card)}
+          </p>
+          {/* 잔액 부족 인라인 경고 — S5, Nielsen #5, Shneiderman #5 */}
+          {isLowBalance && (
+            <p
+              style={{
+                margin: `${spacing[1]} 0 0 0`,
+                color: colors.warning,
+                fontSize: typography.size.xs,
+                fontWeight: typography.weight.medium,
+              }}
+            >
+              잔액이 부족합니다. 충전 후 사용하세요.
+            </p>
+          )}
+        </div>
+
+        {/* 캐시백 진행바 통합 — S3, Nielsen #1, Shneiderman #3·#8 */}
+        <div style={{ marginBottom: spacing[4] }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: spacing[1],
+            }}
+          >
+            <span style={{ color: colors.onDark.secondary, fontSize: typography.size.xs }}>
+              이번 달 캐시백
+            </span>
+            <span
+              style={{
+                color: colors.teal[400],
+                fontSize: typography.size.xs,
+                fontWeight: typography.weight.semibold,
+              }}
+            >
+              {clampedPercent}%
+            </span>
+          </div>
+          <div
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.15)',
+              borderRadius: layout.radiusPill,
+              height: '6px',
+              overflow: 'hidden',
+              marginBottom: spacing[1],
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: colors.teal[400],
+                borderRadius: layout.radiusPill,
+                height: '100%',
+                width: `${clampedPercent}%`,
+                transition: 'width 0.5s ease',
+              }}
+            />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span style={{ color: colors.teal[400], fontSize: typography.size.xs }}>
+              {fmt(balance.cashback)} 적립
+            </span>
+            <span style={{ color: colors.onDark.secondary, fontSize: typography.size.xs }}>
+              한도 {fmt(cashbackMax)}
+            </span>
+          </div>
+          {/* S3: 혜택 체감 문구 (Nielsen #1, Shneiderman #3) */}
+          {getCashbackMessage(balance.cashback) && (
+            <div
+              style={{
+                marginTop: spacing[2],
+                backgroundColor: 'rgba(45,212,191,0.15)',
+                borderRadius: layout.radiusSmall,
+                padding: `${spacing[1]} ${spacing[3]}`,
+                fontSize: typography.size.xs,
+                color: colors.teal[400],
+                fontWeight: typography.weight.medium,
+              }}
+            >
+              {getCashbackMessage(balance.cashback)}
+            </div>
+          )}
+        </div>
+
+        {/* 3버튼 행 — S2 환불 동등 위계, Nielsen #1·#3, Shneiderman #7 */}
+        <div style={{ display: 'flex', gap: spacing[2] }}>
+          {/* S7 코치마크용 ref 연결 — 충전 버튼만 분리 */}
           <button
-            onClick={onCharge}
+            ref={chargeButtonRef}
+            onClick={handleCharge}
             style={{
               flex: 1,
               backgroundColor: 'rgba(255,255,255,0.2)',
@@ -132,51 +223,39 @@ export default function BalanceCardExpanded({
               padding: `${spacing[2]} 0`,
               cursor: 'pointer',
               transition: 'background-color 0.2s',
+              minHeight: layout.touchMin,
+              fontFamily: typography.fontFamily,
             }}
           >
             충전
           </button>
+          {[
+            { label: '환불', onClick: handleRefund },
+            { label: 'QR결제', onClick: handleQR },
+          ].map(({ label, onClick }) => (
+            <button
+              key={label}
+              onClick={onClick}
+              style={{
+                flex: 1,
+                backgroundColor: 'rgba(255,255,255,0.2)',
+                border: '1px solid rgba(255,255,255,0.3)',
+                borderRadius: layout.radiusButton,
+                color: colors.onDark.primary,
+                fontSize: typography.size.sm,
+                fontWeight: typography.weight.semibold,
+                padding: `${spacing[2]} 0`,
+                cursor: 'pointer',
+                transition: 'background-color 0.2s',
+                minHeight: layout.touchMin,
+                fontFamily: typography.fontFamily,
+              }}
+            >
+              {label}
+            </button>
+          ))}
         </div>
       </div>
-
-      {/* 하단 QR결제 버튼 */}
-      <button
-        onClick={onQR}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: spacing[2],
-          width: '100%',
-          marginTop: spacing[3],
-          backgroundColor: colors.primary[700],
-          border: 'none',
-          borderRadius: layout.radiusButton,
-          color: colors.onDark.primary,
-          fontSize: typography.size.md,
-          fontWeight: typography.weight.bold,
-          padding: `${spacing[3]} 0`,
-          cursor: 'pointer',
-          boxShadow: shadow.button,
-        }}
-      >
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-          <rect x="2" y="2" width="8" height="8" rx="1.5" stroke="white" strokeWidth="1.8" />
-          <rect x="12" y="2" width="8" height="8" rx="1.5" stroke="white" strokeWidth="1.8" />
-          <rect x="2" y="12" width="8" height="8" rx="1.5" stroke="white" strokeWidth="1.8" />
-          <rect x="4.5" y="4.5" width="3" height="3" fill="white" rx="0.5" />
-          <rect x="14.5" y="4.5" width="3" height="3" fill="white" rx="0.5" />
-          <rect x="4.5" y="14.5" width="3" height="3" fill="white" rx="0.5" />
-          <line x1="12" y1="12" x2="12" y2="12.01" stroke="white" strokeWidth="2" strokeLinecap="round" />
-          <line x1="15" y1="12" x2="15" y2="12.01" stroke="white" strokeWidth="2" strokeLinecap="round" />
-          <line x1="18" y1="12" x2="18" y2="12.01" stroke="white" strokeWidth="2" strokeLinecap="round" />
-          <line x1="12" y1="15" x2="12" y2="20" stroke="white" strokeWidth="1.8" strokeLinecap="round" />
-          <line x1="15" y1="15" x2="20" y2="15" stroke="white" strokeWidth="1.8" strokeLinecap="round" />
-          <line x1="20" y1="15" x2="20" y2="20" stroke="white" strokeWidth="1.8" strokeLinecap="round" />
-          <line x1="15" y1="20" x2="20" y2="20" stroke="white" strokeWidth="1.8" strokeLinecap="round" />
-        </svg>
-        QR결제
-      </button>
     </div>
   )
 }

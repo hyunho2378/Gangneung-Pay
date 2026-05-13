@@ -1,5 +1,12 @@
-// ChargeScreen.jsx — P02 (p.14,15,19)
-// 충전 금액 입력 전체 화면
+/**
+ * ChargeScreen (Phase 2 redesigned)
+ * Strategy: S4, S5
+ * Nielsen: #1 visibility, #4 closure, #5 error prevention, #8 memory load
+ * Shneiderman: #3 informative feedback, #4 design for closure, #8 reduce memory load
+ * Phase 1 ref: components/payment/ChargeScreen.jsx
+ * Preserved: header style, quick amount chips, numpad, primary button style, background colors
+ * Changed: 3-step flow (C-01·C-06), balance display (C-02), step indicator always visible
+ */
 
 import { useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
@@ -9,8 +16,111 @@ import NumPad from './NumPad'
 
 const MAX_AMOUNT = 999999999
 
-export default function ChargeScreen({ onClose, onRefundGuide, onCharge }) {
+// 단계 표시기 — Shneiderman #8, Nielsen #1
+function StepIndicator({ current }) {
+  const steps = ['금액 입력', '충전 확인', '완료']
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        padding: `${spacing[4]} ${layout.margin} ${spacing[3]}`,
+        backgroundColor: colors.surface.card,
+        borderBottom: `1px solid ${colors.gray[100]}`,
+      }}
+    >
+      {steps.flatMap((label, i) => {
+        const num = i + 1
+        const isActive = num === current
+        const isComplete = num < current
+        const circleColor = isComplete
+          ? colors.success
+          : isActive
+          ? colors.primary[700]
+          : colors.gray[200]
+        const textColor = isActive ? colors.primary[700] : isComplete ? colors.success : colors.gray[400]
+
+        const stepEl = (
+          <div
+            key={`step-${num}`}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}
+          >
+            <div
+              style={{
+                width: '28px',
+                height: '28px',
+                borderRadius: '50%',
+                backgroundColor: circleColor,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'background-color 0.3s ease',
+              }}
+            >
+              {isComplete ? (
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path
+                    d="M2.5 7L5.5 10L11.5 4"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              ) : (
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    color: isActive ? '#FFFFFF' : colors.gray[400],
+                    fontFamily: typography.fontFamily,
+                  }}
+                >
+                  {num}
+                </span>
+              )}
+            </div>
+            <span
+              style={{
+                fontSize: typography.size.xxs,
+                color: textColor,
+                fontWeight: isActive ? typography.weight.semibold : typography.weight.regular,
+                fontFamily: typography.fontFamily,
+                whiteSpace: 'nowrap',
+                transition: 'color 0.3s ease',
+              }}
+            >
+              {label}
+            </span>
+          </div>
+        )
+
+        if (i < steps.length - 1) {
+          const connector = (
+            <div
+              key={`conn-${i}`}
+              style={{
+                width: '40px',
+                height: '2px',
+                backgroundColor: num < current ? colors.success : colors.gray[200],
+                marginTop: '13px',
+                flexShrink: 0,
+                transition: 'background-color 0.3s ease',
+              }}
+            />
+          )
+          return [stepEl, connector]
+        }
+        return [stepEl]
+      })}
+    </div>
+  )
+}
+
+export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance = 120000, chargeLimit = 500000 }) {
   const [amount, setAmount] = useState(0)
+  const [step, setStep] = useState(1)
 
   const handleNumPress = (key) => {
     if (key === 'backspace') {
@@ -37,6 +147,15 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge }) {
 
   const formattedAmount = amount.toLocaleString('ko-KR')
   const hasAmount = amount > 0
+  const isOverLimit = amount > chargeLimit
+  const canProceed = hasAmount && !isOverLimit
+  const newBalance = balance + amount
+
+  // 헤더 뒤로가기 동작: step별 분기
+  const handleBack = () => {
+    if (step === 1) onClose()
+    else if (step === 2) setStep(1)
+  }
 
   return (
     <div
@@ -50,7 +169,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge }) {
         zIndex: 100,
       }}
     >
-      {/* 헤더 */}
+      {/* ── 헤더 ── */}
       <div
         style={{
           backgroundColor: colors.surface.card,
@@ -62,20 +181,22 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge }) {
           borderBottom: `1px solid ${colors.gray[100]}`,
         }}
       >
-        <button
-          onClick={onClose}
-          style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            padding: spacing[1],
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <ArrowLeft size={24} color={colors.gray[900]} />
-        </button>
+        {step < 3 && (
+          <button
+            onClick={handleBack}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: spacing[1],
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <ArrowLeft size={24} color={colors.gray[900]} />
+          </button>
+        )}
         <span
           style={{
             fontSize: typography.size.md,
@@ -83,108 +204,363 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge }) {
             color: colors.gray[900],
           }}
         >
-          충전
+          {step === 1 ? '충전' : step === 2 ? '충전 확인' : '충전 완료'}
         </span>
       </div>
 
-      {/* 금액 표시 영역 */}
-      <div
-        style={{
-          backgroundColor: colors.surface.card,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: `${spacing[8]} ${layout.margin} ${spacing[5]}`,
-          gap: spacing[2],
-        }}
-      >
-        <span
+      {/* ── 단계 표시기 — Nielsen #1, Shneiderman #8 ── */}
+      <StepIndicator current={step} />
+
+      {/* ══ STEP 1: 금액 입력 ══ */}
+      {step === 1 && (
+        <>
+          {/* 현재 잔액 + 금액 표시 — S5, Nielsen #1, Shneiderman #3 */}
+          <div
+            style={{
+              backgroundColor: colors.surface.card,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              padding: `${spacing[5]} ${layout.margin} ${spacing[4]}`,
+              gap: spacing[2],
+            }}
+          >
+            <span
+              style={{
+                fontSize: typography.size.xs,
+                color: colors.gray[500],
+              }}
+            >
+              현재 잔액{' '}
+              <span style={{ color: colors.primary[700], fontWeight: typography.weight.semibold }}>
+                {balance.toLocaleString('ko-KR')}원
+              </span>
+            </span>
+
+            <span
+              style={{
+                fontSize: '36px',
+                fontWeight: typography.weight.bold,
+                color: hasAmount ? colors.gray[900] : colors.gray[400],
+                letterSpacing: '-0.5px',
+                transition: 'color 0.2s ease',
+              }}
+            >
+              {hasAmount ? `${formattedAmount}원` : '0원'}
+            </span>
+
+            {/* C-03: 충전 한도 항상 노출 (Nielsen #1, Shneiderman #8) */}
+            <span style={{ fontSize: typography.size.xxs, color: colors.gray[400] }}>
+              1회 충전 한도 {chargeLimit.toLocaleString('ko-KR')}원
+            </span>
+
+            <button
+              onClick={onRefundGuide}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: typography.size.xs,
+                fontWeight: typography.weight.medium,
+                color: colors.primary[600],
+                padding: 0,
+                textDecoration: 'underline',
+                textUnderlineOffset: '2px',
+              }}
+            >
+              환불안내보기
+            </button>
+            {/* C-05: 환불 요약 인라인 (S2, Nielsen #1) */}
+            <span style={{ fontSize: typography.size.xxs, color: colors.gray[400] }}>
+              충전금은 언제든지 환불 신청이 가능합니다
+            </span>
+          </div>
+
+          {/* 빠른 금액 버튼 */}
+          <div
+            style={{
+              backgroundColor: colors.surface.card,
+              display: 'flex',
+              flexDirection: 'row',
+              gap: spacing[2],
+              padding: `${spacing[3]} ${layout.margin} ${spacing[4]}`,
+              borderBottom: `1px solid ${colors.gray[100]}`,
+            }}
+          >
+            <QuickAmountChip label="+1만원" onClick={() => handleQuickAdd(10000)} />
+            <QuickAmountChip label="+5만원" onClick={() => handleQuickAdd(50000)} />
+            <QuickAmountChip label="+10만원" onClick={() => handleQuickAdd(100000)} />
+          </div>
+
+          {/* 숫자패드 */}
+          <div
+            style={{
+              flex: 1,
+              backgroundColor: colors.surface.background,
+              paddingTop: spacing[3],
+            }}
+          >
+            <NumPad onPress={handleNumPress} />
+          </div>
+
+          {/* 충전 버튼 */}
+          <div
+            style={{
+              padding: `${spacing[4]} ${layout.margin}`,
+              paddingBottom: `calc(${layout.bottomNavHeight} + ${spacing[4]})`,
+              backgroundColor: colors.surface.card,
+              borderTop: `1px solid ${colors.gray[100]}`,
+            }}
+          >
+            <button
+              onClick={() => canProceed && setStep(2)}
+              disabled={!canProceed}
+              style={{
+                width: '100%',
+                height: '52px',
+                backgroundColor: canProceed ? colors.primary[700] : colors.gray[200],
+                color: canProceed ? colors.onDark.primary : colors.gray[400],
+                border: 'none',
+                borderRadius: layout.radiusButton,
+                fontSize: typography.size.md,
+                fontWeight: typography.weight.semibold,
+                cursor: canProceed ? 'pointer' : 'not-allowed',
+                transition: 'background-color 0.2s ease',
+                boxShadow: canProceed ? shadow.button : 'none',
+                fontFamily: typography.fontFamily,
+              }}
+            >
+              다음
+            </button>
+            {/* C-04: Disabled 버튼 사유 명시 (Nielsen #5, #9 — 한국어 평문) */}
+            {isOverLimit && (
+              <p style={{ margin: `${spacing[2]} 0 0`, textAlign: 'center', fontSize: typography.size.xs, color: colors.error }}>
+                1회 충전 한도 {chargeLimit.toLocaleString('ko-KR')}원을 초과했습니다
+              </p>
+            )}
+            {!hasAmount && !isOverLimit && (
+              <p style={{ margin: `${spacing[2]} 0 0`, textAlign: 'center', fontSize: typography.size.xs, color: colors.gray[400] }}>
+                충전 금액을 입력하세요
+              </p>
+            )}
+          </div>
+        </>
+      )}
+
+      {/* ══ STEP 2: 충전 확인 ══ */}
+      {step === 2 && (
+        <div
           style={{
-            fontSize: '36px',
-            fontWeight: typography.weight.bold,
-            color: hasAmount ? colors.gray[900] : colors.gray[400],
-            letterSpacing: '-0.5px',
-            transition: 'color 0.2s ease',
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            padding: `${spacing[5]} ${layout.margin}`,
+            gap: spacing[4],
           }}
         >
-          {hasAmount ? `${formattedAmount}원` : '0원'}
-        </span>
+          {/* 요약 카드 — Shneiderman #4 closure, #8 memory load */}
+          <div
+            style={{
+              backgroundColor: colors.surface.card,
+              borderRadius: layout.radiusCard,
+              padding: spacing[5],
+              boxShadow: shadow.card,
+            }}
+          >
+            {[
+              { label: '충전 금액', value: `${amount.toLocaleString('ko-KR')}원`, bold: true, color: colors.gray[900] },
+              { label: '현재 잔액', value: `${balance.toLocaleString('ko-KR')}원`, bold: false, color: colors.gray[600] },
+              {
+                label: '충전 후 잔액',
+                value: `${newBalance.toLocaleString('ko-KR')}원`,
+                bold: true,
+                color: colors.primary[700],
+              },
+            ].map(({ label, value, bold, color }, i, arr) => (
+              <div
+                key={label}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingTop: i === 0 ? 0 : spacing[4],
+                  paddingBottom: i === arr.length - 1 ? 0 : spacing[4],
+                  borderBottom:
+                    i < arr.length - 1 ? `1px solid ${colors.gray[100]}` : 'none',
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: typography.size.sm,
+                    color: colors.gray[500],
+                  }}
+                >
+                  {label}
+                </span>
+                <span
+                  style={{
+                    fontSize: typography.size.md,
+                    fontWeight: bold ? typography.weight.bold : typography.weight.regular,
+                    color,
+                  }}
+                >
+                  {value}
+                </span>
+              </div>
+            ))}
+          </div>
 
-        <button
-          onClick={onRefundGuide}
+          <div style={{ flex: 1 }} />
+
+          {/* 하단 버튼 2개 */}
+          <div style={{ display: 'flex', gap: spacing[3] }}>
+            <button
+              onClick={() => setStep(1)}
+              style={{
+                flex: 1,
+                height: '52px',
+                backgroundColor: colors.surface.card,
+                border: `1px solid ${colors.gray[200]}`,
+                borderRadius: layout.radiusButton,
+                fontSize: typography.size.md,
+                fontWeight: typography.weight.medium,
+                color: colors.gray[700],
+                cursor: 'pointer',
+                fontFamily: typography.fontFamily,
+              }}
+            >
+              수정
+            </button>
+            <button
+              onClick={() => {
+                onCharge && onCharge(amount)
+                setStep(3)
+              }}
+              style={{
+                flex: 2,
+                height: '52px',
+                backgroundColor: colors.primary[700],
+                border: 'none',
+                borderRadius: layout.radiusButton,
+                fontSize: typography.size.md,
+                fontWeight: typography.weight.semibold,
+                color: colors.onDark.primary,
+                cursor: 'pointer',
+                boxShadow: shadow.button,
+                fontFamily: typography.fontFamily,
+              }}
+            >
+              확인 충전
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ══ STEP 3: 충전 완료 ══ */}
+      {step === 3 && (
+        <div
           style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: typography.size.xs,
-            fontWeight: typography.weight.medium,
-            color: colors.primary[600],
-            padding: 0,
-            textDecoration: 'underline',
-            textUnderlineOffset: '2px',
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: `${spacing[8]} ${layout.margin}`,
+            gap: spacing[5],
           }}
         >
-          환불안내보기
-        </button>
-      </div>
+          {/* 성공 아이콘 — Shneiderman #3 informative feedback */}
+          <div
+            style={{
+              width: '72px',
+              height: '72px',
+              borderRadius: '50%',
+              backgroundColor: colors.successBg,
+              border: `2px solid ${colors.successBorder}`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <path
+                d="M7 18L14 25L29 10"
+                stroke={colors.success}
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
 
-      {/* 빠른 금액 버튼 행 */}
-      <div
-        style={{
-          backgroundColor: colors.surface.card,
-          display: 'flex',
-          flexDirection: 'row',
-          gap: spacing[2],
-          padding: `${spacing[3]} ${layout.margin} ${spacing[4]}`,
-          borderBottom: `1px solid ${colors.gray[100]}`,
-        }}
-      >
-        <QuickAmountChip label="+1만원" onClick={() => handleQuickAdd(10000)} />
-        <QuickAmountChip label="+5만원" onClick={() => handleQuickAdd(50000)} />
-        <QuickAmountChip label="+10만원" onClick={() => handleQuickAdd(100000)} />
-      </div>
+          <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: spacing[2] }}>
+            <p
+              style={{
+                margin: 0,
+                fontSize: typography.size.xl,
+                fontWeight: typography.weight.bold,
+                color: colors.gray[900],
+              }}
+            >
+              충전 완료
+            </p>
+            <p
+              style={{
+                margin: 0,
+                fontSize: typography.size.md,
+                color: colors.gray[500],
+              }}
+            >
+              {amount.toLocaleString('ko-KR')}원을 충전했습니다
+            </p>
+          </div>
 
-      {/* 숫자패드 */}
-      <div
-        style={{
-          flex: 1,
-          backgroundColor: colors.surface.background,
-          paddingTop: spacing[3],
-        }}
-      >
-        <NumPad onPress={handleNumPress} />
-      </div>
+          {/* 잔액 요약 */}
+          <div
+            style={{
+              backgroundColor: colors.surface.card,
+              borderRadius: layout.radiusCard,
+              padding: spacing[4],
+              boxShadow: shadow.card,
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <span style={{ fontSize: typography.size.sm, color: colors.gray[500] }}>현재 잔액</span>
+            <span
+              style={{
+                fontSize: typography.size.lg,
+                fontWeight: typography.weight.bold,
+                color: colors.primary[700],
+              }}
+            >
+              {newBalance.toLocaleString('ko-KR')}원
+            </span>
+          </div>
 
-      {/* 하단 충전 버튼 */}
-      <div
-        style={{
-          padding: `${spacing[4]} ${layout.margin}`,
-          paddingBottom: `calc(${layout.bottomNavHeight} + ${spacing[4]})`,
-          backgroundColor: colors.surface.card,
-          borderTop: `1px solid ${colors.gray[100]}`,
-        }}
-      >
-        <button
-          onClick={() => hasAmount && onCharge && onCharge(amount)}
-          disabled={!hasAmount}
-          style={{
-            width: '100%',
-            height: '52px',
-            backgroundColor: hasAmount ? colors.primary[700] : colors.gray[200],
-            color: hasAmount ? colors.onDark.primary : colors.gray[400],
-            border: 'none',
-            borderRadius: layout.radiusButton,
-            fontSize: typography.size.md,
-            fontWeight: typography.weight.semibold,
-            cursor: hasAmount ? 'pointer' : 'not-allowed',
-            transition: 'background-color 0.2s ease',
-            boxShadow: hasAmount ? shadow.button : 'none',
-          }}
-        >
-          바로 충전하기
-        </button>
-      </div>
+          {/* 홈으로 버튼 — Shneiderman #4 closure */}
+          <button
+            onClick={onClose}
+            style={{
+              width: '100%',
+              height: '52px',
+              backgroundColor: colors.primary[700],
+              border: 'none',
+              borderRadius: layout.radiusButton,
+              fontSize: typography.size.md,
+              fontWeight: typography.weight.semibold,
+              color: colors.onDark.primary,
+              cursor: 'pointer',
+              boxShadow: shadow.button,
+              fontFamily: typography.fontFamily,
+            }}
+          >
+            홈으로 가기
+          </button>
+        </div>
+      )}
     </div>
   )
 }

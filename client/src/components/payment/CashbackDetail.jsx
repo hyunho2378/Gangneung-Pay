@@ -1,9 +1,94 @@
-// CashbackDetail.jsx — P05 (p.11,12)
-// 캐시백 상세 화면
+/**
+ * CashbackDetail (Phase 2 redesigned)
+ * Strategy: S3
+ * Nielsen: #1 visibility, #3 user control
+ * Shneiderman: #3 informative feedback, #8 reduce memory load
+ * Phase 1 ref: components/payment/CashbackDetail.jsx
+ * Changed: summary card top (Cb-01), cashback amount field (Cb-02), tab labels (Cb-03)
+ */
 
 import { useState } from 'react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 import MonthPickerSheet from '../common/MonthPickerSheet'
+
+function SummaryCard({ items, cashbackMax }) {
+  const earned = items.reduce((sum, item) => {
+    const v = item.cashback ?? item.amount ?? 0
+    return v > 0 ? sum + v : sum
+  }, 0)
+  const percent = cashbackMax > 0 ? Math.min((earned / cashbackMax) * 100, 100) : 0
+
+  return (
+    <div
+      style={{
+        margin: `${spacing[3]} ${layout.margin}`,
+        backgroundColor: colors.surface.card,
+        borderRadius: layout.radiusCard,
+        padding: spacing[4],
+        boxShadow: shadow.card,
+      }}
+    >
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: spacing[3] }}>
+        <div>
+          <div style={{ fontSize: typography.size.xs, color: colors.gray[500], marginBottom: '2px' }}>
+            이번달 적립
+          </div>
+          <div
+            style={{
+              fontSize: typography.size.lg,
+              fontWeight: typography.weight.bold,
+              color: colors.teal[500],
+            }}
+          >
+            {earned.toLocaleString('ko-KR')}원
+          </div>
+        </div>
+        <div style={{ textAlign: 'right' }}>
+          <div style={{ fontSize: typography.size.xs, color: colors.gray[500], marginBottom: '2px' }}>
+            월 한도
+          </div>
+          <div
+            style={{
+              fontSize: typography.size.sm,
+              fontWeight: typography.weight.semibold,
+              color: colors.gray[700],
+            }}
+          >
+            {cashbackMax.toLocaleString('ko-KR')}원
+          </div>
+        </div>
+      </div>
+      <div
+        style={{
+          height: '6px',
+          backgroundColor: colors.gray[100],
+          borderRadius: '3px',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            height: '100%',
+            width: `${percent}%`,
+            backgroundColor: colors.teal[400],
+            borderRadius: '3px',
+            transition: 'width 0.4s ease',
+          }}
+        />
+      </div>
+      <div
+        style={{
+          marginTop: spacing[1],
+          fontSize: typography.size.xxs,
+          color: colors.gray[500],
+          textAlign: 'right',
+        }}
+      >
+        {percent.toFixed(1)}% 달성
+      </div>
+    </div>
+  )
+}
 
 function EmptyState({ message }) {
   return (
@@ -43,6 +128,10 @@ function EmptyState({ message }) {
 }
 
 function CashbackItem({ item }) {
+  const cashbackValue = item.cashback ?? item.amount ?? 0
+  const isPositive = cashbackValue >= 0
+  const displayValue = Math.abs(cashbackValue).toLocaleString('ko-KR') + '원'
+
   return (
     <div
       style={{
@@ -73,14 +162,15 @@ function CashbackItem({ item }) {
           {item.date}
         </div>
       </div>
+      {/* Cb-02: item.cashback 우선 사용, 부호 색상 구분 */}
       <div
         style={{
           fontSize: typography.size.sm,
           fontWeight: typography.weight.bold,
-          color: colors.teal[500],
+          color: isPositive ? colors.teal[500] : colors.error,
         }}
       >
-        +{item.amount.toLocaleString('ko-KR')}원
+        {isPositive ? '+' : '-'}{displayValue}
       </div>
     </div>
   )
@@ -92,6 +182,7 @@ export default function CashbackDetail({
   items = [],
   selectedMonth: selectedMonthProp,
   onMonthPickerOpen,
+  cashbackMax = 30000,
 }) {
   const [pickerOpenInternal, setPickerOpenInternal] = useState(false)
   const [selectedMonthInternal, setSelectedMonthInternal] = useState(() => {
@@ -99,12 +190,10 @@ export default function CashbackDetail({
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
   })
 
-  // controlled 모드: 부모가 selectedMonth를 전달하면 그걸 사용, 아니면 내부 state 사용
   const selectedMonth = selectedMonthProp !== undefined ? selectedMonthProp : selectedMonthInternal
   const handlePickerOpen = onMonthPickerOpen !== undefined
     ? onMonthPickerOpen
     : () => setPickerOpenInternal(true)
-  const pickerOpen = onMonthPickerOpen !== undefined ? false : pickerOpenInternal
 
   const formatMonthLabel = (value) => {
     const [year, month] = value.split('-')
@@ -121,7 +210,33 @@ export default function CashbackDetail({
         fontFamily: typography.fontFamily,
       }}
     >
-      {/* 탭 바 */}
+      {/* Cb-01: 이번달 캐시백 요약 카드 */}
+      <SummaryCard items={items} cashbackMax={cashbackMax} />
+
+      {/* Cb-04: 캐시백 사용 안내 (Nielsen #10 help and documentation) */}
+      <div
+        style={{
+          margin: `0 ${layout.margin} ${spacing[2]}`,
+          padding: `${spacing[3]} ${spacing[4]}`,
+          backgroundColor: colors.primary[50],
+          border: `1px solid ${colors.primary[100]}`,
+          borderRadius: layout.radiusSmall,
+          display: 'flex',
+          gap: spacing[2],
+          alignItems: 'flex-start',
+        }}
+      >
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0, marginTop: '1px' }}>
+          <circle cx="7" cy="7" r="6.5" stroke={colors.primary[700]} strokeWidth="1.2" fill="none" />
+          <path d="M7 6 L7 10" stroke={colors.primary[700]} strokeWidth="1.5" strokeLinecap="round" />
+          <circle cx="7" cy="4" r="0.8" fill={colors.primary[700]} />
+        </svg>
+        <p style={{ margin: 0, fontSize: typography.size.xxs, color: colors.gray[600], lineHeight: 1.5 }}>
+          적립된 캐시백은 강릉페이 결제 시 자동으로 차감됩니다. 월 한도 초과 후엔 적립이 중단됩니다.
+        </p>
+      </div>
+
+      {/* Cb-03: 탭 레이블 '자동 적립' / '수동 확인' */}
       <div
         style={{
           display: 'flex',
@@ -148,7 +263,7 @@ export default function CashbackDetail({
                 transition: 'all 0.2s ease',
               }}
             >
-              {tab === 'auto' ? '자동' : '수동'}
+              {tab === 'auto' ? '자동 적립' : '수동 확인'}
             </button>
           )
         })}

@@ -75,3 +75,13 @@ button {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Sprint 1: html5-qrcode 주입 DOM override */
+#qr-reader video {
+  object-fit: cover;
+  border-radius: 8px;
+}
+#qr-reader img,
+#qr-reader br {
+  display: none !important;
+}

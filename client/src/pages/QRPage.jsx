@@ -8,6 +8,7 @@ export default function QRPage() {
     <QRScannerScreen
       onClose={() => navigate(-1)}
       balance={120000}
+      onCharge={() => navigate('/charge')}
     />
   )
 }
