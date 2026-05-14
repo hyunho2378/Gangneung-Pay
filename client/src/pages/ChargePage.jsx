@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useUser } from '../context/UserContext'
 import ChargeScreen from '../components/payment/ChargeScreen'
 import RefundGuideModal from '../components/common/RefundGuideModal'
 import CoachMarkOverlay from '../components/common/CoachMarkOverlay'
@@ -7,6 +8,7 @@ import CoachMarkOverlay from '../components/common/CoachMarkOverlay'
 export default function ChargePage() {
   const navigate = useNavigate()
   const location = useLocation()
+  const { balance, chargeBalance } = useUser()
   const [isRefundOpen, setIsRefundOpen] = useState(false)
   // S7 코치마크 Step 2 — 홈에서 코치마크 "다음" 눌러 진입한 경우만 표시
   const [showCoach, setShowCoach] = useState(location.state?.fromCoach === true)
@@ -16,7 +18,8 @@ export default function ChargePage() {
       <ChargeScreen
         onClose={() => navigate(-1)}
         onRefundGuide={() => setIsRefundOpen(true)}
-        balance={120000}
+        onCharge={chargeBalance}
+        balance={balance}
       />
       {isRefundOpen && (
         <RefundGuideModal onClose={() => setIsRefundOpen(false)} />

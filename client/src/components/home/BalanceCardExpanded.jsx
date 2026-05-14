@@ -7,7 +7,6 @@
  * Task 8: 카드 우측 상단 아이콘 버튼만 뒤집기 트리거 (카드 전체 onClick 제거)
  */
 
-import { useNavigate } from 'react-router-dom'
 import { CreditCard } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 
@@ -25,18 +24,10 @@ export default function BalanceCardExpanded({
   balance = { cashback: 3200, card: 120000, charge: 0 },
   cashbackMax = 30000,
   cashbackPercent = 10,
-  onCharge,
-  onRefund,
-  onHistory,
   onFlip,
   cardCount = 1,
   cardIndex = 1,
-  chargeButtonRef,
 }) {
-  const navigate = useNavigate()
-  const handleCharge = onCharge ?? (() => navigate('/charge'))
-  const handleRefund = onRefund ?? (() => navigate('/refund'))
-  const handleHistory = onHistory ?? (() => navigate('/history'))
   // H-07: 카드명 로직 (Nielsen #2, #6)
   const cardName = cardCount === 1 ? '내 카드' : `강릉페이 ${cardIndex}`
 
@@ -231,55 +222,6 @@ export default function BalanceCardExpanded({
           )}
         </div>
 
-        {/* Task 5: 3버튼 행 — [충전][환불][이용내역] (S2 환불 동등 위계) */}
-        <div style={{ display: 'flex', gap: spacing[2] }}>
-          {/* S7 코치마크용 ref 연결 — 충전 버튼 */}
-          <button
-            ref={chargeButtonRef}
-            onClick={handleCharge}
-            style={{
-              flex: 1,
-              backgroundColor: 'rgba(255,255,255,0.2)',
-              border: '1px solid rgba(255,255,255,0.3)',
-              borderRadius: layout.radiusButton,
-              color: colors.onDark.primary,
-              fontSize: typography.size.sm,
-              fontWeight: typography.weight.semibold,
-              padding: `${spacing[2]} 0`,
-              cursor: 'pointer',
-              transition: 'background-color 0.2s',
-              minHeight: layout.touchMin,
-              fontFamily: typography.fontFamily,
-            }}
-          >
-            충전
-          </button>
-          {[
-            { label: '환불', onClick: handleRefund },
-            { label: '이용내역', onClick: handleHistory },
-          ].map(({ label, onClick }) => (
-            <button
-              key={label}
-              onClick={onClick}
-              style={{
-                flex: 1,
-                backgroundColor: 'rgba(255,255,255,0.2)',
-                border: '1px solid rgba(255,255,255,0.3)',
-                borderRadius: layout.radiusButton,
-                color: colors.onDark.primary,
-                fontSize: typography.size.sm,
-                fontWeight: typography.weight.semibold,
-                padding: `${spacing[2]} 0`,
-                cursor: 'pointer',
-                transition: 'background-color 0.2s',
-                minHeight: layout.touchMin,
-                fontFamily: typography.fontFamily,
-              }}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
       </div>
     </div>
   )

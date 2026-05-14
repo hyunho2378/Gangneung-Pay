@@ -161,7 +161,12 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
     <div
       style={{
         position: 'fixed',
-        inset: 0,
+        top: 0,
+        bottom: 0,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '100%',
+        maxWidth: '430px',
         backgroundColor: colors.surface.background,
         display: 'flex',
         flexDirection: 'column',

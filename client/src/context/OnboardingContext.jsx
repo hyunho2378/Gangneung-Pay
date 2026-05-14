@@ -14,6 +14,8 @@ export function OnboardingProvider({ children }) {
     homeCoachmark: false,
     chargeCoachmark: false,
     cardRegisterCoachmark: false,
+    cardApplyCoachmark: false,
+    monthlyCashback: false,
   })
 
   function markCoachmarkSeen(key) {
@@ -21,7 +23,13 @@ export function OnboardingProvider({ children }) {
   }
 
   function resetCoachmarks() {
-    setSeen({ homeCoachmark: false, chargeCoachmark: false, cardRegisterCoachmark: false })
+    setSeen({
+      homeCoachmark: false,
+      chargeCoachmark: false,
+      cardRegisterCoachmark: false,
+      cardApplyCoachmark: false,
+      monthlyCashback: false,
+    })
   }
 
   return (
@@ -29,6 +37,8 @@ export function OnboardingProvider({ children }) {
       hasSeenHomeCoachmark: seen.homeCoachmark,
       hasSeenChargeCoachmark: seen.chargeCoachmark,
       hasSeenCardRegisterCoachmark: seen.cardRegisterCoachmark,
+      hasSeenCardApplyCoachmark: seen.cardApplyCoachmark,
+      hasSeenMonthlyCashbackModal: seen.monthlyCashback,
       markCoachmarkSeen,
       resetCoachmarks,
     }}>

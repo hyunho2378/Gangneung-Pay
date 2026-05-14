@@ -1,8 +1,39 @@
 # 강릉페이 Phase 3 피드백 반영 — 진행 상황
 
-업데이트: 2026-05-15 (Phase 3-B 완료 — 병렬 3에이전트)
+업데이트: 2026-05-15 (Sprint 1-6 완료 — main 브랜치 18개 태스크)
 
-브랜치: feature/phase3-feedback
+브랜치: main
+
+---
+
+## Sprint 1-6 — main 브랜치 18개 태스크 (2026-05-15) ✅ 완료
+
+**빌드 결과: 0 오류 (1828 모듈, 404ms)**
+
+| # | 파일 | 내용 |
+|---|------|------|
+| T2 | `context/OnboardingContext.jsx` | `hasSeenMonthlyCashbackModal`, `hasSeenCardApplyCoachmark` 상태 추가 |
+| T4 | `context/UserContext.jsx` | `chargeBalance`, `refundBalance`, `spendBalance`, `transactions` 추가; `applyCard` setTimeout 1000ms |
+| T5 | `components/home/CardActions.jsx` (신규) | 충전/환불/이용내역 3버튼 컴포넌트; `chargeButtonRef` prop |
+| T5 | `components/home/BalanceCardExpanded.jsx` | 하단 3버튼 행 제거 |
+| T7 | `components/home/MonthlyCashbackModal.jsx` (신규) | 5월 캐시백 안내 바텀시트; 메가폰 SVG; 확인 CTA |
+| T8 | `components/home/BannerCarousel.jsx` | `KAKAO_SLIDE` 카카오 노란 슬라이드; `CARD_APPLY_SLIDE` hasCard 분기; `applyButtonRef` prop |
+| T9 | `pages/HomePage.jsx` | ExploreScrollCard 복원; CardActions 통합; 캐러셀 상단 이동; 5월 캐시백 진입 카드; 신규/기존 사용자 코치마크 2종 |
+| T10 | `pages/CardApplyPage.jsx` | 2카드 캐러셀 + 혜택 리스트 + 카테고리 아이콘 완전 재작성; 전체 토큰화 |
+| T15 | `pages/RefundPage.jsx` | NumPad + UserContext잔액 + refundBalance 호출; 완료 화면 |
+| T16 | `components/layout/ScreenContainer.jsx` | `maxWidth: 390px → 430px` |
+| T16 | `components/payment/ChargeScreen.jsx` | `position:fixed inset:0 → 430px 센터링` 패턴 |
+| T4 | `pages/ChargePage.jsx` | UserContext balance/chargeBalance 연동 |
+
+### Task 18 QA 결과
+
+| 항목 | 결과 |
+|------|------|
+| localStorage 미사용 | ✅ 0건 |
+| 하드코딩 색상 없음 | ✅ (SVG 장식 제외) |
+| TypeScript 없음 | ✅ 0건 |
+| 이모지 없음 | ✅ 0건 |
+| 빌드 0 오류 | ✅ (1828 모듈, 404ms) |
 
 ---
 
