@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AppProvider } from './context/AppContext'
+import { OnboardingProvider } from './context/OnboardingContext'
+import { UserProvider } from './context/UserContext'
 import SplashPage from './pages/SplashPage'
 import HomePage from './pages/HomePage'
 import StorePage from './pages/StorePage'
@@ -35,6 +37,7 @@ import PlaceDetailPage from './pages/PlaceDetailPage'
 import MyPage from './pages/MyPage'
 import SearchPage from './pages/SearchPage'
 import CardApplyPage from './pages/CardApplyPage'
+import RefundPage from './pages/RefundPage'
 
 function App() {
   const [showSplash, setShowSplash] = useState(true)
@@ -48,6 +51,8 @@ function App() {
 
   return (
     <AppProvider>
+      <UserProvider>
+      <OnboardingProvider>
       <BrowserRouter>
         <Routes>
           {/* 바텀탭 5개 */}
@@ -73,6 +78,7 @@ function App() {
           <Route path="/my" element={<MyPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/card-apply" element={<CardApplyPage />} />
+          <Route path="/refund" element={<RefundPage />} />
 
           {/* 메뉴/설정 */}
           <Route path="/menu" element={<Navigate to="/my" replace />} />
@@ -97,6 +103,8 @@ function App() {
           <Route path="/place/:id" element={<PlaceDetailPage />} />
         </Routes>
       </BrowserRouter>
+      </OnboardingProvider>
+      </UserProvider>
     </AppProvider>
   )
 }

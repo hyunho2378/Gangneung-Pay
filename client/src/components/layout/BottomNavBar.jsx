@@ -6,7 +6,7 @@
  */
 
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Home, Store, QrCode, Receipt, User } from 'lucide-react'
+import { Home, Store, QrCode, Gift, User } from 'lucide-react'
 import { colors, typography, layout, shadow, spacing } from '../../tokens/tokens'
 
 export default function BottomNavBar() {
@@ -18,7 +18,7 @@ export default function BottomNavBar() {
     if (p === '/') return 'home'
     if (p.startsWith('/store')) return 'store'
     if (p.startsWith('/qr')) return 'qr'
-    if (p.startsWith('/history')) return 'history'
+    if (p.startsWith('/support')) return 'support'
     if (p.startsWith('/my')) return 'my'
     return ''
   }
@@ -101,12 +101,12 @@ export default function BottomNavBar() {
         </span>
       </div>
 
-      {/* 이용내역 */}
+      {/* 혜택 (Task 9: 이용내역 → 지원금혜택) */}
       <NavTab
-        label="이용내역"
-        icon={<Receipt size={24} strokeWidth={1.8} />}
-        active={activeKey === 'history'}
-        onClick={() => navigate('/history')}
+        label="혜택"
+        icon={<Gift size={24} strokeWidth={1.8} />}
+        active={activeKey === 'support'}
+        onClick={() => navigate('/support')}
         height={NAV_HEIGHT}
       />
 

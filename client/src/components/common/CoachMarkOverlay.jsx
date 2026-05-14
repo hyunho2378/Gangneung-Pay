@@ -1,21 +1,15 @@
 /**
- * CoachMarkOverlay (Sprint D)
+ * CoachMarkOverlay (Sprint D, Task 1+2)
  * Strategy: S7
  * Nielsen: #10 help and documentation
  * Shneiderman: #4 dialog closure, #8 reduce memory load
+ * Task 1: 건너뛰기/다음 버튼 모달 카드 내부 좌측 정렬
+ * Task 2: AppContext 의존 제거 → 부모가 OnboardingContext로 제어
  */
 
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
-import { useApp } from '../../context/AppContext'
 
 export default function CoachMarkOverlay({ targetRect, message, step, totalSteps, onNext, onSkip }) {
-  const { hasSkippedCoachMark, skipCoachMark } = useApp()
-  if (hasSkippedCoachMark) return null
-
-  function handleSkip() {
-    skipCoachMark()
-    onSkip?.()
-  }
   const hasTarget = targetRect != null && targetRect.width > 0
   const viewportH = typeof window !== 'undefined' ? window.innerHeight : 812
 
@@ -37,7 +31,7 @@ export default function CoachMarkOverlay({ targetRect, message, step, totalSteps
   const tooltipStyle = {
     position: 'absolute',
     left: '50%',
-    transform: 'translateX(-50%)',
+    transform: hasTarget ? 'translateX(-50%)' : 'translateX(-50%) translateY(-50%)',
     width: 'min(calc(100vw - 32px), 398px)',
     ...tooltipTopBottom,
   }
@@ -62,30 +56,6 @@ export default function CoachMarkOverlay({ targetRect, message, step, totalSteps
       ) : (
         <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.65)', pointerEvents: 'none' }} />
       )}
-
-      {/* 건너뛰기 버튼 — 항상 좌하단 고정 */}
-      <div style={{
-        position: 'fixed',
-        bottom: '32px',
-        left: layout.margin,
-        zIndex: 210,
-      }}>
-        <button
-          onClick={handleSkip}
-          style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: typography.size.sm,
-            color: 'rgba(255,255,255,0.7)',
-            padding: `${spacing[2]} 0`,
-            fontFamily: typography.fontFamily,
-            minHeight: layout.touchMin,
-          }}
-        >
-          건너뛰기
-        </button>
-      </div>
 
       {/* 말풍선 */}
       <div style={tooltipStyle}>
@@ -140,7 +110,23 @@ export default function CoachMarkOverlay({ targetRect, message, step, totalSteps
             {message}
           </p>
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          {/* Task 1: 버튼 모달 내부 좌측 정렬 (flex-start) */}
+          <div style={{ display: 'flex', gap: spacing[3], alignItems: 'center' }}>
+            <button
+              onClick={onSkip}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: typography.size.sm,
+                color: colors.gray[500],
+                padding: `${spacing[2]} 0`,
+                fontFamily: typography.fontFamily,
+                minHeight: layout.touchMin,
+              }}
+            >
+              건너뛰기
+            </button>
             <button
               onClick={onNext}
               style={{

@@ -1,7 +1,9 @@
 import { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
-import { colors, layout } from '../tokens/tokens'
+import { useUser } from '../context/UserContext'
+import { useOnboarding } from '../context/OnboardingContext'
+import { colors, typography, layout, spacing } from '../tokens/tokens'
 import CoachMarkOverlay from '../components/common/CoachMarkOverlay'
 
 import ScreenContainer from '../components/layout/ScreenContainer'
@@ -17,18 +19,20 @@ import BalanceCardExpanded from '../components/home/BalanceCardExpanded'
 import BannerCarousel from '../components/home/BannerCarousel'
 // HIDDEN (Phase 3 feedback): OnboardingStepper → 코치마크로 대체
 // import OnboardingStepper from '../components/home/OnboardingStepper'
-import ServiceShortcutGrid from '../components/home/ServiceShortcutGrid'
+// HIDDEN (Task 6): ServiceShortcutGrid 빠른 메뉴 그리드 제거
+// import ServiceShortcutGrid from '../components/home/ServiceShortcutGrid'
 import SectionHeader from '../components/home/SectionHeader'
-import RecentPaymentEmpty from '../components/home/RecentPaymentEmpty'
+// HIDDEN (Task 6): RecentPaymentEmpty 최근 결제 섹션 제거
+// import RecentPaymentEmpty from '../components/home/RecentPaymentEmpty'
 import StoreRecommendCard from '../components/home/StoreRecommendCard'
 // HIDDEN (Phase 3 feedback): ExploreScrollCard
 // import ExploreScrollCard from '../components/home/ExploreScrollCard'
 // HIDDEN (Phase 3 feedback): SupportRankingList
 // import SupportRankingList from '../components/home/SupportRankingList'
-import PromoHorizontalCard from '../components/home/PromoHorizontalCard'
+// HIDDEN (Task 6): PromoHorizontalCard → Task 7 PromoBundle으로 대체
+// import PromoHorizontalCard from '../components/home/PromoHorizontalCard'
+import PromoBundle from '../components/home/PromoBundle'
 import CardBackModal from '../components/home/CardBackModal'
-
-const mockBalance = { cashback: 3200, card: 120000, charge: 0 }
 
 const mockStores = [
   { id: 1, name: '초당순두부', category: '음식점', distance: '0.3km' },
@@ -45,18 +49,26 @@ const mockRanking = [
 export default function HomePage() {
   const navigate = useNavigate()
   const { isLargeText, showAnnouncement, closeAnnouncement } = useApp()
+  // Task 4: 신규/기존 사용자 분기
+  const { hasCard, balance: userBalance } = useUser()
+  // Task 2: OnboardingContext 기반 코치마크 (세션 내 1회 표시)
+  const { hasSeenHomeCoachmark, markCoachmarkSeen } = useOnboarding()
 
-  // S7 코치마크 — 홈 step 1 (충전 버튼 하이라이트)
-  const chargeButtonRef = useRef(null)
-  const [showCoach, setShowCoach] = useState(true)
-  const [chargeButtonRect, setChargeButtonRect] = useState(null)
+  // Task 8: 카드 뒤집기 상태 (카드 본체 onClick 제거, 아이콘 버튼만 트리거)
   const [showCardBack, setShowCardBack] = useState(false)
 
+  // S7: 코치마크 충전 버튼 위치 추적
+  const chargeButtonRef = useRef(null)
+  const [chargeButtonRect, setChargeButtonRect] = useState(null)
+
   useEffect(() => {
-    if (chargeButtonRef.current && showCoach) {
+    if (chargeButtonRef.current && hasCard && !hasSeenHomeCoachmark) {
       setChargeButtonRect(chargeButtonRef.current.getBoundingClientRect())
     }
-  }, [showCoach])
+  }, [hasCard, hasSeenHomeCoachmark])
+
+  // Task 4: hasCard=true 시 UserContext 잔액 사용
+  const cardBalance = { cashback: 0, card: userBalance, charge: 0 }
 
   return (
     <ScreenContainer>
@@ -73,46 +85,88 @@ export default function HomePage() {
         {/* H-01: S1 위젯 추가 배너 */}
         <WidgetAddBanner />
 
-        {/* H-05: 인라인 공지 배너 (AnnouncementModal 대체) */}
+        {/* H-05: 인라인 공지 배너 */}
         <AnnouncementBanner show={showAnnouncement} onClose={closeAnnouncement} />
 
-        {/* H-03: 잔액 카드 최상단으로 이동 */}
-        {/* CashbackProgressCard는 BalanceCardExpanded 내부로 통합됨 (Phase 2 H-04) */}
-        <div
-          onClick={() => setShowCardBack(true)}
-          style={{ cursor: 'pointer' }}
-          aria-label="카드 뒷면 보기"
-        >
+        {/* Task 4: 카드 보유 여부 분기 */}
+        {hasCard ? (
+          // 기존 사용자: 잔액 카드 (Task 8: 카드 본체 onClick 제거, onFlip prop으로 트리거)
           <BalanceCardExpanded
-            balance={mockBalance}
+            balance={cardBalance}
             cashbackMax={30000}
             cashbackPercent={10.7}
             chargeButtonRef={chargeButtonRef}
+            onFlip={() => setShowCardBack(true)}
           />
-        </div>
+        ) : (
+          // 신규 사용자: 카드 신청 CTA 카드
+          <div
+            onClick={() => navigate('/card-apply')}
+            style={{
+              margin: layout.margin,
+              backgroundColor: colors.primary[50],
+              border: `1px solid ${colors.primary[100]}`,
+              borderRadius: layout.radiusCard,
+              padding: spacing[5],
+              cursor: 'pointer',
+            }}
+          >
+            <div
+              style={{
+                fontSize: typography.size.md,
+                fontWeight: typography.weight.bold,
+                color: colors.gray[900],
+                fontFamily: typography.fontFamily,
+                marginBottom: spacing[1],
+              }}
+            >
+              강릉페이 카드를 신청하세요
+            </div>
+            <div
+              style={{
+                fontSize: typography.size.xs,
+                color: colors.gray[500],
+                fontFamily: typography.fontFamily,
+                marginBottom: spacing[4],
+              }}
+            >
+              최대 10% 캐시백
+            </div>
+            <button
+              onClick={(e) => { e.stopPropagation(); navigate('/card-apply') }}
+              style={{
+                backgroundColor: colors.primary[700],
+                border: 'none',
+                borderRadius: layout.radiusButton,
+                color: colors.onDark.primary,
+                fontSize: typography.size.sm,
+                fontWeight: typography.weight.semibold,
+                padding: `${spacing[2]} ${spacing[4]}`,
+                cursor: 'pointer',
+                minHeight: layout.touchMin,
+                fontFamily: typography.fontFamily,
+              }}
+            >
+              신청하기
+            </button>
+          </div>
+        )}
 
         {/* HIDDEN (Phase 3 feedback): OnboardingStepper → 코치마크로 대체 */}
         {/* <OnboardingStepper currentStep={3} /> */}
 
-        {/* H-03: BannerCarousel 잔액카드 아래로 이동 */}
+        {/* H-03: BannerCarousel */}
         <BannerCarousel />
 
-        <ServiceShortcutGrid />
+        {/* HIDDEN (Task 6): ServiceShortcutGrid 빠른 메뉴 그리드 */}
+        {/* <ServiceShortcutGrid /> */}
 
-        <div
-          style={{
-            height: '1px',
-            backgroundColor: colors.gray[200],
-            margin: `${layout.margin} 0`,
-          }}
-        />
+        {/* HIDDEN (Task 6): 구분선 + 최근 결제 내역 섹션 */}
+        {/* <div style={{ height: '1px', backgroundColor: colors.gray[200], margin: `${layout.margin} 0` }} /> */}
+        {/* <SectionHeader title="최근 결제 내역" onViewAll={() => navigate('/history')} /> */}
+        {/* <RecentPaymentEmpty /> */}
 
-        <SectionHeader
-          title="최근 결제 내역"
-          onViewAll={() => navigate('/history')}
-        />
-        <RecentPaymentEmpty />
-
+        {/* 결제 가능 매장 */}
         <SectionHeader
           title="결제 가능 매장"
           onViewAll={() => navigate('/store')}
@@ -126,13 +180,11 @@ export default function HomePage() {
         {/* <SectionHeader title="지원금 랭킹" onViewAll={() => navigate('/support')} showViewAll={true} /> */}
         {/* <SupportRankingList items={mockRanking} /> */}
 
-        <PromoHorizontalCard
-          bgColor={colors.kakaoBg}
-          textColor={colors.gray[900]}
-          title="카카오페이로도 결제하세요"
-          description="강릉페이를 카카오페이와 연결하면 더 편리하게"
-          onClick={() => navigate('/kakao-guide')}
-        />
+        {/* Task 7: PromoBundle — 카드 신청 + 카카오페이 묶음 */}
+        <PromoBundle />
+
+        {/* HIDDEN (Task 6): PromoHorizontalCard 카카오페이 배너 → PromoBundle으로 대체 */}
+        {/* <PromoHorizontalCard bgColor={colors.kakaoBg} textColor={colors.gray[900]} title="카카오페이로도 결제하세요" description="강릉페이를 카카오페이와 연결하면 더 편리하게" onClick={() => navigate('/kakao-guide')} /> */}
 
         {/* H-06: B2BPromoCard 제거 */}
 
@@ -144,18 +196,18 @@ export default function HomePage() {
       <CardBackModal isOpen={showCardBack} onClose={() => setShowCardBack(false)} />
       <BottomNavBar />
 
-      {/* S7: 코치마크 Step 1 — 충전 버튼 안내 */}
-      {showCoach && (
+      {/* S7: 코치마크 — 카드 보유 시, 세션 내 1회 (Task 2: OnboardingContext) */}
+      {hasCard && !hasSeenHomeCoachmark && (
         <CoachMarkOverlay
           targetRect={chargeButtonRect}
           message="[충전] 버튼을 눌러 강릉페이 잔액을 충전할 수 있습니다. 다음을 눌러 충전 화면으로 이동해보세요."
           step={1}
           totalSteps={2}
           onNext={() => {
-            setShowCoach(false)
+            markCoachmarkSeen('homeCoachmark')
             navigate('/charge', { state: { fromCoach: true } })
           }}
-          onSkip={() => setShowCoach(false)}
+          onSkip={() => markCoachmarkSeen('homeCoachmark')}
         />
       )}
     </ScreenContainer>

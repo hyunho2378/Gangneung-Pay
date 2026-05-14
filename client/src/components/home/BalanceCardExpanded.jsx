@@ -3,22 +3,21 @@
  * Strategy: S1, S2, S3
  * Nielsen: #1 visibility, #2 match real world, #3 user control
  * Shneiderman: #3 informative feedback, #7 locus of control, #8 reduce memory load
- * Phase 1 ref: components/home/BalanceCardExpanded.jsx + CashbackProgressCard.jsx
- * Preserved: dark blue card background, glass button style, watermark SVG, brand colors
- * Changed: balance Large Title 34px (H-08), cashback bar integrated (H-04),
- *          3-button row [충전][환불][QR결제] (H-02), watermark moved top-right
+ * Task 5: 3버튼 [충전][환불][이용내역] (QR결제 → 이용내역)
+ * Task 8: 카드 우측 상단 아이콘 버튼만 뒤집기 트리거 (카드 전체 onClick 제거)
  */
 
 import { useNavigate } from 'react-router-dom'
+import { CreditCard } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 
 const LOW_BALANCE = 10000
 
 // S3: 혜택 체감 문구 — 금액 구간별 (Nielsen #1 visibility, Shneiderman #3 feedback)
 function getCashbackMessage(amount) {
-  if (amount >= 30000) return '이번 달 한도 달성! 🎉'
-  if (amount >= 10000) return '점심 한 끼 값 아꼈어요 🍱'
-  if (amount >= 3200) return '커피 한 잔 값 아꼈어요 ☕'
+  if (amount >= 30000) return '이번 달 한도 달성!'
+  if (amount >= 10000) return '점심 한 끼 값 아꼈어요'
+  if (amount >= 3200) return '커피 한 잔 값 아꼈어요'
   return null
 }
 
@@ -28,15 +27,16 @@ export default function BalanceCardExpanded({
   cashbackPercent = 10,
   onCharge,
   onRefund,
-  onQR,
+  onHistory,
+  onFlip,
   cardCount = 1,
   cardIndex = 1,
   chargeButtonRef,
 }) {
   const navigate = useNavigate()
   const handleCharge = onCharge ?? (() => navigate('/charge'))
-  const handleRefund = onRefund ?? (() => navigate('/usage-guide'))
-  const handleQR = onQR ?? (() => navigate('/qr'))
+  const handleRefund = onRefund ?? (() => navigate('/refund'))
+  const handleHistory = onHistory ?? (() => navigate('/history'))
   // H-07: 카드명 로직 (Nielsen #2, #6)
   const cardName = cardCount === 1 ? '내 카드' : `강릉페이 ${cardIndex}`
 
@@ -73,6 +73,31 @@ export default function BalanceCardExpanded({
             <rect x="4" y="32" width="8" height="2" rx="1" fill="#E0E0E0" />
           </svg>
         </div>
+
+        {/* Task 8: 뒤집기 트리거 — 우측 상단 아이콘 버튼 (터치 44×44) */}
+        {onFlip && (
+          <button
+            onClick={onFlip}
+            aria-label="카드 뒷면 보기"
+            style={{
+              position: 'absolute',
+              top: '4px',
+              right: '4px',
+              width: '44px',
+              height: '44px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              opacity: 0.4,
+              zIndex: 1,
+            }}
+          >
+            <CreditCard size={24} color={colors.onDark.primary} strokeWidth={1.8} />
+          </button>
+        )}
 
         {/* 카드명 + 카드 번호 */}
         <div style={{ marginBottom: spacing[4] }}>
@@ -206,9 +231,9 @@ export default function BalanceCardExpanded({
           )}
         </div>
 
-        {/* 3버튼 행 — S2 환불 동등 위계, Nielsen #1·#3, Shneiderman #7 */}
+        {/* Task 5: 3버튼 행 — [충전][환불][이용내역] (S2 환불 동등 위계) */}
         <div style={{ display: 'flex', gap: spacing[2] }}>
-          {/* S7 코치마크용 ref 연결 — 충전 버튼만 분리 */}
+          {/* S7 코치마크용 ref 연결 — 충전 버튼 */}
           <button
             ref={chargeButtonRef}
             onClick={handleCharge}
@@ -231,7 +256,7 @@ export default function BalanceCardExpanded({
           </button>
           {[
             { label: '환불', onClick: handleRefund },
-            { label: 'QR결제', onClick: handleQR },
+            { label: '이용내역', onClick: handleHistory },
           ].map(({ label, onClick }) => (
             <button
               key={label}

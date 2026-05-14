@@ -181,7 +181,7 @@ export default function KakaoPayGuidePage() {
         </div>
       </div>
 
-      {/* 하단 카카오페이 앱 열기 버튼 */}
+      {/* 하단 카카오페이 앱 열기 버튼 (Task 10: 딥링크 + 3단 폴백) */}
       <div
         style={{
           padding: `12px ${layout.margin} 24px`,
@@ -191,6 +191,22 @@ export default function KakaoPayGuidePage() {
         }}
       >
         <button
+          onClick={() => {
+            const ua = navigator.userAgent
+            const isAndroid = /Android/i.test(ua)
+            const isIOS = /iPhone|iPad|iPod/i.test(ua)
+            if (isAndroid) {
+              window.location.href =
+                'intent://kakaopay/#Intent;scheme=kakaopay;package=com.kakaopay.app;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.kakaopay.app;end'
+            } else if (isIOS) {
+              window.location.href = 'kakaotalk://kakaopay/home'
+              setTimeout(() => {
+                window.location.href = 'https://apps.apple.com/kr/app/id1283454116'
+              }, 1500)
+            } else {
+              window.open('https://www.kakaopay.com/', '_blank')
+            }
+          }}
           style={{
             width: '100%',
             padding: '16px',
