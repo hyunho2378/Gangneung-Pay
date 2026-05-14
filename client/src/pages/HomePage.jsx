@@ -8,20 +8,25 @@ import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBar from '../components/layout/TopAppBar'
 import TopAppBarLargeText from '../components/layout/TopAppBarLargeText'
 import BottomNavBar from '../components/layout/BottomNavBar'
-import QRFloatingBar from '../components/layout/QRFloatingBar'
+// HIDDEN (Phase 3 feedback): QRFloatingBar → 바텀탭 QR 중앙 버튼으로 대체
+// import QRFloatingBar from '../components/layout/QRFloatingBar'
 
 import WidgetAddBanner from '../components/home/WidgetAddBanner'
 import AnnouncementBanner from '../components/home/AnnouncementBanner'
 import BalanceCardExpanded from '../components/home/BalanceCardExpanded'
 import BannerCarousel from '../components/home/BannerCarousel'
-import OnboardingStepper from '../components/home/OnboardingStepper'
+// HIDDEN (Phase 3 feedback): OnboardingStepper → 코치마크로 대체
+// import OnboardingStepper from '../components/home/OnboardingStepper'
 import ServiceShortcutGrid from '../components/home/ServiceShortcutGrid'
 import SectionHeader from '../components/home/SectionHeader'
 import RecentPaymentEmpty from '../components/home/RecentPaymentEmpty'
 import StoreRecommendCard from '../components/home/StoreRecommendCard'
-import ExploreScrollCard from '../components/home/ExploreScrollCard'
-import SupportRankingList from '../components/home/SupportRankingList'
+// HIDDEN (Phase 3 feedback): ExploreScrollCard
+// import ExploreScrollCard from '../components/home/ExploreScrollCard'
+// HIDDEN (Phase 3 feedback): SupportRankingList
+// import SupportRankingList from '../components/home/SupportRankingList'
 import PromoHorizontalCard from '../components/home/PromoHorizontalCard'
+import CardBackModal from '../components/home/CardBackModal'
 
 const mockBalance = { cashback: 3200, card: 120000, charge: 0 }
 
@@ -45,6 +50,7 @@ export default function HomePage() {
   const chargeButtonRef = useRef(null)
   const [showCoach, setShowCoach] = useState(true)
   const [chargeButtonRect, setChargeButtonRect] = useState(null)
+  const [showCardBack, setShowCardBack] = useState(false)
 
   useEffect(() => {
     if (chargeButtonRef.current && showCoach) {
@@ -72,14 +78,21 @@ export default function HomePage() {
 
         {/* H-03: 잔액 카드 최상단으로 이동 */}
         {/* CashbackProgressCard는 BalanceCardExpanded 내부로 통합됨 (Phase 2 H-04) */}
-        <BalanceCardExpanded
-          balance={mockBalance}
-          cashbackMax={30000}
-          cashbackPercent={10.7}
-          chargeButtonRef={chargeButtonRef}
-        />
+        <div
+          onClick={() => setShowCardBack(true)}
+          style={{ cursor: 'pointer' }}
+          aria-label="카드 뒷면 보기"
+        >
+          <BalanceCardExpanded
+            balance={mockBalance}
+            cashbackMax={30000}
+            cashbackPercent={10.7}
+            chargeButtonRef={chargeButtonRef}
+          />
+        </div>
 
-        <OnboardingStepper currentStep={3} />
+        {/* HIDDEN (Phase 3 feedback): OnboardingStepper → 코치마크로 대체 */}
+        {/* <OnboardingStepper currentStep={3} /> */}
 
         {/* H-03: BannerCarousel 잔액카드 아래로 이동 */}
         <BannerCarousel />
@@ -106,14 +119,12 @@ export default function HomePage() {
         />
         <StoreRecommendCard stores={mockStores} />
 
-        <ExploreScrollCard />
+        {/* HIDDEN (Phase 3 feedback): ExploreScrollCard */}
+        {/* <ExploreScrollCard /> */}
 
-        <SectionHeader
-          title="지원금 랭킹"
-          onViewAll={() => navigate('/support')}
-          showViewAll={true}
-        />
-        <SupportRankingList items={mockRanking} />
+        {/* HIDDEN (Phase 3 feedback): SupportRankingList */}
+        {/* <SectionHeader title="지원금 랭킹" onViewAll={() => navigate('/support')} showViewAll={true} /> */}
+        {/* <SupportRankingList items={mockRanking} /> */}
 
         <PromoHorizontalCard
           bgColor={colors.kakaoBg}
@@ -128,7 +139,9 @@ export default function HomePage() {
         <div style={{ height: layout.margin }} />
       </div>
 
-      <QRFloatingBar />
+      {/* HIDDEN (Phase 3 feedback): QRFloatingBar → 바텀탭 QR 중앙 버튼으로 대체 */}
+      {/* <QRFloatingBar /> */}
+      <CardBackModal isOpen={showCardBack} onClose={() => setShowCardBack(false)} />
       <BottomNavBar />
 
       {/* S7: 코치마크 Step 1 — 충전 버튼 안내 */}

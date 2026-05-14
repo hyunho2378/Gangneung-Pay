@@ -5,6 +5,7 @@ const AppContext = createContext(null)
 export function AppProvider({ children }) {
   const [isLargeText, setIsLargeText] = useState(false)
   const [showAnnouncement, setShowAnnouncement] = useState(true)
+  const [hasSkippedCoachMark, setHasSkippedCoachMark] = useState(false)
 
   return (
     <AppContext.Provider value={{
@@ -12,6 +13,8 @@ export function AppProvider({ children }) {
       toggleLargeText: () => setIsLargeText(v => !v),
       showAnnouncement,
       closeAnnouncement: () => setShowAnnouncement(false),
+      hasSkippedCoachMark,
+      skipCoachMark: () => setHasSkippedCoachMark(true),
     }}>
       {children}
     </AppContext.Provider>

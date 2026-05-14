@@ -1,4 +1,9 @@
-import { Search, Menu } from 'lucide-react'
+/**
+ * TopAppBar (Phase 3 rewrite)
+ * Feedback: 햄버거 삭제 → 알림종, 검색 → /search
+ * Strategy: Nielsen #4 consistency, Shneiderman #1
+ */
+import { Search, Bell } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext'
 import { colors, typography, layout } from '../../tokens/tokens'
@@ -57,9 +62,9 @@ export default function TopAppBar() {
           {isLargeText ? '큰글씨 켜짐' : '큰글씨'}
         </button>
 
-        {/* 검색 */}
+        {/* 검색 → /search (Phase 3: 매장이 아닌 검색 전용 페이지) */}
         <button
-          onClick={() => navigate('/store')}
+          onClick={() => navigate('/search')}
           style={{
             background: 'none',
             border: 'none',
@@ -74,9 +79,9 @@ export default function TopAppBar() {
           <Search size={20} color={colors.gray[800]} strokeWidth={1.8} />
         </button>
 
-        {/* 메뉴 */}
+        {/* 알림 종 (Phase 3: 햄버거 → Bell) */}
         <button
-          onClick={() => navigate('/menu')}
+          onClick={() => navigate('/notification')}
           style={{
             background: 'none',
             border: 'none',
@@ -88,7 +93,7 @@ export default function TopAppBar() {
             justifyContent: 'center',
           }}
         >
-          <Menu size={20} color={colors.gray[800]} strokeWidth={1.8} />
+          <Bell size={20} color={colors.gray[800]} strokeWidth={1.8} />
         </button>
       </div>
     </div>

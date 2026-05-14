@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AppProvider } from './context/AppContext'
 import SplashPage from './pages/SplashPage'
 import HomePage from './pages/HomePage'
@@ -15,7 +15,7 @@ import ServiceEditPage from './pages/ServiceEditPage'
 import KakaoPayGuidePage from './pages/KakaoPayGuidePage'
 import TransportCardPage from './pages/TransportCardPage'
 import UsageGuidePage from './pages/UsageGuidePage'
-import MenuPage from './pages/MenuPage'
+
 import SettingsPage from './pages/SettingsPage'
 import NotificationPage from './pages/NotificationPage'
 import CustomerCenterPage from './pages/CustomerCenterPage'
@@ -31,6 +31,10 @@ import DonationHistoryPage from './pages/DonationHistoryPage'
 import NewsListPage from './pages/NewsListPage'
 import NewsDetailPage from './pages/NewsDetailPage'
 import PlaceDetailPage from './pages/PlaceDetailPage'
+// Phase 3 신규
+import MyPage from './pages/MyPage'
+import SearchPage from './pages/SearchPage'
+import CardApplyPage from './pages/CardApplyPage'
 
 function App() {
   const [showSplash, setShowSplash] = useState(true)
@@ -65,8 +69,13 @@ function App() {
           <Route path="/transport-card" element={<TransportCardPage />} />
           <Route path="/usage-guide" element={<UsageGuidePage />} />
 
+          {/* Phase 3 신규 */}
+          <Route path="/my" element={<MyPage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/card-apply" element={<CardApplyPage />} />
+
           {/* 메뉴/설정 */}
-          <Route path="/menu" element={<MenuPage />} />
+          <Route path="/menu" element={<Navigate to="/my" replace />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/notification" element={<NotificationPage />} />
           <Route path="/customer-center" element={<CustomerCenterPage />} />

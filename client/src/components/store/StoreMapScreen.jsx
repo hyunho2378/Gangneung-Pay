@@ -1,12 +1,14 @@
 // StoreMapScreen.jsx — M01 (p.24,43,44)
 // 지도 + 검색 + 필터 전체 화면
 
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
 import { Search } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 import CategoryFilterChip from './CategoryFilterChip'
 import StoreListItem from './StoreListItem'
 import StoreDetailSheet from './StoreDetailSheet'
+import FrequentPlaces from './FrequentPlaces'
 
 const CATEGORIES = ['전체', '음식점', '카페', '편의점', '숙박', '관광', '마트']
 
@@ -121,11 +123,15 @@ export default function StoreMapScreen() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedStore, setSelectedStore] = useState(null)
   const [sheetOpen, setSheetOpen] = useState(false)
-  const [mapReady, setMapReady] = useState(false)
+  const [mapRef, setMapRef] = useState(null)
 
-  const mapContainerRef = useRef(null)
-  const mapRef = useRef(null)
-  const markersRef = useRef([])
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY ?? '',
+  })
+
+  const onLoad = (map) => setMapRef(map)
+  const onUnmount = () => setMapRef(null)
 
   const filteredStores =
     activeCategory === '전체'
@@ -135,75 +141,11 @@ export default function StoreMapScreen() {
   const handleStoreClick = (store) => {
     setSelectedStore(store)
     setSheetOpen(true)
-    if (mapRef.current && window.kakao) {
-      mapRef.current.setCenter(new window.kakao.maps.LatLng(store.lat, store.lng))
-      mapRef.current.setLevel(3)
+    if (mapRef) {
+      mapRef.panTo({ lat: store.lat, lng: store.lng })
+      mapRef.setZoom(16)
     }
   }
-
-  // 카카오 지도 초기화 (autoload=false → kakao.maps.load() 콜백 패턴)
-  useEffect(() => {
-    console.log('[Kakao Maps] window.kakao:', window.kakao)
-    console.log('[Kakao Maps] window.kakao?.maps:', window.kakao?.maps)
-
-    const initMap = () => {
-      if (!mapContainerRef.current || mapRef.current) return
-      mapRef.current = new window.kakao.maps.Map(mapContainerRef.current, {
-        center: new window.kakao.maps.LatLng(GANGNEUNG_CENTER.lat, GANGNEUNG_CENTER.lng),
-        level: 5,
-      })
-      setMapReady(true)
-    }
-
-    // window.kakao가 준비되면 kakao.maps.load()로 maps 모듈 초기화
-    const tryLoad = () => {
-      console.log('[Kakao Maps] kakao.maps.load() 호출')
-      window.kakao.maps.load(initMap)
-    }
-
-    if (window.kakao) {
-      tryLoad()
-    } else {
-      // 스크립트가 컴포넌트 마운트보다 늦게 로드되는 경우 대비
-      const interval = setInterval(() => {
-        console.log('[Kakao Maps] polling... window.kakao:', window.kakao)
-        if (window.kakao) {
-          clearInterval(interval)
-          tryLoad()
-        }
-      }, 100)
-      return () => clearInterval(interval)
-    }
-  }, [])
-
-  // 필터 변경 시 마커 업데이트
-  useEffect(() => {
-    if (!mapReady || !window.kakao || !mapRef.current) return
-
-    markersRef.current.forEach((m) => m.setMap(null))
-    markersRef.current = []
-
-    const svgStr = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="${colors.primary[700]}" stroke="#fff" stroke-width="2"/><circle cx="14" cy="14" r="5" fill="#fff"/></svg>`
-    const markerImageSrc = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr)
-    const markerImageSize = new window.kakao.maps.Size(28, 28)
-    const markerImageOption = { offset: new window.kakao.maps.Point(14, 14) }
-    const markerImage = new window.kakao.maps.MarkerImage(markerImageSrc, markerImageSize, markerImageOption)
-
-    filteredStores.forEach((store) => {
-      const marker = new window.kakao.maps.Marker({
-        position: new window.kakao.maps.LatLng(store.lat, store.lng),
-        map: mapRef.current,
-        title: store.name,
-        image: markerImage,
-      })
-
-      window.kakao.maps.event.addListener(marker, 'click', () => {
-        handleStoreClick(store)
-      })
-
-      markersRef.current.push(marker)
-    })
-  }, [mapReady, activeCategory])
 
   return (
     <div
@@ -219,46 +161,50 @@ export default function StoreMapScreen() {
       }}
     >
       {/* 지도 영역 */}
-      <div
-        style={{
-          flex: 1,
-          backgroundColor: colors.gray[200],
-          position: 'relative',
-        }}
-      >
-        {/* 카카오 지도 컨테이너 */}
-        <div
-          ref={mapContainerRef}
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-          }}
-        />
-
-        {/* 로딩 인디케이터 */}
-        {!mapReady && (
+      <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+        {isLoaded ? (
+          <GoogleMap
+            mapContainerStyle={{ width: '100%', height: '100%' }}
+            center={GANGNEUNG_CENTER}
+            zoom={14}
+            onLoad={onLoad}
+            onUnmount={onUnmount}
+            options={{
+              disableDefaultUI: true,
+              zoomControl: false,
+              streetViewControl: false,
+              mapTypeControl: false,
+            }}
+          >
+            {filteredStores.map((store) => (
+              <Marker
+                key={store.id}
+                position={{ lat: store.lat, lng: store.lng }}
+                title={store.name}
+                onClick={() => handleStoreClick(store)}
+                icon={{
+                  path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
+                  fillColor: colors.primary[700],
+                  fillOpacity: 1,
+                  strokeColor: colors.onDark.primary,
+                  strokeWeight: 2,
+                  scale: 1,
+                }}
+              />
+            ))}
+          </GoogleMap>
+        ) : (
           <div
             style={{
-              position: 'absolute',
-              inset: 0,
+              width: '100%',
+              height: '100%',
+              backgroundColor: colors.gray[100],
               display: 'flex',
-              flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
               gap: spacing[2],
-              zIndex: 1,
-              pointerEvents: 'none',
             }}
           >
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-              <path
-                d="M18 3 C12.477 3 8 7.477 8 13 C8 21 18 33 18 33 C18 33 28 21 28 13 C28 7.477 23.523 3 18 3 Z"
-                fill={colors.gray[400]}
-              />
-              <circle cx="18" cy="13" r="4" fill="#FFFFFF" />
-            </svg>
             <span style={{ fontSize: typography.size.xs, color: colors.gray[500] }}>지도 로딩 중</span>
           </div>
         )}
@@ -359,10 +305,13 @@ export default function StoreMapScreen() {
           />
         </div>
 
+        {/* 자주 가는 곳 */}
+        <FrequentPlaces />
+
         {/* 제목 */}
         <div
           style={{
-            padding: `0 ${layout.margin} ${spacing[2]}`,
+            padding: `${spacing[2]} ${layout.margin} ${spacing[2]}`,
             fontSize: typography.size.md,
             fontWeight: typography.weight.semibold,
             color: colors.gray[900],

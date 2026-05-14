@@ -1,8 +1,76 @@
-# 강릉페이 Phase 2 리디자인 — 진행 상황
+# 강릉페이 Phase 3 피드백 반영 — 진행 상황
 
-업데이트: 2026-05-13 (Phase 2 세션 5 — Sprint 1~5 완료)
+업데이트: 2026-05-15 (Phase 3-B 완료 — 병렬 3에이전트)
 
-브랜치: feature/phase2-redesign
+브랜치: feature/phase3-feedback
+
+---
+
+## Phase 3 진행 상황
+
+### Phase 3-B — 기능 구현 (2026-05-15) ✅ 완료
+
+**빌드 결과: 0 오류 (1824 모듈, 309ms)**
+
+#### Agent BN — 검색
+| 항목 | 파일 | 내용 |
+|------|------|------|
+| 재작성 | `pages/SearchPage.jsx` | 검색 input + 최근 검색 + 결과 리스트 완전 구현 |
+| 신규 | `components/search/PopularKeywords.jsx` | 자주 찾는 키워드 8개 가로 스크롤 칩 |
+
+#### Agent MY — MY · 카드
+| 항목 | 파일 | 내용 |
+|------|------|------|
+| 재작성 | `pages/MyPage.jsx` | 프로필 헤더 + 5그룹 메뉴 + 로그아웃 |
+| 재작성 | `pages/CardApplyPage.jsx` | 2카드 선택 캐러셀 + 혜택 3항목 + CTA |
+| 신규 | `components/mypage/MyMenuGroup.jsx` | 그룹 제목 + 항목 리스트 컴포넌트 |
+| 신규 | `components/home/CardBackModal.jsx` | FaceID mock + CVC/카드정보 모달 |
+| 수정 | `pages/HomePage.jsx` | 카드 클릭 → CardBackModal 연동 |
+
+#### Agent FX — 버그수정 · 지도 · 내역
+| 항목 | 파일 | 내용 |
+|------|------|------|
+| 버그수정 | `components/common/CoachMarkOverlay.jsx` | max-w 430px 강제, 건너뛰기 position:fixed |
+| 전환 | `components/store/StoreMapScreen.jsx` | Kakao → Google Maps (@react-google-maps/api) |
+| 신규 | `components/store/FrequentPlaces.jsx` | 자주 가는 곳 가로 스크롤 카드 |
+| 수정 | `components/payment/TransactionHistory.jsx` | 카드관리 탭 제거, 환불 사례 추가 |
+| 수정 | `pages/HistoryPage.jsx` | TopAppBar + BottomNavBar 추가 (메인 탭화) |
+| 개선 | `components/layout/BottomNavBar.jsx` | safe-area-inset-bottom env() 적용 |
+| 정리 | `client/index.html` | Kakao Maps 스크립트 제거 |
+
+---
+
+### Phase 3-A — IA 구조 재편 (2026-05-15) ✅ 완료
+
+| 항목 | 파일 | 내용 |
+|------|------|------|
+| 환경 | `.env`, `.env.example` | `VITE_GOOGLE_MAPS_API_KEY` 추가 |
+| 패키지 | `package.json` | `@react-google-maps/api` 설치 |
+| 숨김 | `HomePage.jsx` | OnboardingStepper, SupportRankingList, ExploreScrollCard, QRFloatingBar 주석 처리 |
+| 숨김 | `StorePage.jsx` | QRFloatingBar 주석 처리 |
+| 숨김 | `LifePage.jsx` | QRFloatingBar 주석 처리 |
+| 숨김 | `SupportPage.jsx` | QRFloatingBar 주석 처리 |
+| 숨김 | `CommunityPage.jsx` | QRFloatingBar 주석 처리 |
+| 재작성 | `BottomNavBar.jsx` | 5탭: 홈·결제매장·QR중앙·이용내역·MY |
+| 수정 | `TopAppBar.jsx` | Menu → Bell, 검색 → /search |
+| 신규 | `pages/MyPage.jsx` | 스텁 → Phase 3-B 완성 |
+| 신규 | `pages/SearchPage.jsx` | 스텁 → Phase 3-B 완성 |
+| 신규 | `pages/CardApplyPage.jsx` | 스텁 → Phase 3-B 완성 |
+| 라우트 | `App.jsx` | `/my`, `/search`, `/card-apply` 추가; `/menu` → `/my` 리다이렉트 |
+| 문서 | `ROUTES.md` | Phase 3 기준 전면 업데이트 |
+
+**Phase 3-A 빌드 결과: 0 오류 (1819 모듈, 373ms)**
+
+---
+
+## Phase 3 다음 단계
+
+| 에이전트 | 담당 | 상태 |
+|---------|------|------|
+| Agent BN | SearchPage·PopularKeywords | ✅ 완료 |
+| Agent MY | MyPage·CardApplyPage·CardBackModal·HomePage | ✅ 완료 |
+| Agent FX | CoachMark·Google Maps·FrequentPlaces·HistoryPage | ✅ 완료 |
+| Agent VR | 최종 검증 체크리스트 44항목 | 대기 (사용자 승인 후) |
 
 ---
 
