@@ -13,10 +13,10 @@ import TopAppBarLargeText from '../components/layout/TopAppBarLargeText'
 import BottomNavBar from '../components/layout/BottomNavBar'
 
 import WidgetAddBanner from '../components/home/WidgetAddBanner'
-import AnnouncementBanner from '../components/home/AnnouncementBanner'
+// AnnouncementBanner: R4 — 인라인 캐시백 배너 제거 (MonthlyCashbackModal로 대체)
 import BannerCarousel from '../components/home/BannerCarousel'
 import BalanceCardExpanded from '../components/home/BalanceCardExpanded'
-import CardActions from '../components/home/CardActions'
+// CardActions: R2 — 카드 내부 3슬롯 복원으로 외부 컴포넌트 제거
 import MonthlyCashbackModal from '../components/home/MonthlyCashbackModal'
 import SectionHeader from '../components/home/SectionHeader'
 import StoreRecommendCard from '../components/home/StoreRecommendCard'
@@ -36,19 +36,21 @@ const mockStores = [
 
 export default function HomePage() {
   const navigate = useNavigate()
-  const { isLargeText, showAnnouncement, closeAnnouncement } = useApp()
-  const { hasCard, balance: userBalance } = useUser()
+  const { isLargeText } = useApp()
+  const { hasCard, balance: userBalance, shouldShowCashbackModalOnNextHome, consumeCashbackModalTrigger } = useUser()
   const { hasSeenHomeCoachmark, hasSeenMonthlyCashbackModal, markCoachmarkSeen } = useOnboarding()
 
   const [showCardBack, setShowCardBack] = useState(false)
   const [showCashbackModal, setShowCashbackModal] = useState(false)
 
-  // 5월 캐시백 모달 — 첫 진입 시 자동 노출
+  // R8: 5월 캐시백 모달 — 카드 등록 완료 후 첫 홈 복귀 시에만 자동 노출 (신규 사용자 첫 진입 시 금지)
   useEffect(() => {
-    if (!hasSeenMonthlyCashbackModal) {
+    if (!hasCard) return
+    if (shouldShowCashbackModalOnNextHome && !hasSeenMonthlyCashbackModal) {
       setShowCashbackModal(true)
+      consumeCashbackModalTrigger()
     }
-  }, [])
+  }, [hasCard, shouldShowCashbackModalOnNextHome, hasSeenMonthlyCashbackModal])
 
   const handleCashbackModalClose = () => {
     setShowCashbackModal(false)
@@ -92,9 +94,6 @@ export default function HomePage() {
         {/* H-01: S1 위젯 추가 배너 */}
         <WidgetAddBanner />
 
-        {/* H-05: 인라인 공지 배너 */}
-        <AnnouncementBanner show={showAnnouncement} onClose={closeAnnouncement} />
-
         {/* Task 8: 캐러셀 상단 이동 */}
         <div style={{ marginBottom: spacing[3] }}>
           <BannerCarousel applyButtonRef={applyButtonRef} />
@@ -103,15 +102,14 @@ export default function HomePage() {
         {/* Task 4: 카드 보유 여부 분기 */}
         {hasCard ? (
           <>
-            {/* 잔액 카드 */}
+            {/* R1: 잔액 카드 — 3버튼 카드 내부 통합, chargeButtonRef 전달 */}
             <BalanceCardExpanded
               balance={cardBalance}
               cashbackMax={30000}
               cashbackPercent={10.7}
               onFlip={() => setShowCardBack(true)}
+              chargeButtonRef={chargeButtonRef}
             />
-            {/* Task 5: CardActions (hasCard true 시만 노출) */}
-            <CardActions chargeButtonRef={chargeButtonRef} />
           </>
         ) : (
           // 신규 사용자: 카드 신청 CTA 카드
@@ -215,7 +213,7 @@ export default function HomePage() {
         <div style={{ height: layout.margin }} />
       </div>
 
-      <CardBackModal isOpen={showCardBack} onClose={() => setShowCardBack(false)} />
+      <CardBackModal isOpen={showCardBack} onClose={() => setShowCardBack(false)} onAuthenticated={() => setShowCardBack(false)} />
       <MonthlyCashbackModal isOpen={showCashbackModal} onClose={handleCashbackModalClose} />
       <BottomNavBar />
 

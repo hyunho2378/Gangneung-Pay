@@ -3,37 +3,43 @@
  * Strategy: S1, S2, S3
  * Nielsen: #1 visibility, #2 match real world, #3 user control
  * Shneiderman: #3 informative feedback, #7 locus of control, #8 reduce memory load
- * Task 5: 3버튼 [충전][환불][이용내역] (QR결제 → 이용내역)
- * Task 8: 카드 우측 상단 아이콘 버튼만 뒤집기 트리거 (카드 전체 onClick 제거)
+ * R1: 3버튼 [충전][환불][이용내역] 카드 내부 통합 복원
+ * R7: 3D SVG 클릭 영역 (별도 아이콘 제거)
+ * R9: 직관 캐시백 메시지 lucide 아이콘 적용
  */
 
-import { CreditCard } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Bus, Coffee, Utensils, ShoppingBag, Smartphone } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 
-const LOW_BALANCE = 10000
-
-// S3: 혜택 체감 문구 — 금액 구간별 (Nielsen #1 visibility, Shneiderman #3 feedback)
-function getCashbackMessage(amount) {
-  if (amount >= 30000) return '이번 달 한도 달성!'
-  if (amount >= 10000) return '점심 한 끼 값 아꼈어요'
-  if (amount >= 3200) return '커피 한 잔 값 아꼈어요'
+// R9: 적립액 → { text, Icon } 매핑 (lucide-react, 이모지 없음)
+function getCashbackMessage(cashback) {
+  if (cashback >= 20000) return { text: '한 달 통신비 아꼈어요', Icon: Smartphone }
+  if (cashback >= 10000) return { text: '이번 달 외식비 굳었어요', Icon: ShoppingBag }
+  if (cashback >= 6000)  return { text: '맛있는 식사 한 끼 아꼈어요', Icon: Utensils }
+  if (cashback >= 3000)  return { text: '커피 한 잔 값 아꼈어요', Icon: Coffee }
+  if (cashback >= 1)     return { text: '버스 한 번 탔어요', Icon: Bus }
   return null
 }
 
 export default function BalanceCardExpanded({
-  balance = { cashback: 3200, card: 120000, charge: 0 },
+  balance = { cashback: 0, card: 0, charge: 0 },
   cashbackMax = 30000,
-  cashbackPercent = 10,
+  cashbackPercent = 0,
   onFlip,
   cardCount = 1,
   cardIndex = 1,
+  chargeButtonRef,
 }) {
+  const navigate = useNavigate()
+
   // H-07: 카드명 로직 (Nielsen #2, #6)
   const cardName = cardCount === 1 ? '내 카드' : `강릉페이 ${cardIndex}`
 
   const fmt = (n) => n.toLocaleString('ko-KR') + '원'
   const clampedPercent = Math.min(100, Math.max(0, cashbackPercent))
-  const isLowBalance = balance.card < LOW_BALANCE
+
+  const cashbackMsg = getCashbackMessage(balance.cashback)
 
   return (
     <div style={{ margin: layout.margin }}>
@@ -47,15 +53,19 @@ export default function BalanceCardExpanded({
           overflow: 'hidden',
         }}
       >
-        {/* 워터마크 — 우상단 절대 배치, 비파괴 SVG 보존 */}
+        {/* R7: 3D SVG — 우상단 배치, 클릭 시 카드 뒷면 모달 */}
         <div
+          onClick={onFlip}
           style={{
             position: 'absolute',
             right: spacing[5],
             top: spacing[5],
-            opacity: 0.15,
-            pointerEvents: 'none',
+            opacity: 0.4,
+            cursor: onFlip ? 'pointer' : 'default',
+            transition: 'opacity 0.2s ease',
           }}
+          onMouseEnter={e => { if (onFlip) e.currentTarget.style.opacity = '0.65' }}
+          onMouseLeave={e => { e.currentTarget.style.opacity = '0.4' }}
         >
           <svg width="60" height="36" viewBox="0 0 60 36" fill="none">
             <rect x="0" y="0" width="60" height="36" rx="5" fill="#FFFFFF" />
@@ -64,31 +74,6 @@ export default function BalanceCardExpanded({
             <rect x="4" y="32" width="8" height="2" rx="1" fill="#E0E0E0" />
           </svg>
         </div>
-
-        {/* Task 8: 뒤집기 트리거 — 우측 상단 아이콘 버튼 (터치 44×44) */}
-        {onFlip && (
-          <button
-            onClick={onFlip}
-            aria-label="카드 뒷면 보기"
-            style={{
-              position: 'absolute',
-              top: '4px',
-              right: '4px',
-              width: '44px',
-              height: '44px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              opacity: 0.4,
-              zIndex: 1,
-            }}
-          >
-            <CreditCard size={24} color={colors.onDark.primary} strokeWidth={1.8} />
-          </button>
-        )}
 
         {/* 카드명 + 카드 번호 */}
         <div style={{ marginBottom: spacing[4] }}>
@@ -115,7 +100,7 @@ export default function BalanceCardExpanded({
           </p>
         </div>
 
-        {/* 잔액 레이블 + 금액 — Nielsen #1 visibility, S1·S3 */}
+        {/* 잔액 레이블 + 금액 — R1: 색상 항상 white */}
         <div style={{ marginBottom: spacing[4] }}>
           <p
             style={{
@@ -129,33 +114,19 @@ export default function BalanceCardExpanded({
           <p
             style={{
               margin: 0,
-              color: isLowBalance ? colors.warning : colors.onDark.primary,
+              color: colors.onDark.primary,
               fontSize: typography.size.largeTitle,
               fontWeight: typography.weight.bold,
               lineHeight: 1.1,
               letterSpacing: '-0.02em',
-              transition: 'color 0.3s ease',
             }}
           >
             {fmt(balance.card)}
           </p>
-          {/* 잔액 부족 인라인 경고 — S5, Nielsen #5, Shneiderman #5 */}
-          {isLowBalance && (
-            <p
-              style={{
-                margin: `${spacing[1]} 0 0 0`,
-                color: colors.warning,
-                fontSize: typography.size.xs,
-                fontWeight: typography.weight.medium,
-              }}
-            >
-              잔액이 부족합니다. 충전 후 사용하세요.
-            </p>
-          )}
         </div>
 
-        {/* 캐시백 진행바 통합 — S3, Nielsen #1, Shneiderman #3·#8 */}
-        <div style={{ marginBottom: spacing[4] }}>
+        {/* 캐시백 진행바 — S3, Nielsen #1, Shneiderman #3·#8 */}
+        <div style={{ marginBottom: spacing[3] }}>
           <div
             style={{
               display: 'flex',
@@ -204,24 +175,69 @@ export default function BalanceCardExpanded({
               한도 {fmt(cashbackMax)}
             </span>
           </div>
-          {/* S3: 혜택 체감 문구 (Nielsen #1, Shneiderman #3) */}
-          {getCashbackMessage(balance.cashback) && (
+
+          {/* R9: 직관 캐시백 메시지 — lucide 아이콘 + 텍스트 */}
+          {cashbackMsg && (
             <div
               style={{
                 marginTop: spacing[2],
-                backgroundColor: 'rgba(45,212,191,0.15)',
+                backgroundColor: 'rgba(255,255,255,0.15)',
                 borderRadius: layout.radiusSmall,
-                padding: `${spacing[1]} ${spacing[3]}`,
-                fontSize: typography.size.xs,
-                color: colors.teal[400],
-                fontWeight: typography.weight.medium,
+                padding: `${spacing[2]} ${spacing[3]}`,
+                display: 'flex',
+                alignItems: 'center',
+                gap: spacing[2],
               }}
             >
-              {getCashbackMessage(balance.cashback)}
+              <cashbackMsg.Icon size={16} color={colors.onDark.primary} strokeWidth={1.5} />
+              <span
+                style={{
+                  fontSize: typography.size.xs,
+                  color: colors.onDark.primary,
+                  fontWeight: typography.weight.medium,
+                }}
+              >
+                {cashbackMsg.text}
+              </span>
             </div>
           )}
         </div>
 
+        {/* R1 8행: 3슬롯 액션 버튼 row — 카드 내부 */}
+        <div
+          style={{
+            display: 'flex',
+            gap: spacing[2],
+            paddingTop: spacing[3],
+            borderTop: '1px solid rgba(255,255,255,0.15)',
+          }}
+        >
+          {[
+            { label: '충전', path: '/charge', ref: chargeButtonRef },
+            { label: '환불', path: '/refund', ref: undefined },
+            { label: '이용내역', path: '/history', ref: undefined },
+          ].map(({ label, path, ref }) => (
+            <button
+              key={label}
+              ref={ref}
+              onClick={() => navigate(path)}
+              style={{
+                flex: 1,
+                height: '48px',
+                backgroundColor: 'rgba(255,255,255,0.15)',
+                border: 'none',
+                borderRadius: layout.radiusSmall,
+                color: colors.onDark.primary,
+                fontSize: typography.size.sm,
+                fontWeight: typography.weight.medium,
+                cursor: 'pointer',
+                fontFamily: typography.fontFamily,
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   )

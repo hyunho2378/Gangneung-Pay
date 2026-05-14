@@ -6,6 +6,41 @@
 
 ---
 
+## Sprint R1~R10 — 긴급 복구 & dotLottie (2026-05-15) ✅ 완료
+
+**빌드 결과: 0 오류 (1829 모듈, 807ms)**
+
+| # | 파일 | 내용 |
+|---|------|------|
+| R1+R7 | `components/home/BalanceCardExpanded.jsx` | 3버튼(충전/환불/이용내역) 카드 내부 복원; 잔액 색상 항상 white; "잔액이 부족합니다" 제거; CreditCard 아이콘 제거 → 3D SVG 클릭 영역화 |
+| R2 | `pages/HomePage.jsx` | CardActions import/사용 제거; chargeButtonRef를 BalanceCardExpanded에 전달 |
+| R3→R9 | `components/home/BalanceCardExpanded.jsx` | 직관 캐시백 메시지 이모지 없음, lucide-react 5종 아이콘 적용 (Bus/Coffee/Utensils/ShoppingBag/Smartphone) |
+| R4 | `pages/HomePage.jsx` | AnnouncementBanner import/사용 제거 (인라인 캐시백 배너 완전 삭제) |
+| R5 | `components/home/BannerCarousel.jsx` | 캐시백 충전 슬라이드 teal-600 → primary-100 라이트 블루; 텍스트 primary-800/700 |
+| R8 | `context/UserContext.jsx` | `shouldShowCashbackModalOnNextHome` 상태; `registerCard()` 시 true; `consumeCashbackModalTrigger()` 추가 |
+| R8 | `pages/HomePage.jsx` | 캐시백 모달 useEffect 조건 → 카드 등록 후 첫 홈 복귀 시에만 노출 |
+| R10 | `package.json` | `@lottiefiles/dotlottie-react ^0.19.2` 설치 |
+| R10 | `vite.config.js` | `assetsInclude: ['**/*.lottie']` 추가 |
+| R10 | `components/home/CardBackModal.jsx` | DotLottieReact + face-id.lottie + State Machine "face_unlock_1" 재작성 |
+
+### R1~R10 QA 결과
+
+| 항목 | 결과 |
+|------|------|
+| 잔액 0원 색상 white | ✅ |
+| "잔액이 부족합니다" 없음 | ✅ |
+| 3버튼 카드 내부 통합 | ✅ |
+| 카드 외부 흰색 CardActions 없음 | ✅ |
+| 인라인 캐시백 배너 없음 | ✅ |
+| 캐시백 슬라이드 라이트 블루 | ✅ |
+| 직관 메시지 이모지 0개 | ✅ |
+| 캐시백 모달 신규 진입 시 안 뜸 | ✅ |
+| dotLottie face-id 빌드 포함 | ✅ (10.61 kB) |
+| localStorage 0건 | ✅ |
+| 빌드 0 오류 | ✅ (1829 모듈) |
+
+---
+
 ## Sprint 1-6 — main 브랜치 18개 태스크 (2026-05-15) ✅ 완료
 
 **빌드 결과: 0 오류 (1828 모듈, 404ms)**

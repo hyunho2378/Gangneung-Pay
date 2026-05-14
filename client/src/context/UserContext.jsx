@@ -13,6 +13,8 @@ export function UserProvider({ children }) {
   const [cardStatus, setCardStatus] = useState('none') // 'none' | 'applying' | 'shipped' | 'registered'
   const [balance, setBalance] = useState(0)
   const [transactions, setTransactions] = useState([])
+  // R8: 카드 등록 완료 → 홈 복귀 시 캐시백 모달 1회 자동 노출 트리거
+  const [shouldShowCashbackModalOnNextHome, setShouldShowCashbackModalOnNextHome] = useState(false)
 
   function applyCard() {
     setCardStatus('applying')
@@ -23,6 +25,11 @@ export function UserProvider({ children }) {
     setHasCard(true)
     setCardStatus('registered')
     setBalance(0)
+    setShouldShowCashbackModalOnNextHome(true) // R8: 등록 완료 → 홈 복귀 시 캐시백 모달 1회
+  }
+
+  function consumeCashbackModalTrigger() {
+    setShouldShowCashbackModalOnNextHome(false)
   }
 
   function chargeBalance(amount) {
@@ -55,11 +62,13 @@ export function UserProvider({ children }) {
       cardStatus,
       balance,
       transactions,
+      shouldShowCashbackModalOnNextHome,
       applyCard,
       registerCard,
       chargeBalance,
       refundBalance,
       spendBalance,
+      consumeCashbackModalTrigger,
     }}>
       {children}
     </UserContext.Provider>

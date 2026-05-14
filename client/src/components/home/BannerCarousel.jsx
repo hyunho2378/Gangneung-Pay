@@ -26,24 +26,27 @@ const KAKAO_SLIDE = {
   ),
 }
 
+// R5: 캐시백 충전 슬라이드 — primary-100 라이트 블루 (teal-600 초록 제거)
 const BASE_SLIDES = [
   {
     id: 'cashback',
-    bgColor: colors.teal[600],
-    textColor: colors.onDark.primary,
-    subTextColor: 'rgba(255,255,255,0.85)',
+    bgColor: colors.primary[100],
+    textColor: colors.primary[800],
+    subTextColor: colors.primary[700],
+    buttonBg: colors.primary[200],
+    buttonTextColor: colors.primary[800],
     title: '캐시백 충전하고',
     description: '강릉 전역에서 사용하세요',
     buttonLabel: '충전하기',
     buttonPath: '/charge',
     illustration: (
       <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="40" cy="40" r="28" fill="rgba(255,255,255,0.15)" />
-        <circle cx="40" cy="40" r="20" fill="rgba(255,255,255,0.2)" />
-        <path d="M34 32 L48 40 L34 48 Z" fill="rgba(255,255,255,0.9)" />
-        <path d="M24 56 Q32 44 40 40 Q48 36 56 24" stroke="rgba(255,255,255,0.5)" strokeWidth="2" fill="none" strokeDasharray="4 3" />
-        <circle cx="56" cy="24" r="4" fill="rgba(255,255,255,0.7)" />
-        <circle cx="24" cy="56" r="4" fill="rgba(255,255,255,0.7)" />
+        <circle cx="40" cy="40" r="28" fill={colors.primary[200]} opacity="0.6" />
+        <circle cx="40" cy="40" r="20" fill={colors.primary[300]} opacity="0.4" />
+        <path d="M34 32 L48 40 L34 48 Z" fill={colors.primary[500]} opacity="0.9" />
+        <path d="M24 56 Q32 44 40 40 Q48 36 56 24" stroke={colors.primary[400]} strokeWidth="2" fill="none" strokeDasharray="4 3" />
+        <circle cx="56" cy="24" r="4" fill={colors.primary[400]} opacity="0.7" />
+        <circle cx="24" cy="56" r="4" fill={colors.primary[400]} opacity="0.7" />
       </svg>
     ),
   },
@@ -163,8 +166,8 @@ export default function BannerCarousel({ applyButtonRef }) {
               style={{
                 marginTop: spacing[1],
                 alignSelf: 'flex-start',
-                backgroundColor: safeSlide.id === 'cardApply' ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.25)',
-                color: safeSlide.textColor,
+                backgroundColor: safeSlide.buttonBg || 'rgba(255,255,255,0.25)',
+                color: safeSlide.buttonTextColor || safeSlide.textColor,
                 border: 'none',
                 borderRadius: layout.radiusPill,
                 padding: `6px 14px`,
