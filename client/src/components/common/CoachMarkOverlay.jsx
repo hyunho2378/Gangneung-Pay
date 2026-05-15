@@ -6,11 +6,13 @@
  * A1: ScreenContainer 기준 relative 좌표로 말풍선 위치 고정 (모바일 390px 안에만 표시)
  */
 
-import { useState, useLayoutEffect, useEffect } from 'react'
+import { useState, useLayoutEffect, useEffect, useRef } from 'react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 
-export default function CoachMarkOverlay({ targetRect, message, step, totalSteps, onNext, onSkip }) {
+export default function CoachMarkOverlay({ targetRef, message, step, totalSteps, onNext, onSkip }) {
   const [containerRect, setContainerRect] = useState(null)
+  const [targetRect, setTargetRect] = useState(null)
+  const rafRef = useRef(null)
 
   useEffect(() => {
     const prevOverflow = document.body.style.overflow
@@ -24,20 +26,17 @@ export default function CoachMarkOverlay({ targetRect, message, step, totalSteps
   }, [])
 
   useLayoutEffect(() => {
-    const updateRect = () => {
+    const updateRects = () => {
       const container = document.getElementById('screen-container')
-      if (container) {
-        setContainerRect(container.getBoundingClientRect())
-      }
+      if (container) setContainerRect(container.getBoundingClientRect())
+      if (targetRef?.current) setTargetRect(targetRef.current.getBoundingClientRect())
+      rafRef.current = requestAnimationFrame(updateRects)
     }
-    updateRect()
-    window.addEventListener('resize', updateRect)
-    window.addEventListener('scroll', updateRect, true)
+    updateRects()
     return () => {
-      window.removeEventListener('resize', updateRect)
-      window.removeEventListener('scroll', updateRect, true)
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
-  }, [targetRect])
+  }, [targetRef])
 
   if (!containerRect) return null
 

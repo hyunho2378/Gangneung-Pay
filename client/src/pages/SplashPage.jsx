@@ -4,8 +4,9 @@ import { colors, typography, spacing } from '../tokens/tokens'
 export default function SplashPage() {
   return (
     <div style={{
-      position: 'fixed',
-      inset: 0,
+      width: '100%',
+      flex: 1,
+      minHeight: '100dvh',
       backgroundColor: colors.primary[700],
       display: 'flex',
       flexDirection: 'column',
@@ -18,7 +19,7 @@ export default function SplashPage() {
         src={LogoWhite}
         alt="강릉페이"
         style={{
-          width: '90px',
+          width: '80px',
           height: 'auto',
         }}
       />

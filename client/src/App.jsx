@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AppProvider } from './context/AppContext'
 import { OnboardingProvider } from './context/OnboardingContext'
 import { UserProvider } from './context/UserContext'
+import ScreenContainer from './components/layout/ScreenContainer'
 import SplashPage from './pages/SplashPage'
 import HomePage from './pages/HomePage'
 import StorePage from './pages/StorePage'
@@ -48,7 +49,13 @@ function App() {
     return () => clearTimeout(timer)
   }, [])
 
-  if (showSplash) return <SplashPage />
+  if (showSplash) {
+    return (
+      <ScreenContainer>
+        <SplashPage />
+      </ScreenContainer>
+    )
+  }
 
   return (
     <AppProvider>

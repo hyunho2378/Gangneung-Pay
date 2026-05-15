@@ -46,9 +46,6 @@ export default function HomePage() {
   const applyButtonRef = useRef(null)
 
   const [coachStep, setCoachStep] = useState(null) // 'cardApply' | 'charge' | 'refund' | null
-  const [chargeRect, setChargeRect] = useState(null)
-  const [refundRect, setRefundRect] = useState(null)
-  const [applyRect, setApplyRect] = useState(null)
   const [showCashbackModal, setShowCashbackModal] = useState(false)
   const [showFaceId, setShowFaceId] = useState(false)
   const [showCardBack, setShowCardBack] = useState(false)
@@ -85,17 +82,6 @@ export default function HomePage() {
     }
     setCoachStep(null)
   }, [hasCard, hasSeenCardApplyCoach, hasSeenChargeCoach, hasSeenRefundCoach, hasSeenCashbackModal])
-
-  // B4: coachStep 변경 시 해당 버튼 rect 계산
-  useEffect(() => {
-    if (coachStep === 'cardApply' && applyButtonRef.current) {
-      setApplyRect(applyButtonRef.current.getBoundingClientRect())
-    } else if (coachStep === 'charge' && chargeButtonRef.current) {
-      setChargeRect(chargeButtonRef.current.getBoundingClientRect())
-    } else if (coachStep === 'refund' && refundButtonRef.current) {
-      setRefundRect(refundButtonRef.current.getBoundingClientRect())
-    }
-  }, [coachStep])
 
   const cashbackPercent = Math.min(100, Math.floor((monthlyCashback / 30000) * 100))
 
@@ -175,7 +161,7 @@ export default function HomePage() {
       {/* B4: 코치마크 오버레이 */}
       {coachStep === 'cardApply' && (
         <CoachMarkOverlay
-          targetRect={applyRect}
+          targetRef={applyButtonRef}
           message="강릉페이 카드를 신청해보세요. 신청하기를 누르면 1초 만에 카드를 받을 수 있어요."
           step={1}
           totalSteps={1}
@@ -192,7 +178,7 @@ export default function HomePage() {
 
       {coachStep === 'charge' && (
         <CoachMarkOverlay
-          targetRect={chargeRect}
+          targetRef={chargeButtonRef}
           message="[충전] 버튼을 눌러 강릉페이 잔액을 충전할 수 있습니다."
           step={1}
           totalSteps={2}
@@ -203,7 +189,7 @@ export default function HomePage() {
 
       {coachStep === 'refund' && (
         <CoachMarkOverlay
-          targetRect={refundRect}
+          targetRef={refundButtonRef}
           message="[환불] 버튼으로 충전한 금액을 다시 환불받을 수 있습니다."
           step={2}
           totalSteps={2}
