@@ -1,34 +1,35 @@
-import LogoBlue from '../assets/logos/강릉페이로고_블루.svg'
-import { colors, typography } from '../tokens/tokens'
+import LogoWhite from '../assets/logos/강릉페이로고_화이트.svg'
+import { colors, typography, spacing } from '../tokens/tokens'
 
 export default function SplashPage() {
   return (
     <div style={{
-      width: '100%',
-      minHeight: '100dvh',
-      backgroundColor: colors.surface.card,
+      position: 'fixed',
+      inset: 0,
+      backgroundColor: colors.primary[700],
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '0',
+      gap: spacing[4],
+      fontFamily: typography.fontFamily,
     }}>
-      {/* 로고 */}
       <img
-        src={LogoBlue}
+        src={LogoWhite}
         alt="강릉페이"
-        style={{ width: '180px', marginBottom: '16px' }}
+        style={{
+          width: '90px',
+          height: 'auto',
+        }}
       />
-
-      {/* 부제목 */}
-      <p style={{
-        color: colors.gray[500],
-        fontSize: typography.size.sm,
-        marginTop: '8px',
-        fontFamily: typography.fontFamily,
+      <span style={{
+        color: colors.onDark.primary,
+        fontSize: typography.size.xl,
+        fontWeight: typography.weight.bold,
+        letterSpacing: '-0.02em',
       }}>
-        강릉시 지역화폐
-      </p>
+        강릉페이
+      </span>
     </div>
   )
 }
