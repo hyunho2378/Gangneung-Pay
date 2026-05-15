@@ -121,6 +121,7 @@ function StepIndicator({ current }) {
 export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance = 120000, chargeLimit = 500000 }) {
   const [amount, setAmount] = useState(0)
   const [step, setStep] = useState(1)
+  const [charged, setCharged] = useState(false)
 
   const handleNumPress = (key) => {
     if (key === 'backspace') {
@@ -154,7 +155,10 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
   // 헤더 뒤로가기 동작: step별 분기
   const handleBack = () => {
     if (step === 1) onClose()
-    else if (step === 2) setStep(1)
+    else if (step === 2) {
+      setStep(1)
+      setCharged(false)
+    }
   }
 
   return (
@@ -420,7 +424,10 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
           {/* 하단 버튼 2개 */}
           <div style={{ display: 'flex', gap: spacing[3] }}>
             <button
-              onClick={() => setStep(1)}
+              onClick={() => {
+                setStep(1)
+                setCharged(false)
+              }}
               style={{
                 flex: 1,
                 height: '52px',
@@ -438,9 +445,12 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
             </button>
             <button
               onClick={() => {
+                if (charged) return
+                setCharged(true)
                 onCharge && onCharge(amount)
                 setStep(3)
               }}
+              disabled={charged}
               style={{
                 flex: 2,
                 height: '52px',
@@ -541,7 +551,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
                 color: colors.primary[700],
               }}
             >
-              {newBalance.toLocaleString('ko-KR')}원
+              {balance.toLocaleString('ko-KR')}원
             </span>
           </div>
 

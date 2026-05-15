@@ -15,6 +15,7 @@ import CashbackPage from './pages/CashbackPage'
 import HistoryPage from './pages/HistoryPage'
 import ServiceEditPage from './pages/ServiceEditPage'
 import KakaoPayGuidePage from './pages/KakaoPayGuidePage'
+import NaverPayGuidePage from './pages/NaverPayGuidePage'
 import TransportCardPage from './pages/TransportCardPage'
 import UsageGuidePage from './pages/UsageGuidePage'
 
@@ -71,6 +72,7 @@ function App() {
           {/* 서비스 안내 */}
           <Route path="/service-edit" element={<ServiceEditPage />} />
           <Route path="/kakao-guide" element={<KakaoPayGuidePage />} />
+          <Route path="/naver-guide" element={<NaverPayGuidePage />} />
           <Route path="/transport-card" element={<TransportCardPage />} />
           <Route path="/usage-guide" element={<UsageGuidePage />} />
 

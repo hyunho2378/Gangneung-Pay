@@ -1,52 +1,72 @@
 /**
- * MonthlyCashbackModal (Task 7)
- * Strategy: S3
- * Nielsen: #1 visibility, #10 help
- * Shneiderman: #3 informative feedback
- * 5월 캐시백 안내 바텀시트 모달
+ * MonthlyCashbackModal (B5)
+ * 5월 캐시백 안내 바텀시트 — 슬라이드업/다운 애니메이션
+ * prop: open (bool), onClose, monthlyCashback (number)
  */
 
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 
-export default function MonthlyCashbackModal({ isOpen, onClose }) {
+export default function MonthlyCashbackModal({ open, onClose, monthlyCashback = 0 }) {
   const navigate = useNavigate()
+  const [mounted, setMounted] = useState(false)
+  const [visible, setVisible] = useState(false)
 
-  if (!isOpen) return null
+  useEffect(() => {
+    if (open) {
+      setMounted(true)
+      // 더블 rAF: mount 후 CSS 트랜지션 신뢰성 확보
+      requestAnimationFrame(() => requestAnimationFrame(() => setVisible(true)))
+    } else {
+      setVisible(false)
+      const t = setTimeout(() => setMounted(false), 350)
+      return () => clearTimeout(t)
+    }
+  }, [open])
+
+  const handleClose = () => {
+    setVisible(false)
+    setTimeout(() => onClose?.(), 350)
+  }
+
+  if (!mounted) return null
+
+  const sheetTranslate = visible ? '0' : '100%'
+  const dimOpacity = visible ? 1 : 0
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 400,
-        display: 'flex',
-        alignItems: 'flex-end',
-        justifyContent: 'center',
-        fontFamily: typography.fontFamily,
-      }}
-    >
-      {/* 오버레이 */}
+    <>
+      {/* 딤 */}
       <div
-        onClick={onClose}
+        onClick={handleClose}
         style={{
-          position: 'absolute',
+          position: 'fixed',
           inset: 0,
           backgroundColor: 'rgba(0,0,0,0.5)',
+          opacity: dimOpacity,
+          transition: 'opacity 350ms cubic-bezier(0.32, 0.72, 0, 1)',
+          zIndex: 400,
         }}
       />
 
-      {/* 바텀시트 카드 */}
+      {/* 바텀시트 */}
       <div
         style={{
-          position: 'relative',
-          zIndex: 1,
+          position: 'fixed',
+          left: '50%',
+          bottom: 0,
+          transform: `translate(-50%, ${sheetTranslate})`,
+          transition: 'transform 350ms cubic-bezier(0.32, 0.72, 0, 1)',
           width: '100%',
-          maxWidth: '430px',
+          maxWidth: '390px',
           backgroundColor: colors.surface.card,
-          borderRadius: `${layout.radiusModal} ${layout.radiusModal} 0 0`,
+          borderTopLeftRadius: layout.radiusModal,
+          borderTopRightRadius: layout.radiusModal,
           paddingBottom: 'max(env(safe-area-inset-bottom), 24px)',
           boxShadow: shadow.modal,
+          zIndex: 401,
+          fontFamily: typography.fontFamily,
         }}
       >
         {/* 핸들 */}
@@ -54,17 +74,13 @@ export default function MonthlyCashbackModal({ isOpen, onClose }) {
           <div style={{ width: '40px', height: '4px', borderRadius: '2px', backgroundColor: colors.gray[300] }} />
         </div>
 
-        {/* 메가폰 SVG — 파란색 announcement 스타일 */}
+        {/* 메가폰 SVG */}
         <div style={{ display: 'flex', justifyContent: 'center', paddingTop: spacing[4] }}>
           <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-            {/* 배경 원 */}
             <circle cx="36" cy="36" r="32" fill={colors.primary[50]} />
-            {/* 메가폰 몸체 */}
             <path d="M20 28 L20 44 L30 44 L46 52 L46 20 L30 28 Z" fill={colors.primary[700]} />
-            {/* 음파 */}
             <path d="M50 26 Q56 32 56 36 Q56 40 50 46" stroke={colors.primary[500]} strokeWidth="2.5" strokeLinecap="round" fill="none" />
             <path d="M53 23 Q61 31 61 36 Q61 41 53 49" stroke={colors.primary[300]} strokeWidth="2" strokeLinecap="round" fill="none" />
-            {/* 손잡이 */}
             <rect x="18" y="37" width="6" height="10" rx="3" fill={colors.primary[600]} />
           </svg>
         </div>
@@ -110,9 +126,9 @@ export default function MonthlyCashbackModal({ isOpen, onClose }) {
           {/* 구분선 */}
           <div style={{ height: '1px', backgroundColor: colors.gray[200], marginBottom: spacing[3] }} />
 
-          {/* 이번 달 받은 캐시백 행 */}
+          {/* 이번 달 캐시백 행 */}
           <button
-            onClick={() => { onClose(); navigate('/cashback') }}
+            onClick={() => { handleClose(); setTimeout(() => navigate('/cashback'), 350) }}
             style={{
               width: '100%',
               display: 'flex',
@@ -130,13 +146,13 @@ export default function MonthlyCashbackModal({ isOpen, onClose }) {
               이번 달 받은 캐시백
             </span>
             <span style={{ fontSize: typography.size.sm, color: colors.primary[700], fontWeight: typography.weight.semibold }}>
-              0원 &gt;
+              {monthlyCashback.toLocaleString('ko-KR')}원 &gt;
             </span>
           </button>
 
           {/* CTA */}
           <button
-            onClick={onClose}
+            onClick={handleClose}
             style={{
               width: '100%',
               height: '52px',
@@ -154,6 +170,6 @@ export default function MonthlyCashbackModal({ isOpen, onClose }) {
           </button>
         </div>
       </div>
-    </div>
+    </>
   )
 }

@@ -23,7 +23,7 @@ export default function WidgetAddBanner() {
   return (
     <div
       style={{
-        margin: `${spacing[3]} ${layout.margin} 0`,
+        margin: `${spacing[3]} ${layout.margin}`,
         fontFamily: typography.fontFamily,
       }}
     >

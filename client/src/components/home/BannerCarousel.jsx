@@ -26,6 +26,22 @@ const KAKAO_SLIDE = {
   ),
 }
 
+const NAVER_SLIDE = {
+  id: 'naver',
+  bgColor: '#E6F9EC',
+  textColor: '#15803D',
+  subTextColor: '#15803D',
+  title: '네이버페이로도\n결제하세요',
+  description: '강릉페이를 네이버페이와 연결하면 더 편리하게',
+  illustration: (
+    <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+      <rect x="8" y="8" width="48" height="48" rx="10" fill="#03C75A" />
+      <rect x="10" y="10" width="48" height="48" rx="10" fill="#15803D" opacity="0.4" />
+      <path d="M22 18 L22 46 L28 46 L28 30 L36 46 L42 46 L42 18 L36 18 L36 34 L28 18 Z" fill="white" />
+    </svg>
+  ),
+}
+
 // R5: 캐시백 충전 슬라이드 — primary-100 라이트 블루 (teal-600 초록 제거)
 const BASE_SLIDES = [
   {
@@ -83,8 +99,8 @@ export default function BannerCarousel({ applyButtonRef }) {
   const [startX, setStartX] = useState(null)
 
   const slides = hasCard
-    ? [...BASE_SLIDES, KAKAO_SLIDE]
-    : [CARD_APPLY_SLIDE, ...BASE_SLIDES, KAKAO_SLIDE]
+    ? [...BASE_SLIDES, KAKAO_SLIDE, NAVER_SLIDE]
+    : [CARD_APPLY_SLIDE, ...BASE_SLIDES, KAKAO_SLIDE, NAVER_SLIDE]
 
   const slide = slides[currentIndex]
   const safeIndex = Math.min(currentIndex, slides.length - 1)
@@ -112,6 +128,7 @@ export default function BannerCarousel({ applyButtonRef }) {
 
   const handleSlideClick = () => {
     if (safeSlide.id === 'kakao') navigate('/kakao-guide')
+    else if (safeSlide.id === 'naver') navigate('/naver-guide')
   }
 
   return (
@@ -132,7 +149,7 @@ export default function BannerCarousel({ applyButtonRef }) {
           justifyContent: 'space-between',
           padding: `0 ${spacing[4]} 0 ${spacing[5]}`,
           position: 'relative',
-          cursor: safeSlide.id === 'kakao' ? 'pointer' : 'default',
+          cursor: (safeSlide.id === 'kakao' || safeSlide.id === 'naver') ? 'pointer' : 'default',
           transition: 'background-color 0.35s ease',
         }}
       >

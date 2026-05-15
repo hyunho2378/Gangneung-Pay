@@ -65,7 +65,7 @@ const CATEGORY_ICONS = {
   ),
 }
 
-const GANGNEUNG_CENTER = { lat: 37.7519, lng: 128.8761 }
+const GANGNEUNG_CENTER = { lat: 37.7647, lng: 128.8990 }
 
 const SAMPLE_STORES = [
   {

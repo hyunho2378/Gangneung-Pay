@@ -1,12 +1,12 @@
 /**
- * BottomNavBar (Phase 3 rewrite)
- * Feedback: 햄버거 삭제 → 5탭 (홈·결제매장·QR중앙·이용내역·MY)
+ * BottomNavBar (A2)
+ * 5탭 균등: 홈·결제매장·혜택·이용내역·MY
+ * QR 중앙 원형 제거 — QR 진입은 잔액 카드 3번 슬롯으로 이동
  * Strategy: Nielsen #4 consistency, Shneiderman #1
- * Hidden: 생활편의·지원금·소통참여 탭 → 라우트는 유지
  */
 
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Home, Store, QrCode, Gift, User } from 'lucide-react'
+import { Home, Store, Gift, Receipt, User } from 'lucide-react'
 import { colors, typography, layout, shadow, spacing } from '../../tokens/tokens'
 
 export default function BottomNavBar() {
@@ -17,8 +17,8 @@ export default function BottomNavBar() {
     const p = location.pathname
     if (p === '/') return 'home'
     if (p.startsWith('/store')) return 'store'
-    if (p.startsWith('/qr')) return 'qr'
     if (p.startsWith('/support')) return 'support'
+    if (p.startsWith('/history')) return 'history'
     if (p.startsWith('/my')) return 'my'
     return ''
   }
@@ -41,7 +41,6 @@ export default function BottomNavBar() {
       alignItems: 'flex-end',
       paddingBottom: 'max(env(safe-area-inset-bottom), 16px)',
     }}>
-      {/* 홈 */}
       <NavTab
         label="홈"
         icon={<Home size={24} strokeWidth={1.8} />}
@@ -49,8 +48,6 @@ export default function BottomNavBar() {
         onClick={() => navigate('/')}
         height={NAV_HEIGHT}
       />
-
-      {/* 결제매장 */}
       <NavTab
         label="결제매장"
         icon={<Store size={24} strokeWidth={1.8} />}
@@ -58,59 +55,20 @@ export default function BottomNavBar() {
         onClick={() => navigate('/store')}
         height={NAV_HEIGHT}
       />
-
-      {/* QR결제 — 중앙 강조 */}
-      <div style={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        paddingBottom: '4px',
-        minHeight: NAV_HEIGHT,
-      }}>
-        <button
-          onClick={() => navigate('/qr')}
-          aria-label="QR결제"
-          style={{
-            width: '60px',
-            height: '60px',
-            borderRadius: '50%',
-            backgroundColor: colors.primary[700],
-            border: 'none',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transform: 'translateY(-12px)',
-            boxShadow: '0 4px 12px rgba(29, 78, 216, 0.4)',
-            flexShrink: 0,
-          }}
-        >
-          <QrCode size={28} color={colors.onDark.primary} strokeWidth={1.8} />
-        </button>
-        <span style={{
-          fontSize: typography.size.nav,
-          fontWeight: typography.weight.semibold,
-          color: activeKey === 'qr' ? colors.primary[700] : colors.gray[500],
-          fontFamily: typography.fontFamily,
-          lineHeight: 1.2,
-          marginTop: '-8px',
-        }}>
-          QR결제
-        </span>
-      </div>
-
-      {/* 혜택 (Task 9: 이용내역 → 지원금혜택) */}
       <NavTab
-        label="혜택"
+        label="이용내역"
+        icon={<Receipt size={24} strokeWidth={1.8} />}
+        active={activeKey === 'history'}
+        onClick={() => navigate('/history')}
+        height={NAV_HEIGHT}
+      />
+      <NavTab
+        label="지원금·혜택"
         icon={<Gift size={24} strokeWidth={1.8} />}
         active={activeKey === 'support'}
         onClick={() => navigate('/support')}
         height={NAV_HEIGHT}
       />
-
-      {/* MY */}
       <NavTab
         label="MY"
         icon={<User size={24} strokeWidth={1.8} />}
@@ -143,11 +101,10 @@ function NavTab({ label, icon, active, onClick, height }) {
         color,
       }}
     >
-      {/* lucide-react icon — currentColor 상속 */}
       <span style={{ color, display: 'flex' }}>{icon}</span>
       <span style={{
         fontSize: typography.size.nav,
-        fontWeight: active ? typography.weight.semibold : typography.weight.regular,
+        fontWeight: active ? typography.weight.medium : typography.weight.regular,
         color,
         fontFamily: typography.fontFamily,
         lineHeight: 1.2,

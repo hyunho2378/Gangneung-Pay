@@ -1,24 +1,27 @@
 /**
- * CardApplyPage (Task 10)
+ * CardApplyPage (Task 10 + B1-B5)
  * Strategy: S7
  * Nielsen: #1 visibility, #3 user control, #8 memory load
  * Shneiderman: #4 closure, #8 reduce memory load
- * 이미지 3, 4 기준 전면 재작성
+ * B1: 카드 SVG 140×88 축소, 캐러셀 200px 고정
+ * B2: 발급 비용 캡슐 박스
+ * B3: 카테고리 아코디언
+ * B4: 배경 그라데이션 (#E4EFFD — 페이지 전용 예외값)
+ * B5: 한 화면 레이아웃 최적화
  */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../tokens/tokens'
 import ScreenContainer from '../components/layout/ScreenContainer'
 
-// 카드 SVG 컴포넌트
+// B1: 140×88 축소 (viewBox 좌표계 220×138 유지)
 function CardSVG({ type }) {
   const isTransit = type === 'transit'
   return (
-    <svg width="220" height="138" viewBox="0 0 220 138" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* 카드 배경 */}
+    <svg width="140" height="88" viewBox="0 0 220 138" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="220" height="138" rx="12" fill={colors.primary[700]} />
       <rect width="220" height="138" rx="12" fill="url(#cardGrad)" />
       <defs>
@@ -27,27 +30,21 @@ function CardSVG({ type }) {
           <stop offset="1" stopColor={colors.primary[800]} />
         </linearGradient>
       </defs>
-      {/* 강릉 배경 일러스트 (추상적 산 실루엣) */}
       <path d="M0 100 Q40 70 80 85 Q120 60 160 80 Q190 65 220 75 L220 138 L0 138 Z" fill={colors.primary[800]} fillOpacity="0.35" />
-      {/* 칩 */}
       <rect x="16" y="48" width="28" height="22" rx="4" fill="#E8C840" />
       <line x1="22" y1="48" x2="22" y2="70" stroke="#C8A830" strokeWidth="1" />
       <line x1="28" y1="48" x2="28" y2="70" stroke="#C8A830" strokeWidth="1" />
       <line x1="34" y1="48" x2="34" y2="70" stroke="#C8A830" strokeWidth="1" />
       <line x1="16" y1="55" x2="44" y2="55" stroke="#C8A830" strokeWidth="1" />
       <line x1="16" y1="62" x2="44" y2="62" stroke="#C8A830" strokeWidth="1" />
-      {/* 강릉페이 텍스트 */}
       <text x="16" y="30" fontSize="11" fontWeight="700" fill="rgba(255,255,255,0.9)" fontFamily="sans-serif">강릉페이</text>
-      {/* 강릉시 로고 텍스트 */}
       <text x="16" y="122" fontSize="9" fontWeight="600" fill="rgba(255,255,255,0.7)" fontFamily="sans-serif">강릉시</text>
-      {/* eZL 교통 로고 (교통카드 겸용 시) */}
       {isTransit && (
         <rect x="170" y="108" width="36" height="18" rx="4" fill="rgba(255,255,255,0.2)" />
       )}
       {isTransit && (
         <text x="174" y="121" fontSize="9" fontWeight="700" fill="rgba(255,255,255,0.9)" fontFamily="sans-serif">eZL</text>
       )}
-      {/* 카드 번호 */}
       <text x="16" y="107" fontSize="10" fill="rgba(255,255,255,0.6)" letterSpacing="2" fontFamily="monospace">•••• •••• •••• ••••</text>
     </svg>
   )
@@ -163,7 +160,6 @@ const CATEGORY_ICONS = [
   { label: '생활', color: colors.gray[500] },
 ]
 
-// 카테고리 SVG 아이콘 map
 function CategoryIcon({ label, color }) {
   const icons = {
     '서적': <path d="M4 3 Q4 2 5 2 L15 2 Q16 2 16 3 L16 17 Q16 18 15 18 L5 18 Q4 18 4 17 Z M7 2 L7 18 M10 5 L14 5 M10 8 L14 8" stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" />,
@@ -181,9 +177,61 @@ function CategoryIcon({ label, color }) {
   )
 }
 
+// B3: 카테고리 아코디언 — 기본 접힘, 클릭 시 펼침
+function CategoryAccordion({ children }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div style={{
+      backgroundColor: colors.surface.card,
+      borderRadius: layout.radiusCard,
+      margin: `0 ${layout.margin}`,
+      overflow: 'hidden',
+    }}>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        style={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: spacing[3],
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          fontFamily: typography.fontFamily,
+        }}
+      >
+        <span style={{ fontSize: typography.size.sm, color: colors.gray[700] }}>
+          다양한 매장에서 혜택 누리세요!
+        </span>
+        {open ? (
+          <ChevronUp size={20} color={colors.gray[500]} />
+        ) : (
+          <ChevronDown size={20} color={colors.gray[500]} />
+        )}
+      </button>
+      {open && (
+        <div style={{
+          padding: `0 ${spacing[3]} ${spacing[3]}`,
+          animation: 'fadeIn 0.2s ease',
+        }}>
+          {children}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function CardApplyPage() {
   const navigate = useNavigate()
-  const { cardStatus, applyCard, registerCard } = useUser()
+  const { cardStatus, applyCard, shipCard, registerCard } = useUser()
+
+  useEffect(() => {
+    if (cardStatus === 'applying') {
+      const t = setTimeout(() => shipCard(), 1000)
+      return () => clearTimeout(t)
+    }
+  }, [cardStatus, shipCard])
   const [cardIndex, setCardIndex] = useState(0)
   const [cardCode, setCardCode] = useState('')
 
@@ -200,7 +248,6 @@ export default function CardApplyPage() {
           backgroundColor: colors.surface.background,
           fontFamily: typography.fontFamily,
         }}>
-          {/* 헤더 */}
           <div style={{
             backgroundColor: colors.surface.card,
             display: 'flex',
@@ -217,7 +264,7 @@ export default function CardApplyPage() {
             </span>
           </div>
 
-          <div style={{ flex: 1, overflowY: 'auto', paddingBottom: '100px' }}>
+          <div style={{ flex: 1, overflowY: 'auto' }}>
             <div style={{
               margin: `${spacing[4]} ${layout.margin} 0`,
               backgroundColor: colors.successBg,
@@ -269,11 +316,8 @@ export default function CardApplyPage() {
           </div>
 
           <div style={{
-            position: 'sticky',
-            bottom: 0,
-            backgroundColor: colors.surface.card,
-            borderTop: `1px solid ${colors.gray[200]}`,
-            padding: `${spacing[3]} ${layout.margin} ${spacing[5]}`,
+            padding: `${spacing[3]} ${layout.margin}`,
+            paddingBottom: `calc(env(safe-area-inset-bottom) + ${spacing[3]})`,
           }}>
             <button
               onClick={() => { registerCard(); navigate('/') }}
@@ -285,12 +329,12 @@ export default function CardApplyPage() {
                 borderRadius: layout.radiusButton,
                 color: colors.onDark.primary,
                 fontSize: typography.size.md,
-                fontWeight: typography.weight.bold,
+                fontWeight: typography.weight.semibold,
                 cursor: 'pointer',
                 fontFamily: typography.fontFamily,
               }}
             >
-              등록 완료
+              카드 등록하기
             </button>
           </div>
         </div>
@@ -305,33 +349,61 @@ export default function CardApplyPage() {
         <div style={{
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
           minHeight: '100dvh',
-          gap: spacing[4],
           backgroundColor: colors.surface.background,
           fontFamily: typography.fontFamily,
         }}>
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style={{ animation: 'spin 1s linear infinite' }}>
-            <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
-            <circle cx="20" cy="20" r="16" stroke={colors.gray[200]} strokeWidth="3" fill="none" />
-            <path d="M20 4 A16 16 0 0 1 36 20" stroke={colors.primary[700]} strokeWidth="3" strokeLinecap="round" fill="none" />
-          </svg>
-          <div style={{ fontSize: typography.size.sm, color: colors.gray[500] }}>신청 처리 중입니다...</div>
-          <div style={{ fontSize: typography.size.xs, color: colors.gray[400] }}>잠시 후 배송 준비가 완료됩니다</div>
+          <div style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: spacing[4],
+          }}>
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style={{ animation: 'spin 1s linear infinite' }}>
+              <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+              <circle cx="20" cy="20" r="16" stroke={colors.gray[200]} strokeWidth="3" fill="none" />
+              <path d="M20 4 A16 16 0 0 1 36 20" stroke={colors.primary[700]} strokeWidth="3" strokeLinecap="round" fill="none" />
+            </svg>
+            <div style={{ fontSize: typography.size.sm, color: colors.gray[500] }}>신청 처리 중입니다...</div>
+            <div style={{ fontSize: typography.size.xs, color: colors.gray[400] }}>잠시 후 배송 준비가 완료됩니다</div>
+          </div>
+          <div style={{
+            padding: `${spacing[3]} ${layout.margin}`,
+            paddingBottom: `calc(env(safe-area-inset-bottom) + ${spacing[3]})`,
+          }}>
+            <button
+              disabled
+              style={{
+                width: '100%',
+                height: '52px',
+                backgroundColor: colors.gray[200],
+                color: colors.gray[400],
+                border: 'none',
+                borderRadius: layout.radiusButton,
+                fontSize: typography.size.md,
+                fontWeight: typography.weight.semibold,
+                cursor: 'default',
+                fontFamily: typography.fontFamily,
+              }}
+            >
+              카드 발송 중...
+            </button>
+          </div>
         </div>
       </ScreenContainer>
     )
   }
 
-  // 기본: 카드 선택 화면 (cardStatus === 'none')
+  // 기본: 카드 선택 화면
   return (
     <ScreenContainer>
       <div style={{
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100dvh',
-        backgroundColor: colors.surface.background,
+        background: 'linear-gradient(180deg, #E4EFFD 0%, #FFFFFF 60%)',
         fontFamily: typography.fontFamily,
       }}>
         {/* 헤더 */}
@@ -361,11 +433,11 @@ export default function CardApplyPage() {
           </button>
         </div>
 
-        <div style={{ flex: 1, overflowY: 'auto', paddingBottom: '90px' }}>
-          {/* 타이틀 */}
+        <div style={{ flex: 1, overflowY: 'auto' }}>
+          {/* B5: 타이틀 padding 축소 */}
           <div style={{
             textAlign: 'center',
-            padding: `${spacing[6]} ${layout.margin} ${spacing[5]}`,
+            padding: `${spacing[3]} ${layout.margin}`,
           }}>
             <p style={{
               margin: 0,
@@ -387,85 +459,112 @@ export default function CardApplyPage() {
             </p>
           </div>
 
-          {/* 카드 선택 캐러셀 */}
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: `0 ${spacing[8]}`, marginBottom: spacing[4] }}>
-            {/* 이전 화살표 */}
-            <button
-              onClick={() => setCardIndex(prev => Math.max(0, prev - 1))}
-              disabled={cardIndex === 0}
-              style={{
-                position: 'absolute',
-                left: spacing[2],
-                background: 'none',
-                border: 'none',
-                cursor: cardIndex === 0 ? 'default' : 'pointer',
-                opacity: cardIndex === 0 ? 0.3 : 1,
-                padding: spacing[2],
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <ChevronLeft size={24} color={colors.gray[700]} />
-            </button>
+          {/* B1: 카드 캐러셀 + 라벨 고정 200px */}
+          <div style={{
+            height: '200px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            paddingTop: spacing[2],
+          }}>
+            {/* 이전/다음 화살표 + 카드 이미지 */}
+            <div style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              padding: `0 ${spacing[8]}`,
+              marginBottom: spacing[2],
+            }}>
+              <button
+                onClick={() => setCardIndex(prev => Math.max(0, prev - 1))}
+                disabled={cardIndex === 0}
+                style={{
+                  position: 'absolute',
+                  left: spacing[2],
+                  background: 'none',
+                  border: 'none',
+                  cursor: cardIndex === 0 ? 'default' : 'pointer',
+                  opacity: cardIndex === 0 ? 0.3 : 1,
+                  padding: spacing[2],
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <ChevronLeft size={24} color={colors.gray[700]} />
+              </button>
 
-            {/* 카드 이미지 */}
-            <div style={{ transition: 'all 0.3s ease' }}>
-              <CardSVG type={selectedCard.id === 'transit' ? 'transit' : 'standard'} />
+              <div style={{ transition: 'all 0.3s ease' }}>
+                <CardSVG type={selectedCard.id === 'transit' ? 'transit' : 'standard'} />
+              </div>
+
+              <button
+                onClick={() => setCardIndex(prev => Math.min(CARD_TYPES.length - 1, prev + 1))}
+                disabled={cardIndex === CARD_TYPES.length - 1}
+                style={{
+                  position: 'absolute',
+                  right: spacing[2],
+                  background: 'none',
+                  border: 'none',
+                  cursor: cardIndex === CARD_TYPES.length - 1 ? 'default' : 'pointer',
+                  opacity: cardIndex === CARD_TYPES.length - 1 ? 0.3 : 1,
+                  padding: spacing[2],
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <ChevronRight size={24} color={colors.gray[700]} />
+              </button>
             </div>
 
-            {/* 다음 화살표 */}
-            <button
-              onClick={() => setCardIndex(prev => Math.min(CARD_TYPES.length - 1, prev + 1))}
-              disabled={cardIndex === CARD_TYPES.length - 1}
-              style={{
-                position: 'absolute',
-                right: spacing[2],
-                background: 'none',
-                border: 'none',
-                cursor: cardIndex === CARD_TYPES.length - 1 ? 'default' : 'pointer',
-                opacity: cardIndex === CARD_TYPES.length - 1 ? 0.3 : 1,
-                padding: spacing[2],
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <ChevronRight size={24} color={colors.gray[700]} />
-            </button>
-          </div>
-
-          {/* 카드 라벨 */}
-          <div style={{ textAlign: 'center', marginBottom: spacing[5] }}>
-            <span style={{
-              fontSize: typography.size.md,
-              fontWeight: typography.weight.bold,
-              color: colors.gray[900],
-            }}>
-              {selectedCard.name}
-            </span>
-            {selectedCard.badges.map(badge => (
-              <span key={badge} style={{
-                marginLeft: spacing[2],
-                backgroundColor: colors.primary[50],
-                color: colors.primary[700],
-                fontSize: typography.size.xxs,
-                fontWeight: typography.weight.semibold,
-                padding: `2px 8px`,
-                borderRadius: layout.radiusPill,
-                border: `1px solid ${colors.primary[100]}`,
+            {/* 카드 라벨 + 배지 */}
+            <div style={{ textAlign: 'center' }}>
+              <span style={{
+                fontSize: typography.size.md,
+                fontWeight: typography.weight.bold,
+                color: colors.gray[900],
               }}>
-                {badge}
+                {selectedCard.name}
               </span>
-            ))}
+              {selectedCard.badges.map(badge => (
+                <span key={badge} style={{
+                  marginLeft: spacing[2],
+                  backgroundColor: colors.primary[50],
+                  color: colors.primary[700],
+                  fontSize: typography.size.xxs,
+                  fontWeight: typography.weight.semibold,
+                  padding: `2px 8px`,
+                  borderRadius: layout.radiusPill,
+                  border: `1px solid ${colors.primary[100]}`,
+                }}>
+                  {badge}
+                </span>
+              ))}
+            </div>
+
+            {/* B2: 발급 비용 캡슐 박스 */}
             {selectedCard.cost && (
-              <div style={{ marginTop: spacing[1], fontSize: typography.size.xs, color: colors.gray[500] }}>
-                {selectedCard.cost}
+              <div style={{ marginTop: spacing[2], display: 'flex', justifyContent: 'center' }}>
+                <div style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  backgroundColor: colors.surface.card,
+                  border: `1px solid ${colors.gray[200]}`,
+                  borderRadius: layout.radiusPill,
+                  padding: `${spacing[1]} ${spacing[4]}`,
+                  fontSize: typography.size.sm,
+                  color: colors.gray[900],
+                }}>
+                  발급 비용 <strong style={{ marginLeft: spacing[1], color: colors.gray[900] }}>5,000원</strong>
+                </div>
               </div>
             )}
           </div>
 
-          {/* 혜택 리스트 */}
+          {/* B5: 혜택 리스트 — 행 padding spacing[3] */}
           <div style={{
-            margin: `0 ${layout.margin} ${spacing[4]}`,
+            margin: `0 ${layout.margin} ${spacing[3]}`,
             backgroundColor: colors.surface.card,
             borderRadius: layout.radiusCard,
             boxShadow: shadow.card,
@@ -478,7 +577,7 @@ export default function CardApplyPage() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: spacing[3],
-                  padding: `${spacing[4]} ${spacing[4]}`,
+                  padding: `${spacing[3]} ${spacing[4]}`,
                   borderBottom: idx < BENEFITS.length - 1 ? `1px solid ${colors.gray[100]}` : 'none',
                 }}
               >
@@ -506,88 +605,75 @@ export default function CardApplyPage() {
             ))}
           </div>
 
-          {/* 점선 구분선 */}
+          {/* B5: 점선 구분선 — margin spacing[3] */}
           <div style={{
-            margin: `0 ${layout.margin} ${spacing[4]}`,
+            margin: `0 ${layout.margin} ${spacing[3]}`,
             borderTop: `1.5px dashed ${colors.gray[200]}`,
           }} />
 
-          {/* 다양한 매장 안내 */}
-          <p style={{
-            margin: `0 0 ${spacing[3]}`,
-            textAlign: 'center',
-            fontSize: typography.size.sm,
-            color: colors.gray[500],
-          }}>
-            다양한 매장에서 혜택 누리세요!
-          </p>
-
-          {/* 카테고리 아이콘 가로 스크롤 */}
-          <div style={{
-            display: 'flex',
-            gap: spacing[3],
-            overflowX: 'auto',
-            padding: `0 ${layout.margin} ${spacing[4]}`,
-            scrollbarWidth: 'none',
-          }}>
-            {CATEGORY_ICONS.map(({ label, color }) => (
-              <div key={label} style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: spacing[1],
-                flexShrink: 0,
-              }}>
-                <div style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: '50%',
-                  backgroundColor: color,
+          {/* B3: 카테고리 아코디언 */}
+          <CategoryAccordion>
+            <div style={{
+              display: 'flex',
+              gap: spacing[3],
+              overflowX: 'auto',
+              scrollbarWidth: 'none',
+            }}>
+              {CATEGORY_ICONS.map(({ label, color }) => (
+                <div key={label} style={{
                   display: 'flex',
+                  flexDirection: 'column',
                   alignItems: 'center',
-                  justifyContent: 'center',
+                  gap: spacing[1],
+                  flexShrink: 0,
                 }}>
-                  <CategoryIcon label={label} color={color} />
+                  <div style={{
+                    width: '44px',
+                    height: '44px',
+                    borderRadius: '50%',
+                    backgroundColor: color,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    <CategoryIcon label={label} color={color} />
+                  </div>
+                  <span style={{
+                    fontSize: typography.size.xxs,
+                    color: colors.gray[500],
+                    whiteSpace: 'nowrap',
+                    fontFamily: typography.fontFamily,
+                  }}>
+                    {label}
+                  </span>
                 </div>
-                <span style={{
-                  fontSize: typography.size.xxs,
-                  color: colors.gray[500],
-                  whiteSpace: 'nowrap',
-                  fontFamily: typography.fontFamily,
-                }}>
-                  {label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+              ))}
+            </div>
+          </CategoryAccordion>
 
-        {/* 하단 CTA */}
-        <div style={{
-          position: 'sticky',
-          bottom: 0,
-          backgroundColor: colors.surface.card,
-          borderTop: `1px solid ${colors.gray[200]}`,
-          padding: `${spacing[3]} ${layout.margin} ${spacing[5]}`,
-        }}>
-          <button
-            onClick={applyCard}
-            style={{
-              width: '100%',
-              height: '52px',
-              backgroundColor: colors.primary[700],
-              border: 'none',
-              borderRadius: layout.radiusButton,
-              color: colors.onDark.primary,
-              fontSize: typography.size.md,
-              fontWeight: typography.weight.bold,
-              cursor: 'pointer',
-              fontFamily: typography.fontFamily,
-              boxShadow: shadow.button,
-            }}
-          >
-            간편 신청하기
-          </button>
+          {/* 간편신청하기 버튼 */}
+          <div style={{
+            padding: `${spacing[3]} ${layout.margin}`,
+            paddingBottom: `calc(env(safe-area-inset-bottom) + ${spacing[3]})`,
+          }}>
+            <button
+              onClick={applyCard}
+              style={{
+                width: '100%',
+                height: '52px',
+                backgroundColor: colors.primary[700],
+                color: colors.onDark.primary,
+                border: 'none',
+                borderRadius: layout.radiusButton,
+                fontSize: typography.size.md,
+                fontWeight: typography.weight.semibold,
+                cursor: 'pointer',
+                fontFamily: typography.fontFamily,
+              }}
+            >
+              간편 신청하기
+            </button>
+          </div>
         </div>
       </div>
     </ScreenContainer>

@@ -1,8 +1,133 @@
 # 강릉페이 Phase 3 피드백 반영 — 진행 상황
 
-업데이트: 2026-05-15 (Sprint 1-6 완료 — main 브랜치 18개 태스크)
+업데이트: 2026-05-15 (청크 D 완료 — 캐시백 페이지 재작성 + 가상 데이터)
 
 브랜치: main
+
+---
+
+## 청크 D — 캐시백 페이지 재작성 + 가상 데이터 (2026-05-15) ✅ 완료
+
+**빌드 결과: 0 오류 (1830 모듈, 347ms)**
+
+| # | 파일 | 내용 |
+|---|------|------|
+| D1 | `context/UserContext.jsx` | 모듈 상단 STORES/REGULAR_STORES 상수 + `generateMockTransactions()` 추가; 12개월 × 15~30건, 단골 매장 30% 비중; `initialMonthlyCashback` 5월 스펜드 합산 자동 계산; `initialState` 교체 |
+| D2 | `components/common/PeriodPickerModal.jsx` (신규) | 390px 앱 고정형 바텀시트; 슬라이드업 300ms; 12개월 목록 (2026-05 ~ 2025-06); CashbackPage·HistoryPage 공용 |
+| D3 | `pages/CashbackPage.jsx` | 전면 재작성; "차감" 표현 전면 제거; primary[700] 요약 카드 + teal 진행바; 기간 선택 버튼; spend 필터 + 적립 내역 리스트; 빈 상태 처리 |
+| D4 | `pages/HistoryPage.jsx` | 타입 필터 칩 4종 (전체/충전/환불/결제); 기간 필터 PeriodPickerModal 재사용; spend 항목 store명 표시 + teal 캐시백 적립 표시; 기간 필터 초기화 X 버튼 |
+
+### 청크 D QA 결과
+
+| 항목 | 결과 |
+|------|------|
+| 12개월치 mock 데이터 생성 | ✅ |
+| 단골 매장 반복 등장 | ✅ |
+| 5월 monthlyCashback 자동 계산 | ✅ |
+| PeriodPickerModal 390px 고정 | ✅ |
+| 슬라이드업 애니메이션 | ✅ |
+| CashbackPage "차감" 표현 0건 | ✅ |
+| 기간 선택 → 목록 필터 | ✅ |
+| HistoryPage 타입/기간 필터 | ✅ |
+| spend 항목 store명 + 적립 표시 | ✅ |
+| localStorage 0건 | ✅ |
+| 빌드 0 오류 | ✅ (1830 모듈) |
+
+---
+
+## 청크 C — 인터랙션 디테일 (2026-05-15) ✅ 완료
+
+**빌드 결과: 0 오류 (1831 모듈, 414ms)**
+
+| # | 파일 | 내용 |
+|---|------|------|
+| C1 | `vite.config.js` | `assetsInclude: ['**/*.lottie']` — R10에서 이미 완료 |
+| C2 | `package.json` | `@lottiefiles/dotlottie-react ^0.19.2` — R10에서 이미 완료 |
+| C3 | `components/home/CardBackFaceId.jsx` (신규) | Dynamic Island 필 컴포넌트; 상단 슬라이드다운→Lottie 재생→슬라이드업; 화면 어두워짐 없음; 연타 방지 |
+| C4 | `pages/HomePage.jsx` | `showFaceId` 상태 + `handleCardIconClick`; `CardBackModal` → `CardBackFaceId` 교체; `onCardIconClick` 빈함수 → `handleCardIconClick` 연결 |
+| C5 | `pages/RefundPage.jsx` | 전면 재작성; NumPad/금액입력 방식 → 충전 내역 리스트; `refundTransaction(id)` 호출; 확인 다이얼로그; 빈 상태 처리 |
+| C6 | `pages/CardApplyPage.jsx` | 이미지 3,4 사양 — Task 10에서 이미 완료 |
+| C7 | `pages/CardApplyPage.jsx` | `useEffect` 추가: `cardStatus === 'applying'` 시 1000ms 후 `shipCard()` 자동 호출 |
+| C8 | `pages/KakaoPayGuidePage.jsx` | 딥링크 3단 폴백 — Task 10에서 이미 완료 |
+| C9 | `components/home/BannerCarousel.jsx` | 3슬라이드(카드신청/캐시백/카카오) + hasCard 분기 — Task 8/R5에서 이미 완료 |
+| C10 | `components/layout/BottomNavBar.jsx` | 4번째 슬롯 "혜택"/Gift/`/support` — Task 9에서 이미 완료 |
+
+### 청크 C QA 결과
+
+| 항목 | 결과 |
+|------|------|
+| face-id.lottie 존재 | ✅ |
+| vite.config.js assetsInclude lottie | ✅ |
+| CardBackFaceId Dynamic Island 구조 | ✅ |
+| onCardIconClick 연결 (연타 방지 포함) | ✅ |
+| RefundPage 충전 내역 리스트 방식 | ✅ |
+| refundTransaction(id) 호출 | ✅ |
+| CardApplyPage 1초 auto-shipCard useEffect | ✅ |
+| KakaoPayGuidePage 딥링크 | ✅ |
+| BannerCarousel 3슬라이드 + hasCard 분기 | ✅ |
+| BottomNavBar 혜택/Gift/support | ✅ |
+| localStorage 0건 | ✅ |
+| 빌드 0 오류 | ✅ (1831 모듈) |
+
+---
+
+## 청크 B — 흐름 로직 (2026-05-15) ✅ 완료
+
+**빌드 결과: 0 오류 (1831 모듈, 416ms)**
+
+| # | 파일 | 내용 |
+|---|------|------|
+| B1 | `context/UserContext.jsx` | `monthlyCashback` 상태 추가; `useCallback` 적용; `shipCard` 추가; `chargeBalance` ID 반환; `refundTransaction(id)` 추가; `spendBalance` 캐시백 자동 계산; `refundBalance` 청크C 호환 유지; `shouldShowCashbackModalOnNextHome` 삭제 |
+| B2 | `context/OnboardingContext.jsx` | 전면 교체: `hasSeenCardApplyCoach`, `hasSeenChargeCoach`, `hasSeenRefundCoach`, `hasSeenCashbackModal`; `markSeen(key)`, `completeAllCoachmarks()` |
+| B3 | `components/common/CoachMarkOverlay.jsx` | 버튼 row `justifyContent: 'space-between'` — 건너뛰기 좌측/다음 우측 |
+| B4 | `pages/HomePage.jsx` | 전면 재작성; AnnouncementBanner 제거; CardApplyCTA/CashbackEntryCard 분기; 코치마크 3단계(cardApply→charge→refund→cashbackModal) useEffect 자동 진행; mockBalance 제거(UserContext 동적 값 사용) |
+| B5 | `components/home/MonthlyCashbackModal.jsx` | `isOpen→open`, `monthlyCashback` prop 추가; 슬라이드업/다운 350ms 애니메이션 |
+| B6 | `components/home/CardApplyCTA.jsx` (신규) | 신규 사용자 잔액 카드 자리 CTA; `applyButtonRef` 부착 |
+| B7 | `components/home/CashbackEntryCard.jsx` (신규) | hasCard true 시 잔액 카드 아래 노출; 클릭 → 캐시백 모달 |
+
+### 청크 B QA 결과
+
+| 항목 | 결과 |
+|------|------|
+| mockBalance 0건 | ✅ |
+| localStorage 0건 | ✅ |
+| 구버전 shouldShowCashbackModalOnNextHome 0건 | ✅ |
+| coachStep 3단계 useEffect 분기 | ✅ |
+| MonthlyCashbackModal 슬라이드업 애니메이션 | ✅ |
+| CardApplyCTA 신규 파일 | ✅ |
+| CashbackEntryCard 신규 파일 | ✅ |
+| refundBalance 호환 유지 (청크 C까지) | ✅ |
+| 빌드 0 오류 | ✅ (1831 모듈) |
+
+---
+
+## 청크 A — 디자인 시스템 복원 (2026-05-15) ✅ 완료
+
+**빌드 결과: 0 오류 (1830 모듈, 487ms)**
+
+| # | 파일 | 내용 |
+|---|------|------|
+| A1 | `components/layout/ScreenContainer.jsx` | maxWidth 390px 복원 (tokens.layout.viewport 일치); `env(safe-area-inset-bottom/top)` 추가 |
+| A2 | `components/home/BalanceCardExpanded.jsx` | [변경 3] 워터마크 div→button, `onCardIconClick` prop, opacity 0.15/hover 0.25; [변경 4] `refundButtonRef` prop, 환불 버튼 map 분리; [변경 5] `LOW_BALANCE=10000` 복원, 잔액<10000 `colors.warning`+경고 문구; [변경 6] `getCashbackIntuition` 함수명, `rgba(45,212,191,0.15)` 배경+`colors.teal[400]` 아이콘/텍스트; 글래스 버튼 `rgba(255,255,255,0.2)` + border `rgba(255,255,255,0.3)` |
+| A3 | `pages/HomePage.jsx` | AnnouncementBanner 복원 (import+JSX); `showAnnouncement/closeAnnouncement` useApp() 추가; `refundButtonRef` useRef 추가; BalanceCardExpanded `onFlip→onCardIconClick={() => {}}`, `refundButtonRef` 전달 |
+
+### 청크 A QA 결과
+
+| 항목 | 결과 |
+|------|------|
+| ScreenContainer maxWidth 390px | ✅ |
+| safe-area-inset padding | ✅ |
+| 워터마크 button + onCardIconClick | ✅ |
+| opacity 0.15 / hover 0.25 | ✅ |
+| refundButtonRef 분리 | ✅ |
+| LOW_BALANCE < 10000 warning | ✅ |
+| getCashbackIntuition teal 색상 | ✅ |
+| 글래스 버튼 0.2 배경 + 0.3 보더 | ✅ |
+| AnnouncementBanner 복원 | ✅ |
+| 카드 외부 CardActions 없음 | ✅ |
+| ServiceShortcutGrid/RecentPaymentEmpty 주석 유지 | ✅ |
+| localStorage 0건 | ✅ |
+| 빌드 0 오류 | ✅ (1830 모듈) |
 
 ---
 
