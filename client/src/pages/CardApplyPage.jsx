@@ -21,7 +21,7 @@ import ScreenContainer from '../components/layout/ScreenContainer'
 function CardSVG({ type }) {
   const isTransit = type === 'transit'
   return (
-    <svg width="140" height="88" viewBox="0 0 220 138" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="120" height="75" viewBox="0 0 220 138" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="220" height="138" rx="12" fill={colors.primary[700]} />
       <rect width="220" height="138" rx="12" fill="url(#cardGrad)" />
       <defs>
@@ -194,7 +194,8 @@ function CategoryAccordion({ children }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: spacing[3],
+          padding: spacing[2],
+          minHeight: '40px',
           background: 'none',
           border: 'none',
           cursor: 'pointer',
@@ -444,7 +445,7 @@ export default function CardApplyPage() {
               fontSize: typography.size.xl,
               fontWeight: typography.weight.bold,
               color: colors.gray[900],
-              lineHeight: 1.4,
+              lineHeight: 1.3,
             }}>
               강릉시에서
             </p>
@@ -453,15 +454,15 @@ export default function CardApplyPage() {
               fontSize: typography.size.xl,
               fontWeight: typography.weight.bold,
               color: colors.gray[900],
-              lineHeight: 1.4,
+              lineHeight: 1.3,
             }}>
               혜택받을 카드를 선택해주세요
             </p>
           </div>
 
-          {/* B1: 카드 캐러셀 + 라벨 고정 200px */}
+          {/* B1: 카드 캐러셀 + 라벨 고정 160px */}
           <div style={{
-            height: '200px',
+            height: '160px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -552,7 +553,7 @@ export default function CardApplyPage() {
                   backgroundColor: colors.surface.card,
                   border: `1px solid ${colors.gray[200]}`,
                   borderRadius: layout.radiusPill,
-                  padding: `${spacing[1]} ${spacing[4]}`,
+                  padding: `${spacing[1]} ${spacing[3]}`,
                   fontSize: typography.size.sm,
                   color: colors.gray[900],
                 }}>
@@ -564,7 +565,7 @@ export default function CardApplyPage() {
 
           {/* B5: 혜택 리스트 — 행 padding spacing[3] */}
           <div style={{
-            margin: `0 ${layout.margin} ${spacing[3]}`,
+            margin: `0 ${layout.margin} ${spacing[2]}`,
             backgroundColor: colors.surface.card,
             borderRadius: layout.radiusCard,
             boxShadow: shadow.card,
@@ -577,13 +578,13 @@ export default function CardApplyPage() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: spacing[3],
-                  padding: `${spacing[3]} ${spacing[4]}`,
+                  padding: `${spacing[2]} ${spacing[4]}`,
                   borderBottom: idx < BENEFITS.length - 1 ? `1px solid ${colors.gray[100]}` : 'none',
                 }}
               >
                 <div style={{
-                  width: '36px',
-                  height: '36px',
+                  width: '32px',
+                  height: '32px',
                   borderRadius: '50%',
                   backgroundColor: benefit.iconBg,
                   display: 'flex',
@@ -607,7 +608,7 @@ export default function CardApplyPage() {
 
           {/* B5: 점선 구분선 — margin spacing[3] */}
           <div style={{
-            margin: `0 ${layout.margin} ${spacing[3]}`,
+            margin: `${spacing[2]} 0`,
             borderTop: `1.5px dashed ${colors.gray[200]}`,
           }} />
 
@@ -653,14 +654,14 @@ export default function CardApplyPage() {
 
           {/* 간편신청하기 버튼 */}
           <div style={{
-            padding: `${spacing[3]} ${layout.margin}`,
-            paddingBottom: `calc(env(safe-area-inset-bottom) + ${spacing[3]})`,
+            padding: `${spacing[2]} ${layout.margin}`,
+            paddingBottom: `calc(env(safe-area-inset-bottom) + ${spacing[2]})`,
           }}>
             <button
               onClick={applyCard}
               style={{
                 width: '100%',
-                height: '52px',
+                height: '48px',
                 backgroundColor: colors.primary[700],
                 color: colors.onDark.primary,
                 border: 'none',

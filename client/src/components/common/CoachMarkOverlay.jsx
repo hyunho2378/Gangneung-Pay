@@ -6,22 +6,18 @@
  * A1: ScreenContainer 기준 relative 좌표로 말풍선 위치 고정 (모바일 390px 안에만 표시)
  */
 
-import { useState, useLayoutEffect, useEffect, useRef } from 'react'
+import { useState, useLayoutEffect, useEffect } from 'react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 
 export default function CoachMarkOverlay({ targetRef, message, step, totalSteps, onNext, onSkip }) {
   const [containerRect, setContainerRect] = useState(null)
   const [targetRect, setTargetRect] = useState(null)
-  const rafRef = useRef(null)
 
   useEffect(() => {
     const prevOverflow = document.body.style.overflow
-    const prevTouchAction = document.body.style.touchAction
     document.body.style.overflow = 'hidden'
-    document.body.style.touchAction = 'none'
     return () => {
       document.body.style.overflow = prevOverflow
-      document.body.style.touchAction = prevTouchAction
     }
   }, [])
 
@@ -30,11 +26,13 @@ export default function CoachMarkOverlay({ targetRef, message, step, totalSteps,
       const container = document.getElementById('screen-container')
       if (container) setContainerRect(container.getBoundingClientRect())
       if (targetRef?.current) setTargetRect(targetRef.current.getBoundingClientRect())
-      rafRef.current = requestAnimationFrame(updateRects)
     }
+
     updateRects()
+    window.addEventListener('resize', updateRects)
+
     return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+      window.removeEventListener('resize', updateRects)
     }
   }, [targetRef])
 
@@ -57,30 +55,31 @@ export default function CoachMarkOverlay({ targetRef, message, step, totalSteps,
   let tooltipPosition = {}
   let arrowDir = null
 
+  const TOOLTIP_ESTIMATED_HEIGHT = 180
+
   if (relativeTarget) {
-    const spaceBelow = containerHeight - relativeTarget.bottom
-    if (spaceBelow >= 200) {
-      tooltipPosition = { top: `${relativeTarget.bottom + 12}px` }
-      arrowDir = 'top'
-    } else {
+    const spaceAbove = relativeTarget.top
+
+    if (spaceAbove >= TOOLTIP_ESTIMATED_HEIGHT + 24) {
       tooltipPosition = { bottom: `${containerHeight - relativeTarget.top + 12}px` }
       arrowDir = 'bottom'
+    } else {
+      tooltipPosition = { top: '50%', transform: 'translateY(-50%)' }
+      arrowDir = null
     }
   } else {
-    tooltipPosition = { top: '50%' }
+    tooltipPosition = { top: '50%', transform: 'translateY(-50%)' }
   }
 
   return (
     <div
-      onTouchMove={(e) => e.preventDefault()}
-      onWheel={(e) => e.preventDefault()}
       style={{
         position: 'fixed',
         top: containerRect.top,
         left: containerRect.left,
         width: containerRect.width,
         height: containerRect.height,
-        zIndex: 200,
+        zIndex: 9999,
         fontFamily: typography.fontFamily,
         pointerEvents: 'auto',
       }}
@@ -113,6 +112,7 @@ export default function CoachMarkOverlay({ targetRef, message, step, totalSteps,
           position: 'absolute',
           left: spacing[4],
           right: spacing[4],
+          pointerEvents: 'auto',
           ...tooltipPosition,
         }}
       >
@@ -177,6 +177,7 @@ export default function CoachMarkOverlay({ targetRef, message, step, totalSteps,
                 padding: `${spacing[2]} 0`,
                 fontFamily: typography.fontFamily,
                 minHeight: layout.touchMin,
+                pointerEvents: 'auto',
               }}
             >
               건너뛰기
@@ -194,6 +195,7 @@ export default function CoachMarkOverlay({ targetRef, message, step, totalSteps,
                 cursor: 'pointer',
                 minHeight: layout.touchMin,
                 fontFamily: typography.fontFamily,
+                pointerEvents: 'auto',
               }}
             >
               다음
