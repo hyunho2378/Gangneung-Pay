@@ -14,7 +14,7 @@ export default function SupportGrantCard({
       onClick={onClick}
       style={{
         backgroundColor: colors.surface.card,
-        borderRadius: '12px',
+        borderRadius: layout.radiusButton,
         padding: spacing[4],
         boxShadow: shadow.card,
         display: 'flex',

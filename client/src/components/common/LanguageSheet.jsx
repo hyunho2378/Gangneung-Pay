@@ -104,6 +104,7 @@ export default function LanguageSheet({ isOpen, onClose, selected, onSelect }) {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: spacing[3] }}>
+                {/* 장식 예외: 국기 16px 높이의 미세한 라운딩 */}
                 <div
                   style={{
                     width: '24px',

@@ -46,7 +46,7 @@ export default function StoreRecommendCard({ stores = defaultStores }) {
             minWidth: '120px',
             width: '120px',
             backgroundColor: colors.surface.card,
-            borderRadius: '12px',
+            borderRadius: layout.radiusButton,
             padding: spacing[3],
             boxShadow: shadow.card,
             cursor: 'pointer',

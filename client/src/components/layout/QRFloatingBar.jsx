@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { colors, typography, layout } from '../../tokens/tokens'
+import { colors, typography, layout, spacing } from '../../tokens/tokens'
 
 function QRIcon() {
   return (
@@ -34,7 +34,7 @@ export default function QRFloatingBar() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '8px',
+      gap: spacing[2],
       cursor: 'pointer',
       zIndex: 190,
     }}

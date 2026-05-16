@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { colors, layout, typography, shadow } from '../tokens/tokens'
+import { colors, layout, typography, shadow, spacing } from '../tokens/tokens'
 
 import ScreenContainer from '../components/layout/ScreenContainer'
-import TopAppBar from '../components/layout/TopAppBar'
 import BottomNavBar from '../components/layout/BottomNavBar'
 // HIDDEN (Phase 3 feedback): QRFloatingBar → 바텀탭 QR 중앙 버튼으로 대체
 // import QRFloatingBar from '../components/layout/QRFloatingBar'
@@ -60,8 +59,6 @@ export default function SupportPage() {
 
   return (
     <ScreenContainer>
-      <TopAppBar />
-
       {/* 탭 바 */}
       <div
         style={{
@@ -111,7 +108,7 @@ export default function SupportPage() {
             cursor: 'pointer',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: spacing[2] }}>
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
               <circle cx="9" cy="6" r="3" stroke={colors.primary[700]} strokeWidth="1.5" />
               <path d="M3 15c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke={colors.primary[700]} strokeWidth="1.5" strokeLinecap="round" />
@@ -141,7 +138,7 @@ export default function SupportPage() {
           padding: `12px ${layout.margin} 139px`,
         }}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[3] }}>
           {mockGrants.map((grant) => (
             <SupportGrantCard
               key={grant.id}

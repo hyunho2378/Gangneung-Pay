@@ -7,7 +7,7 @@ export default function OnboardingStepper({ currentStep = 3 }) {
     <div
       style={{
         backgroundColor: colors.surface.card,
-        borderRadius: '12px',
+        borderRadius: layout.radiusButton,
         margin: layout.margin,
         padding: spacing[4],
         boxShadow: shadow.card,

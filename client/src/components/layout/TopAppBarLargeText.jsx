@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext'
-import { colors, typography, layout } from '../../tokens/tokens'
+import { colors, typography, layout, spacing } from '../../tokens/tokens'
 import LogoBlue from '../../assets/logos/강릉페이로고_블루.svg'
 
 export default function TopAppBarLargeText() {
@@ -22,10 +22,11 @@ export default function TopAppBarLargeText() {
       borderBottom: `1px solid ${colors.gray[200]}`,
     }}>
       {/* 로고 + 텍스트 — 큰글씨 모드에서 더 크게 */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', paddingLeft: '4px' }}>
+      {/* 장식 예외: 브랜드 마크 tight grouping (디자인시스템 단계 3-B) */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', paddingLeft: spacing[1] }}>
         <img src={LogoBlue} alt="강릉페이" style={{ height: '28px' }} />
         <span style={{
-          fontSize: '20px',
+          fontSize: typography.size.xl,
           fontWeight: typography.weight.bold,
           color: colors.primary[700],
           fontFamily: typography.fontFamily,
@@ -36,7 +37,7 @@ export default function TopAppBarLargeText() {
       </div>
 
       {/* 우측: 큰글씨 끄기 pill + 메뉴 */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: spacing[2] }}>
         <button
           onClick={toggleLargeText}
           style={{
@@ -45,7 +46,7 @@ export default function TopAppBarLargeText() {
             border: `1px solid ${colors.primary[500]}`,
             backgroundColor: colors.primary[100],
             color: colors.primary[700],
-            fontSize: '13px',
+            fontSize: typography.size.xs,
             fontWeight: typography.weight.semibold,
             cursor: 'pointer',
             fontFamily: typography.fontFamily,
@@ -61,7 +62,7 @@ export default function TopAppBarLargeText() {
             border: 'none',
             cursor: 'pointer',
             color: colors.gray[700],
-            fontSize: '14px',
+            fontSize: typography.size.xs,
             fontWeight: typography.weight.medium,
             fontFamily: typography.fontFamily,
             padding: '4px 8px',

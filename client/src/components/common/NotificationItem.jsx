@@ -100,7 +100,7 @@ export default function NotificationItem({ date, items = [] }) {
             <div
               style={{
                 position: 'absolute',
-                left: '8px',
+                left: spacing[2],
                 top: '50%',
                 transform: 'translateY(-50%)',
                 width: '6px',

@@ -194,7 +194,7 @@ export default function ChatBotScreen({ onClose }) {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start',
-                gap: '4px',
+                gap: spacing[1],
                 maxWidth: '72%',
               }}
             >

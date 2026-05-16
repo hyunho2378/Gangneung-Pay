@@ -79,6 +79,7 @@ export default function PeriodPickerModal({ open, onClose, onSelect, selectedYea
       >
         {/* 핸들 */}
         <div style={{ display: 'flex', justifyContent: 'center', paddingTop: spacing[3] }}>
+          {/* 장식 예외: 핸들 4px 높이의 perfect rounded */}
           <div style={{
             width: '40px',
             height: '4px',

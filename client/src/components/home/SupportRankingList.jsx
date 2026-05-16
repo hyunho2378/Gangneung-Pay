@@ -92,6 +92,7 @@ export default function SupportRankingList({ items = defaultItems }) {
           </div>
 
           {/* 보기 화살표 */}
+          {/* 장식 예외: 아이콘 버튼 그룹 마이크로 간격 (디자인시스템 단계 3-B) */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '2px', flexShrink: 0 }}>
             <span
               style={{

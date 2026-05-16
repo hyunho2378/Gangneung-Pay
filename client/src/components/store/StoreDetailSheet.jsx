@@ -97,7 +97,7 @@ export default function StoreDetailSheet({ isOpen, onClose, store }) {
                   style={{
                     width: '32px',
                     height: '32px',
-                    borderRadius: '8px',
+                    borderRadius: layout.radiusSmall,
                     backgroundColor: colors.primary[50],
                     display: 'flex',
                     alignItems: 'center',
@@ -125,7 +125,7 @@ export default function StoreDetailSheet({ isOpen, onClose, store }) {
                   style={{
                     width: '32px',
                     height: '32px',
-                    borderRadius: '8px',
+                    borderRadius: layout.radiusSmall,
                     backgroundColor: colors.primary[50],
                     display: 'flex',
                     alignItems: 'center',
@@ -162,7 +162,7 @@ export default function StoreDetailSheet({ isOpen, onClose, store }) {
                   style={{
                     width: '32px',
                     height: '32px',
-                    borderRadius: '8px',
+                    borderRadius: layout.radiusSmall,
                     backgroundColor: colors.primary[50],
                     display: 'flex',
                     alignItems: 'center',

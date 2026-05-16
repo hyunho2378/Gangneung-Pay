@@ -125,6 +125,8 @@ export default function StoreMapScreen() {
   const [sheetOpen, setSheetOpen] = useState(false)
   const [mapRef, setMapRef] = useState(null)
 
+  console.log('Maps API Key:', import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? 'EXISTS' : 'MISSING')
+
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY ?? '',

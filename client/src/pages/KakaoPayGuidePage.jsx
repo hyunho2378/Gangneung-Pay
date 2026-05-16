@@ -42,7 +42,7 @@ export default function KakaoPayGuidePage() {
               width: '80px',
               height: '80px',
               backgroundColor: colors.kakaoYellow,
-              borderRadius: '24px',
+              borderRadius: layout.radiusModal,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',

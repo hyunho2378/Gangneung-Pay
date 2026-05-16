@@ -6,7 +6,7 @@
 import { Search, Bell } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext'
-import { colors, typography, layout } from '../../tokens/tokens'
+import { colors, typography, layout, spacing } from '../../tokens/tokens'
 import LogoBlue from '../../assets/logos/강릉페이로고_블루.svg'
 
 export default function TopAppBar() {
@@ -28,10 +28,11 @@ export default function TopAppBar() {
       borderBottom: `1px solid ${colors.gray[200]}`,
     }}>
       {/* 로고 + 텍스트 */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', paddingLeft: '4px' }}>
+      {/* 장식 예외: 브랜드 마크 tight grouping (디자인시스템 단계 3-B) */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', paddingLeft: spacing[1] }}>
         <img src={LogoBlue} alt="강릉페이" style={{ height: '22px' }} />
         <span style={{
-          fontSize: '20px',
+          fontSize: typography.size.xl,
           fontWeight: typography.weight.bold,
           color: colors.primary[700],
           fontFamily: typography.fontFamily,
@@ -42,6 +43,7 @@ export default function TopAppBar() {
       </div>
 
       {/* 우측 액션 */}
+      {/* 장식 예외: 아이콘 버튼 그룹 마이크로 간격 (디자인시스템 단계 3-B) */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
         {/* 큰글씨 pill */}
         <button
@@ -52,7 +54,7 @@ export default function TopAppBar() {
             border: `1px solid ${isLargeText ? colors.primary[300] : colors.gray[200]}`,
             backgroundColor: isLargeText ? colors.primary[100] : colors.surface.card,
             color: isLargeText ? colors.primary[700] : colors.gray[500],
-            fontSize: '12px',
+            fontSize: typography.size.xxs,
             fontWeight: typography.weight.medium,
             cursor: 'pointer',
             fontFamily: typography.fontFamily,

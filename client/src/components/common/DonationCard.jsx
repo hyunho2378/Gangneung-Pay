@@ -42,7 +42,7 @@ export default function DonationCard({ campaign = defaultCampaign }) {
     <div
       style={{
         backgroundColor: colors.surface.card,
-        borderRadius: '12px',
+        borderRadius: layout.radiusButton,
         overflow: 'hidden',
         boxShadow: shadow.card,
         display: 'flex',
@@ -158,7 +158,7 @@ export default function DonationCard({ campaign = defaultCampaign }) {
         </div>
 
         {/* 참여자 수 */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: spacing[1] }}>
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
             <circle cx="4.5" cy="3.5" r="2" stroke={colors.gray[400]} strokeWidth="1.2" />
             <path d="M1 10 C1 7.79 2.57 6 4.5 6" stroke={colors.gray[400]} strokeWidth="1.2" strokeLinecap="round" />

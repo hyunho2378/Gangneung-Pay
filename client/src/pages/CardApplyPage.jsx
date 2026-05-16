@@ -652,29 +652,28 @@ export default function CardApplyPage() {
             </div>
           </CategoryAccordion>
 
-          {/* 간편신청하기 버튼 */}
-          <div style={{
-            padding: `${spacing[2]} ${layout.margin}`,
-            paddingBottom: `calc(env(safe-area-inset-bottom) + ${spacing[2]})`,
-          }}>
-            <button
-              onClick={applyCard}
-              style={{
-                width: '100%',
-                height: '48px',
-                backgroundColor: colors.primary[700],
-                color: colors.onDark.primary,
-                border: 'none',
-                borderRadius: layout.radiusButton,
-                fontSize: typography.size.md,
-                fontWeight: typography.weight.semibold,
-                cursor: 'pointer',
-                fontFamily: typography.fontFamily,
-              }}
-            >
-              간편 신청하기
-            </button>
-          </div>
+        </div>
+        <div style={{
+          padding: `${spacing[3]} ${layout.margin}`,
+          paddingBottom: `calc(env(safe-area-inset-bottom) + ${spacing[3]})`,
+        }}>
+          <button
+            onClick={applyCard}
+            style={{
+              width: '100%',
+              height: '48px',
+              backgroundColor: colors.primary[700],
+              color: colors.onDark.primary,
+              border: 'none',
+              borderRadius: layout.radiusButton,
+              fontSize: typography.size.md,
+              fontWeight: typography.weight.semibold,
+              cursor: 'pointer',
+              fontFamily: typography.fontFamily,
+            }}
+          >
+            간편 신청하기
+          </button>
         </div>
       </div>
     </ScreenContainer>

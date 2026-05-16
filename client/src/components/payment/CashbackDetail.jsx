@@ -58,6 +58,7 @@ function SummaryCard({ items, cashbackMax }) {
           </div>
         </div>
       </div>
+      {/* 장식 예외: 진행바 6px 높이의 perfect rounded */}
       <div
         style={{
           height: '6px',

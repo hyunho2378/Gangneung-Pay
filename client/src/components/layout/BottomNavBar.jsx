@@ -96,6 +96,7 @@ function NavTab({ label, icon, active, onClick, height }) {
         background: 'none',
         border: 'none',
         cursor: 'pointer',
+        // 장식 예외: 탭 아이콘-라벨 의미적 결속 (디자인시스템 단계 3-B)
         gap: '2px',
         minHeight: height,
         color,

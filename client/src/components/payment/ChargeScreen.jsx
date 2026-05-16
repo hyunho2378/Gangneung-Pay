@@ -44,7 +44,7 @@ function StepIndicator({ current }) {
         const stepEl = (
           <div
             key={`step-${num}`}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: spacing[1] }}
           >
             <div
               style={{
@@ -71,7 +71,7 @@ function StepIndicator({ current }) {
               ) : (
                 <span
                   style={{
-                    fontSize: '11px',
+                    fontSize: typography.size.nav,
                     fontWeight: 600,
                     color: isActive ? '#FFFFFF' : colors.gray[400],
                     fontFamily: typography.fontFamily,
@@ -248,7 +248,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
 
             <span
               style={{
-                fontSize: '36px',
+                fontSize: typography.size.balanceLarge,
                 fontWeight: typography.weight.bold,
                 color: hasAmount ? colors.gray[900] : colors.gray[400],
                 letterSpacing: '-0.5px',

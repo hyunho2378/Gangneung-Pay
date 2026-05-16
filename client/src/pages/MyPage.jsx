@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom'
 import { User, LogOut } from 'lucide-react'
 import { colors, typography, layout, spacing } from '../tokens/tokens'
 import ScreenContainer from '../components/layout/ScreenContainer'
-import TopAppBar from '../components/layout/TopAppBar'
 import BottomNavBar from '../components/layout/BottomNavBar'
 import MyMenuGroup from '../components/mypage/MyMenuGroup'
 
@@ -53,8 +52,6 @@ export default function MyPage() {
 
   return (
     <ScreenContainer>
-      <TopAppBar />
-
       <div style={{ overflowY: 'auto', paddingBottom: '100px', flex: 1 }}>
         {/* 프로필 헤더 */}
         <div

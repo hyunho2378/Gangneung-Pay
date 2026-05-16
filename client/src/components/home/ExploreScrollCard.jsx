@@ -77,7 +77,7 @@ export default function ExploreScrollCard() {
               minWidth: '160px',
               width: '160px',
               height: '100px',
-              borderRadius: '12px',
+              borderRadius: layout.radiusButton,
               backgroundColor: card.bg,
               padding: spacing[3],
               display: 'flex',

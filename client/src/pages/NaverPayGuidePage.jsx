@@ -61,7 +61,7 @@ export default function NaverPayGuidePage() {
               width: '80px',
               height: '80px',
               backgroundColor: NAVER_GREEN,
-              borderRadius: '24px',
+              borderRadius: layout.radiusModal,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',

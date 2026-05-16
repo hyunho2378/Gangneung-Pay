@@ -71,6 +71,7 @@ export default function MonthlyCashbackModal({ open, onClose, monthlyCashback = 
       >
         {/* 핸들 */}
         <div style={{ display: 'flex', justifyContent: 'center', paddingTop: spacing[3] }}>
+          {/* 장식 예외: 핸들 4px 높이의 perfect rounded */}
           <div style={{ width: '40px', height: '4px', borderRadius: '2px', backgroundColor: colors.gray[300] }} />
         </div>
 

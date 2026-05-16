@@ -62,6 +62,7 @@ export default function SettingsToggleRow({ label, description, value, onChange 
         <span
           style={{
             position: 'absolute',
+            // 장식 예외: vertical-align 미세 보정 (디자인시스템 단계 3-B)
             top: '3px',
             left: value ? '23px' : '3px',
             width: '22px',

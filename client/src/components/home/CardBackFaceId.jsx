@@ -7,6 +7,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 import faceIdLottie from '../../assets/lottie/face-id-clean.lottie?url'
+import { layout } from '../../tokens/tokens'
 
 const PLAY_SPEED = 9.0
 const POST_HOLD_MS = 400
@@ -101,7 +102,7 @@ export default function CardBackFaceId({ open, onClose }) {
         width: 240,
         height: 80,
         backgroundColor: 'black',
-        borderRadius: 40,
+        borderRadius: layout.radiusPill,
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',

@@ -9,7 +9,7 @@
 import { useState, useLayoutEffect, useEffect } from 'react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 
-export default function CoachMarkOverlay({ targetRef, message, step, totalSteps, onNext, onSkip }) {
+export default function CoachMarkOverlay({ targetRef, message, step, totalSteps, onNext, onSkip, placement = 'top' }) {
   const [containerRect, setContainerRect] = useState(null)
   const [targetRect, setTargetRect] = useState(null)
 
@@ -58,14 +58,18 @@ export default function CoachMarkOverlay({ targetRef, message, step, totalSteps,
   const TOOLTIP_ESTIMATED_HEIGHT = 180
 
   if (relativeTarget) {
-    const spaceAbove = relativeTarget.top
-
-    if (spaceAbove >= TOOLTIP_ESTIMATED_HEIGHT + 24) {
-      tooltipPosition = { bottom: `${containerHeight - relativeTarget.top + 12}px` }
-      arrowDir = 'bottom'
+    if (placement === 'bottom') {
+      tooltipPosition = { top: `${relativeTarget.bottom + 12}px` }
+      arrowDir = 'top'
     } else {
-      tooltipPosition = { top: '50%', transform: 'translateY(-50%)' }
-      arrowDir = null
+      const spaceAbove = relativeTarget.top
+      if (spaceAbove >= TOOLTIP_ESTIMATED_HEIGHT + 24) {
+        tooltipPosition = { bottom: `${containerHeight - relativeTarget.top + 12}px` }
+        arrowDir = 'bottom'
+      } else {
+        tooltipPosition = { top: '50%', transform: 'translateY(-50%)' }
+        arrowDir = null
+      }
     }
   } else {
     tooltipPosition = { top: '50%', transform: 'translateY(-50%)' }

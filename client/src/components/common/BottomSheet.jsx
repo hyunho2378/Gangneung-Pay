@@ -31,6 +31,10 @@ export default function BottomSheet({ isOpen, onClose, title, children }) {
       <div
         style={{
           position: 'relative',
+          width: '100%',
+          maxWidth: layout.viewport,
+          marginLeft: 'auto',
+          marginRight: 'auto',
           backgroundColor: colors.surface.card,
           borderTopLeftRadius: layout.radiusModal,
           borderTopRightRadius: layout.radiusModal,

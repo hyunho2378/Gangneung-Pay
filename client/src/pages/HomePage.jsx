@@ -162,6 +162,7 @@ export default function HomePage() {
       {coachStep === 'cardApply' && (
         <CoachMarkOverlay
           targetRef={applyButtonRef}
+          placement="bottom"
           message="강릉페이 카드를 신청해보세요. 신청하기를 누르면 1초 만에 카드를 받을 수 있어요."
           step={1}
           totalSteps={1}

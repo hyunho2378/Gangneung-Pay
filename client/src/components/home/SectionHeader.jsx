@@ -34,6 +34,7 @@ export default function SectionHeader({ title, onViewAll, showViewAll = true }) 
             padding: 0,
             display: 'flex',
             alignItems: 'center',
+            // 장식 예외: 아이콘 버튼 그룹 마이크로 간격 (디자인시스템 단계 3-B)
             gap: '2px',
             color: colors.primary[600],
             fontSize: typography.size.xs,
