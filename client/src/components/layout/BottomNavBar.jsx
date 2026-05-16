@@ -33,7 +33,7 @@ export default function BottomNavBar() {
       left: '50%',
       transform: 'translateX(-50%)',
       width: '100%',
-      maxWidth: '430px',
+      maxWidth: layout.viewport,
       backgroundColor: colors.surface.card,
       boxShadow: shadow.nav,
       zIndex: 200,
