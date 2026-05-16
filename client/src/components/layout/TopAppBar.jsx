@@ -18,14 +18,14 @@ export default function TopAppBar() {
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      backgroundColor: colors.surface.card,
+      backgroundColor: colors.surface.background,
       height: layout.topBarHeight,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingLeft: layout.margin,
       paddingRight: '8px',
-      borderBottom: `1px solid ${colors.gray[200]}`,
+      borderBottom: 'none',
     }}>
       {/* 로고 + 텍스트 */}
       {/* 장식 예외: 브랜드 마크 tight grouping (디자인시스템 단계 3-B) */}

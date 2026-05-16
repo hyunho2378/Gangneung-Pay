@@ -164,6 +164,20 @@ export const typography = {
     normal: 1.4,
     loose: 1.6,
   },
+
+  sizeLarge: {
+    largeTitle: '44px',
+    balance: '40px',
+    balanceLarge: '48px',
+    appTitle: '30px',
+    xl: '26px',
+    lg: '24px',
+    md: '22px',
+    sm: '20px',
+    xs: '17px',
+    xxs: '15px',
+    nav: '14px',
+  },
 };
 
 export const spacing = {

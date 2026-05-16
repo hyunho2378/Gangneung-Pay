@@ -7,10 +7,10 @@
  */
 
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, Calendar, ChevronDown, X } from 'lucide-react'
+import { Calendar, ChevronDown, X } from 'lucide-react'
 import { useUser } from '../context/UserContext'
 import { colors, typography, layout, spacing } from '../tokens/tokens'
+import { useTypography } from '../hooks/useTypography'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import BottomNavBar from '../components/layout/BottomNavBar'
 import PeriodPickerModal from '../components/common/PeriodPickerModal'
@@ -23,7 +23,7 @@ const TYPE_FILTERS = [
 ]
 
 export default function HistoryPage() {
-  const navigate = useNavigate()
+  const sizes = useTypography()
   const { transactions } = useUser()
 
   const [typeFilter, setTypeFilter] = useState('all')
@@ -57,30 +57,22 @@ export default function HistoryPage() {
     : '기간 선택'
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       {/* 헤더 */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        gap: spacing[3],
         padding: `${spacing[3]} ${layout.margin}`,
         backgroundColor: colors.surface.card,
         borderBottom: `1px solid ${colors.gray[200]}`,
         minHeight: layout.topBarHeight,
       }}>
-        <button
-          onClick={() => navigate(-1)}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-          aria-label="뒤로가기"
-        >
-          <ChevronLeft size={24} color={colors.gray[900]} />
-        </button>
         <h1 style={{
           margin: 0,
-          flex: 1,
-          fontSize: typography.size.lg,
+          fontSize: sizes.lg,
           fontWeight: typography.weight.bold,
           color: colors.gray[900],
+          fontFamily: typography.fontFamily,
         }}>
           이용 내역
         </h1>
@@ -106,7 +98,7 @@ export default function HistoryPage() {
                   border: `1px solid ${active ? colors.primary[700] : colors.gray[200]}`,
                   backgroundColor: active ? colors.primary[700] : 'transparent',
                   color: active ? colors.onDark.primary : colors.gray[700],
-                  fontSize: typography.size.xs,
+                  fontSize: sizes.xs,
                   fontWeight: active ? typography.weight.semibold : typography.weight.regular,
                   cursor: 'pointer',
                   fontFamily: typography.fontFamily,
@@ -138,7 +130,7 @@ export default function HistoryPage() {
           >
             <Calendar size={14} color={periodFilter ? colors.primary[700] : colors.gray[500]} />
             <span style={{
-              fontSize: typography.size.xs,
+              fontSize: sizes.xs,
               fontWeight: periodFilter ? typography.weight.semibold : typography.weight.regular,
               color: periodFilter ? colors.primary[700] : colors.gray[700],
             }}>
@@ -181,7 +173,7 @@ export default function HistoryPage() {
             padding: spacing[8],
             textAlign: 'center',
             color: colors.gray[500],
-            fontSize: typography.size.sm,
+            fontSize: sizes.sm,
           }}>
             이용 내역이 없습니다
           </div>
@@ -202,7 +194,7 @@ export default function HistoryPage() {
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: spacing[2] }}>
                       <span style={{
-                        fontSize: typography.size.sm,
+                        fontSize: sizes.sm,
                         fontWeight: typography.weight.semibold,
                         color: label.color,
                       }}>
@@ -210,7 +202,7 @@ export default function HistoryPage() {
                       </span>
                       {t.type === 'charge' && t.refunded && (
                         <span style={{
-                          fontSize: typography.size.xxs,
+                          fontSize: sizes.xxs,
                           color: colors.gray[500],
                           backgroundColor: colors.gray[100],
                           padding: `2px ${spacing[2]}`,
@@ -222,7 +214,7 @@ export default function HistoryPage() {
                     </div>
                     <p style={{
                       margin: `${spacing[1]} 0 0 0`,
-                      fontSize: typography.size.xs,
+                      fontSize: sizes.xs,
                       color: colors.gray[500],
                     }}>
                       {fmtDate(t.date)}
@@ -231,7 +223,7 @@ export default function HistoryPage() {
                     {t.type === 'spend' && t.cashback > 0 && (
                       <p style={{
                         margin: `2px 0 0 0`,
-                        fontSize: typography.size.xs,
+                        fontSize: sizes.xs,
                         color: colors.teal[500],
                       }}>
                         +{t.cashback.toLocaleString('ko-KR')}원 적립
@@ -239,7 +231,7 @@ export default function HistoryPage() {
                     )}
                   </div>
                   <span style={{
-                    fontSize: typography.size.md,
+                    fontSize: sizes.md,
                     fontWeight: typography.weight.bold,
                     color: label.color,
                     whiteSpace: 'nowrap',

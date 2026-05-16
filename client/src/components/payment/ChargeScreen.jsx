@@ -11,6 +11,7 @@
 import { useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
+import { useTypography } from '../../hooks/useTypography'
 import QuickAmountChip from './QuickAmountChip'
 import NumPad from './NumPad'
 
@@ -18,6 +19,7 @@ const MAX_AMOUNT = 999999999
 
 // 단계 표시기 — Shneiderman #8, Nielsen #1
 function StepIndicator({ current }) {
+  const sizes = useTypography()
   const steps = ['금액 입력', '충전 확인', '완료']
   return (
     <div
@@ -71,7 +73,7 @@ function StepIndicator({ current }) {
               ) : (
                 <span
                   style={{
-                    fontSize: typography.size.nav,
+                    fontSize: sizes.nav,
                     fontWeight: 600,
                     color: isActive ? '#FFFFFF' : colors.gray[400],
                     fontFamily: typography.fontFamily,
@@ -83,7 +85,7 @@ function StepIndicator({ current }) {
             </div>
             <span
               style={{
-                fontSize: typography.size.xxs,
+                fontSize: sizes.xxs,
                 color: textColor,
                 fontWeight: isActive ? typography.weight.semibold : typography.weight.regular,
                 fontFamily: typography.fontFamily,
@@ -119,6 +121,7 @@ function StepIndicator({ current }) {
 }
 
 export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance = 120000, chargeLimit = 500000 }) {
+  const sizes = useTypography()
   const [amount, setAmount] = useState(0)
   const [step, setStep] = useState(1)
   const [charged, setCharged] = useState(false)
@@ -208,7 +211,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
         )}
         <span
           style={{
-            fontSize: typography.size.md,
+            fontSize: sizes.md,
             fontWeight: typography.weight.semibold,
             color: colors.gray[900],
           }}
@@ -236,7 +239,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
           >
             <span
               style={{
-                fontSize: typography.size.xs,
+                fontSize: sizes.xs,
                 color: colors.gray[500],
               }}
             >
@@ -248,7 +251,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
 
             <span
               style={{
-                fontSize: typography.size.balanceLarge,
+                fontSize: sizes.balanceLarge,
                 fontWeight: typography.weight.bold,
                 color: hasAmount ? colors.gray[900] : colors.gray[400],
                 letterSpacing: '-0.5px',
@@ -259,7 +262,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
             </span>
 
             {/* C-03: 충전 한도 항상 노출 (Nielsen #1, Shneiderman #8) */}
-            <span style={{ fontSize: typography.size.xxs, color: colors.gray[400] }}>
+            <span style={{ fontSize: sizes.xxs, color: colors.gray[400] }}>
               1회 충전 한도 {chargeLimit.toLocaleString('ko-KR')}원
             </span>
 
@@ -269,7 +272,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
-                fontSize: typography.size.xs,
+                fontSize: sizes.xs,
                 fontWeight: typography.weight.medium,
                 color: colors.primary[600],
                 padding: 0,
@@ -280,7 +283,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
               환불안내보기
             </button>
             {/* C-05: 환불 요약 인라인 (S2, Nielsen #1) */}
-            <span style={{ fontSize: typography.size.xxs, color: colors.gray[400] }}>
+            <span style={{ fontSize: sizes.xxs, color: colors.gray[400] }}>
               충전금은 언제든지 환불 신청이 가능합니다
             </span>
           </div>
@@ -331,7 +334,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
                 color: canProceed ? colors.onDark.primary : colors.gray[400],
                 border: 'none',
                 borderRadius: layout.radiusButton,
-                fontSize: typography.size.md,
+                fontSize: sizes.md,
                 fontWeight: typography.weight.semibold,
                 cursor: canProceed ? 'pointer' : 'not-allowed',
                 transition: 'background-color 0.2s ease',
@@ -343,12 +346,12 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
             </button>
             {/* C-04: Disabled 버튼 사유 명시 (Nielsen #5, #9 — 한국어 평문) */}
             {isOverLimit && (
-              <p style={{ margin: `${spacing[2]} 0 0`, textAlign: 'center', fontSize: typography.size.xs, color: colors.error }}>
+              <p style={{ margin: `${spacing[2]} 0 0`, textAlign: 'center', fontSize: sizes.xs, color: colors.error }}>
                 1회 충전 한도 {chargeLimit.toLocaleString('ko-KR')}원을 초과했습니다
               </p>
             )}
             {!hasAmount && !isOverLimit && (
-              <p style={{ margin: `${spacing[2]} 0 0`, textAlign: 'center', fontSize: typography.size.xs, color: colors.gray[400] }}>
+              <p style={{ margin: `${spacing[2]} 0 0`, textAlign: 'center', fontSize: sizes.xs, color: colors.gray[400] }}>
                 충전 금액을 입력하세요
               </p>
             )}
@@ -400,7 +403,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
               >
                 <span
                   style={{
-                    fontSize: typography.size.sm,
+                    fontSize: sizes.sm,
                     color: colors.gray[500],
                   }}
                 >
@@ -408,7 +411,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
                 </span>
                 <span
                   style={{
-                    fontSize: typography.size.md,
+                    fontSize: sizes.md,
                     fontWeight: bold ? typography.weight.bold : typography.weight.regular,
                     color,
                   }}
@@ -434,7 +437,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
                 backgroundColor: colors.surface.card,
                 border: `1px solid ${colors.gray[200]}`,
                 borderRadius: layout.radiusButton,
-                fontSize: typography.size.md,
+                fontSize: sizes.md,
                 fontWeight: typography.weight.medium,
                 color: colors.gray[700],
                 cursor: 'pointer',
@@ -457,7 +460,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
                 backgroundColor: colors.primary[700],
                 border: 'none',
                 borderRadius: layout.radiusButton,
-                fontSize: typography.size.md,
+                fontSize: sizes.md,
                 fontWeight: typography.weight.semibold,
                 color: colors.onDark.primary,
                 cursor: 'pointer',
@@ -512,7 +515,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
             <p
               style={{
                 margin: 0,
-                fontSize: typography.size.xl,
+                fontSize: sizes.xl,
                 fontWeight: typography.weight.bold,
                 color: colors.gray[900],
               }}
@@ -522,7 +525,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
             <p
               style={{
                 margin: 0,
-                fontSize: typography.size.md,
+                fontSize: sizes.md,
                 color: colors.gray[500],
               }}
             >
@@ -543,10 +546,10 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
               alignItems: 'center',
             }}
           >
-            <span style={{ fontSize: typography.size.sm, color: colors.gray[500] }}>현재 잔액</span>
+            <span style={{ fontSize: sizes.sm, color: colors.gray[500] }}>현재 잔액</span>
             <span
               style={{
-                fontSize: typography.size.lg,
+                fontSize: sizes.lg,
                 fontWeight: typography.weight.bold,
                 color: colors.primary[700],
               }}
@@ -564,7 +567,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
               backgroundColor: colors.primary[700],
               border: 'none',
               borderRadius: layout.radiusButton,
-              fontSize: typography.size.md,
+              fontSize: sizes.md,
               fontWeight: typography.weight.semibold,
               color: colors.onDark.primary,
               cursor: 'pointer',

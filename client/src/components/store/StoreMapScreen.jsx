@@ -1,16 +1,15 @@
 // StoreMapScreen.jsx — M01 (p.24,43,44)
-// 지도 + 검색 + 필터 전체 화면
+// 지도 + 검색 자동완성 + 카테고리 필터 + 드래그 바텀시트
 
-import { useState } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
 import { Search } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
+import { STORES, CATEGORIES } from '../../data/stores'
 import CategoryFilterChip from './CategoryFilterChip'
 import StoreListItem from './StoreListItem'
 import StoreDetailSheet from './StoreDetailSheet'
 import FrequentPlaces from './FrequentPlaces'
-
-const CATEGORIES = ['전체', '음식점', '카페', '편의점', '숙박', '관광', '마트']
 
 // St-03: 카테고리 아이콘 (S6, Nielsen #6)
 const CATEGORY_ICONS = {
@@ -67,60 +66,10 @@ const CATEGORY_ICONS = {
 
 const GANGNEUNG_CENTER = { lat: 37.7647, lng: 128.8990 }
 
-const SAMPLE_STORES = [
-  {
-    id: 1,
-    name: '강릉중앙시장 순두부',
-    category: '음식점',
-    distance: '150m',
-    phone: '033-640-1234',
-    address: '강원특별자치도 강릉시 금성로 21',
-    hours: '09:00 ~ 21:00 (매주 월요일 휴무)',
-    lastUpdated: '2026.04.15',
-    lat: 37.7527,
-    lng: 128.8759,
-  },
-  {
-    id: 2,
-    name: '테라로사 강릉 본점',
-    category: '카페',
-    distance: '380m',
-    phone: '033-648-2327',
-    address: '강원특별자치도 강릉시 구정면 현천길 25',
-    hours: '09:00 ~ 22:00',
-    lastUpdated: '2026.03.22',
-    lat: 37.7096,
-    lng: 128.8572,
-  },
-  {
-    id: 3,
-    name: '강릉 GS25 경포점',
-    category: '편의점',
-    distance: '520m',
-    phone: '033-641-0001',
-    address: '강원특별자치도 강릉시 경포로 365',
-    hours: '24시간 운영',
-    lastUpdated: '2026.05.01',
-    lat: 37.7923,
-    lng: 128.8992,
-  },
-  {
-    id: 4,
-    name: '경포해변 쏠비치',
-    category: '숙박',
-    distance: '1.2km',
-    phone: '1588-4888',
-    address: '강원특별자치도 강릉시 해안로 307',
-    hours: '체크인 15:00 / 체크아웃 11:00',
-    lastUpdated: '2026.02.10',
-    lat: 37.7944,
-    lng: 128.9078,
-  },
-]
-
 export default function StoreMapScreen() {
   const [activeCategory, setActiveCategory] = useState('전체')
   const [searchQuery, setSearchQuery] = useState('')
+  const [showSuggestions, setShowSuggestions] = useState(false)
   const [selectedStore, setSelectedStore] = useState(null)
   const [sheetOpen, setSheetOpen] = useState(false)
   const [mapRef, setMapRef] = useState(null)
@@ -132,13 +81,29 @@ export default function StoreMapScreen() {
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY ?? '',
   })
 
+  // 드래그 시트 — 3단 스냅 포인트 (마운트 시 1회 평가)
+  const SHEET_HEIGHTS = useMemo(() => ({
+    collapsed: 200,
+    half: typeof window !== 'undefined' ? Math.round(window.innerHeight * 0.5) : 400,
+    expanded: typeof window !== 'undefined' ? Math.round(window.innerHeight * 0.9) : 720,
+  }), [])
+  const [sheetHeight, setSheetHeight] = useState(SHEET_HEIGHTS.half)
+  const [isDragging, setIsDragging] = useState(false)
+  const dragStart = useRef({ y: 0, height: 0 })
+  const searchContainerRef = useRef(null)
+
   const onLoad = (map) => setMapRef(map)
   const onUnmount = () => setMapRef(null)
 
   const filteredStores =
     activeCategory === '전체'
-      ? SAMPLE_STORES
-      : SAMPLE_STORES.filter((s) => s.category === activeCategory)
+      ? STORES
+      : STORES.filter((s) => s.category === activeCategory)
+
+  // 검색 자동완성: 부분 일치, 최대 5건
+  const suggestions = searchQuery.trim().length > 0
+    ? STORES.filter((s) => s.name.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 5)
+    : []
 
   const handleStoreClick = (store) => {
     setSelectedStore(store)
@@ -148,6 +113,69 @@ export default function StoreMapScreen() {
       mapRef.setZoom(16)
     }
   }
+
+  const handleSelectSuggestion = (store) => {
+    setSearchQuery(store.name)
+    setShowSuggestions(false)
+    handleStoreClick(store)
+  }
+
+  // 검색바 외부 클릭 시 자동완성 닫기
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target)) {
+        setShowSuggestions(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('touchstart', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('touchstart', handleClickOutside)
+    }
+  }, [])
+
+  // 드래그 핸들러
+  const handleDragStart = (clientY) => {
+    setIsDragging(true)
+    dragStart.current = { y: clientY, height: sheetHeight }
+  }
+
+  // 전역 mousemove / mouseup, touchmove / touchend
+  useEffect(() => {
+    if (!isDragging) return
+
+    const handleMove = (clientY) => {
+      const deltaY = dragStart.current.y - clientY
+      const newHeight = dragStart.current.height + deltaY
+      setSheetHeight(Math.max(SHEET_HEIGHTS.collapsed, Math.min(SHEET_HEIGHTS.expanded, newHeight)))
+    }
+    const handleEnd = () => {
+      setIsDragging(false)
+      setSheetHeight((current) => {
+        const distances = [
+          { h: SHEET_HEIGHTS.collapsed, dist: Math.abs(current - SHEET_HEIGHTS.collapsed) },
+          { h: SHEET_HEIGHTS.half, dist: Math.abs(current - SHEET_HEIGHTS.half) },
+          { h: SHEET_HEIGHTS.expanded, dist: Math.abs(current - SHEET_HEIGHTS.expanded) },
+        ]
+        return distances.reduce((min, d) => (d.dist < min.dist ? d : min)).h
+      })
+    }
+
+    const onMouseMove = (e) => handleMove(e.clientY)
+    const onTouchMove = (e) => handleMove(e.touches[0].clientY)
+
+    document.addEventListener('mousemove', onMouseMove)
+    document.addEventListener('mouseup', handleEnd)
+    document.addEventListener('touchmove', onTouchMove)
+    document.addEventListener('touchend', handleEnd)
+    return () => {
+      document.removeEventListener('mousemove', onMouseMove)
+      document.removeEventListener('mouseup', handleEnd)
+      document.removeEventListener('touchmove', onTouchMove)
+      document.removeEventListener('touchend', handleEnd)
+    }
+  }, [isDragging, SHEET_HEIGHTS])
 
   return (
     <div
@@ -168,7 +196,7 @@ export default function StoreMapScreen() {
           <GoogleMap
             mapContainerStyle={{ width: '100%', height: '100%' }}
             center={GANGNEUNG_CENTER}
-            zoom={14}
+            zoom={13}
             onLoad={onLoad}
             onUnmount={onUnmount}
             options={{
@@ -211,14 +239,15 @@ export default function StoreMapScreen() {
           </div>
         )}
 
-        {/* 검색바 (absolute — 지도 위) */}
+        {/* 검색바 + 자동완성 (absolute — 지도 위) */}
         <div
+          ref={searchContainerRef}
           style={{
             position: 'absolute',
             top: `calc(44px + ${spacing[4]})`,
             left: layout.margin,
             right: layout.margin,
-            zIndex: 10,
+            zIndex: 20,
           }}
         >
           <div
@@ -233,10 +262,14 @@ export default function StoreMapScreen() {
             }}
           >
             <Search size={18} color={colors.gray[400]} />
-            {/* St-04: 검색 input 활성화 (Nielsen #7 flexibility) */}
+            {/* St-04: 검색 input + 자동완성 (Nielsen #7 flexibility) */}
             <input
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value)
+                setShowSuggestions(true)
+              }}
+              onFocus={() => setShowSuggestions(true)}
               placeholder="매장 검색"
               style={{
                 border: 'none',
@@ -249,6 +282,61 @@ export default function StoreMapScreen() {
               }}
             />
           </div>
+
+          {/* 자동완성 드롭다운 */}
+          {showSuggestions && suggestions.length > 0 && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                right: 0,
+                marginTop: spacing[2],
+                backgroundColor: colors.surface.card,
+                borderRadius: layout.radiusCard,
+                boxShadow: shadow.modal,
+                overflow: 'hidden',
+              }}
+            >
+              {suggestions.map((store) => (
+                <button
+                  key={store.id}
+                  onClick={() => handleSelectSuggestion(store)}
+                  style={{
+                    width: '100%',
+                    padding: spacing[3],
+                    border: 'none',
+                    background: 'none',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    borderBottom: `1px solid ${colors.gray[100]}`,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: spacing[1],
+                    fontFamily: typography.fontFamily,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: typography.size.sm,
+                      fontWeight: typography.weight.medium,
+                      color: colors.gray[900],
+                    }}
+                  >
+                    {store.name}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: typography.size.xs,
+                      color: colors.gray[500],
+                    }}
+                  >
+                    {store.category} · {store.address}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* 필터칩 행 (검색바 아래) */}
@@ -278,28 +366,44 @@ export default function StoreMapScreen() {
         </div>
       </div>
 
-      {/* 하단 바텀시트 (기본 노출) */}
+      {/* 드래그 가능 바텀시트 (fixed — viewport 기준 + 중앙 정렬) */}
       <div
         style={{
+          position: 'fixed',
+          left: '50%',
+          bottom: layout.bottomNavHeight,
+          transform: 'translateX(-50%)',
+          width: '100%',
+          maxWidth: layout.viewport,
+          height: sheetHeight,
           backgroundColor: colors.surface.card,
           borderTopLeftRadius: layout.radiusModal,
           borderTopRightRadius: layout.radiusModal,
           boxShadow: shadow.modal,
-          maxHeight: '320px',
-          overflowY: 'auto',
+          transition: isDragging ? 'none' : 'height 250ms cubic-bezier(0.32, 0.72, 0, 1)',
+          zIndex: 30,
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        {/* 핸들 */}
+        {/* 드래그 핸들 영역 */}
         <div
+          onMouseDown={(e) => handleDragStart(e.clientY)}
+          onTouchStart={(e) => handleDragStart(e.touches[0].clientY)}
           style={{
+            padding: `${spacing[3]} 0 ${spacing[2]}`,
+            cursor: isDragging ? 'grabbing' : 'grab',
             display: 'flex',
             justifyContent: 'center',
-            padding: `${spacing[3]} 0 ${spacing[2]}`,
+            flexShrink: 0,
+            touchAction: 'none',
+            userSelect: 'none',
           }}
         >
           <div
             style={{
-              width: '32px',
+              width: '40px',
               height: '4px',
               borderRadius: layout.radiusPill,
               backgroundColor: colors.gray[300],
@@ -307,42 +411,45 @@ export default function StoreMapScreen() {
           />
         </div>
 
-        {/* 자주 가는 곳 */}
-        <FrequentPlaces />
+        {/* 콘텐츠 스크롤 영역 */}
+        <div style={{ flex: 1, overflowY: 'auto' }}>
+          {/* 자주 가는 곳 */}
+          <FrequentPlaces />
 
-        {/* 제목 */}
-        <div
-          style={{
-            padding: `${spacing[2]} ${layout.margin} ${spacing[2]}`,
-            fontSize: typography.size.md,
-            fontWeight: typography.weight.semibold,
-            color: colors.gray[900],
-          }}
-        >
-          가까운 매장
-        </div>
-
-        {/* 매장 리스트 */}
-        {filteredStores.length === 0 ? (
+          {/* 제목 */}
           <div
             style={{
-              padding: `${spacing[8]} ${layout.margin}`,
-              textAlign: 'center',
-              fontSize: typography.size.sm,
-              color: colors.gray[400],
+              padding: `${spacing[2]} ${layout.margin} ${spacing[2]}`,
+              fontSize: typography.size.md,
+              fontWeight: typography.weight.semibold,
+              color: colors.gray[900],
             }}
           >
-            해당 카테고리 매장이 없습니다
+            가까운 매장
           </div>
-        ) : (
-          filteredStores.map((store) => (
-            <StoreListItem
-              key={store.id}
-              store={store}
-              onClick={() => handleStoreClick(store)}
-            />
-          ))
-        )}
+
+          {/* 매장 리스트 */}
+          {filteredStores.length === 0 ? (
+            <div
+              style={{
+                padding: `${spacing[8]} ${layout.margin}`,
+                textAlign: 'center',
+                fontSize: typography.size.sm,
+                color: colors.gray[400],
+              }}
+            >
+              해당 카테고리 매장이 없습니다
+            </div>
+          ) : (
+            filteredStores.map((store) => (
+              <StoreListItem
+                key={store.id}
+                store={store}
+                onClick={() => handleStoreClick(store)}
+              />
+            ))
+          )}
+        </div>
       </div>
 
       {/* 매장 상세 바텀시트 */}

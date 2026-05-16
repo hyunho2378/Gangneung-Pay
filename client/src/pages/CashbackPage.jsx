@@ -10,12 +10,14 @@ import { useNavigate } from 'react-router-dom'
 import { Calendar, ChevronDown } from 'lucide-react'
 import { useUser } from '../context/UserContext'
 import { colors, typography, layout, spacing } from '../tokens/tokens'
+import { useTypography } from '../hooks/useTypography'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
 import PeriodPickerModal from '../components/common/PeriodPickerModal'
 
 export default function CashbackPage() {
   const navigate = useNavigate()
+  const sizes = useTypography()
   const { transactions } = useUser()
 
   const [periodOpen, setPeriodOpen] = useState(false)
@@ -60,14 +62,14 @@ export default function CashbackPage() {
         }}>
           <p style={{
             margin: 0,
-            fontSize: typography.size.sm,
+            fontSize: sizes.sm,
             color: colors.onDark.secondary,
           }}>
             {selectedYear}년 {selectedMonth}월 적립
           </p>
           <p style={{
             margin: `${spacing[1]} 0`,
-            fontSize: typography.size.largeTitle,
+            fontSize: sizes.largeTitle,
             fontWeight: typography.weight.bold,
             color: colors.onDark.primary,
             lineHeight: 1.2,
@@ -76,7 +78,7 @@ export default function CashbackPage() {
           </p>
           <p style={{
             margin: `0 0 ${spacing[3]}`,
-            fontSize: typography.size.xs,
+            fontSize: sizes.xs,
             color: colors.onDark.secondary,
           }}>
             월 한도 30,000원
@@ -100,7 +102,7 @@ export default function CashbackPage() {
 
           <p style={{
             margin: `${spacing[2]} 0 0`,
-            fontSize: typography.size.xs,
+            fontSize: sizes.xs,
             color: colors.onDark.secondary,
           }}>
             {percent}% 달성
@@ -110,7 +112,7 @@ export default function CashbackPage() {
         {/* 안내 문구 */}
         <p style={{
           margin: `0 ${layout.margin} ${spacing[4]}`,
-          fontSize: typography.size.xs,
+          fontSize: sizes.xs,
           color: colors.gray[500],
           lineHeight: 1.5,
         }}>
@@ -136,7 +138,7 @@ export default function CashbackPage() {
         >
           <Calendar size={16} color={colors.primary[700]} />
           <span style={{
-            fontSize: typography.size.sm,
+            fontSize: sizes.sm,
             fontWeight: typography.weight.medium,
             color: colors.gray[900],
           }}>
@@ -154,7 +156,7 @@ export default function CashbackPage() {
             padding: spacing[8],
             textAlign: 'center',
             color: colors.gray[400],
-            fontSize: typography.size.sm,
+            fontSize: sizes.sm,
           }}>
             해당 월의 캐시백 적립 내역이 없습니다
           </div>
@@ -178,7 +180,7 @@ export default function CashbackPage() {
                 <div style={{ flex: 1 }}>
                   <p style={{
                     margin: 0,
-                    fontSize: typography.size.sm,
+                    fontSize: sizes.sm,
                     fontWeight: typography.weight.semibold,
                     color: colors.gray[900],
                   }}>
@@ -186,14 +188,14 @@ export default function CashbackPage() {
                   </p>
                   <p style={{
                     margin: `${spacing[1]} 0 0`,
-                    fontSize: typography.size.xs,
+                    fontSize: sizes.xs,
                     color: colors.gray[500],
                   }}>
                     {fmtDate(t.date)} · {fmt(t.amount)}원 결제
                   </p>
                 </div>
                 <span style={{
-                  fontSize: typography.size.sm,
+                  fontSize: sizes.sm,
                   fontWeight: typography.weight.semibold,
                   color: colors.teal[500],
                   whiteSpace: 'nowrap',

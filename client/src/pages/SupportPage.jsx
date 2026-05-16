@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { colors, layout, typography, shadow, spacing } from '../tokens/tokens'
+import { useTypography } from '../hooks/useTypography'
 
 import ScreenContainer from '../components/layout/ScreenContainer'
 import BottomNavBar from '../components/layout/BottomNavBar'
@@ -55,10 +56,31 @@ const tabs = ['맞춤', '추천·할인', '청년', '저장됨']
 
 export default function SupportPage() {
   const navigate = useNavigate()
+  const sizes = useTypography()
   const [activeTab, setActiveTab] = useState(0)
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
+      {/* 타이틀 */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        padding: `${spacing[3]} ${layout.margin}`,
+        backgroundColor: colors.surface.card,
+        borderBottom: `1px solid ${colors.gray[200]}`,
+        minHeight: layout.topBarHeight,
+      }}>
+        <h1 style={{
+          margin: 0,
+          fontSize: sizes.lg,
+          fontWeight: typography.weight.bold,
+          color: colors.gray[900],
+          fontFamily: typography.fontFamily,
+        }}>
+          지원금·혜택
+        </h1>
+      </div>
+
       {/* 탭 바 */}
       <div
         style={{
@@ -81,7 +103,7 @@ export default function SupportPage() {
               border: 'none',
               borderBottom: activeTab === index ? `2px solid ${colors.primary[700]}` : '2px solid transparent',
               color: activeTab === index ? colors.primary[700] : colors.gray[500],
-              fontSize: typography.size.sm,
+              fontSize: sizes.sm,
               fontWeight: activeTab === index ? typography.weight.semibold : typography.weight.medium,
               cursor: 'pointer',
               whiteSpace: 'nowrap',
@@ -115,7 +137,7 @@ export default function SupportPage() {
             </svg>
             <span
               style={{
-                fontSize: typography.size.sm,
+                fontSize: sizes.sm,
                 fontWeight: typography.weight.medium,
                 color: colors.primary[700],
               }}
@@ -169,7 +191,7 @@ export default function SupportPage() {
           <div>
             <p
               style={{
-                fontSize: typography.size.sm,
+                fontSize: sizes.sm,
                 fontWeight: typography.weight.semibold,
                 color: colors.gray[900],
                 margin: 0,
@@ -179,7 +201,7 @@ export default function SupportPage() {
             </p>
             <p
               style={{
-                fontSize: typography.size.xs,
+                fontSize: sizes.xs,
                 color: colors.gray[500],
                 margin: '4px 0 0',
               }}

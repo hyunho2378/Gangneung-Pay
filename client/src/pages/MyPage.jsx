@@ -1,12 +1,14 @@
 import { useNavigate } from 'react-router-dom'
 import { User, LogOut } from 'lucide-react'
 import { colors, typography, layout, spacing } from '../tokens/tokens'
+import { useTypography } from '../hooks/useTypography'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import BottomNavBar from '../components/layout/BottomNavBar'
 import MyMenuGroup from '../components/mypage/MyMenuGroup'
 
 export default function MyPage() {
   const navigate = useNavigate()
+  const sizes = useTypography()
 
   const groups = [
     {
@@ -51,7 +53,7 @@ export default function MyPage() {
   ]
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <div style={{ overflowY: 'auto', paddingBottom: '100px', flex: 1 }}>
         {/* 프로필 헤더 */}
         <div
@@ -84,7 +86,7 @@ export default function MyPage() {
           <div>
             <div
               style={{
-                fontSize: typography.size.lg,
+                fontSize: sizes.lg,
                 fontWeight: typography.weight.bold,
                 color: colors.gray[900],
                 fontFamily: typography.fontFamily,
@@ -94,7 +96,7 @@ export default function MyPage() {
             </div>
             <div
               style={{
-                fontSize: typography.size.xs,
+                fontSize: sizes.xs,
                 color: colors.gray[400],
                 fontFamily: typography.fontFamily,
                 marginTop: spacing[1],
@@ -123,7 +125,7 @@ export default function MyPage() {
             border: `1px solid ${colors.gray[200]}`,
             borderRadius: layout.radiusButton,
             color: colors.error,
-            fontSize: typography.size.sm,
+            fontSize: sizes.sm,
             fontWeight: typography.weight.semibold,
             fontFamily: typography.fontFamily,
             cursor: 'pointer',

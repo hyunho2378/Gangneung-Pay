@@ -12,14 +12,14 @@ export default function TopAppBarLargeText() {
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      backgroundColor: colors.surface.card,
+      backgroundColor: colors.surface.background,
       height: '52px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingLeft: layout.margin,
       paddingRight: layout.margin,
-      borderBottom: `1px solid ${colors.gray[200]}`,
+      borderBottom: 'none',
     }}>
       {/* 로고 + 텍스트 — 큰글씨 모드에서 더 크게 */}
       {/* 장식 예외: 브랜드 마크 tight grouping (디자인시스템 단계 3-B) */}

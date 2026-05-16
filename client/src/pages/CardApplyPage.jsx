@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../tokens/tokens'
+import { useTypography } from '../hooks/useTypography'
 import ScreenContainer from '../components/layout/ScreenContainer'
 
 // B1: 140×88 축소 (viewBox 좌표계 220×138 유지)
@@ -65,7 +66,8 @@ const CARD_TYPES = [
   },
 ]
 
-const BENEFITS = [
+function getBenefits(sizes) {
+  return [
   {
     iconBg: colors.warmBg,
     iconContent: (
@@ -78,7 +80,7 @@ const BENEFITS = [
       <span>
         결제할 때마다 <b>10%</b>
         <br />
-        <span style={{ fontSize: typography.size.xxs, color: colors.gray[500] }}>월 <b>최대 3만원</b> 적립</span>
+        <span style={{ fontSize: sizes.xxs, color: colors.gray[500] }}>월 <b>최대 3만원</b> 적립</span>
       </span>
     ),
   },
@@ -144,11 +146,12 @@ const BENEFITS = [
       <span>
         만 <b>14세</b> 이상이면 누구나
         <br />
-        <span style={{ fontSize: typography.size.xxs, color: colors.gray[500] }}>온라인으로 서류없이 간편 신청</span>
+        <span style={{ fontSize: sizes.xxs, color: colors.gray[500] }}>온라인으로 서류없이 간편 신청</span>
       </span>
     ),
   },
-]
+  ]
+}
 
 const CATEGORY_ICONS = [
   { label: '서적', color: colors.primary[500] },
@@ -179,6 +182,7 @@ function CategoryIcon({ label, color }) {
 
 // B3: 카테고리 아코디언 — 기본 접힘, 클릭 시 펼침
 function CategoryAccordion({ children }) {
+  const sizes = useTypography()
   const [open, setOpen] = useState(false)
   return (
     <div style={{
@@ -202,7 +206,7 @@ function CategoryAccordion({ children }) {
           fontFamily: typography.fontFamily,
         }}
       >
-        <span style={{ fontSize: typography.size.sm, color: colors.gray[700] }}>
+        <span style={{ fontSize: sizes.sm, color: colors.gray[700] }}>
           다양한 매장에서 혜택 누리세요!
         </span>
         {open ? (
@@ -225,7 +229,9 @@ function CategoryAccordion({ children }) {
 
 export default function CardApplyPage() {
   const navigate = useNavigate()
+  const sizes = useTypography()
   const { cardStatus, applyCard, shipCard, registerCard } = useUser()
+  const BENEFITS = getBenefits(sizes)
 
   useEffect(() => {
     if (cardStatus === 'applying') {
@@ -260,7 +266,7 @@ export default function CardApplyPage() {
             <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: spacing[1], marginRight: spacing[3] }}>
               <ChevronLeft size={24} color={colors.gray[900]} />
             </button>
-            <span style={{ fontSize: typography.size.md, fontWeight: typography.weight.semibold, color: colors.gray[900] }}>
+            <span style={{ fontSize: sizes.md, fontWeight: typography.weight.semibold, color: colors.gray[900] }}>
               카드 등록
             </span>
           </div>
@@ -279,19 +285,19 @@ export default function CardApplyPage() {
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path d="M3 8 L7 12 L13 4" stroke={colors.success} strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span style={{ fontSize: typography.size.sm, color: colors.success, fontWeight: typography.weight.semibold }}>
+              <span style={{ fontSize: sizes.sm, color: colors.success, fontWeight: typography.weight.semibold }}>
                 배송 완료
               </span>
-              <span style={{ fontSize: typography.size.xs, color: colors.gray[500] }}>
+              <span style={{ fontSize: sizes.xs, color: colors.gray[500] }}>
                 카드를 등록해주세요
               </span>
             </div>
 
             <div style={{ padding: `${spacing[5]} ${layout.margin}` }}>
-              <div style={{ fontSize: typography.size.md, fontWeight: typography.weight.bold, color: colors.gray[900], marginBottom: spacing[2] }}>
+              <div style={{ fontSize: sizes.md, fontWeight: typography.weight.bold, color: colors.gray[900], marginBottom: spacing[2] }}>
                 카드 번호를 입력해주세요
               </div>
-              <div style={{ fontSize: typography.size.xs, color: colors.gray[500], marginBottom: spacing[4] }}>
+              <div style={{ fontSize: sizes.xs, color: colors.gray[500], marginBottom: spacing[4] }}>
                 카드 앞면의 16자리 번호를 입력해주세요
               </div>
               <input
@@ -305,7 +311,7 @@ export default function CardApplyPage() {
                   border: `1px solid ${colors.gray[200]}`,
                   borderRadius: layout.radiusButton,
                   padding: `0 ${spacing[4]}`,
-                  fontSize: typography.size.sm,
+                  fontSize: sizes.sm,
                   color: colors.gray[900],
                   fontFamily: typography.fontFamily,
                   boxSizing: 'border-box',
@@ -329,7 +335,7 @@ export default function CardApplyPage() {
                 border: 'none',
                 borderRadius: layout.radiusButton,
                 color: colors.onDark.primary,
-                fontSize: typography.size.md,
+                fontSize: sizes.md,
                 fontWeight: typography.weight.semibold,
                 cursor: 'pointer',
                 fontFamily: typography.fontFamily,
@@ -367,8 +373,8 @@ export default function CardApplyPage() {
               <circle cx="20" cy="20" r="16" stroke={colors.gray[200]} strokeWidth="3" fill="none" />
               <path d="M20 4 A16 16 0 0 1 36 20" stroke={colors.primary[700]} strokeWidth="3" strokeLinecap="round" fill="none" />
             </svg>
-            <div style={{ fontSize: typography.size.sm, color: colors.gray[500] }}>신청 처리 중입니다...</div>
-            <div style={{ fontSize: typography.size.xs, color: colors.gray[400] }}>잠시 후 배송 준비가 완료됩니다</div>
+            <div style={{ fontSize: sizes.sm, color: colors.gray[500] }}>신청 처리 중입니다...</div>
+            <div style={{ fontSize: sizes.xs, color: colors.gray[400] }}>잠시 후 배송 준비가 완료됩니다</div>
           </div>
           <div style={{
             padding: `${spacing[3]} ${layout.margin}`,
@@ -383,7 +389,7 @@ export default function CardApplyPage() {
                 color: colors.gray[400],
                 border: 'none',
                 borderRadius: layout.radiusButton,
-                fontSize: typography.size.md,
+                fontSize: sizes.md,
                 fontWeight: typography.weight.semibold,
                 cursor: 'default',
                 fontFamily: typography.fontFamily,
@@ -425,7 +431,7 @@ export default function CardApplyPage() {
             border: `1px solid ${colors.gray[300]}`,
             borderRadius: layout.radiusPill,
             padding: `${spacing[1]} ${spacing[3]}`,
-            fontSize: typography.size.xs,
+            fontSize: sizes.xs,
             color: colors.gray[600],
             cursor: 'pointer',
             fontFamily: typography.fontFamily,
@@ -442,7 +448,7 @@ export default function CardApplyPage() {
           }}>
             <p style={{
               margin: 0,
-              fontSize: typography.size.xl,
+              fontSize: sizes.xl,
               fontWeight: typography.weight.bold,
               color: colors.gray[900],
               lineHeight: 1.3,
@@ -451,7 +457,7 @@ export default function CardApplyPage() {
             </p>
             <p style={{
               margin: 0,
-              fontSize: typography.size.xl,
+              fontSize: sizes.xl,
               fontWeight: typography.weight.bold,
               color: colors.gray[900],
               lineHeight: 1.3,
@@ -522,7 +528,7 @@ export default function CardApplyPage() {
             {/* 카드 라벨 + 배지 */}
             <div style={{ textAlign: 'center' }}>
               <span style={{
-                fontSize: typography.size.md,
+                fontSize: sizes.md,
                 fontWeight: typography.weight.bold,
                 color: colors.gray[900],
               }}>
@@ -533,7 +539,7 @@ export default function CardApplyPage() {
                   marginLeft: spacing[2],
                   backgroundColor: colors.primary[50],
                   color: colors.primary[700],
-                  fontSize: typography.size.xxs,
+                  fontSize: sizes.xxs,
                   fontWeight: typography.weight.semibold,
                   padding: `2px 8px`,
                   borderRadius: layout.radiusPill,
@@ -554,7 +560,7 @@ export default function CardApplyPage() {
                   border: `1px solid ${colors.gray[200]}`,
                   borderRadius: layout.radiusPill,
                   padding: `${spacing[1]} ${spacing[3]}`,
-                  fontSize: typography.size.sm,
+                  fontSize: sizes.sm,
                   color: colors.gray[900],
                 }}>
                   발급 비용 <strong style={{ marginLeft: spacing[1], color: colors.gray[900] }}>5,000원</strong>
@@ -595,7 +601,7 @@ export default function CardApplyPage() {
                   {benefit.iconContent}
                 </div>
                 <div style={{
-                  fontSize: typography.size.sm,
+                  fontSize: sizes.sm,
                   color: colors.gray[900],
                   lineHeight: 1.5,
                   fontFamily: typography.fontFamily,
@@ -640,7 +646,7 @@ export default function CardApplyPage() {
                     <CategoryIcon label={label} color={color} />
                   </div>
                   <span style={{
-                    fontSize: typography.size.xxs,
+                    fontSize: sizes.xxs,
                     color: colors.gray[500],
                     whiteSpace: 'nowrap',
                     fontFamily: typography.fontFamily,
@@ -666,7 +672,7 @@ export default function CardApplyPage() {
               color: colors.onDark.primary,
               border: 'none',
               borderRadius: layout.radiusButton,
-              fontSize: typography.size.md,
+              fontSize: sizes.md,
               fontWeight: typography.weight.semibold,
               cursor: 'pointer',
               fontFamily: typography.fontFamily,

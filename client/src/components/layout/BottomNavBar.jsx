@@ -8,6 +8,7 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Home, Store, Gift, Receipt, User } from 'lucide-react'
 import { colors, typography, layout, shadow, spacing } from '../../tokens/tokens'
+import { useTypography } from '../../hooks/useTypography'
 
 export default function BottomNavBar() {
   const navigate = useNavigate()
@@ -81,6 +82,7 @@ export default function BottomNavBar() {
 }
 
 function NavTab({ label, icon, active, onClick, height }) {
+  const sizes = useTypography()
   const color = active ? colors.primary[700] : colors.gray[400]
   return (
     <button
@@ -104,7 +106,7 @@ function NavTab({ label, icon, active, onClick, height }) {
     >
       <span style={{ color, display: 'flex' }}>{icon}</span>
       <span style={{
-        fontSize: typography.size.nav,
+        fontSize: sizes.nav,
         fontWeight: active ? typography.weight.medium : typography.weight.regular,
         color,
         fontFamily: typography.fontFamily,

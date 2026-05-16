@@ -109,9 +109,12 @@ export default function WidgetAddBanner() {
           <p
             style={{
               margin: 0,
+              padding: `0 ${spacing[3]}`,
               fontSize: typography.size.xs,
               color: colors.gray[700],
               lineHeight: typography.lineHeight.normal,
+              wordBreak: 'keep-all',
+              fontFamily: typography.fontFamily,
             }}
           >
             홈 화면에 위젯을 추가하면 앱을 열지 않아도 잔액을 바로 확인할 수 있어요.

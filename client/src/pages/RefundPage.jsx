@@ -10,11 +10,13 @@ import { useState } from 'react'
 import { ChevronLeft } from 'lucide-react'
 import { useUser } from '../context/UserContext'
 import { colors, typography, layout, spacing, shadow } from '../tokens/tokens'
+import { useTypography } from '../hooks/useTypography'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import BottomNavBar from '../components/layout/BottomNavBar'
 
 export default function RefundPage() {
   const navigate = useNavigate()
+  const sizes = useTypography()
   const { transactions, balance, refundTransaction } = useUser()
   const [confirmId, setConfirmId] = useState(null)
 
@@ -81,7 +83,7 @@ export default function RefundPage() {
         </button>
         <h1 style={{
           margin: 0,
-          fontSize: typography.size.lg,
+          fontSize: sizes.lg,
           fontWeight: typography.weight.bold,
           color: colors.gray[900],
         }}>
@@ -98,13 +100,13 @@ export default function RefundPage() {
           marginBottom: spacing[5],
           boxShadow: shadow.button,
         }}>
-          <p style={{ margin: 0, color: colors.onDark.secondary, fontSize: typography.size.xs }}>
+          <p style={{ margin: 0, color: colors.onDark.secondary, fontSize: sizes.xs }}>
             현재 잔액
           </p>
           <p style={{
             margin: `${spacing[1]} 0 0 0`,
             color: colors.onDark.primary,
-            fontSize: typography.size.largeTitle,
+            fontSize: sizes.largeTitle,
             fontWeight: typography.weight.bold,
           }}>
             {fmt(balance)}
@@ -116,7 +118,7 @@ export default function RefundPage() {
           padding: spacing[4],
           backgroundColor: colors.primary[50],
           borderRadius: layout.radiusCard,
-          fontSize: typography.size.xs,
+          fontSize: sizes.xs,
           color: colors.gray[700],
           lineHeight: 1.6,
         }}>
@@ -131,7 +133,7 @@ export default function RefundPage() {
 
         <h2 style={{
           margin: `0 0 ${spacing[3]} 0`,
-          fontSize: typography.size.md,
+          fontSize: sizes.md,
           fontWeight: typography.weight.semibold,
           color: colors.gray[900],
         }}>
@@ -148,7 +150,7 @@ export default function RefundPage() {
             <p style={{ color: colors.gray[700], fontWeight: typography.weight.semibold, margin: `0 0 ${spacing[2]} 0` }}>
               환불할 잔액이 없습니다
             </p>
-            <p style={{ color: colors.gray[500], fontSize: typography.size.xs, margin: 0 }}>
+            <p style={{ color: colors.gray[500], fontSize: sizes.xs, margin: 0 }}>
               충전 후 이용해보세요
             </p>
           </div>
@@ -157,7 +159,7 @@ export default function RefundPage() {
             {Object.entries(grouped).map(([monthKey, items]) => (
               <div key={monthKey}>
                 <div style={{
-                  fontSize: typography.size.xs,
+                  fontSize: sizes.xs,
                   fontWeight: typography.weight.semibold,
                   color: colors.gray[700],
                   paddingBottom: spacing[2],
@@ -178,19 +180,19 @@ export default function RefundPage() {
                       gap: spacing[3],
                     }}>
                       <div>
-                        <p style={{ margin: 0, fontSize: typography.size.sm, fontWeight: typography.weight.semibold, color: colors.gray[900] }}>
+                        <p style={{ margin: 0, fontSize: sizes.sm, fontWeight: typography.weight.semibold, color: colors.gray[900] }}>
                           충전
                         </p>
-                        <p style={{ margin: `${spacing[1]} 0 0 0`, fontSize: typography.size.xs, color: colors.gray[500] }}>
+                        <p style={{ margin: `${spacing[1]} 0 0 0`, fontSize: sizes.xs, color: colors.gray[500] }}>
                           {fmtDate(t.date)}
                         </p>
-                        <p style={{ margin: `${spacing[1]} 0 0 0`, fontSize: typography.size.md, fontWeight: typography.weight.semibold, color: colors.gray[900] }}>
+                        <p style={{ margin: `${spacing[1]} 0 0 0`, fontSize: sizes.md, fontWeight: typography.weight.semibold, color: colors.gray[900] }}>
                           {fmt(t.amount)}
                         </p>
                       </div>
                       {t.refunded ? (
                         <span style={{
-                          fontSize: typography.size.sm,
+                          fontSize: sizes.sm,
                           fontWeight: typography.weight.medium,
                           color: colors.gray[400],
                           whiteSpace: 'nowrap',
@@ -206,7 +208,7 @@ export default function RefundPage() {
                             color: colors.primary[700],
                             borderRadius: layout.radiusButton,
                             padding: `${spacing[2]} ${spacing[4]}`,
-                            fontSize: typography.size.sm,
+                            fontSize: sizes.sm,
                             fontWeight: typography.weight.semibold,
                             cursor: 'pointer',
                             minHeight: layout.touchMin,
@@ -218,7 +220,7 @@ export default function RefundPage() {
                         </button>
                       ) : (
                         <span style={{
-                          fontSize: typography.size.xs,
+                          fontSize: sizes.xs,
                           color: colors.gray[400],
                           whiteSpace: 'nowrap',
                           textAlign: 'right',
@@ -254,10 +256,10 @@ export default function RefundPage() {
             gap: spacing[4],
             fontFamily: typography.fontFamily,
           }}>
-            <h3 style={{ margin: 0, fontSize: typography.size.md, fontWeight: typography.weight.bold, color: colors.gray[900] }}>
+            <h3 style={{ margin: 0, fontSize: sizes.md, fontWeight: typography.weight.bold, color: colors.gray[900] }}>
               환불하시겠습니까?
             </h3>
-            <p style={{ margin: 0, fontSize: typography.size.sm, color: colors.gray[700] }}>
+            <p style={{ margin: 0, fontSize: sizes.sm, color: colors.gray[700] }}>
               {fmt(confirmTarget.amount)}을 환불합니다.
             </p>
             <div style={{ display: 'flex', gap: spacing[2] }}>
@@ -269,7 +271,7 @@ export default function RefundPage() {
                   border: 'none',
                   borderRadius: layout.radiusButton,
                   padding: `${spacing[3]} 0`,
-                  fontSize: typography.size.sm,
+                  fontSize: sizes.sm,
                   fontWeight: typography.weight.semibold,
                   color: colors.gray[700],
                   cursor: 'pointer',
@@ -287,7 +289,7 @@ export default function RefundPage() {
                   border: 'none',
                   borderRadius: layout.radiusButton,
                   padding: `${spacing[3]} 0`,
-                  fontSize: typography.size.sm,
+                  fontSize: sizes.sm,
                   fontWeight: typography.weight.semibold,
                   color: colors.onDark.primary,
                   cursor: 'pointer',

@@ -10,6 +10,7 @@ import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBar from '../components/layout/TopAppBar'
 import TopAppBarLargeText from '../components/layout/TopAppBarLargeText'
 import BottomNavBar from '../components/layout/BottomNavBar'
+import HomePageLarge from './HomePageLarge'
 
 import WidgetAddBanner from '../components/home/WidgetAddBanner'
 import BannerCarousel from '../components/home/BannerCarousel'
@@ -84,6 +85,8 @@ export default function HomePage() {
   }, [hasCard, hasSeenCardApplyCoach, hasSeenChargeCoach, hasSeenRefundCoach, hasSeenCashbackModal])
 
   const cashbackPercent = Math.min(100, Math.floor((monthlyCashback / 30000) * 100))
+
+  if (isLargeText) return <HomePageLarge />
 
   return (
     <ScreenContainer>
