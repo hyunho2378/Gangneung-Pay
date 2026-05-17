@@ -5,19 +5,9 @@ import { useState } from 'react'
 import { Phone, MapPin, Clock, ExternalLink } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 import BottomSheet from '../common/BottomSheet'
+import { GANGNEUNG_STATION, calculateDistance } from '../../data/stores'
 
-const GANGNEUNG_STATION = { lat: 37.7647, lng: 128.8990 }
-
-function formatDistance(lat, lng) {
-  if (typeof lat !== 'number' || typeof lng !== 'number') return null
-  const R = 6371
-  const toRad = (d) => (d * Math.PI) / 180
-  const dLat = toRad(lat - GANGNEUNG_STATION.lat)
-  const dLng = toRad(lng - GANGNEUNG_STATION.lng)
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(GANGNEUNG_STATION.lat)) * Math.cos(toRad(lat)) * Math.sin(dLng / 2) ** 2
-  const km = 2 * R * Math.asin(Math.sqrt(a))
+function formatDistanceKm(km) {
   return km < 1 ? `${Math.round(km * 1000)}m` : `${km.toFixed(1)}km`
 }
 
@@ -40,7 +30,12 @@ export default function StoreDetailSheet({ isOpen, onClose, store }) {
   } = store || {}
 
   const phoneNumber = phone || tel
-  const distanceLabel = distance || formatDistance(lat, lng)
+  const distanceKm = typeof distance === 'number'
+    ? distance
+    : (typeof lat === 'number' && typeof lng === 'number'
+      ? calculateDistance(GANGNEUNG_STATION.lat, GANGNEUNG_STATION.lng, lat, lng)
+      : null)
+  const distanceLabel = distanceKm != null ? formatDistanceKm(distanceKm) : null
 
   return (
     <>

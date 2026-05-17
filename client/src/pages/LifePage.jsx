@@ -33,9 +33,9 @@ export default function LifePage() {
 
       <div
         style={{
-          overflowY: 'auto',
-          paddingBottom: '139px',
           flex: 1,
+          minHeight: 0,
+          overflowY: 'auto',
           backgroundColor: colors.surface.background,
         }}
       >

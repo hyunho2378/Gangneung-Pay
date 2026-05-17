@@ -6,7 +6,6 @@ export default function SplashPage() {
     <div style={{
       width: '100%',
       flex: 1,
-      minHeight: '100dvh',
       backgroundColor: colors.primary[700],
       display: 'flex',
       flexDirection: 'column',

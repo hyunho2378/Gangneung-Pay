@@ -163,7 +163,7 @@ const CATEGORY_ICONS = [
   { label: '생활', color: colors.gray[500] },
 ]
 
-function CategoryIcon({ label, color }) {
+function CategoryIcon({ label }) {
   const icons = {
     '서적': <path d="M4 3 Q4 2 5 2 L15 2 Q16 2 16 3 L16 17 Q16 18 15 18 L5 18 Q4 18 4 17 Z M7 2 L7 18 M10 5 L14 5 M10 8 L14 8" stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" />,
     '의료': <><rect x="7" y="4" width="6" height="12" rx="1" fill="white" /><rect x="4" y="7" width="12" height="6" rx="1" fill="white" /></>,
@@ -177,53 +177,6 @@ function CategoryIcon({ label, color }) {
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
       {icons[label] || <circle cx="10" cy="10" r="8" fill="white" fillOpacity="0.5" />}
     </svg>
-  )
-}
-
-// B3: 카테고리 아코디언 — 기본 접힘, 클릭 시 펼침
-function CategoryAccordion({ children }) {
-  const sizes = useTypography()
-  const [open, setOpen] = useState(false)
-  return (
-    <div style={{
-      backgroundColor: colors.surface.card,
-      borderRadius: layout.radiusCard,
-      margin: `0 ${layout.margin}`,
-      overflow: 'hidden',
-    }}>
-      <button
-        onClick={() => setOpen((v) => !v)}
-        style={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: spacing[2],
-          minHeight: '40px',
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          fontFamily: typography.fontFamily,
-        }}
-      >
-        <span style={{ fontSize: sizes.sm, color: colors.gray[700] }}>
-          다양한 매장에서 혜택 누리세요!
-        </span>
-        {open ? (
-          <ChevronUp size={20} color={colors.gray[500]} />
-        ) : (
-          <ChevronDown size={20} color={colors.gray[500]} />
-        )}
-      </button>
-      {open && (
-        <div style={{
-          padding: `0 ${spacing[3]} ${spacing[3]}`,
-          animation: 'fadeIn 0.2s ease',
-        }}>
-          {children}
-        </div>
-      )}
-    </div>
   )
 }
 
@@ -241,6 +194,7 @@ export default function CardApplyPage() {
   }, [cardStatus, shipCard])
   const [cardIndex, setCardIndex] = useState(0)
   const [cardCode, setCardCode] = useState('')
+  const [accordionOpen, setAccordionOpen] = useState(false)
 
   const selectedCard = CARD_TYPES[cardIndex]
 
@@ -249,9 +203,10 @@ export default function CardApplyPage() {
     return (
       <ScreenContainer>
         <div style={{
+          flex: 1,
+          minHeight: 0,
           display: 'flex',
           flexDirection: 'column',
-          minHeight: '100dvh',
           backgroundColor: colors.surface.background,
           fontFamily: typography.fontFamily,
         }}>
@@ -260,8 +215,8 @@ export default function CardApplyPage() {
             display: 'flex',
             alignItems: 'center',
             padding: `${spacing[3]} ${layout.margin}`,
-            paddingTop: '52px',
             borderBottom: `1px solid ${colors.gray[100]}`,
+            flexShrink: 0,
           }}>
             <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: spacing[1], marginRight: spacing[3] }}>
               <ChevronLeft size={24} color={colors.gray[900]} />
@@ -271,78 +226,84 @@ export default function CardApplyPage() {
             </span>
           </div>
 
-          <div style={{ flex: 1, overflowY: 'auto' }}>
-            <div style={{
-              margin: `${spacing[4]} ${layout.margin} 0`,
-              backgroundColor: colors.successBg,
-              border: `1px solid ${colors.successBorder}`,
-              borderRadius: layout.radiusCard,
-              padding: `${spacing[3]} ${spacing[4]}`,
-              display: 'flex',
-              alignItems: 'center',
-              gap: spacing[2],
-            }}>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M3 8 L7 12 L13 4" stroke={colors.success} strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <span style={{ fontSize: sizes.sm, color: colors.success, fontWeight: typography.weight.semibold }}>
-                배송 완료
-              </span>
-              <span style={{ fontSize: sizes.xs, color: colors.gray[500] }}>
-                카드를 등록해주세요
-              </span>
+          <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+            <div style={{ flexShrink: 0 }}>
+              <div style={{
+                margin: `${spacing[4]} ${layout.margin} 0`,
+                backgroundColor: colors.successBg,
+                border: `1px solid ${colors.successBorder}`,
+                borderRadius: layout.radiusCard,
+                padding: `${spacing[3]} ${spacing[4]}`,
+                display: 'flex',
+                alignItems: 'center',
+                gap: spacing[2],
+              }}>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M3 8 L7 12 L13 4" stroke={colors.success} strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span style={{ fontSize: sizes.sm, color: colors.success, fontWeight: typography.weight.semibold }}>
+                  배송 완료
+                </span>
+                <span style={{ fontSize: sizes.xs, color: colors.gray[500] }}>
+                  카드를 등록해주세요
+                </span>
+              </div>
+
+              <div style={{ padding: `${spacing[5]} ${layout.margin}` }}>
+                <div style={{ fontSize: sizes.md, fontWeight: typography.weight.bold, color: colors.gray[900], marginBottom: spacing[2] }}>
+                  카드 번호를 입력해주세요
+                </div>
+                <div style={{ fontSize: sizes.xs, color: colors.gray[500], marginBottom: spacing[4] }}>
+                  카드 앞면의 16자리 번호를 입력해주세요
+                </div>
+                <input
+                  value={cardCode}
+                  onChange={(e) => setCardCode(e.target.value)}
+                  placeholder="0000 0000 0000 0000"
+                  maxLength={19}
+                  style={{
+                    width: '100%',
+                    height: '48px',
+                    border: `1px solid ${colors.gray[200]}`,
+                    borderRadius: layout.radiusButton,
+                    padding: `0 ${spacing[4]}`,
+                    fontSize: sizes.sm,
+                    color: colors.gray[900],
+                    fontFamily: typography.fontFamily,
+                    boxSizing: 'border-box',
+                    outline: 'none',
+                    backgroundColor: colors.surface.card,
+                  }}
+                />
+              </div>
             </div>
 
-            <div style={{ padding: `${spacing[5]} ${layout.margin}` }}>
-              <div style={{ fontSize: sizes.md, fontWeight: typography.weight.bold, color: colors.gray[900], marginBottom: spacing[2] }}>
-                카드 번호를 입력해주세요
-              </div>
-              <div style={{ fontSize: sizes.xs, color: colors.gray[500], marginBottom: spacing[4] }}>
-                카드 앞면의 16자리 번호를 입력해주세요
-              </div>
-              <input
-                value={cardCode}
-                onChange={(e) => setCardCode(e.target.value)}
-                placeholder="0000 0000 0000 0000"
-                maxLength={19}
+            <div style={{ flex: 1 }} />
+
+            <div style={{
+              flexShrink: 0,
+              borderTop: `1px solid ${colors.gray[100]}`,
+              padding: `${spacing[3]} ${layout.margin}`,
+              paddingBottom: `calc(env(safe-area-inset-bottom) + ${spacing[3]})`,
+            }}>
+              <button
+                onClick={() => { registerCard(); navigate('/') }}
                 style={{
                   width: '100%',
-                  height: '48px',
-                  border: `1px solid ${colors.gray[200]}`,
+                  height: '52px',
+                  backgroundColor: colors.primary[700],
+                  border: 'none',
                   borderRadius: layout.radiusButton,
-                  padding: `0 ${spacing[4]}`,
-                  fontSize: sizes.sm,
-                  color: colors.gray[900],
+                  color: colors.onDark.primary,
+                  fontSize: sizes.md,
+                  fontWeight: typography.weight.semibold,
+                  cursor: 'pointer',
                   fontFamily: typography.fontFamily,
-                  boxSizing: 'border-box',
-                  outline: 'none',
-                  backgroundColor: colors.surface.card,
                 }}
-              />
+              >
+                카드 등록하기
+              </button>
             </div>
-          </div>
-
-          <div style={{
-            padding: `${spacing[3]} ${layout.margin}`,
-            paddingBottom: `calc(env(safe-area-inset-bottom) + ${spacing[3]})`,
-          }}>
-            <button
-              onClick={() => { registerCard(); navigate('/') }}
-              style={{
-                width: '100%',
-                height: '52px',
-                backgroundColor: colors.primary[700],
-                border: 'none',
-                borderRadius: layout.radiusButton,
-                color: colors.onDark.primary,
-                fontSize: sizes.md,
-                fontWeight: typography.weight.semibold,
-                cursor: 'pointer',
-                fontFamily: typography.fontFamily,
-              }}
-            >
-              카드 등록하기
-            </button>
           </div>
         </div>
       </ScreenContainer>
@@ -354,9 +315,10 @@ export default function CardApplyPage() {
     return (
       <ScreenContainer>
         <div style={{
+          flex: 1,
+          minHeight: 0,
           display: 'flex',
           flexDirection: 'column',
-          minHeight: '100dvh',
           backgroundColor: colors.surface.background,
           fontFamily: typography.fontFamily,
         }}>
@@ -407,9 +369,10 @@ export default function CardApplyPage() {
   return (
     <ScreenContainer>
       <div style={{
+        flex: 1,
+        minHeight: 0,
         display: 'flex',
         flexDirection: 'column',
-        minHeight: '100dvh',
         background: 'linear-gradient(180deg, #E4EFFD 0%, #FFFFFF 60%)',
         fontFamily: typography.fontFamily,
       }}>
@@ -420,8 +383,8 @@ export default function CardApplyPage() {
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: `${spacing[3]} ${layout.margin}`,
-          paddingTop: '52px',
           borderBottom: `1px solid ${colors.gray[100]}`,
+          flexShrink: 0,
         }}>
           <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: spacing[1] }}>
             <ChevronLeft size={24} color={colors.gray[900]} />
@@ -440,7 +403,8 @@ export default function CardApplyPage() {
           </button>
         </div>
 
-        <div style={{ flex: 1, overflowY: 'auto' }}>
+        {/* 타이틀 + 카드 캐러셀 — flexShrink: 0 */}
+        <div style={{ flexShrink: 0 }}>
           {/* B5: 타이틀 padding 축소 */}
           <div style={{
             textAlign: 'center',
@@ -568,98 +532,146 @@ export default function CardApplyPage() {
               </div>
             )}
           </div>
-
-          {/* B5: 혜택 리스트 — 행 padding spacing[3] */}
-          <div style={{
-            margin: `0 ${layout.margin} ${spacing[2]}`,
-            backgroundColor: colors.surface.card,
-            borderRadius: layout.radiusCard,
-            boxShadow: shadow.card,
-            overflow: 'hidden',
-          }}>
-            {BENEFITS.map((benefit, idx) => (
-              <div
-                key={idx}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: spacing[3],
-                  padding: `${spacing[2]} ${spacing[4]}`,
-                  borderBottom: idx < BENEFITS.length - 1 ? `1px solid ${colors.gray[100]}` : 'none',
-                }}
-              >
-                <div style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '50%',
-                  backgroundColor: benefit.iconBg,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                }}>
-                  {benefit.iconContent}
-                </div>
-                <div style={{
-                  fontSize: sizes.sm,
-                  color: colors.gray[900],
-                  lineHeight: 1.5,
-                  fontFamily: typography.fontFamily,
-                }}>
-                  {benefit.text}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* B5: 점선 구분선 — margin spacing[3] */}
-          <div style={{
-            margin: `${spacing[2]} 0`,
-            borderTop: `1.5px dashed ${colors.gray[200]}`,
-          }} />
-
-          {/* B3: 카테고리 아코디언 */}
-          <CategoryAccordion>
-            <div style={{
-              display: 'flex',
-              gap: spacing[3],
-              overflowX: 'auto',
-              scrollbarWidth: 'none',
-            }}>
-              {CATEGORY_ICONS.map(({ label, color }) => (
-                <div key={label} style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: spacing[1],
-                  flexShrink: 0,
-                }}>
-                  <div style={{
-                    width: '44px',
-                    height: '44px',
-                    borderRadius: '50%',
-                    backgroundColor: color,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    <CategoryIcon label={label} color={color} />
-                  </div>
-                  <span style={{
-                    fontSize: sizes.xxs,
-                    color: colors.gray[500],
-                    whiteSpace: 'nowrap',
-                    fontFamily: typography.fontFamily,
-                  }}>
-                    {label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </CategoryAccordion>
-
         </div>
+
+        {/* B5: 혜택 리스트 — flexShrink: 0 */}
         <div style={{
+          flexShrink: 0,
+          margin: `0 ${layout.margin} ${spacing[2]}`,
+          backgroundColor: colors.surface.card,
+          borderRadius: layout.radiusCard,
+          boxShadow: shadow.card,
+          overflow: 'hidden',
+        }}>
+          {BENEFITS.map((benefit, idx) => (
+            <div
+              key={idx}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: spacing[3],
+                padding: `${spacing[2]} ${spacing[4]}`,
+                borderBottom: idx < BENEFITS.length - 1 ? `1px solid ${colors.gray[100]}` : 'none',
+              }}
+            >
+              <div style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                backgroundColor: benefit.iconBg,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                {benefit.iconContent}
+              </div>
+              <div style={{
+                fontSize: sizes.sm,
+                color: colors.gray[900],
+                lineHeight: 1.5,
+                fontFamily: typography.fontFamily,
+              }}>
+                {benefit.text}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* 점선 구분선 — flexShrink: 0 */}
+        <div style={{
+          flexShrink: 0,
+          margin: `${spacing[2]} 0`,
+          borderTop: `1.5px dashed ${colors.gray[200]}`,
+        }} />
+
+        {/* B3: 아코디언 영역 — flex: 1, 접히면 헤더만, 펼치면 내부 스크롤 */}
+        <div style={{
+          flex: 1,
+          minHeight: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          backgroundColor: colors.surface.card,
+          borderRadius: layout.radiusCard,
+          margin: `0 ${layout.margin}`,
+          overflow: 'hidden',
+        }}>
+          <button
+            onClick={() => setAccordionOpen((v) => !v)}
+            style={{
+              flexShrink: 0,
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: spacing[2],
+              minHeight: '40px',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              fontFamily: typography.fontFamily,
+            }}
+          >
+            <span style={{ fontSize: sizes.sm, color: colors.gray[700] }}>
+              다양한 매장에서 혜택 누리세요!
+            </span>
+            {accordionOpen ? (
+              <ChevronUp size={20} color={colors.gray[500]} />
+            ) : (
+              <ChevronDown size={20} color={colors.gray[500]} />
+            )}
+          </button>
+          {accordionOpen && (
+            <div style={{
+              flex: 1,
+              minHeight: 0,
+              overflowY: 'auto',
+              padding: `0 ${spacing[3]} ${spacing[3]}`,
+            }}>
+              <div style={{
+                display: 'flex',
+                gap: spacing[3],
+                overflowX: 'auto',
+                scrollbarWidth: 'none',
+              }}>
+                {CATEGORY_ICONS.map(({ label, color }) => (
+                  <div key={label} style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: spacing[1],
+                    flexShrink: 0,
+                  }}>
+                    <div style={{
+                      width: '44px',
+                      height: '44px',
+                      borderRadius: '50%',
+                      backgroundColor: color,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                      <CategoryIcon label={label} />
+                    </div>
+                    <span style={{
+                      fontSize: sizes.xxs,
+                      color: colors.gray[500],
+                      whiteSpace: 'nowrap',
+                      fontFamily: typography.fontFamily,
+                    }}>
+                      {label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 신청하기 버튼 — flexShrink: 0, 항상 하단 고정 */}
+        <div style={{
+          flexShrink: 0,
+          borderTop: `1px solid ${colors.gray[100]}`,
           padding: `${spacing[3]} ${layout.margin}`,
           paddingBottom: `calc(env(safe-area-inset-bottom) + ${spacing[3]})`,
         }}>

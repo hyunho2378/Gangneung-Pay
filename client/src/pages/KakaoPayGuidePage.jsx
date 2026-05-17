@@ -16,7 +16,7 @@ export default function KakaoPayGuidePage() {
   const navigate = useNavigate()
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <TopAppBarBack title="카카오페이 연동" onBack={() => navigate(-1)} />
 
       <div

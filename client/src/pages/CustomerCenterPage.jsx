@@ -5,8 +5,8 @@ import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
 
 const faqItems = [
-  { id: 1, question: '충전은 어떻게 하나요?', route: '/chatbot' },
-  { id: 2, question: '환불은 어떻게 신청하나요?', route: '/chatbot' },
+  { id: 1, question: '충전은 어떻게 하나요?', route: '/charge' },
+  { id: 2, question: '환불은 어떻게 신청하나요?', route: '/refund' },
   { id: 3, question: '카드를 분실했어요', route: '/card-lost' },
   { id: 4, question: '가맹점은 어디서 사용 가능한가요?', route: '/store' },
   { id: 5, question: '캐시백은 어떻게 받나요?', route: '/cashback' },
@@ -27,69 +27,8 @@ export default function CustomerCenterPage() {
           backgroundColor: colors.surface.background,
         }}
       >
-        {/* 챗봇 배너 */}
-        <div style={{ padding: `16px ${layout.margin} 0` }}>
-          <div
-            onClick={() => navigate('/chatbot')}
-            style={{
-              backgroundColor: colors.surface.card,
-              borderRadius: layout.radiusCard,
-              padding: '20px',
-              boxShadow: shadow.card,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '16px',
-            }}
-          >
-            <div
-              style={{
-                width: '52px',
-                height: '52px',
-                backgroundColor: colors.primary[100],
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-              }}
-            >
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <path d="M14 3C8.477 3 4 7.477 4 13c0 2.21.712 4.254 1.923 5.913L4 23l4.5-1.5A9.96 9.96 0 0014 23c5.523 0 10-4.477 10-10S19.523 3 14 3z" fill={colors.primary[700]} />
-                <circle cx="10" cy="13" r="1.5" fill="white" />
-                <circle cx="14" cy="13" r="1.5" fill="white" />
-                <circle cx="18" cy="13" r="1.5" fill="white" />
-              </svg>
-            </div>
-            <div style={{ flex: 1 }}>
-              <p
-                style={{
-                  fontSize: typography.size.md,
-                  fontWeight: typography.weight.semibold,
-                  color: colors.gray[900],
-                  margin: 0,
-                }}
-              >
-                챗봇 푸루에게 물어보세요
-              </p>
-              <p
-                style={{
-                  fontSize: typography.size.xs,
-                  color: colors.gray[500],
-                  margin: '4px 0 0',
-                }}
-              >
-                24시간 언제든지 답변받을 수 있어요
-              </p>
-            </div>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M6 4l4 4-4 4" stroke={colors.gray[400]} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-        </div>
-
         {/* 전화 상담 */}
-        <div style={{ padding: `12px ${layout.margin} 0` }}>
+        <div style={{ padding: `16px ${layout.margin} 0` }}>
           <div
             style={{
               backgroundColor: colors.surface.card,

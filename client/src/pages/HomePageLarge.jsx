@@ -5,28 +5,124 @@ import { colors, spacing, layout, shadow, typography } from '../tokens/tokens'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import BottomNavBar from '../components/layout/BottomNavBar'
 import TopAppBarLargeText from '../components/layout/TopAppBarLargeText'
-import { ChevronRight, Receipt, HelpCircle } from 'lucide-react'
+import { ChevronRight, Receipt, HelpCircle, Check } from 'lucide-react'
 
-// LARGETEXT.md 4.4절 — 3단 + 2버튼 잔액 카드
-function BalanceCardLarge({ balance, monthlyCashback, sizes, navigate, fmt }) {
+// 잔액 카드 (다크) — 강릉페이 + balance + [충전(흰)][QR결제(글래스)]
+function BalanceCardLarge({ balance, sizes, navigate, fmt }) {
   return (
     <div style={{
+      backgroundColor: colors.surface.darkCard,
       borderRadius: layout.radiusCard,
-      overflow: 'hidden',
-      boxShadow: shadow.card,
+      padding: spacing[5],
+      color: colors.onDark.primary,
+      boxShadow: shadow.button,
     }}>
-      {/* 1단: 캐시백 — surface.background 배경 */}
+      {/* 강릉페이 + balance */}
       <div style={{
-        backgroundColor: colors.surface.background,
-        padding: `${spacing[4]} ${spacing[5]}`,
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'baseline',
+        marginBottom: spacing[4],
       }}>
         <span style={{
           fontSize: sizes.md,
           fontWeight: typography.weight.medium,
-          color: colors.gray[500],
+          color: 'rgba(255,255,255,0.85)',
+          fontFamily: typography.fontFamily,
+        }}>
+          강릉페이
+        </span>
+        <span style={{
+          fontSize: sizes.balance,
+          fontWeight: typography.weight.bold,
+          color: colors.onDark.primary,
+          fontFamily: typography.fontFamily,
+        }}>
+          {fmt(balance)}원
+        </span>
+      </div>
+
+      {/* 충전 + QR결제 */}
+      <div style={{ display: 'flex', gap: spacing[2] }}>
+        <button
+          onClick={() => navigate('/charge')}
+          style={{
+            flex: 1,
+            height: '68px',
+            backgroundColor: colors.surface.card,
+            color: colors.primary[700],
+            border: 'none',
+            borderRadius: layout.radiusButton,
+            fontSize: sizes.md,
+            fontWeight: typography.weight.bold,
+            cursor: 'pointer',
+            fontFamily: typography.fontFamily,
+          }}
+        >
+          충전
+        </button>
+        <button
+          onClick={() => navigate('/qr')}
+          style={{
+            flex: 1,
+            height: '68px',
+            backgroundColor: 'rgba(255,255,255,0.15)',
+            color: colors.onDark.primary,
+            border: '1px solid rgba(255,255,255,0.35)',
+            borderRadius: layout.radiusButton,
+            fontSize: sizes.md,
+            fontWeight: typography.weight.bold,
+            cursor: 'pointer',
+            fontFamily: typography.fontFamily,
+          }}
+        >
+          QR결제
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// 캐시백 카드 (흰) — 캐시백 + cashbackBalance(teal) + [자동][수동] 토글 (대비 강화)
+// 큰글씨 모드의 토글이 일반 모드(BalanceCardExpanded)보다 강조도 높음.
+// 의도: 시니어 가독성 + 정보 밀도 다운 원칙. LARGETEXT.md 5절 참조.
+function CashbackToggleCardLarge({ cashbackBalance, cashbackMode, setCashbackMode, sizes, fmt }) {
+  const toggleBtn = (active) => ({
+    flex: 1,
+    height: '68px',
+    backgroundColor: active ? colors.primary[700] : colors.surface.card,
+    color: active ? colors.onDark.primary : colors.gray[500],
+    border: `2px solid ${active ? colors.primary[700] : colors.gray[200]}`,
+    borderRadius: layout.radiusButton,
+    fontSize: sizes.md,
+    fontWeight: typography.weight.bold,
+    cursor: 'pointer',
+    fontFamily: typography.fontFamily,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing[1],
+    transition: 'all 200ms',
+  })
+
+  return (
+    <div style={{
+      backgroundColor: colors.surface.card,
+      borderRadius: layout.radiusCard,
+      padding: spacing[5],
+      boxShadow: shadow.card,
+    }}>
+      {/* 캐시백 잔액 */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'baseline',
+        marginBottom: spacing[4],
+      }}>
+        <span style={{
+          fontSize: sizes.md,
+          fontWeight: typography.weight.medium,
+          color: colors.gray[700],
           fontFamily: typography.fontFamily,
         }}>
           캐시백
@@ -34,117 +130,82 @@ function BalanceCardLarge({ balance, monthlyCashback, sizes, navigate, fmt }) {
         <span style={{
           fontSize: sizes.xl,
           fontWeight: typography.weight.bold,
-          color: colors.gray[900],
+          color: colors.teal[500],
           fontFamily: typography.fontFamily,
         }}>
-          {fmt(monthlyCashback)}원
+          {fmt(cashbackBalance)}원
         </span>
       </div>
 
-      {/* 1단과 2-3단 사이 구분선 */}
-      <div style={{ height: '1px', backgroundColor: colors.gray[200] }} />
-
-      {/* 2-3단 + 버튼 — surface.card 배경 */}
-      <div style={{
-        backgroundColor: colors.surface.card,
-        padding: `${spacing[4]} ${spacing[5]} ${spacing[5]}`,
-      }}>
-        {/* 2단: 강릉페이(1) */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: spacing[3],
-        }}>
-          <span style={{
-            fontSize: sizes.md,
-            fontWeight: typography.weight.medium,
-            color: colors.gray[500],
-            fontFamily: typography.fontFamily,
-          }}>
-            강릉페이(1)
-          </span>
-          <span style={{
-            fontSize: sizes.xl,
-            fontWeight: typography.weight.bold,
-            color: colors.gray[900],
-            fontFamily: typography.fontFamily,
-          }}>
-            {fmt(balance)}원
-          </span>
-        </div>
-
-        {/* 3단: 충전 잔액 */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingBottom: spacing[5],
-          marginBottom: spacing[4],
-          borderBottom: `1px solid ${colors.gray[100]}`,
-        }}>
-          <span style={{
-            fontSize: sizes.sm,
-            fontWeight: typography.weight.regular,
-            color: colors.gray[400],
-            fontFamily: typography.fontFamily,
-          }}>
-            충전 잔액
-          </span>
-          <span style={{
-            fontSize: sizes.md,
-            fontWeight: typography.weight.medium,
-            color: colors.gray[700],
-            fontFamily: typography.fontFamily,
-          }}>
-            {fmt(balance)}원
-          </span>
-        </div>
-
-        {/* 2버튼: QR결제 (outline) + 충전 (fill), height 68px */}
-        <div style={{ display: 'flex', gap: spacing[3] }}>
-          <button
-            onClick={() => navigate('/qr')}
-            style={{
-              flex: 1,
-              height: '68px',
-              borderRadius: layout.radiusButton,
-              border: `1px solid ${colors.gray[200]}`,
-              backgroundColor: colors.surface.card,
-              color: colors.gray[900],
-              fontSize: sizes.md,
-              fontWeight: typography.weight.bold,
-              cursor: 'pointer',
-              fontFamily: typography.fontFamily,
-            }}
-          >
-            QR결제
-          </button>
-          <button
-            onClick={() => navigate('/charge')}
-            style={{
-              flex: 1,
-              height: '68px',
-              borderRadius: layout.radiusButton,
-              border: 'none',
-              backgroundColor: colors.primary[700],
-              color: colors.surface.card,
-              fontSize: sizes.md,
-              fontWeight: typography.weight.bold,
-              cursor: 'pointer',
-              fontFamily: typography.fontFamily,
-            }}
-          >
-            충전
-          </button>
-        </div>
+      {/* 자동/수동 토글 — 활성 primary 채움 + 체크 */}
+      <div style={{ display: 'flex', gap: spacing[2] }}>
+        <button onClick={() => setCashbackMode('auto')} style={toggleBtn(cashbackMode === 'auto')}>
+          {cashbackMode === 'auto' && <Check size={18} />}
+          자동 사용
+        </button>
+        <button onClick={() => setCashbackMode('manual')} style={toggleBtn(cashbackMode === 'manual')}>
+          {cashbackMode === 'manual' && <Check size={18} />}
+          수동 사용
+        </button>
       </div>
     </div>
   )
 }
 
-// LARGETEXT.md 4.5절 — 캐시백 카드
-function CashbackCardLarge({ monthlyCashback, sizes, fmt, onClick }) {
+// 신규 사용자 — 카드 신청 CTA (큰글씨 톤, 단순)
+function CardApplyCTALarge({ sizes, navigate }) {
+  return (
+    <div style={{
+      backgroundColor: colors.surface.darkCard,
+      borderRadius: layout.radiusCard,
+      padding: spacing[6],
+      boxShadow: shadow.button,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: spacing[4],
+    }}>
+      <div>
+        <div style={{
+          fontSize: sizes.xl,
+          fontWeight: typography.weight.bold,
+          color: colors.onDark.primary,
+          lineHeight: 1.3,
+          marginBottom: spacing[2],
+          fontFamily: typography.fontFamily,
+        }}>
+          강릉페이 카드를<br />신청하세요
+        </div>
+        <div style={{
+          fontSize: sizes.md,
+          color: colors.onDark.secondary,
+          fontFamily: typography.fontFamily,
+        }}>
+          최대 10% 캐시백 혜택
+        </div>
+      </div>
+      <button
+        onClick={() => navigate('/card-apply')}
+        style={{
+          width: '100%',
+          height: '68px',
+          backgroundColor: 'rgba(255,255,255,0.2)',
+          border: '1px solid rgba(255,255,255,0.3)',
+          borderRadius: layout.radiusButton,
+          color: colors.onDark.primary,
+          fontSize: sizes.md,
+          fontWeight: typography.weight.bold,
+          cursor: 'pointer',
+          fontFamily: typography.fontFamily,
+        }}
+      >
+        신청하기
+      </button>
+    </div>
+  )
+}
+
+// 캐시백 카드 — 이번달 적립 + 사용 가능 + 한도
+function CashbackCardLarge({ monthlyAccumulated, cashbackBalance, sizes, fmt, onClick }) {
   return (
     <div
       onClick={onClick}
@@ -180,7 +241,7 @@ function CashbackCardLarge({ monthlyCashback, sizes, fmt, onClick }) {
           </span>
         </div>
 
-        {/* 2줄: 받은 금액 */}
+        {/* 2줄: 이번달 적립 */}
         <div style={{
           fontSize: sizes.lg,
           fontWeight: typography.weight.bold,
@@ -188,10 +249,21 @@ function CashbackCardLarge({ monthlyCashback, sizes, fmt, onClick }) {
           fontFamily: typography.fontFamily,
           marginBottom: spacing[1],
         }}>
-          받은 금액 {fmt(monthlyCashback)}원
+          이번달 적립 {fmt(monthlyAccumulated)}원
         </div>
 
-        {/* 3줄: 이번 달 최대 */}
+        {/* 3줄: 사용 가능 */}
+        <div style={{
+          fontSize: sizes.md,
+          fontWeight: typography.weight.medium,
+          color: colors.gray[700],
+          fontFamily: typography.fontFamily,
+          marginBottom: spacing[1],
+        }}>
+          사용 가능 {fmt(cashbackBalance)}원
+        </div>
+
+        {/* 4줄: 이번 달 최대 */}
         <div style={{
           fontSize: sizes.sm,
           color: colors.gray[500],
@@ -201,13 +273,12 @@ function CashbackCardLarge({ monthlyCashback, sizes, fmt, onClick }) {
         </div>
       </div>
 
-      {/* 우측 chevron 32px */}
       <ChevronRight size={32} color={colors.gray[400]} strokeWidth={1.8} />
     </div>
   )
 }
 
-// LARGETEXT.md 4.5절 — 액션 카드 (이용내역, 이용안내)
+// 액션 카드 (이용내역, 이용안내)
 function ActionCardLarge({ title, icon: Icon, iconBg, iconColor, sizes, onClick }) {
   return (
     <div
@@ -232,7 +303,6 @@ function ActionCardLarge({ title, icon: Icon, iconBg, iconColor, sizes, onClick 
         {title}
       </span>
 
-      {/* 우측 56×56 아이콘 박스 */}
       <div style={{
         width: '56px',
         height: '56px',
@@ -249,7 +319,7 @@ function ActionCardLarge({ title, icon: Icon, iconBg, iconColor, sizes, onClick 
   )
 }
 
-// LARGETEXT.md 4.5절 환불 카드 + 4.6절 3D 일러스트
+// 환불 카드 + 3D 일러스트
 function RefundCardLarge({ sizes, onClick }) {
   return (
     <div
@@ -285,7 +355,6 @@ function RefundCardLarge({ sizes, onClick }) {
         </div>
       </div>
 
-      {/* 4.6절 사양 — 80×80 3D 일러스트 SVG */}
       <svg width="80" height="80" viewBox="0 0 80 80" fill="none" aria-hidden="true">
         <ellipse cx="40" cy="50" rx="28" ry="24" fill="#22C55E" />
         <ellipse cx="40" cy="48" rx="28" ry="24" fill="#15803D" opacity="0.4" />
@@ -301,54 +370,71 @@ function RefundCardLarge({ sizes, onClick }) {
 export default function HomePageLarge() {
   const navigate = useNavigate()
   const sizes = useTypography()
-  const { balance, monthlyCashback } = useUser()
+  const {
+    hasCard,
+    balance,
+    cashbackBalance,
+    cashbackMode,
+    setCashbackMode,
+    monthlyAccumulated,
+  } = useUser()
   const fmt = (n) => n.toLocaleString('ko-KR')
 
   return (
-    <ScreenContainer statusBarBg={colors.surface.card}>
+    <ScreenContainer>
       <TopAppBarLargeText />
 
       <div style={{
+        flex: 1,
+        minHeight: 0,
         overflowY: 'auto',
         paddingTop: spacing[3],
         paddingLeft: layout.margin,
         paddingRight: layout.margin,
-        paddingBottom: '120px',
         display: 'flex',
         flexDirection: 'column',
         gap: spacing[4],
       }}>
-        {/* 잔액 카드 — LARGETEXT.md 4.4절 */}
-        <BalanceCardLarge
-          balance={balance}
-          monthlyCashback={monthlyCashback}
-          sizes={sizes}
-          navigate={navigate}
-          fmt={fmt}
-        />
+        {!hasCard ? (
+          <CardApplyCTALarge sizes={sizes} navigate={navigate} />
+        ) : (
+          <>
+            <BalanceCardLarge
+              balance={balance}
+              sizes={sizes}
+              navigate={navigate}
+              fmt={fmt}
+            />
 
-        {/* 캐시백 카드 — LARGETEXT.md 4.5절 */}
-        <CashbackCardLarge
-          monthlyCashback={monthlyCashback}
-          sizes={sizes}
-          fmt={fmt}
-          onClick={() => navigate('/cashback')}
-        />
+            <CashbackToggleCardLarge
+              cashbackBalance={cashbackBalance}
+              cashbackMode={cashbackMode}
+              setCashbackMode={setCashbackMode}
+              sizes={sizes}
+              fmt={fmt}
+            />
 
-        {/* 이용 내역 카드 — LARGETEXT.md 4.5절 액션 카드 */}
-        <ActionCardLarge
-          title="이용 내역"
-          icon={Receipt}
-          iconBg={colors.primary[100]}
-          iconColor={colors.primary[700]}
-          sizes={sizes}
-          onClick={() => navigate('/history')}
-        />
+            <CashbackCardLarge
+              monthlyAccumulated={monthlyAccumulated}
+              cashbackBalance={cashbackBalance}
+              sizes={sizes}
+              fmt={fmt}
+              onClick={() => navigate('/cashback')}
+            />
 
-        {/* 환불(출금) 카드 — LARGETEXT.md 4.5절 환불 카드 */}
-        <RefundCardLarge sizes={sizes} onClick={() => navigate('/refund')} />
+            <ActionCardLarge
+              title="이용 내역"
+              icon={Receipt}
+              iconBg={colors.primary[100]}
+              iconColor={colors.primary[700]}
+              sizes={sizes}
+              onClick={() => navigate('/history')}
+            />
 
-        {/* 강릉페이 이용안내 카드 — LARGETEXT.md 4.5절 액션 카드 */}
+            <RefundCardLarge sizes={sizes} onClick={() => navigate('/refund')} />
+          </>
+        )}
+
         <ActionCardLarge
           title="강릉페이 이용안내"
           icon={HelpCircle}

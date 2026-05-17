@@ -30,3 +30,25 @@ export function getStoresByCategory(category, qrOnly = false) {
   }
   return list
 }
+
+export const GANGNEUNG_STATION = { lat: 37.7647, lng: 128.8990 }
+
+export function calculateDistance(lat1, lng1, lat2, lng2) {
+  const R = 6371
+  const toRad = (d) => (d * Math.PI) / 180
+  const dLat = toRad(lat2 - lat1)
+  const dLng = toRad(lng2 - lng1)
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2
+  return 2 * R * Math.asin(Math.sqrt(a))
+}
+
+export function getNearbyStores(refLat, refLng, limit = 100, qrOnly = false) {
+  const list = qrOnly ? QR_STORES : STORES
+  return list
+    .filter((s) => typeof s.lat === 'number' && typeof s.lng === 'number')
+    .map((s) => ({ ...s, distance: calculateDistance(refLat, refLng, s.lat, s.lng) }))
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, limit)
+}

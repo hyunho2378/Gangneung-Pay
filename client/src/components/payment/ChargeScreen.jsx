@@ -167,18 +167,13 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
   return (
     <div
       style={{
-        position: 'fixed',
-        top: 0,
-        bottom: 0,
-        left: '50%',
-        transform: 'translateX(-50%)',
+        flex: 1,
+        minHeight: 0,
         width: '100%',
-        maxWidth: '430px',
         backgroundColor: colors.surface.background,
         display: 'flex',
         flexDirection: 'column',
         fontFamily: typography.fontFamily,
-        zIndex: 100,
       }}
     >
       {/* ── 헤더 ── */}
@@ -188,9 +183,9 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
           display: 'flex',
           alignItems: 'center',
           padding: `${spacing[3]} ${layout.margin}`,
-          paddingTop: '52px',
           gap: spacing[3],
           borderBottom: `1px solid ${colors.gray[100]}`,
+          flexShrink: 0,
         }}
       >
         {step < 3 && (

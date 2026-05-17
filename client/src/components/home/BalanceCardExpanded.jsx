@@ -1,43 +1,27 @@
 /**
- * BalanceCardExpanded (Phase 2 redesigned)
- * Strategy: S1, S2, S3
- * Nielsen: #1 visibility, #2 match real world, #3 user control
- * Shneiderman: #3 informative feedback, #7 locus of control, #8 reduce memory load
- * A2: onCardIconClick(button), refundButtonRef, LOW_BALANCE, teal 직관 메시지, 글래스 보더
+ * BalanceCardExpanded — 한 다크 카드 (잔액 + 캐시백 + 토글 + 3버튼)
+ * 큰글씨 모드(HomePageLarge)는 잔액/캐시백 분리 구조, 일반 모드는 한 카드 통합 구조 유지
+ * 자동/수동 토글: 글래스 톤 + 활성 시 체크 아이콘 (대비 강화)
+ * Strategy: S1, S3 | Nielsen: #1, #3, #7 | Shneiderman: #7
  */
 
 import { useNavigate } from 'react-router-dom'
-import { Bus, Coffee, Utensils, ShoppingBag, Smartphone } from 'lucide-react'
+import { Check } from 'lucide-react'
+import { useUser } from '../../context/UserContext'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 import CardBackModal from './CardBackModal'
 
-function getCashbackIntuition(amount) {
-  if (amount >= 20000) return { text: '한 달 통신비 아꼈어요', Icon: Smartphone }
-  if (amount >= 10000) return { text: '이번 달 외식비 굳었어요', Icon: ShoppingBag }
-  if (amount >= 6000)  return { text: '맛있는 식사 한 끼 아꼈어요', Icon: Utensils }
-  if (amount >= 3000)  return { text: '커피 한 잔 값 아꼈어요', Icon: Coffee }
-  if (amount >= 1)     return { text: '버스 한 번 탔어요', Icon: Bus }
-  return null
-}
-
 export default function BalanceCardExpanded({
-  balance = { cashback: 0, card: 0, charge: 0 },
-  cashbackMax = 30000,
-  cashbackPercent = 0,
-  onCardIconClick,
-  cardCount = 1,
-  cardIndex = 1,
   chargeButtonRef,
   refundButtonRef,
+  onCardIconClick,
   cardBackOpen = false,
   onCardBackClose,
 }) {
   const navigate = useNavigate()
+  const { balance, cashbackBalance, cashbackMode, setCashbackMode } = useUser()
 
-  const cardName = cardCount === 1 ? '내 카드' : `강릉페이 ${cardIndex}`
   const fmt = (n) => n.toLocaleString('ko-KR') + '원'
-  const clampedPercent = Math.min(100, Math.max(0, cashbackPercent))
-  const intuition = getCashbackIntuition(balance.cashback)
 
   const glassBtn = {
     flex: 1,
@@ -52,6 +36,24 @@ export default function BalanceCardExpanded({
     fontFamily: typography.fontFamily,
   }
 
+  const toggleBtn = (active) => ({
+    flex: 1,
+    padding: `${spacing[2]} ${spacing[3]}`,
+    backgroundColor: active ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.08)',
+    color: colors.onDark.primary,
+    border: `1px solid ${active ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.2)'}`,
+    borderRadius: layout.radiusButton,
+    fontSize: typography.size.xs,
+    fontWeight: typography.weight.bold,
+    cursor: 'pointer',
+    transition: 'all 200ms',
+    fontFamily: typography.fontFamily,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing[1],
+  })
+
   return (
     <div style={{ margin: layout.margin }}>
       <div
@@ -64,7 +66,7 @@ export default function BalanceCardExpanded({
           overflow: 'hidden',
         }}
       >
-        {/* A2 [변경 3]: 워터마크 button, onCardIconClick prop, opacity 0.15 → hover 0.25 */}
+        {/* 워터마크 카드 SVG (클릭 시 Face ID) */}
         <button
           type="button"
           onClick={onCardIconClick}
@@ -92,7 +94,7 @@ export default function BalanceCardExpanded({
           </svg>
         </button>
 
-        {/* 카드명 + 카드 번호 */}
+        {/* 카드명 + 카드번호 */}
         <div style={{ marginBottom: spacing[4] }}>
           <p style={{
             margin: '0 0 3px 0',
@@ -100,7 +102,7 @@ export default function BalanceCardExpanded({
             fontSize: typography.size.xs,
             fontWeight: typography.weight.semibold,
           }}>
-            {cardName}
+            강릉페이
           </p>
           <p style={{
             margin: 0,
@@ -113,106 +115,94 @@ export default function BalanceCardExpanded({
           </p>
         </div>
 
-        {/* 잔액 레이블 + 금액 — A2 [변경 5]: LOW_BALANCE < 10000 시 warning */}
-        <div style={{ marginBottom: spacing[4] }}>
-          <p style={{
-            margin: '0 0 4px 0',
-            color: colors.onDark.secondary,
-            fontSize: typography.size.xs,
-          }}>
-            잔액
-          </p>
-          <p style={{
-            margin: 0,
-            color: colors.onDark.primary,
-            fontSize: typography.size.largeTitle,
-            fontWeight: typography.weight.bold,
-            lineHeight: 1.1,
-            letterSpacing: '-0.02em',
-          }}>
-            {fmt(balance.card)}
-          </p>
-        </div>
-
-        {/* 캐시백 진행바 — FIX-H2: 화이트 박스 분리 */}
+        {/* 잔액 표시 — 강릉페이 + 캐시백 별도 줄 */}
         <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: spacing[2],
           marginBottom: spacing[4],
-          backgroundColor: colors.surface.card,
-          borderRadius: layout.radiusSmall,
-          padding: spacing[3],
         }}>
           <div style={{
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: spacing[2],
+            alignItems: 'baseline',
           }}>
             <span style={{
-              color: colors.gray[700],
-              fontSize: typography.size.xs,
+              fontSize: typography.size.sm,
+              color: 'rgba(255,255,255,0.7)',
               fontWeight: typography.weight.medium,
             }}>
-              이번 달 캐시백
+              강릉페이
             </span>
             <span style={{
-              color: colors.teal[500],
+              fontSize: typography.size.largeTitle,
+              color: colors.onDark.primary,
+              fontWeight: typography.weight.bold,
+              lineHeight: 1.1,
+              letterSpacing: '-0.02em',
+            }}>
+              {fmt(balance)}
+            </span>
+          </div>
+
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'baseline',
+          }}>
+            <span style={{
               fontSize: typography.size.sm,
+              color: 'rgba(255,255,255,0.7)',
+              fontWeight: typography.weight.medium,
+            }}>
+              캐시백
+            </span>
+            <span style={{
+              fontSize: typography.size.xl,
+              color: colors.teal[400],
               fontWeight: typography.weight.bold,
             }}>
-              {clampedPercent}%
+              {fmt(cashbackBalance)}
             </span>
           </div>
-          <div style={{
-            backgroundColor: colors.gray[100],
-            borderRadius: layout.radiusPill,
-            height: '6px',
-            overflow: 'hidden',
-            marginBottom: spacing[2],
-          }}>
-            <div style={{
-              backgroundColor: colors.teal[500],
-              borderRadius: layout.radiusPill,
-              height: '100%',
-              width: `${clampedPercent}%`,
-              transition: 'width 0.5s ease',
-            }} />
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{
-              color: colors.teal[500],
-              fontSize: typography.size.xs,
-              fontWeight: typography.weight.semibold,
-            }}>
-              {fmt(balance.cashback)} 적립
-            </span>
-            <span style={{ color: colors.gray[500], fontSize: typography.size.xs }}>
-              한도 {fmt(cashbackMax)}
-            </span>
-          </div>
-
-          {intuition && (
-            <div style={{
-              marginTop: spacing[2],
-              backgroundColor: 'rgba(20,184,166,0.1)',
-              borderRadius: layout.radiusSmall,
-              padding: `${spacing[1]} ${spacing[3]}`,
-              display: 'flex',
-              alignItems: 'center',
-              gap: spacing[2],
-            }}>
-              <intuition.Icon size={16} color={colors.teal[500]} strokeWidth={1.8} />
-              <span style={{
-                fontSize: typography.size.xs,
-                color: colors.teal[500],
-                fontWeight: typography.weight.medium,
-              }}>
-                {intuition.text}
-              </span>
-            </div>
-          )}
         </div>
 
-        {/* A2 [변경 4]: 충전(chargeButtonRef), 환불(refundButtonRef 분리), 이용내역 */}
+        {/* 캐시백 사용 모드 토글 — 글래스 톤 + 활성 시 체크 (대비 강화) */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: spacing[3],
+          padding: `${spacing[3]} ${spacing[4]}`,
+          backgroundColor: 'rgba(255,255,255,0.1)',
+          borderRadius: layout.radiusCard,
+          marginBottom: spacing[4],
+        }}>
+          <span style={{
+            fontSize: typography.size.sm,
+            color: colors.onDark.primary,
+            fontWeight: typography.weight.medium,
+          }}>
+            캐시백
+          </span>
+          <div style={{ display: 'flex', flex: 1, gap: spacing[2] }}>
+            <button
+              onClick={() => setCashbackMode('auto')}
+              style={toggleBtn(cashbackMode === 'auto')}
+            >
+              {cashbackMode === 'auto' && <Check size={14} />}
+              자동 사용
+            </button>
+            <button
+              onClick={() => setCashbackMode('manual')}
+              style={toggleBtn(cashbackMode === 'manual')}
+            >
+              {cashbackMode === 'manual' && <Check size={14} />}
+              수동 사용
+            </button>
+          </div>
+        </div>
+
+        {/* 충전 / 환불 / QR결제 — 글래스 톤 통일 */}
         <div style={{
           display: 'flex',
           gap: spacing[2],
@@ -230,7 +220,6 @@ export default function BalanceCardExpanded({
           </button>
         </div>
 
-        {/* 카드 뒷면 모달 — 카드 영역 내 absolute, overflow hidden으로 클립 */}
         <CardBackModal open={cardBackOpen} onClose={onCardBackClose} />
       </div>
     </div>

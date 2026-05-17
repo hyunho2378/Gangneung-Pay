@@ -1,7 +1,7 @@
 /**
- * UserContext (FIX-2)
- * balance/monthlyCashback/transactions → 단일 useReducer
- * 동기화 보장 + React Strict Mode 이중 실행 대응
+ * UserContext — 캐시백 시스템 풀스택 재구축 (단계 2)
+ * 잔액/캐시백 분리 지갑, 자동/수동 모드, 월 한도 30,000원
+ * 12개월 가상 거래 데이터 (실제 강릉시 가맹점 기반)
  * Session-scoped — 새로고침 시 리셋 (localStorage 금지 정책)
  */
 
@@ -10,163 +10,295 @@ import storesData from '../data/stores.json'
 
 const UserContext = createContext(null)
 
-// ─── Mock 데이터 생성 (모듈 최상위, 1회 실행) ───────────────────────────────
+// ─── 실제 매장 데이터 ────────────────────────────────────────────────────────
 
 const SPEND_CANDIDATES = storesData
   .filter((s) => ['음식점', '카페', '편의점', '마트'].includes(s.category))
-  .map((s) => s.name)
+  .map((s) => ({ name: s.name, category: s.category }))
 
-const STORES = SPEND_CANDIDATES
-const REGULAR_STORES = SPEND_CANDIDATES.slice(0, 5)
+const REGULAR_STORE_POOL = storesData
+  .filter((s) => ['음식점', '카페'].includes(s.category))
+
+function pickRegulars() {
+  const indices = [0, 50, 100, 150, 200]
+  return indices
+    .filter((i) => i < REGULAR_STORE_POOL.length)
+    .map((i) => ({
+      name: REGULAR_STORE_POOL[i].name,
+      category: REGULAR_STORE_POOL[i].category,
+    }))
+}
+
+const REGULAR_STORES = pickRegulars()
+
+// ─── Mock 거래 데이터 생성 ──────────────────────────────────────────────────
 
 function generateMockTransactions() {
   const transactions = []
-  const now = new Date('2026-05-15')
-  const MAX_MONTHLY = 30000
 
-  for (let monthOffset = 0; monthOffset < 12; monthOffset++) {
-    const year = now.getFullYear()
-    const month = now.getMonth() - monthOffset
-    const date = new Date(year, month, 1)
-    const yyyy = date.getFullYear()
-    const mm = date.getMonth()
+  let cumulativeBalance = 0
+  let cumulativeCashback = 0
+  let monthlyAccumulated = 0
 
-    const isCurrentMonth = (yyyy === 2026 && mm === 4)
+  const monthsList = []
+  for (let offset = 11; offset >= 0; offset--) {
+    const d = new Date(2026, 4 - offset, 1)
+    monthsList.push({ year: d.getFullYear(), month: d.getMonth() })
+  }
+
+  for (const { year, month } of monthsList) {
+    monthlyAccumulated = 0
+
+    const isCurrentMonth = (year === 2026 && month === 4)
     const maxDay = isCurrentMonth ? 15 : 28
-    const count = isCurrentMonth ? 8 + Math.floor(Math.random() * 8) : 15 + Math.floor(Math.random() * 16)
-    let monthlyAccumulated = 0
-    const monthTransactions = []
+    const txCount = isCurrentMonth
+      ? 8 + Math.floor(Math.random() * 8)
+      : 15 + Math.floor(Math.random() * 16)
 
-    for (let i = 0; i < count; i++) {
+    const monthTxs = []
+
+    for (let i = 0; i < txCount; i++) {
       const day = 1 + Math.floor(Math.random() * maxDay)
-      const hour = 8 + Math.floor(Math.random() * 14)
+      const hour = 9 + Math.floor(Math.random() * 13)
       const minute = Math.floor(Math.random() * 60)
-      const dateIso = new Date(yyyy, mm, day, hour, minute).toISOString()
+      const date = new Date(year, month, day, hour, minute)
 
-      const rand = Math.random()
-      let tx
+      const r = Math.random()
 
-      if (rand < 0.15) {
-        const amount = [10000, 30000, 50000, 100000][Math.floor(Math.random() * 4)]
-        tx = {
-          id: `tx_mock_${yyyy}${mm}${i}_c`,
+      if (r < 0.15) {
+        const chargeAmount = [10000, 30000, 50000, 100000, 200000][Math.floor(Math.random() * 5)]
+        cumulativeBalance += chargeAmount
+        monthTxs.push({
+          id: date.getTime() + i,
+          date: date.toISOString(),
           type: 'charge',
-          amount,
-          date: dateIso,
-          refunded: false,
-        }
-      } else if (rand < 0.2) {
-        const amount = [10000, 30000, 50000][Math.floor(Math.random() * 3)]
-        tx = {
-          id: `tx_mock_${yyyy}${mm}${i}_r`,
-          type: 'refund',
-          amount,
-          date: dateIso,
+          storeName: null,
+          totalAmount: chargeAmount,
+          paidByCashback: 0,
+          paidByBalance: chargeAmount,
+          cashbackEarned: 0,
+          cashbackMode: null,
+        })
+      } else if (r < 0.20 && cumulativeBalance > 50000) {
+        const refundAmount = [10000, 20000, 30000][Math.floor(Math.random() * 3)]
+        if (cumulativeBalance >= refundAmount) {
+          cumulativeBalance -= refundAmount
+          monthTxs.push({
+            id: date.getTime() + i,
+            date: date.toISOString(),
+            type: 'refund',
+            storeName: null,
+            totalAmount: refundAmount,
+            paidByCashback: 0,
+            paidByBalance: refundAmount,
+            cashbackEarned: 0,
+            cashbackMode: null,
+          })
         }
       } else {
-        const useRegular = Math.random() < 0.3
-        const store = useRegular
-          ? REGULAR_STORES[Math.floor(Math.random() * REGULAR_STORES.length)]
-          : STORES[Math.floor(Math.random() * STORES.length)]
-        const amount = 1000 + Math.floor(Math.random() * 49000)
-        const rawCashback = Math.floor(amount * 0.1)
-        const remainingLimit = Math.max(0, MAX_MONTHLY - monthlyAccumulated)
-        const cashback = Math.min(rawCashback, remainingLimit)
-        monthlyAccumulated += cashback
-        tx = {
-          id: `tx_mock_${yyyy}${mm}${i}_s`,
-          type: 'spend',
-          amount,
-          store,
-          date: dateIso,
-          cashback,
+        const isRegular = Math.random() < 0.3
+        const pool = isRegular ? REGULAR_STORES : SPEND_CANDIDATES
+        if (pool.length === 0) continue
+        const store = pool[Math.floor(Math.random() * pool.length)]
+
+        const amount = 1000 + Math.floor(Math.random() * 49) * 1000
+
+        const mode = Math.random() < 0.8 ? 'auto' : 'manual'
+
+        if (cumulativeBalance + cumulativeCashback < amount && mode === 'auto') continue
+        if (cumulativeBalance < amount && mode === 'manual') continue
+
+        let paidByCashback = 0
+        let paidByBalance = amount
+        if (mode === 'auto' && cumulativeCashback > 0) {
+          paidByCashback = Math.min(cumulativeCashback, amount)
+          paidByBalance = amount - paidByCashback
         }
+
+        if (paidByBalance > cumulativeBalance) continue
+
+        const eligibleAmount = paidByBalance
+        const potentialCashback = Math.floor(eligibleAmount * 0.1)
+        const remainingLimit = 30000 - monthlyAccumulated
+        const cashbackEarned = Math.min(potentialCashback, Math.max(0, remainingLimit))
+
+        cumulativeBalance -= paidByBalance
+        cumulativeCashback = cumulativeCashback - paidByCashback + cashbackEarned
+        monthlyAccumulated += cashbackEarned
+
+        monthTxs.push({
+          id: date.getTime() + i,
+          date: date.toISOString(),
+          type: 'spend',
+          storeName: store.name,
+          totalAmount: amount,
+          paidByCashback,
+          paidByBalance,
+          cashbackEarned,
+          cashbackMode: mode,
+        })
       }
-      monthTransactions.push(tx)
     }
-    transactions.push(...monthTransactions)
+
+    monthTxs.sort((a, b) => new Date(a.date) - new Date(b.date))
+    transactions.push(...monthTxs)
   }
 
   transactions.sort((a, b) => new Date(b.date) - new Date(a.date))
+
   return transactions
 }
 
-const initialMockTransactions = generateMockTransactions()
-const initialMonthlyCashback = Math.min(
-  30000,
-  initialMockTransactions
-    .filter((t) => {
-      const d = new Date(t.date)
-      return t.type === 'spend' && d.getFullYear() === 2026 && d.getMonth() === 4
-    })
-    .reduce((sum, t) => sum + (t.cashback || 0), 0)
-)
+// ─── 초기 상태 계산 ──────────────────────────────────────────────────────────
 
-// ─────────────────────────────────────────────────────────────────────────────
+function calculateInitialState() {
+  const transactions = generateMockTransactions()
+  const chronological = [...transactions].reverse()
 
-const initialState = {
-  balance: 0,
-  monthlyCashback: initialMonthlyCashback,
-  transactions: initialMockTransactions,
+  let balance = 0
+  let cashbackBalance = 0
+  let monthlyAccumulated = 0
+  const currentMonth = 4
+  const currentYear = 2026
+
+  for (const tx of chronological) {
+    const txDate = new Date(tx.date)
+    const txMonth = txDate.getMonth()
+    const txYear = txDate.getFullYear()
+
+    if (tx.type === 'charge') {
+      balance += tx.paidByBalance
+    } else if (tx.type === 'refund') {
+      balance -= tx.paidByBalance
+    } else if (tx.type === 'spend') {
+      balance -= tx.paidByBalance
+      cashbackBalance = cashbackBalance - tx.paidByCashback + tx.cashbackEarned
+
+      if (txYear === currentYear && txMonth === currentMonth) {
+        monthlyAccumulated += tx.cashbackEarned
+      }
+    }
+  }
+
+  return {
+    balance: Math.max(0, balance),
+    cashbackBalance: Math.max(0, cashbackBalance),
+    cashbackMode: 'auto',
+    monthlyAccumulated: Math.max(0, monthlyAccumulated),
+    transactions,
+  }
 }
+
+const initialState = calculateInitialState()
+
+// ─── Reducer ─────────────────────────────────────────────────────────────────
 
 function userReducer(state, action) {
   switch (action.type) {
-    case 'CHARGE': {
+
+    case 'CHARGE_BALANCE': {
       const { id, amount, date } = action.payload
+      const newTransaction = {
+        id,
+        date,
+        type: 'charge',
+        storeName: null,
+        totalAmount: amount,
+        paidByCashback: 0,
+        paidByBalance: amount,
+        cashbackEarned: 0,
+        cashbackMode: null,
+      }
       return {
         ...state,
         balance: state.balance + amount,
-        transactions: [
-          { id, type: 'charge', amount, date, refunded: false },
-          ...state.transactions,
-        ],
+        transactions: [newTransaction, ...state.transactions],
       }
     }
-    case 'REFUND': {
-      const { chargeId } = action.payload
-      const target = state.transactions.find(
-        (t) => t.id === chargeId && t.type === 'charge' && !t.refunded
-      )
-      if (!target) return state
-      const refundId = `tx_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
-      const refundEntry = {
-        id: refundId,
-        type: 'refund',
-        amount: target.amount,
+
+    case 'SPEND_BALANCE': {
+      const { amount, storeName } = action.payload
+
+      let paidByCashback = 0
+      let paidByBalance = amount
+
+      if (state.cashbackMode === 'auto' && state.cashbackBalance > 0) {
+        paidByCashback = Math.min(state.cashbackBalance, amount)
+        paidByBalance = amount - paidByCashback
+      }
+
+      if (paidByBalance > state.balance) return state
+
+      const potentialCashback = Math.floor(paidByBalance * 0.1)
+      const remainingMonthlyLimit = 30000 - state.monthlyAccumulated
+      const cashbackEarned = Math.min(potentialCashback, Math.max(0, remainingMonthlyLimit))
+
+      const newTransaction = {
+        id: Date.now(),
         date: new Date().toISOString(),
-        refundOf: chargeId,
+        type: 'spend',
+        storeName,
+        totalAmount: amount,
+        paidByCashback,
+        paidByBalance,
+        cashbackEarned,
+        cashbackMode: state.cashbackMode,
       }
+
       return {
         ...state,
-        balance: state.balance - target.amount,
+        balance: state.balance - paidByBalance,
+        cashbackBalance: state.cashbackBalance - paidByCashback + cashbackEarned,
+        monthlyAccumulated: state.monthlyAccumulated + cashbackEarned,
+        transactions: [newTransaction, ...state.transactions],
+      }
+    }
+
+    case 'REFUND_TRANSACTION': {
+      const { transactionId } = action.payload
+      const target = state.transactions.find((t) => t.id === transactionId)
+
+      if (!target || target.type !== 'charge') return state
+
+      const refundAmount = target.paidByBalance
+
+      if (refundAmount > state.balance) return state
+
+      const newTransaction = {
+        id: Date.now(),
+        date: new Date().toISOString(),
+        type: 'refund',
+        storeName: null,
+        totalAmount: refundAmount,
+        paidByCashback: 0,
+        paidByBalance: refundAmount,
+        cashbackEarned: 0,
+        cashbackMode: null,
+      }
+
+      return {
+        ...state,
+        balance: state.balance - refundAmount,
         transactions: [
-          refundEntry,
-          ...state.transactions.map((t) =>
-            t.id === chargeId ? { ...t, refunded: true } : t
-          ),
+          newTransaction,
+          ...state.transactions.filter((t) => t.id !== transactionId),
         ],
       }
     }
-    case 'SPEND': {
-      const { id, amount, date } = action.payload
-      const newBalance = Math.max(0, state.balance - amount)
-      const cashbackEarned = Math.floor(amount * 0.1)
-      const newCashback = Math.min(30000, state.monthlyCashback + cashbackEarned)
+
+    case 'SET_CASHBACK_MODE': {
       return {
         ...state,
-        balance: newBalance,
-        monthlyCashback: newCashback,
-        transactions: [
-          { id, type: 'spend', amount, date, cashback: cashbackEarned },
-          ...state.transactions,
-        ],
+        cashbackMode: action.payload.mode,
       }
     }
+
     default:
       return state
   }
 }
+
+// ─── Provider ────────────────────────────────────────────────────────────────
 
 export function UserProvider({ children }) {
   const [hasCard, setHasCard] = useState(false)
@@ -183,18 +315,20 @@ export function UserProvider({ children }) {
   const chargeBalance = useCallback((amount) => {
     const id = `tx_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
     const date = new Date().toISOString()
-    dispatch({ type: 'CHARGE', payload: { id, amount, date } })
+    dispatch({ type: 'CHARGE_BALANCE', payload: { id, amount, date } })
     return id
   }, [])
 
-  const refundTransaction = useCallback((chargeId) => {
-    dispatch({ type: 'REFUND', payload: { chargeId } })
+  const spendBalance = useCallback((amount, storeName = null) => {
+    dispatch({ type: 'SPEND_BALANCE', payload: { amount, storeName } })
   }, [])
 
-  const spendBalance = useCallback((amount) => {
-    const id = `tx_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
-    const date = new Date().toISOString()
-    dispatch({ type: 'SPEND', payload: { id, amount, date } })
+  const refundTransaction = useCallback((transactionId) => {
+    dispatch({ type: 'REFUND_TRANSACTION', payload: { transactionId } })
+  }, [])
+
+  const setCashbackMode = useCallback((mode) => {
+    dispatch({ type: 'SET_CASHBACK_MODE', payload: { mode } })
   }, [])
 
   return (
@@ -202,14 +336,17 @@ export function UserProvider({ children }) {
       hasCard,
       cardStatus,
       balance: state.balance,
-      monthlyCashback: state.monthlyCashback,
+      cashbackBalance: state.cashbackBalance,
+      cashbackMode: state.cashbackMode,
+      monthlyAccumulated: state.monthlyAccumulated,
       transactions: state.transactions,
       applyCard,
       shipCard,
       registerCard,
       chargeBalance,
-      refundTransaction,
       spendBalance,
+      refundTransaction,
+      setCashbackMode,
     }}>
       {children}
     </UserContext.Provider>

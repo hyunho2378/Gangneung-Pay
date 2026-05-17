@@ -45,7 +45,7 @@ export default function CardApplyCTA({ applyButtonRef }) {
             alignSelf: 'flex-start',
             backgroundColor: 'rgba(255,255,255,0.2)',
             border: '1px solid rgba(255,255,255,0.3)',
-            borderRadius: layout.radiusPill,
+            borderRadius: layout.radiusButton,
             color: colors.onDark.primary,
             fontSize: typography.size.sm,
             fontWeight: typography.weight.semibold,

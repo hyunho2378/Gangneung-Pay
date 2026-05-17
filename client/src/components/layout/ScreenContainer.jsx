@@ -21,8 +21,10 @@ export default function ScreenContainer({ children, statusBarBg, statusBarLight 
     <div id="screen-container" style={{
       maxWidth: '390px',
       margin: '0 auto',
-      minHeight: '100dvh',
-      backgroundColor: colors.surface.background,
+      height: '100dvh',
+      display: 'flex',
+      flexDirection: 'column',
+      backgroundColor: statusBarBg || colors.surface.background,
       position: 'relative',
       overflowX: 'hidden',
       paddingBottom: 'env(safe-area-inset-bottom)',

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
 import { colors, typography, layout, spacing } from '../../tokens/tokens'
@@ -97,18 +97,34 @@ export default function BannerCarousel({ applyButtonRef }) {
   const { hasCard } = useUser()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [startX, setStartX] = useState(null)
+  const intervalRef = useRef(null)
 
   const slides = hasCard
     ? [...BASE_SLIDES, KAKAO_SLIDE, NAVER_SLIDE]
     : [CARD_APPLY_SLIDE, ...BASE_SLIDES, KAKAO_SLIDE, NAVER_SLIDE]
 
-  const slide = slides[currentIndex]
   const safeIndex = Math.min(currentIndex, slides.length - 1)
-  const safeSlide = slides[safeIndex]
 
+  // 자동 슬라이드 타이머 시작/재시작
+  const resetTimer = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    intervalRef.current = setInterval(() => {
+      setCurrentIndex(prev => (prev + 1) % slides.length)
+    }, 5000)
+  }
+
+  useEffect(() => {
+    resetTimer()
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current) }
+  }, [slides.length])
+
+  // 수동 이동 (스와이프 — 끝에서 막힘) + 타이머 리셋
   const go = (dir) => {
-    if (dir > 0) setCurrentIndex(prev => Math.min(prev + 1, slides.length - 1))
-    else setCurrentIndex(prev => Math.max(prev - 1, 0))
+    const next = dir > 0
+      ? Math.min(safeIndex + 1, slides.length - 1)
+      : Math.max(safeIndex - 1, 0)
+    setCurrentIndex(next)
+    resetTimer()
   }
 
   const handleTouchStart = (e) => setStartX(e.touches[0].clientX)
@@ -126,111 +142,124 @@ export default function BannerCarousel({ applyButtonRef }) {
     setStartX(null)
   }
 
-  const handleSlideClick = () => {
-    if (safeSlide.id === 'kakao') navigate('/kakao-guide')
-    else if (safeSlide.id === 'naver') navigate('/naver-guide')
-  }
-
   return (
-    <div style={{ margin: `0 ${layout.margin}`, borderRadius: layout.radiusCard, overflow: 'hidden', userSelect: 'none' }}>
+    <div style={{
+      margin: `0 ${layout.margin}`,
+      borderRadius: layout.radiusCard,
+      overflow: 'hidden',
+      userSelect: 'none',
+      position: 'relative',
+    }}>
+      {/* 슬라이드 트랙 */}
       <div
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
-        onClick={handleSlideClick}
         style={{
-          backgroundColor: safeSlide.bgColor,
-          borderRadius: layout.radiusCard,
-          height: '160px',
           display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: `0 ${spacing[4]} 0 ${spacing[5]}`,
-          position: 'relative',
-          cursor: (safeSlide.id === 'kakao' || safeSlide.id === 'naver') ? 'pointer' : 'default',
-          transition: 'background-color 0.35s ease',
+          transform: `translateX(-${safeIndex * 100}%)`,
+          transition: 'transform 300ms ease-out',
+          width: '100%',
         }}
       >
-        {/* 좌측 텍스트 */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[2], flex: 1 }}>
-          <p style={{
-            margin: 0,
-            color: safeSlide.textColor,
-            fontSize: typography.size.md,
-            fontWeight: typography.weight.bold,
-            lineHeight: 1.35,
-            whiteSpace: 'pre-line',
-          }}>
-            {safeSlide.title}
-          </p>
-          <p style={{
-            margin: 0,
-            color: safeSlide.subTextColor,
-            fontSize: typography.size.xs,
-            fontWeight: typography.weight.medium,
-          }}>
-            {safeSlide.description}
-          </p>
-          {safeSlide.buttonLabel && safeSlide.id !== 'kakao' && (
-            <button
-              ref={safeSlide.id === 'cardApply' ? applyButtonRef : undefined}
-              onClick={(e) => {
-                e.stopPropagation()
-                navigate(safeSlide.buttonPath)
-              }}
-              style={{
-                marginTop: spacing[1],
-                alignSelf: 'flex-start',
-                backgroundColor: safeSlide.buttonBg || 'rgba(255,255,255,0.25)',
-                color: safeSlide.buttonTextColor || safeSlide.textColor,
-                border: 'none',
-                borderRadius: layout.radiusPill,
-                padding: `6px 14px`,
+        {slides.map((slide) => (
+          <div
+            key={slide.id}
+            onClick={() => {
+              if (slide.id === 'kakao') navigate('/kakao-guide')
+              else if (slide.id === 'naver') navigate('/naver-guide')
+            }}
+            style={{
+              width: '100%',
+              flexShrink: 0,
+              backgroundColor: slide.bgColor,
+              height: '160px',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: `0 ${spacing[4]} 0 ${spacing[5]}`,
+              cursor: (slide.id === 'kakao' || slide.id === 'naver') ? 'pointer' : 'default',
+            }}
+          >
+            {/* 좌측 텍스트 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[2], flex: 1 }}>
+              <p style={{
+                margin: 0,
+                color: slide.textColor,
+                fontSize: typography.size.md,
+                fontWeight: typography.weight.bold,
+                lineHeight: 1.35,
+                whiteSpace: 'pre-line',
+              }}>
+                {slide.title}
+              </p>
+              <p style={{
+                margin: 0,
+                color: slide.subTextColor,
                 fontSize: typography.size.xs,
-                fontWeight: typography.weight.semibold,
-                cursor: 'pointer',
-                fontFamily: typography.fontFamily,
-              }}
-            >
-              {safeSlide.buttonLabel}
-            </button>
-          )}
-        </div>
+                fontWeight: typography.weight.medium,
+              }}>
+                {slide.description}
+              </p>
+              {slide.buttonLabel && slide.id !== 'kakao' && (
+                <button
+                  ref={slide.id === 'cardApply' ? applyButtonRef : undefined}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    navigate(slide.buttonPath)
+                  }}
+                  style={{
+                    marginTop: spacing[1],
+                    alignSelf: 'flex-start',
+                    backgroundColor: slide.buttonBg || 'rgba(255,255,255,0.25)',
+                    color: slide.buttonTextColor || slide.textColor,
+                    border: 'none',
+                    borderRadius: layout.radiusButton,
+                    padding: `6px 14px`,
+                    fontSize: typography.size.xs,
+                    fontWeight: typography.weight.semibold,
+                    cursor: 'pointer',
+                    fontFamily: typography.fontFamily,
+                  }}
+                >
+                  {slide.buttonLabel}
+                </button>
+              )}
+            </div>
 
-        {/* 우측 일러스트 */}
-        <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {safeSlide.illustration}
-        </div>
+            {/* 우측 일러스트 */}
+            <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {slide.illustration}
+            </div>
+          </div>
+        ))}
+      </div>
 
-        {/* dot 인디케이터 */}
-        <div style={{
-          position: 'absolute',
-          bottom: spacing[2],
-          left: '50%',
-          transform: 'translateX(-50%)',
-          display: 'flex',
-          gap: spacing[1],
-          alignItems: 'center',
-        }}>
-          {slides.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={(e) => { e.stopPropagation(); setCurrentIndex(idx) }}
-              style={{
-                width: idx === safeIndex ? '18px' : '6px',
-                height: '6px',
-                borderRadius: layout.radiusPill,
-                backgroundColor: idx === safeIndex ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.45)',
-                border: 'none',
-                padding: 0,
-                cursor: 'pointer',
-                transition: 'all 0.25s ease',
-              }}
-            />
-          ))}
-        </div>
+      {/* dot 인디케이터 — 슬라이드 트랙 위 오버레이 */}
+      <div style={{
+        position: 'absolute',
+        bottom: spacing[2],
+        left: '50%',
+        transform: 'translateX(-50%)',
+        display: 'flex',
+        gap: spacing[1],
+        alignItems: 'center',
+        pointerEvents: 'none',
+      }}>
+        {slides.map((_, idx) => (
+          <div
+            key={idx}
+            style={{
+              width: idx === safeIndex ? '18px' : '6px',
+              height: '6px',
+              borderRadius: layout.radiusPill,
+              backgroundColor: idx === safeIndex ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.45)',
+              transition: 'all 0.25s ease',
+            }}
+          />
+        ))}
       </div>
     </div>
   )

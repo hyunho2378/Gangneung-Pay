@@ -14,6 +14,7 @@ import CommunityPage from './pages/CommunityPage'
 import QRPage from './pages/QRPage'
 import ChargePage from './pages/ChargePage'
 import CashbackPage from './pages/CashbackPage'
+import CashbackInfoPage from './pages/CashbackInfoPage'
 import HistoryPage from './pages/HistoryPage'
 import ServiceEditPage from './pages/ServiceEditPage'
 import KakaoPayGuidePage from './pages/KakaoPayGuidePage'
@@ -75,6 +76,7 @@ function App() {
           <Route path="/qr" element={<QRPage />} />
           <Route path="/charge" element={<ChargePage />} />
           <Route path="/cashback" element={<CashbackPage />} />
+          <Route path="/cashback-info" element={<CashbackInfoPage />} />
           <Route path="/history" element={<HistoryPage />} />
 
           {/* 서비스 안내 */}

@@ -45,8 +45,7 @@ export default function RefundPage() {
 
   const isRefundable = (chargeTx) => {
     if (balance <= 0) return { ok: false, reason: '잔액이 없습니다' }
-    if (chargeTx.amount > balance) return { ok: false, reason: '잔액 부족' }
-    if (chargeTx.refunded) return { ok: false, reason: '환불 완료' }
+    if (chargeTx.totalAmount > balance) return { ok: false, reason: '잔액 부족' }
     const d = new Date(chargeTx.date)
     if (!(d.getFullYear() === 2026 && d.getMonth() === 4)) {
       return { ok: false, reason: '환불 불가 (과거 거래)' }
@@ -54,9 +53,9 @@ export default function RefundPage() {
     const chargeDate = new Date(chargeTx.date).getTime()
     const spentAfter = transactions
       .filter((t) => t.type === 'spend' && new Date(t.date).getTime() >= chargeDate)
-      .reduce((sum, t) => sum + t.amount, 0)
-    const requiredRatio = chargeTx.amount > 10000 ? 0.6 : 0.8
-    if (spentAfter / chargeTx.amount < requiredRatio) {
+      .reduce((sum, t) => sum + t.totalAmount, 0)
+    const requiredRatio = chargeTx.totalAmount > 10000 ? 0.6 : 0.8
+    if (spentAfter / chargeTx.totalAmount < requiredRatio) {
       return { ok: false, reason: `${Math.floor(requiredRatio * 100)}% 이상 사용 후 환불 가능` }
     }
     return { ok: true }
@@ -91,7 +90,7 @@ export default function RefundPage() {
         </h1>
       </div>
 
-      <div style={{ padding: layout.margin, flex: 1, overflowY: 'auto', paddingBottom: '139px' }}>
+      <div style={{ padding: layout.margin, flex: 1, minHeight: 0, overflowY: 'auto' }}>
         {/* 현재 잔액 */}
         <div style={{
           backgroundColor: colors.surface.darkCard,
@@ -187,19 +186,10 @@ export default function RefundPage() {
                           {fmtDate(t.date)}
                         </p>
                         <p style={{ margin: `${spacing[1]} 0 0 0`, fontSize: sizes.md, fontWeight: typography.weight.semibold, color: colors.gray[900] }}>
-                          {fmt(t.amount)}
+                          {fmt(t.totalAmount)}
                         </p>
                       </div>
-                      {t.refunded ? (
-                        <span style={{
-                          fontSize: sizes.sm,
-                          fontWeight: typography.weight.medium,
-                          color: colors.gray[400],
-                          whiteSpace: 'nowrap',
-                        }}>
-                          환불 완료
-                        </span>
-                      ) : result.ok ? (
+                      {result.ok ? (
                         <button
                           onClick={() => setConfirmId(t.id)}
                           style={{
@@ -260,7 +250,7 @@ export default function RefundPage() {
               환불하시겠습니까?
             </h3>
             <p style={{ margin: 0, fontSize: sizes.sm, color: colors.gray[700] }}>
-              {fmt(confirmTarget.amount)}을 환불합니다.
+              {fmt(confirmTarget.totalAmount)}을 환불합니다.
             </p>
             <div style={{ display: 'flex', gap: spacing[2] }}>
               <button

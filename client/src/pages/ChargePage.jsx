@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
+import { colors } from '../tokens/tokens'
+import ScreenContainer from '../components/layout/ScreenContainer'
 import ChargeScreen from '../components/payment/ChargeScreen'
 import RefundGuideModal from '../components/common/RefundGuideModal'
 import CoachMarkOverlay from '../components/common/CoachMarkOverlay'
@@ -14,7 +16,7 @@ export default function ChargePage() {
   const [showCoach, setShowCoach] = useState(location.state?.fromCoach === true)
 
   return (
-    <>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <ChargeScreen
         onClose={() => navigate(-1)}
         onRefundGuide={() => setIsRefundOpen(true)}
@@ -34,6 +36,6 @@ export default function ChargePage() {
           onSkip={() => setShowCoach(false)}
         />
       )}
-    </>
+    </ScreenContainer>
   )
 }

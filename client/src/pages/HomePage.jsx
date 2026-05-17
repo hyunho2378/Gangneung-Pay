@@ -17,7 +17,6 @@ import BannerCarousel from '../components/home/BannerCarousel'
 import BalanceCardExpanded from '../components/home/BalanceCardExpanded'
 import CardApplyCTA from '../components/home/CardApplyCTA'
 import CashbackEntryCard from '../components/home/CashbackEntryCard'
-import MonthlyCashbackModal from '../components/home/MonthlyCashbackModal'
 import CardBackFaceId from '../components/home/CardBackFaceId'
 import SectionHeader from '../components/home/SectionHeader'
 import StoreRecommendCard from '../components/home/StoreRecommendCard'
@@ -32,12 +31,11 @@ const mockStores = [
 export default function HomePage() {
   const navigate = useNavigate()
   const { isLargeText } = useApp()
-  const { hasCard, balance, monthlyCashback } = useUser()
+  const { hasCard } = useUser()
   const {
     hasSeenCardApplyCoach,
     hasSeenChargeCoach,
     hasSeenRefundCoach,
-    hasSeenCashbackModal,
     markSeen,
     completeAllCoachmarks,
   } = useOnboarding()
@@ -47,7 +45,6 @@ export default function HomePage() {
   const applyButtonRef = useRef(null)
 
   const [coachStep, setCoachStep] = useState(null) // 'cardApply' | 'charge' | 'refund' | null
-  const [showCashbackModal, setShowCashbackModal] = useState(false)
   const [showFaceId, setShowFaceId] = useState(false)
   const [showCardBack, setShowCardBack] = useState(false)
 
@@ -75,16 +72,8 @@ export default function HomePage() {
       setCoachStep('refund')
       return
     }
-    // 코치마크 모두 본 후 + 캐시백 모달 안 봤으면 자동 노출
-    if (hasCard && hasSeenChargeCoach && hasSeenRefundCoach && !hasSeenCashbackModal) {
-      setCoachStep(null)
-      const t = setTimeout(() => setShowCashbackModal(true), 500)
-      return () => clearTimeout(t)
-    }
     setCoachStep(null)
-  }, [hasCard, hasSeenCardApplyCoach, hasSeenChargeCoach, hasSeenRefundCoach, hasSeenCashbackModal])
-
-  const cashbackPercent = Math.min(100, Math.floor((monthlyCashback / 30000) * 100))
+  }, [hasCard, hasSeenCardApplyCoach, hasSeenChargeCoach, hasSeenRefundCoach])
 
   if (isLargeText) return <HomePageLarge />
 
@@ -94,9 +83,9 @@ export default function HomePage() {
 
       <div
         style={{
-          overflowY: 'auto',
-          paddingBottom: '139px',
           flex: 1,
+          minHeight: 0,
+          overflowY: 'auto',
           backgroundColor: colors.surface.background,
         }}
       >
@@ -112,16 +101,13 @@ export default function HomePage() {
         {hasCard ? (
           <>
             <BalanceCardExpanded
-              balance={{ cashback: monthlyCashback, card: balance, charge: 0 }}
-              cashbackMax={30000}
-              cashbackPercent={cashbackPercent}
               onCardIconClick={handleCardIconClick}
               chargeButtonRef={chargeButtonRef}
               refundButtonRef={refundButtonRef}
               cardBackOpen={showCardBack}
               onCardBackClose={() => setShowCardBack(false)}
             />
-            {/* B7: 진입 카드 */}
+            {/* B7: 진입 카드 — 클릭 시 바로 /cashback 진입 */}
             <div style={{ marginTop: spacing[2] }}>
               <CashbackEntryCard onClick={() => navigate('/cashback')} />
             </div>
@@ -150,14 +136,6 @@ export default function HomePage() {
       <CardBackFaceId
         open={showFaceId}
         onClose={handleFaceIdComplete}
-      />
-      <MonthlyCashbackModal
-        open={showCashbackModal}
-        onClose={() => {
-          setShowCashbackModal(false)
-          markSeen('cashbackModal')
-        }}
-        monthlyCashback={monthlyCashback}
       />
       <BottomNavBar />
 

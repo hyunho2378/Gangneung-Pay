@@ -35,7 +35,7 @@ export default function NaverPayGuidePage() {
   }
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <TopAppBarBack title="네이버페이 연동" onBack={() => navigate(-1)} />
 
       <div

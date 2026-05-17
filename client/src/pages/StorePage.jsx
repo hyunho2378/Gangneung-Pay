@@ -1,5 +1,3 @@
-import { colors } from '../tokens/tokens'
-
 import ScreenContainer from '../components/layout/ScreenContainer'
 import BottomNavBar from '../components/layout/BottomNavBar'
 // HIDDEN (Phase 3 feedback): QRFloatingBar → 바텀탭 QR 중앙 버튼으로 대체
@@ -8,7 +6,7 @@ import StoreMapScreen from '../components/store/StoreMapScreen'
 
 export default function StorePage() {
   return (
-    <ScreenContainer statusBarBg={colors.surface.card}>
+    <ScreenContainer>
       <div
         style={{
           flex: 1,

@@ -1,9 +1,8 @@
 /**
- * HistoryPage (C3-4)
- * UserContext.transactions 시간순 표시
- * 타입 필터 (전체/충전/환불/결제) + 기간 필터 (PeriodPickerModal)
- * type 'spend': store명 + 적립 금액 teal-500
- * Nielsen #3 user control, #6 recognition
+ * HistoryPage (단계 4 — 캐시백 시스템 풀스택 재구축)
+ * 새 transaction 구조: storeName / totalAmount / paidByCashback / paidByBalance / cashbackEarned / cashbackMode
+ * spend: 캐시백 사용 분리 박스 + 자동/수동 라벨 + 적립 표시
+ * Nielsen #1 visibility, #3 user control, #6 recognition
  */
 
 import { useState } from 'react'
@@ -28,7 +27,7 @@ export default function HistoryPage() {
 
   const [typeFilter, setTypeFilter] = useState('all')
   const [periodOpen, setPeriodOpen] = useState(false)
-  const [periodFilter, setPeriodFilter] = useState(null) // null = 전체, {year, month} = 특정 월
+  const [periodFilter, setPeriodFilter] = useState(null)
 
   const filtered = transactions.filter((t) => {
     if (typeFilter !== 'all' && t.type !== typeFilter) return false
@@ -39,17 +38,10 @@ export default function HistoryPage() {
     return true
   })
 
-  const fmt = (n) => n.toLocaleString('ko-KR') + '원'
+  const fmt = (n) => n.toLocaleString('ko-KR')
   const fmtDate = (iso) => {
     const d = new Date(iso)
     return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
-  }
-
-  const getLabel = (t) => {
-    if (t.type === 'charge') return { text: '충전', color: colors.primary[700], sign: '+' }
-    if (t.type === 'refund') return { text: '환불', color: colors.error, sign: '-' }
-    if (t.type === 'spend') return { text: t.store || '결제', color: colors.gray[900], sign: '-' }
-    return { text: '기타', color: colors.gray[700], sign: '' }
   }
 
   const periodLabel = periodFilter
@@ -139,7 +131,6 @@ export default function HistoryPage() {
             <ChevronDown size={14} color={periodFilter ? colors.primary[700] : colors.gray[400]} />
           </button>
 
-          {/* 기간 필터 초기화 버튼 */}
           {periodFilter && (
             <button
               onClick={() => setPeriodFilter(null)}
@@ -162,8 +153,8 @@ export default function HistoryPage() {
       <div style={{
         padding: layout.margin,
         flex: 1,
+        minHeight: 0,
         overflowY: 'auto',
-        paddingBottom: '139px',
         backgroundColor: colors.surface.background,
       }}>
         {filtered.length === 0 ? (
@@ -180,64 +171,110 @@ export default function HistoryPage() {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[2] }}>
             {filtered.map((t) => {
-              const label = getLabel(t)
+              const isCharge = t.type === 'charge'
+              const isRefund = t.type === 'refund'
+              const isSpend = t.type === 'spend'
+
+              const headerText = isCharge ? '충전' : isRefund ? '환불' : t.storeName
+              const sign = isCharge ? '+' : '-'
+              const amountColor = isCharge
+                ? colors.primary[700]
+                : isRefund
+                  ? colors.warning
+                  : colors.gray[900]
+
               return (
                 <div key={t.id} style={{
                   backgroundColor: colors.surface.card,
                   borderRadius: layout.radiusCard,
                   padding: spacing[4],
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: spacing[3],
                 }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: spacing[2] }}>
-                      <span style={{
+                  {/* 1줄: 헤더 라벨 + 총액 */}
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    gap: spacing[3],
+                  }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{
                         fontSize: sizes.sm,
                         fontWeight: typography.weight.semibold,
-                        color: label.color,
+                        color: colors.gray[900],
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
                       }}>
-                        {label.text}
-                      </span>
-                      {t.type === 'charge' && t.refunded && (
-                        <span style={{
-                          fontSize: sizes.xxs,
-                          color: colors.gray[500],
-                          backgroundColor: colors.gray[100],
-                          padding: `2px ${spacing[2]}`,
-                          borderRadius: layout.radiusPill,
-                        }}>
-                          환불됨
-                        </span>
-                      )}
-                    </div>
-                    <p style={{
-                      margin: `${spacing[1]} 0 0 0`,
-                      fontSize: sizes.xs,
-                      color: colors.gray[500],
-                    }}>
-                      {fmtDate(t.date)}
-                    </p>
-                    {/* 결제 건 캐시백 적립 표시 */}
-                    {t.type === 'spend' && t.cashback > 0 && (
-                      <p style={{
-                        margin: `2px 0 0 0`,
+                        {headerText}
+                      </div>
+                      <div style={{
+                        marginTop: spacing[1],
                         fontSize: sizes.xs,
-                        color: colors.teal[500],
+                        color: colors.gray[500],
                       }}>
-                        +{t.cashback.toLocaleString('ko-KR')}원 적립
-                      </p>
-                    )}
+                        {fmtDate(t.date)}
+                        {isSpend && t.cashbackMode && (
+                          <> · {t.cashbackMode === 'auto' ? '자동' : '수동'}</>
+                        )}
+                      </div>
+                    </div>
+                    <span style={{
+                      fontSize: sizes.md,
+                      fontWeight: typography.weight.bold,
+                      color: amountColor,
+                      whiteSpace: 'nowrap',
+                    }}>
+                      {sign}{fmt(t.totalAmount)}원
+                    </span>
                   </div>
-                  <span style={{
-                    fontSize: sizes.md,
-                    fontWeight: typography.weight.bold,
-                    color: label.color,
-                    whiteSpace: 'nowrap',
-                  }}>
-                    {label.sign}{fmt(t.amount)}
-                  </span>
+
+                  {/* 결제 수단 분리 (캐시백 사용한 경우만) */}
+                  {isSpend && t.paidByCashback > 0 && (
+                    <div style={{
+                      marginTop: spacing[3],
+                      paddingLeft: spacing[3],
+                      borderLeft: `2px solid ${colors.gray[200]}`,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: spacing[1],
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        fontSize: sizes.xs,
+                        color: colors.gray[700],
+                      }}>
+                        <span>캐시백 사용</span>
+                        <span style={{
+                          color: colors.teal[500],
+                          fontWeight: typography.weight.medium,
+                        }}>
+                          -{fmt(t.paidByCashback)}원
+                        </span>
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        fontSize: sizes.xs,
+                        color: colors.gray[700],
+                      }}>
+                        <span>강릉페이</span>
+                        <span>-{fmt(t.paidByBalance)}원</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 적립 표시 */}
+                  {isSpend && t.cashbackEarned > 0 && (
+                    <div style={{
+                      marginTop: spacing[2],
+                      fontSize: sizes.xs,
+                      color: colors.teal[500],
+                      fontWeight: typography.weight.medium,
+                    }}>
+                      +{fmt(t.cashbackEarned)}원 적립
+                    </div>
+                  )}
                 </div>
               )
             })}
