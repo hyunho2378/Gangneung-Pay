@@ -2,10 +2,11 @@
 // 지도 + 검색 자동완성 + 카테고리 필터 + 드래그 바텀시트
 
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
+import { GoogleMap, useJsApiLoader } from '@react-google-maps/api'
+import { MarkerClusterer } from '@googlemaps/markerclusterer'
 import { Search } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
-import { STORES, CATEGORIES } from '../../data/stores'
+import { CATEGORIES, searchStores, getStoresByCategory } from '../../data/stores'
 import CategoryFilterChip from './CategoryFilterChip'
 import StoreListItem from './StoreListItem'
 import StoreDetailSheet from './StoreDetailSheet'
@@ -62,9 +63,56 @@ const CATEGORY_ICONS = {
       <circle cx="9.5" cy="10.5" r="1.5" fill="currentColor" />
     </svg>
   ),
+  '의료': (
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+      <path d="M5 1.5 L8 1.5 L8 5 L11.5 5 L11.5 8 L8 8 L8 11.5 L5 11.5 L5 8 L1.5 8 L1.5 5 L5 5 Z" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinejoin="round" />
+    </svg>
+  ),
+  '미용': (
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+      <circle cx="3" cy="10" r="1.8" stroke="currentColor" strokeWidth="1.3" fill="none" />
+      <circle cx="10" cy="10" r="1.8" stroke="currentColor" strokeWidth="1.3" fill="none" />
+      <path d="M4.5 9 L11.5 2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+      <path d="M8.5 9 L1.5 2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
+  ),
+  '교통': (
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+      <rect x="2.5" y="2" width="8" height="7.5" rx="1.2" stroke="currentColor" strokeWidth="1.4" fill="none" />
+      <path d="M2.5 6.5 L10.5 6.5" stroke="currentColor" strokeWidth="1.2" />
+      <circle cx="4.5" cy="8.2" r="0.8" fill="currentColor" />
+      <circle cx="8.5" cy="8.2" r="0.8" fill="currentColor" />
+      <path d="M3 9.5 L3 11 M10 9.5 L10 11" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
+  ),
+  '생활': (
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+      <path d="M1.5 6 L6.5 1.5 L11.5 6 L11.5 11.5 L1.5 11.5 Z" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinejoin="round" />
+      <path d="M5 11.5 L5 8 L8 8 L8 11.5" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinejoin="round" />
+    </svg>
+  ),
+  '교육': (
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+      <path d="M1 4.5 L6.5 1.5 L12 4.5 L6.5 7.5 Z" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinejoin="round" />
+      <path d="M3.5 6 L3.5 9.5 Q6.5 11.5 9.5 9.5 L9.5 6" stroke="currentColor" strokeWidth="1.3" fill="none" />
+      <path d="M12 4.5 L12 8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
+  ),
+  '기타': (
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+      <circle cx="3" cy="6.5" r="1.2" fill="currentColor" />
+      <circle cx="6.5" cy="6.5" r="1.2" fill="currentColor" />
+      <circle cx="10" cy="6.5" r="1.2" fill="currentColor" />
+    </svg>
+  ),
 }
 
 const GANGNEUNG_CENTER = { lat: 37.7647, lng: 128.8990 }
+
+function shortAddress(addr) {
+  if (!addr) return ''
+  return addr.replace(/^강원\s*강릉시\s*/, '')
+}
 
 export default function StoreMapScreen() {
   const [activeCategory, setActiveCategory] = useState('전체')
@@ -73,6 +121,8 @@ export default function StoreMapScreen() {
   const [selectedStore, setSelectedStore] = useState(null)
   const [sheetOpen, setSheetOpen] = useState(false)
   const [mapRef, setMapRef] = useState(null)
+  const clustererRef = useRef(null)
+  const [debouncedQuery, setDebouncedQuery] = useState('')
 
   console.log('Maps API Key:', import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? 'EXISTS' : 'MISSING')
 
@@ -95,14 +145,26 @@ export default function StoreMapScreen() {
   const onLoad = (map) => setMapRef(map)
   const onUnmount = () => setMapRef(null)
 
-  const filteredStores =
-    activeCategory === '전체'
-      ? STORES
-      : STORES.filter((s) => s.category === activeCategory)
+  // 검색 디바운스 300ms
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQuery(searchQuery), 300)
+    return () => clearTimeout(t)
+  }, [searchQuery])
 
-  // 검색 자동완성: 부분 일치, 최대 5건
+  // 표시할 매장: 검색 시 검색 결과, 카테고리 선택 시 카테고리, 기본 전체+미검색은 비표시
+  const visibleStores = useMemo(() => {
+    if (debouncedQuery.trim()) {
+      return searchStores(debouncedQuery, { category: activeCategory, limit: 500 })
+    }
+    if (activeCategory && activeCategory !== '전체') {
+      return getStoresByCategory(activeCategory, false)
+    }
+    return []
+  }, [debouncedQuery, activeCategory])
+
+  // 검색 자동완성: 부분 일치 상위 10건
   const suggestions = searchQuery.trim().length > 0
-    ? STORES.filter((s) => s.name.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 5)
+    ? searchStores(searchQuery, { limit: 10 })
     : []
 
   const handleStoreClick = (store) => {
@@ -113,6 +175,38 @@ export default function StoreMapScreen() {
       mapRef.setZoom(16)
     }
   }
+
+  // 마커 클러스터러: visibleStores 변경 시 마커 재생성
+  useEffect(() => {
+    if (!isLoaded || !mapRef || !window.google) return
+
+    if (clustererRef.current) {
+      clustererRef.current.clearMarkers()
+    }
+
+    const markers = visibleStores.map((store) => {
+      const marker = new window.google.maps.Marker({
+        position: { lat: store.lat, lng: store.lng },
+        icon: {
+          path: window.google.maps.SymbolPath.CIRCLE,
+          scale: 6,
+          fillColor: store.isQR ? colors.teal[500] : colors.primary[700],
+          fillOpacity: 0.85,
+          strokeColor: '#FFFFFF',
+          strokeWeight: 1.5,
+        },
+        title: store.name,
+      })
+      marker.addListener('click', () => handleStoreClick(store))
+      return marker
+    })
+
+    clustererRef.current = new MarkerClusterer({ map: mapRef, markers })
+
+    return () => {
+      clustererRef.current?.clearMarkers()
+    }
+  }, [isLoaded, mapRef, visibleStores])
 
   const handleSelectSuggestion = (store) => {
     setSearchQuery(store.name)
@@ -205,24 +299,7 @@ export default function StoreMapScreen() {
               streetViewControl: false,
               mapTypeControl: false,
             }}
-          >
-            {filteredStores.map((store) => (
-              <Marker
-                key={store.id}
-                position={{ lat: store.lat, lng: store.lng }}
-                title={store.name}
-                onClick={() => handleStoreClick(store)}
-                icon={{
-                  path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
-                  fillColor: colors.primary[700],
-                  fillOpacity: 1,
-                  strokeColor: colors.onDark.primary,
-                  strokeWeight: 2,
-                  scale: 1,
-                }}
-              />
-            ))}
-          </GoogleMap>
+          />
         ) : (
           <div
             style={{
@@ -331,7 +408,7 @@ export default function StoreMapScreen() {
                       color: colors.gray[500],
                     }}
                   >
-                    {store.category} · {store.address}
+                    {store.category} · {shortAddress(store.address)}
                   </span>
                 </button>
               ))}
@@ -413,8 +490,8 @@ export default function StoreMapScreen() {
 
         {/* 콘텐츠 스크롤 영역 */}
         <div style={{ flex: 1, overflowY: 'auto' }}>
-          {/* 자주 가는 곳 */}
-          <FrequentPlaces />
+          {/* 자주 가는 곳 / QR결제 매장 */}
+          <FrequentPlaces onSelectStore={handleStoreClick} />
 
           {/* 제목 */}
           <div
@@ -429,7 +506,7 @@ export default function StoreMapScreen() {
           </div>
 
           {/* 매장 리스트 */}
-          {filteredStores.length === 0 ? (
+          {visibleStores.length === 0 ? (
             <div
               style={{
                 padding: `${spacing[8]} ${layout.margin}`,
@@ -438,10 +515,10 @@ export default function StoreMapScreen() {
                 color: colors.gray[400],
               }}
             >
-              해당 카테고리 매장이 없습니다
+              카테고리를 선택하거나 매장을 검색해보세요
             </div>
           ) : (
-            filteredStores.map((store) => (
+            visibleStores.slice(0, 100).map((store) => (
               <StoreListItem
                 key={store.id}
                 store={store}

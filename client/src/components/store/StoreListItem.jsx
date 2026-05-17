@@ -14,6 +14,21 @@ const CATEGORY_COLORS = {
   기타: colors.gray[400],
 }
 
+const GANGNEUNG_STATION = { lat: 37.7647, lng: 128.8990 }
+
+function formatDistance(lat, lng) {
+  if (typeof lat !== 'number' || typeof lng !== 'number') return null
+  const R = 6371
+  const toRad = (d) => (d * Math.PI) / 180
+  const dLat = toRad(lat - GANGNEUNG_STATION.lat)
+  const dLng = toRad(lng - GANGNEUNG_STATION.lng)
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(GANGNEUNG_STATION.lat)) * Math.cos(toRad(lat)) * Math.sin(dLng / 2) ** 2
+  const km = 2 * R * Math.asin(Math.sqrt(a))
+  return km < 1 ? `${Math.round(km * 1000)}m` : `${km.toFixed(1)}km`
+}
+
 function StoreIcon({ category }) {
   const bg = CATEGORY_COLORS[category] || CATEGORY_COLORS['기타']
   return (
@@ -77,7 +92,8 @@ function StoreIcon({ category }) {
 }
 
 export default function StoreListItem({ store, onClick }) {
-  const { name, category, distance } = store || {}
+  const { name, category, distance, lat, lng, isQR } = store || {}
+  const distanceLabel = distance || formatDistance(lat, lng)
 
   return (
     <button
@@ -128,14 +144,28 @@ export default function StoreListItem({ store, onClick }) {
           >
             {category}
           </span>
-          {distance && (
+          {isQR && (
+            <span
+              style={{
+                fontSize: typography.size.xxs,
+                fontWeight: typography.weight.semibold,
+                color: '#FFFFFF',
+                backgroundColor: colors.teal[500],
+                borderRadius: layout.radiusPill,
+                padding: '1px 8px',
+              }}
+            >
+              QR
+            </span>
+          )}
+          {distanceLabel && (
             <span
               style={{
                 fontSize: typography.size.xs,
                 color: colors.gray[500],
               }}
             >
-              {distance}
+              {distanceLabel}
             </span>
           )}
         </div>

@@ -6,18 +6,41 @@ import { Phone, MapPin, Clock, ExternalLink } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 import BottomSheet from '../common/BottomSheet'
 
+const GANGNEUNG_STATION = { lat: 37.7647, lng: 128.8990 }
+
+function formatDistance(lat, lng) {
+  if (typeof lat !== 'number' || typeof lng !== 'number') return null
+  const R = 6371
+  const toRad = (d) => (d * Math.PI) / 180
+  const dLat = toRad(lat - GANGNEUNG_STATION.lat)
+  const dLng = toRad(lng - GANGNEUNG_STATION.lng)
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(GANGNEUNG_STATION.lat)) * Math.cos(toRad(lat)) * Math.sin(dLng / 2) ** 2
+  const km = 2 * R * Math.asin(Math.sqrt(a))
+  return km < 1 ? `${Math.round(km * 1000)}m` : `${km.toFixed(1)}km`
+}
+
 export default function StoreDetailSheet({ isOpen, onClose, store }) {
   const [ownerSheetOpen, setOwnerSheetOpen] = useState(false)
 
   const {
     name = '매장명',
     category = '기타',
+    subCategory,
     distance,
     phone,
+    tel,
     address,
     hours,
     lastUpdated,
+    isQR,
+    lat,
+    lng,
   } = store || {}
+
+  const phoneNumber = phone || tel
+  const distanceLabel = distance || formatDistance(lat, lng)
 
   return (
     <>
@@ -53,7 +76,7 @@ export default function StoreDetailSheet({ isOpen, onClose, store }) {
             >
               {name}
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: spacing[2] }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: spacing[2], flexWrap: 'wrap' }}>
               <span
                 style={{
                   fontSize: typography.size.xs,
@@ -64,11 +87,25 @@ export default function StoreDetailSheet({ isOpen, onClose, store }) {
                   padding: '2px 10px',
                 }}
               >
-                {category}
+                {subCategory ? `${category} · ${subCategory}` : category}
               </span>
-              {distance && (
+              {isQR && (
+                <span
+                  style={{
+                    fontSize: typography.size.xs,
+                    fontWeight: typography.weight.semibold,
+                    color: '#FFFFFF',
+                    backgroundColor: colors.teal[500],
+                    borderRadius: layout.radiusPill,
+                    padding: '2px 10px',
+                  }}
+                >
+                  QR결제
+                </span>
+              )}
+              {distanceLabel && (
                 <span style={{ fontSize: typography.size.xs, color: colors.gray[500] }}>
-                  {distance}
+                  {distanceLabel}
                 </span>
               )}
             </div>
@@ -83,7 +120,7 @@ export default function StoreDetailSheet({ isOpen, onClose, store }) {
 
           {/* 상세 정보 행들 */}
           <div style={{ padding: `${spacing[2]} ${layout.margin}` }}>
-            {phone && (
+            {phoneNumber && (
               <div
                 style={{
                   display: 'flex',
@@ -107,7 +144,16 @@ export default function StoreDetailSheet({ isOpen, onClose, store }) {
                 >
                   <Phone size={16} color={colors.primary[700]} />
                 </div>
-                <span style={{ fontSize: typography.size.sm, color: colors.gray[900] }}>{phone}</span>
+                <a
+                  href={`tel:${phoneNumber}`}
+                  style={{
+                    fontSize: typography.size.sm,
+                    color: colors.gray[900],
+                    textDecoration: 'none',
+                  }}
+                >
+                  {phoneNumber}
+                </a>
               </div>
             )}
 
@@ -186,17 +232,18 @@ export default function StoreDetailSheet({ isOpen, onClose, store }) {
             }}
           >
             <button
-              onClick={() => phone && window.open(`tel:${phone}`)}
+              onClick={() => phoneNumber && window.open(`tel:${phoneNumber}`)}
+              disabled={!phoneNumber}
               style={{
                 flex: 1,
                 height: '48px',
                 backgroundColor: 'transparent',
-                color: colors.primary[700],
-                border: `1.5px solid ${colors.primary[700]}`,
+                color: phoneNumber ? colors.primary[700] : colors.gray[400],
+                border: `1.5px solid ${phoneNumber ? colors.primary[700] : colors.gray[200]}`,
                 borderRadius: layout.radiusButton,
                 fontSize: typography.size.sm,
                 fontWeight: typography.weight.semibold,
-                cursor: 'pointer',
+                cursor: phoneNumber ? 'pointer' : 'not-allowed',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

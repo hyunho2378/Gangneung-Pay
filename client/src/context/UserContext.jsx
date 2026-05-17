@@ -6,22 +6,18 @@
  */
 
 import { createContext, useContext, useReducer, useState, useCallback } from 'react'
+import storesData from '../data/stores.json'
 
 const UserContext = createContext(null)
 
 // ─── Mock 데이터 생성 (모듈 최상위, 1회 실행) ───────────────────────────────
 
-const STORES = [
-  '초당순두부', '강릉중앙시장', '보헤미안커피', '테라로사 본점',
-  '강릉짬뽕순두부', '안목해변카페', '강문해변 회센터', '경포대 횟집',
-  '정동진역 카페', '오죽한옥마을', '주문진수산시장', '사천해변 식당',
-  '옥천오일장', '강릉커피거리 베이커리', '교동반점', '동인동 분식',
-  '강릉터미널 편의점', '한솥도시락 강릉점', 'GS25 강릉경포점',
-  '강릉의료원 약국', '강릉시청 구내식당', '초당두부마을',
-  '송정해변 횟집', '영진해변 카페', '강릉항 활어센터',
-]
+const SPEND_CANDIDATES = storesData
+  .filter((s) => ['음식점', '카페', '편의점', '마트'].includes(s.category))
+  .map((s) => s.name)
 
-const REGULAR_STORES = ['초당순두부', '테라로사 본점', '교동반점', 'GS25 강릉경포점']
+const STORES = SPEND_CANDIDATES
+const REGULAR_STORES = SPEND_CANDIDATES.slice(0, 5)
 
 function generateMockTransactions() {
   const transactions = []
