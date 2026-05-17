@@ -259,14 +259,8 @@ export default function StoreMapScreen() {
         overflow: 'hidden',
       }}
     >
-      {/* 지도 영역: 55% — safe-area-inset-top 영역까지 침범 (statusBar 위까지 확장) */}
-      <div style={{
-        marginTop: 'calc(env(safe-area-inset-top) * -1)',
-        height: 'calc(55% + env(safe-area-inset-top))',
-        position: 'relative',
-        flexShrink: 0,
-        overflow: 'hidden',
-      }}>
+      {/* 지도 영역: 55% — ScreenContainer fullBleedTop으로 statusBar 영역 처리 */}
+      <div style={{ height: '55%', position: 'relative', flexShrink: 0, overflow: 'hidden' }}>
         {isLoaded ? (
           <GoogleMap
             mapContainerStyle={{ width: '100%', height: '100%' }}

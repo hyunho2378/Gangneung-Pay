@@ -6,7 +6,7 @@ import StoreMapScreen from '../components/store/StoreMapScreen'
 
 export default function StorePage() {
   return (
-    <ScreenContainer>
+    <ScreenContainer transparentStatusBar>
       <div
         style={{
           flex: 1,
