@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { colors } from '../../tokens/tokens'
 import StatusBar from './StatusBar'
 
-export default function ScreenContainer({ children, statusBarBg }) {
+export default function ScreenContainer({ children, statusBarBg, statusBarLight }) {
   const [isDesktop, setIsDesktop] = useState(false)
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function ScreenContainer({ children, statusBarBg }) {
         borderRight: `1px solid ${colors.gray[200]}`,
       }),
     }}>
-      {isDesktop && <StatusBar backgroundColor={statusBarBg} />}
+      {isDesktop && <StatusBar backgroundColor={statusBarBg} light={statusBarLight} />}
       {children}
     </div>
   )

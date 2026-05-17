@@ -7,7 +7,7 @@ import statusBarIcons from '../../assets/icons/status-bar-icons.svg?url'
 
 const STATUS_BAR_HEIGHT = 41
 
-export default function StatusBar({ backgroundColor }) {
+export default function StatusBar({ backgroundColor, light }) {
   const [time, setTime] = useState(new Date())
 
   useEffect(() => {
@@ -37,6 +37,7 @@ export default function StatusBar({ backgroundColor }) {
           left: 0,
           width: '100%',
           height: '100%',
+          filter: light ? 'brightness(0) invert(1)' : undefined,
         }}
       />
 
@@ -48,7 +49,7 @@ export default function StatusBar({ backgroundColor }) {
         transform: 'translateY(-50%)',
         fontSize: '17px',
         fontWeight: 600,
-        color: colors.gray[900],
+        color: light ? '#ffffff' : colors.gray[900],
         fontFamily: typography.fontFamily,
         letterSpacing: '-0.5px',
         fontVariantNumeric: 'tabular-nums',

@@ -4,6 +4,7 @@ import { AppProvider } from './context/AppContext'
 import { OnboardingProvider } from './context/OnboardingContext'
 import { UserProvider } from './context/UserContext'
 import ScreenContainer from './components/layout/ScreenContainer'
+import { colors } from './tokens/tokens'
 import SplashPage from './pages/SplashPage'
 import HomePage from './pages/HomePage'
 import StorePage from './pages/StorePage'
@@ -51,7 +52,7 @@ function App() {
 
   if (showSplash) {
     return (
-      <ScreenContainer>
+      <ScreenContainer statusBarBg={colors.primary[700]} statusBarLight>
         <SplashPage />
       </ScreenContainer>
     )
