@@ -8,7 +8,7 @@ export default function DonationHistoryPage() {
   const navigate = useNavigate()
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <TopAppBarBack title="기부한 내역" onBack={() => navigate(-1)} />
 
       <div

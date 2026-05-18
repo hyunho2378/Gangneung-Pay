@@ -6,9 +6,11 @@
  */
 
 import { useState } from 'react'
-import { Calendar, ChevronDown, X } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Calendar, ChevronDown, Receipt } from 'lucide-react'
 import { useUser } from '../context/UserContext'
 import { colors, typography, layout, spacing } from '../tokens/tokens'
+import { formatDate } from '../utils/date'
 import { useTypography } from '../hooks/useTypography'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import BottomNavBar from '../components/layout/BottomNavBar'
@@ -22,12 +24,110 @@ const TYPE_FILTERS = [
 ]
 
 export default function HistoryPage() {
+  const navigate = useNavigate()
   const sizes = useTypography()
-  const { transactions } = useUser()
+  const { hasCard, transactions } = useUser()
 
   const [typeFilter, setTypeFilter] = useState('all')
   const [periodOpen, setPeriodOpen] = useState(false)
   const [periodFilter, setPeriodFilter] = useState(null)
+
+  // 카드 미신청 시 빈 상태 — BottomNav 진입 가능 페이지라 카드 미신청 사용자도 도달 가능
+  if (!hasCard) {
+    return (
+      <ScreenContainer statusBarBg={colors.surface.card}>
+        {/* 헤더 */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          padding: `${spacing[3]} ${layout.margin}`,
+          backgroundColor: colors.surface.card,
+          borderBottom: `1px solid ${colors.gray[200]}`,
+          minHeight: layout.topBarHeight,
+          flexShrink: 0,
+        }}>
+          <h1 style={{
+            margin: 0,
+            fontSize: sizes.lg,
+            fontWeight: typography.weight.bold,
+            color: colors.gray[900],
+            fontFamily: typography.fontFamily,
+          }}>
+            이용 내역
+          </h1>
+        </div>
+
+        {/* 빈 상태 본문 */}
+        <div style={{
+          flex: 1,
+          minHeight: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: spacing[6],
+          gap: spacing[5],
+          backgroundColor: colors.surface.background,
+        }}>
+          <div style={{
+            width: '80px',
+            height: '80px',
+            borderRadius: layout.radiusPill,
+            backgroundColor: colors.primary[50],
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <Receipt size={40} color={colors.primary[700]} />
+          </div>
+
+          <div style={{ textAlign: 'center' }}>
+            <h2 style={{
+              margin: 0,
+              marginBottom: spacing[2],
+              fontSize: sizes.lg,
+              fontWeight: typography.weight.bold,
+              color: colors.gray[900],
+              fontFamily: typography.fontFamily,
+            }}>
+              아직 이용 내역이 없어요
+            </h2>
+            <p style={{
+              margin: 0,
+              fontSize: sizes.sm,
+              color: colors.gray[500],
+              lineHeight: 1.5,
+              fontFamily: typography.fontFamily,
+            }}>
+              카드 신청 후 강릉페이를 이용하시면<br />
+              이용 내역을 확인할 수 있어요
+            </p>
+          </div>
+
+          <button
+            onClick={() => navigate('/card-apply')}
+            style={{
+              width: '100%',
+              maxWidth: '280px',
+              height: '52px',
+              backgroundColor: colors.primary[700],
+              color: colors.onDark.primary,
+              border: 'none',
+              borderRadius: layout.radiusButton,
+              fontSize: sizes.md,
+              fontWeight: typography.weight.bold,
+              cursor: 'pointer',
+              fontFamily: typography.fontFamily,
+            }}
+          >
+            카드 신청하기
+          </button>
+        </div>
+
+        <BottomNavBar />
+      </ScreenContainer>
+    )
+  }
 
   const filtered = transactions.filter((t) => {
     if (typeFilter !== 'all' && t.type !== typeFilter) return false
@@ -39,14 +139,11 @@ export default function HistoryPage() {
   })
 
   const fmt = (n) => n.toLocaleString('ko-KR')
-  const fmtDate = (iso) => {
-    const d = new Date(iso)
-    return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
-  }
+  const fmtDate = (iso) => formatDate(iso, { withTime: true })
 
   const periodLabel = periodFilter
     ? `${periodFilter.year}년 ${periodFilter.month}월`
-    : '기간 선택'
+    : '전체 기간'
 
   return (
     <ScreenContainer statusBarBg={colors.surface.card}>
@@ -131,22 +228,6 @@ export default function HistoryPage() {
             <ChevronDown size={14} color={periodFilter ? colors.primary[700] : colors.gray[400]} />
           </button>
 
-          {periodFilter && (
-            <button
-              onClick={() => setPeriodFilter(null)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: spacing[1],
-              }}
-              aria-label="기간 필터 초기화"
-            >
-              <X size={16} color={colors.gray[400]} />
-            </button>
-          )}
         </div>
       </div>
 
@@ -287,9 +368,10 @@ export default function HistoryPage() {
       <PeriodPickerModal
         open={periodOpen}
         onClose={() => setPeriodOpen(false)}
-        onSelect={(y, m) => setPeriodFilter({ year: y, month: m })}
-        selectedYear={periodFilter?.year ?? 2026}
-        selectedMonth={periodFilter?.month ?? 5}
+        onSelect={(y, m) => setPeriodFilter(y === null ? null : { year: y, month: m })}
+        selectedYear={periodFilter?.year ?? null}
+        selectedMonth={periodFilter?.month ?? null}
+        showAll
       />
     </ScreenContainer>
   )

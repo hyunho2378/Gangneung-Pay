@@ -201,13 +201,13 @@ export default function CardApplyPage() {
   // 배송 완료 → 등록 화면
   if (cardStatus === 'shipped') {
     return (
-      <ScreenContainer>
+      <ScreenContainer statusBarBg={colors.surface.card}>
         <div style={{
           flex: 1,
           minHeight: 0,
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: colors.surface.background,
+          backgroundColor: colors.surface.card,
           fontFamily: typography.fontFamily,
         }}>
           <div style={{
@@ -313,13 +313,13 @@ export default function CardApplyPage() {
   // 신청 처리 중
   if (cardStatus === 'applying') {
     return (
-      <ScreenContainer>
+      <ScreenContainer statusBarBg={colors.surface.card}>
         <div style={{
           flex: 1,
           minHeight: 0,
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: colors.surface.background,
+          backgroundColor: colors.surface.card,
           fontFamily: typography.fontFamily,
         }}>
           <div style={{
@@ -367,7 +367,7 @@ export default function CardApplyPage() {
 
   // 기본: 카드 선택 화면
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <div style={{
         flex: 1,
         minHeight: 0,

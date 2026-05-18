@@ -391,6 +391,7 @@ export default function HomePageLarge() {
         paddingTop: spacing[3],
         paddingLeft: layout.margin,
         paddingRight: layout.margin,
+        paddingBottom: 'calc(env(safe-area-inset-bottom) + 100px)',
         display: 'flex',
         flexDirection: 'column',
         gap: spacing[4],

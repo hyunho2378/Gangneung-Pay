@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { ChevronLeft } from 'lucide-react'
 import { useUser } from '../context/UserContext'
+import { useApp } from '../context/AppContext'
+import { formatDate } from '../utils/date'
 import { colors, typography, layout, spacing, shadow } from '../tokens/tokens'
 import { useTypography } from '../hooks/useTypography'
 import ScreenContainer from '../components/layout/ScreenContainer'
@@ -18,7 +20,12 @@ export default function RefundPage() {
   const navigate = useNavigate()
   const sizes = useTypography()
   const { transactions, balance, refundTransaction } = useUser()
+  const { isLargeText } = useApp()
   const [confirmId, setConfirmId] = useState(null)
+
+  // 큰글씨 모드: 본문/statusBar 회색 (surface.background)
+  // 일반 모드: 흰색 (surface.card)
+  const bodyBg = isLargeText ? colors.surface.background : colors.surface.card
 
   const chargeList = transactions.filter((t) => t.type === 'charge')
 
@@ -31,10 +38,7 @@ export default function RefundPage() {
   }, {})
 
   const fmt = (n) => n.toLocaleString('ko-KR') + '원'
-  const fmtDate = (iso) => {
-    const d = new Date(iso)
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
-  }
+  const fmtDate = (iso) => formatDate(iso, { withTime: true })
 
   const handleRefund = (id) => {
     refundTransaction(id)
@@ -62,7 +66,7 @@ export default function RefundPage() {
   }
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={bodyBg}>
       {/* 헤더 */}
       <div style={{
         display: 'flex',
@@ -90,7 +94,7 @@ export default function RefundPage() {
         </h1>
       </div>
 
-      <div style={{ padding: layout.margin, flex: 1, minHeight: 0, overflowY: 'auto' }}>
+      <div style={{ padding: layout.margin, flex: 1, minHeight: 0, overflowY: 'auto', backgroundColor: bodyBg }}>
         {/* 현재 잔액 */}
         <div style={{
           backgroundColor: colors.surface.darkCard,

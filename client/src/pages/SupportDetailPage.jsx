@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import SupportGrantDetail from '../components/common/SupportGrantDetail'
+import { colors } from '../tokens/tokens'
 
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
@@ -20,7 +21,7 @@ export default function SupportDetailPage() {
   const navigate = useNavigate()
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <TopAppBarBack title="지원금 상세" onBack={() => navigate(-1)} />
 
       <div style={{ flex: 1, overflowY: 'auto', paddingBottom: '24px' }}>

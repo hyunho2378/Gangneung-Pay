@@ -66,7 +66,7 @@ export default function NotificationPage() {
   const navigate = useNavigate()
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <TopAppBarBack title="알림" onBack={() => navigate(-1)} />
 
       <div

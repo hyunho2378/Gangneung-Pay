@@ -17,7 +17,6 @@ import BannerCarousel from '../components/home/BannerCarousel'
 import BalanceCardExpanded from '../components/home/BalanceCardExpanded'
 import CardApplyCTA from '../components/home/CardApplyCTA'
 import CashbackEntryCard from '../components/home/CashbackEntryCard'
-import CardBackFaceId from '../components/home/CardBackFaceId'
 import SectionHeader from '../components/home/SectionHeader'
 import StoreRecommendCard from '../components/home/StoreRecommendCard'
 import ExploreScrollCard from '../components/home/ExploreScrollCard'
@@ -45,18 +44,6 @@ export default function HomePage() {
   const applyButtonRef = useRef(null)
 
   const [coachStep, setCoachStep] = useState(null) // 'cardApply' | 'charge' | 'refund' | null
-  const [showFaceId, setShowFaceId] = useState(false)
-  const [showCardBack, setShowCardBack] = useState(false)
-
-  const handleCardIconClick = () => {
-    if (showFaceId || showCardBack) return
-    setShowFaceId(true)
-  }
-
-  const handleFaceIdComplete = () => {
-    setShowFaceId(false)
-    setShowCardBack(true)
-  }
 
   // B4: 코치마크 자동 노출 단계 결정
   useEffect(() => {
@@ -101,11 +88,8 @@ export default function HomePage() {
         {hasCard ? (
           <>
             <BalanceCardExpanded
-              onCardIconClick={handleCardIconClick}
               chargeButtonRef={chargeButtonRef}
               refundButtonRef={refundButtonRef}
-              cardBackOpen={showCardBack}
-              onCardBackClose={() => setShowCardBack(false)}
             />
             {/* B7: 진입 카드 — 클릭 시 바로 /cashback 진입 */}
             <div style={{ marginTop: spacing[2] }}>
@@ -132,11 +116,6 @@ export default function HomePage() {
         <div style={{ height: layout.margin }} />
       </div>
 
-      {/* C3/C4: Dynamic Island Face ID */}
-      <CardBackFaceId
-        open={showFaceId}
-        onClose={handleFaceIdComplete}
-      />
       <BottomNavBar />
 
       {/* B4: 코치마크 오버레이 */}

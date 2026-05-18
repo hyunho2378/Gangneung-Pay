@@ -39,7 +39,8 @@ export default function BottomNavBar() {
       boxShadow: shadow.nav,
       zIndex: 200,
       display: 'flex',
-      alignItems: 'flex-end',
+      alignItems: 'center',
+      paddingTop: spacing[2],
       paddingBottom: 'max(env(safe-area-inset-bottom), 16px)',
     }}>
       <NavTab
@@ -93,13 +94,10 @@ function NavTab({ label, icon, active, onClick, height }) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingTop: spacing[2],
-        paddingBottom: '4px',
         background: 'none',
         border: 'none',
         cursor: 'pointer',
-        // 장식 예외: 탭 아이콘-라벨 의미적 결속 (디자인시스템 단계 3-B)
-        gap: '2px',
+        gap: '4px',
         minHeight: height,
         color,
       }}

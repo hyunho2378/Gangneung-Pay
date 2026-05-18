@@ -18,7 +18,7 @@ export default function SettingsPage() {
   const [isLanguageOpen, setIsLanguageOpen] = useState(false)
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <TopAppBarBack title="설정" onBack={() => navigate(-1)} />
 
       <div

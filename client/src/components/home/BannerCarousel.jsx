@@ -9,7 +9,7 @@ const KAKAO_SLIDE = {
   textColor: colors.kakaoDark,
   subTextColor: colors.explore.amberDark,
   title: '카카오페이로도\n결제하세요',
-  description: '강릉페이를 카카오페이와 연결하면 더 편리하게',
+  description: '카카오페이와 연결하면 더 편리해요',
   illustration: (
     <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
       {/* 카카오톡 말풍선 isometric 스타일 */}
@@ -32,7 +32,7 @@ const NAVER_SLIDE = {
   textColor: '#15803D',
   subTextColor: '#15803D',
   title: '네이버페이로도\n결제하세요',
-  description: '강릉페이를 네이버페이와 연결하면 더 편리하게',
+  description: '네이버페이와 연결하면 더 편리해요',
   illustration: (
     <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
       <rect x="8" y="8" width="48" height="48" rx="10" fill="#03C75A" />
@@ -56,13 +56,11 @@ const BASE_SLIDES = [
     buttonLabel: '충전하기',
     buttonPath: '/charge',
     illustration: (
-      <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="40" cy="40" r="28" fill={colors.primary[200]} opacity="0.6" />
-        <circle cx="40" cy="40" r="20" fill={colors.primary[300]} opacity="0.4" />
-        <path d="M34 32 L48 40 L34 48 Z" fill={colors.primary[500]} opacity="0.9" />
-        <path d="M24 56 Q32 44 40 40 Q48 36 56 24" stroke={colors.primary[400]} strokeWidth="2" fill="none" strokeDasharray="4 3" />
-        <circle cx="56" cy="24" r="4" fill={colors.primary[400]} opacity="0.7" />
-        <circle cx="24" cy="56" r="4" fill={colors.primary[400]} opacity="0.7" />
+      <svg width="76" height="64" viewBox="0 0 100 64" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-8deg)' }}>
+        <rect x="0" y="0" width="100" height="64" rx="8" fill="#FFFFFF" />
+        <text x="8" y="22" fontSize="13" fontWeight="700" fill={colors.primary[700]} fontFamily="sans-serif">강릉페이</text>
+        <rect x="8" y="32" width="26" height="16" rx="3" fill={colors.gray[200]} />
+        <rect x="8" y="54" width="14" height="3" rx="1.5" fill={colors.gray[300]} />
       </svg>
     ),
   },
@@ -73,8 +71,8 @@ const CARD_APPLY_SLIDE = {
   bgColor: colors.primary[700],
   textColor: colors.onDark.primary,
   subTextColor: 'rgba(255,255,255,0.85)',
-  title: '강릉페이 카드를\n신청하세요',
-  description: '최대 10% 캐시백 혜택',
+  title: '강릉 곳곳에서 10% 캐시백',
+  description: '신청만 하면 바로 적용',
   buttonLabel: '신청하기',
   buttonPath: '/card-apply',
   illustration: (
@@ -174,7 +172,7 @@ export default function BannerCarousel({ applyButtonRef }) {
               width: '100%',
               flexShrink: 0,
               backgroundColor: slide.bgColor,
-              height: '160px',
+              height: '120px',
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',

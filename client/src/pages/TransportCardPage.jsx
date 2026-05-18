@@ -14,7 +14,7 @@ export default function TransportCardPage() {
   const navigate = useNavigate()
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <TopAppBarBack title="교통카드 기능" onBack={() => navigate(-1)} />
 
       <div

@@ -16,7 +16,7 @@ export default function CustomerCenterPage() {
   const navigate = useNavigate()
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <TopAppBarBack title="고객센터" onBack={() => navigate(-1)} />
 
       <div

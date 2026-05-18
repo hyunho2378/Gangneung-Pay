@@ -10,7 +10,7 @@ export default function CardLostPage() {
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <TopAppBarBack title="분실신고/재발급" onBack={() => navigate(-1)} />
 
       <div

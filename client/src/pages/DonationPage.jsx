@@ -48,7 +48,7 @@ export default function DonationPage() {
   const [activeTab, setActiveTab] = useState(0)
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <TopAppBarBack title="기부" onBack={() => navigate(-1)} />
 
       {/* 탭 바 */}

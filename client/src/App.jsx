@@ -41,6 +41,7 @@ import PlaceDetailPage from './pages/PlaceDetailPage'
 import MyPage from './pages/MyPage'
 import SearchPage from './pages/SearchPage'
 import CardApplyPage from './pages/CardApplyPage'
+import CardManagementPage from './pages/CardManagementPage'
 import RefundPage from './pages/RefundPage'
 
 function App() {
@@ -90,6 +91,7 @@ function App() {
           <Route path="/my" element={<MyPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/card-apply" element={<CardApplyPage />} />
+          <Route path="/card-management" element={<CardManagementPage />} />
           <Route path="/refund" element={<RefundPage />} />
 
           {/* 메뉴/설정 */}

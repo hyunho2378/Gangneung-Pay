@@ -170,7 +170,7 @@ export default function UsageGuidePage() {
   const [activeTab, setActiveTab] = useState(0)
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <TopAppBarBack title="이용안내" onBack={() => navigate(-1)} />
 
       {/* 탭 바 */}

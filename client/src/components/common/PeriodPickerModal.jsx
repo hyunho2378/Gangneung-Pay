@@ -10,7 +10,7 @@ import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens
 
 const SLIDE_MS = 300
 
-export default function PeriodPickerModal({ open, onClose, onSelect, selectedYear, selectedMonth }) {
+export default function PeriodPickerModal({ open, onClose, onSelect, selectedYear, selectedMonth, showAll = false }) {
   const [visible, setVisible] = useState(false)
   const [closing, setClosing] = useState(false)
 
@@ -97,6 +97,32 @@ export default function PeriodPickerModal({ open, onClose, onSelect, selectedYea
         }}>
           기간 선택
         </p>
+
+        {/* 전체 기간 옵션 — showAll=true 시 첫 항목으로 노출 */}
+        {showAll && (() => {
+          const isAllSelected = selectedYear == null && selectedMonth == null
+          return (
+            <button
+              key="all"
+              onClick={() => { onSelect(null, null); handleClose() }}
+              style={{
+                width: '100%',
+                padding: `${spacing[4]} ${spacing[5]}`,
+                backgroundColor: isAllSelected ? colors.primary[50] : 'transparent',
+                border: 'none',
+                borderBottom: `1px solid ${colors.gray[100]}`,
+                textAlign: 'left',
+                fontSize: typography.size.md,
+                fontWeight: isAllSelected ? typography.weight.semibold : typography.weight.regular,
+                color: isAllSelected ? colors.primary[700] : colors.gray[900],
+                cursor: 'pointer',
+                fontFamily: typography.fontFamily,
+              }}
+            >
+              전체 기간
+            </button>
+          )
+        })()}
 
         {/* 기간 목록 */}
         {periods.map(({ year, month }) => {

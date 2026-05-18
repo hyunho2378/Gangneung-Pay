@@ -31,7 +31,7 @@ export default function DonationDetailPage() {
   }
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <TopAppBarBack title="기부 캠페인" onBack={() => navigate(-1)} />
 
       <div

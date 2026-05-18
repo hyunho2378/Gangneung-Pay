@@ -3572,6 +3572,233 @@ grep -rnE "\bt\.store\b" client/src     # storeName 제외
 
 기술과 인문이 결합될 때 좋은 디자인이 나온다. AI는 그 결합을 가능하게 하는 도구다.
 
+16. MY 페이지 토스 톤 재설계 + 챗봇 제거 (2026-05-18)
+16.1 배경
+AS-IS 강릉페이 MY 페이지 문제 진단 (캡처 기반 분석)
+AS-IS 문제이유상단 3아이콘 (내정보/고객센터/설정)위계 없는 평면 구조지역농협 계좌 큰 카드우리 mock에 계좌 연결 없음가맹점 등록 슬라이드 (1/2)B2B 콘텐츠를 B2C 화면에 노출 (DESIGN.md 절대 금지)챗봇 푸루 진입 메뉴시니어 부적합 + 2018년 트렌드"새로워진 앱 사용 가이드" 광고자기 광고 노이즈
+16.2 설계 결정: 챗봇 제거
+의사결정 근거
+항목챗봇 유지챗봇 제거시니어 적합성자연어 입력 부담적합 (단순 메뉴)2026년 트렌드X (2018년 트렌드)O (명확한 IA)토스/카카오페이둘 다 챗봇 미사용부합시연 임팩트약함 (mock 응답)"선택과 집중"
+발표 메시지: "AI 시대라서 챗봇을 넣는 게 아니라, AI 시대이기 때문에 챗봇이 필요 없는 명확한 IA를 설계했어요."
+대안: 고객지원 그룹에 "전화 1566-4335 한 줄"이 챗봇 100번보다 시니어에게 가치 있음.
+16.3 토스 패턴 기반 MY 페이지 재구성
+5그룹 구조
+그룹항목내 카드카드 관리, 카드 배송 현황, 주 카드 변경, 분실신고/재발급회원정보회원정보 변경, 비밀번호 변경, 본인확인 정보고객지원고객센터, 자주 묻는 질문, 공지사항, 이용약관 (챗봇 제거)설정알림 설정, 언어 설정(value 표시), 큰글씨 모드(value 표시)가맹점 신청가맹점 신청/관리 (B2B 별도 분리)
+16.4 프로필 카드 신규 추가
+토스 표준 패턴 적용
+👤 홍길동
+   h***@gmail.com     ← 이메일 마스킹 (h + *** + @domain)
+   010-1234-****      ← 전화 마스킹 (뒤 4자리)
+                [편집]
+마스킹 함수
+
+이메일: hong@gmail.com → h***@gmail.com (1글자 + 별표)
+전화: 010-1234-5678 → 010-1234-**** (뒤 4자리)
+
+16.5 앱 버전 정보 + 최신 배지
+앱 버전 v1.0.0  ✓ 최신
+최신 버전을 사용 중이에요
+UX 의도: 시니어가 "내가 옛날 버전 쓰는 거 아닌가" 불안 해소. CheckCircle 아이콘 (lucide-react).
+16.6 AI 활용 패턴
+
+AS-IS 강릉페이 캡처 분석 → 기능 나열형 IA 문제 진단
+토스 MY 페이지 패턴 분석 → 5그룹 구조로 번역
+MyMenuGroup.jsx에 value prop 지원 추가 (언어 설정 "한국어", 큰글씨 "꺼짐" 우측 표시)
+
+
+17. ScreenContainer 아키텍처 개선 + 회귀 사이클 (2026-05-18)
+17.1 발견: 구조적 결함
+ScreenContainer 통합 수정 과정에서 근본 구조 결함 발견
+문제: ScreenContainer가 display: block인데 자식 28건이 flex: 1 패턴 사용 → 무력화
+기존 ScreenContainer (display: block)
+└─ 자식 (flex: 1) ← 부모가 flex container 아님. flex: 1 무력화.
+
+수정 후 ScreenContainer (display: flex + flexDirection: column)
+└─ 자식 (flex: 1) ← 정상 동작
+이게 paddingBottom: 139px 같은 hack이 12개 페이지에 누적된 근본 원인.
+17.2 통합 수정 (Phase A + B)
+Phase A (statusBar 배경 연동)
+jsx// Before
+backgroundColor: colors.surface.background  // 항상 회색
+
+// After
+backgroundColor: statusBarBg || colors.surface.background  // prop 연동
+효과: statusBarBg prop 설정된 페이지에서 safe-area-inset-top 영역도 prop 색 적용.
+Phase B (flex column 통합)
+jsx// Before
+minHeight: '100dvh',
+display: 'block',
+
+// After
+height: '100dvh',
+display: 'flex',
+flexDirection: 'column',
+효과: 자식 28건의 flex: 1 패턴이 의도대로 동작. BottomNav 영역 자동 분리.
+17.3 회귀 사이클에서 배운 것
+회귀 1: statusBar prop이 모바일에서 무력화
+원인: isDesktop && <StatusBar> 조건부 렌더. 모바일에서 StatusBar 컴포넌트 미렌더 → statusBarBg prop이 모바일에서 효과 없음.
+해결: ScreenContainer 자체 backgroundColor를 prop에 연동 (Phase A).
+회귀 2: ChargePage statusBar 사라짐
+원인: ChargePage가 ScreenContainer 미사용 + ChargeScreen이 position: fixed. ScreenContainer 수정 효과 없음.
+해결: ChargePage에 ScreenContainer 추가 + ChargeScreen position: fixed 제거.
+회귀 3: StorePage 회색 띠 (데스크탑)
+진단 과정: 음수 marginTop 시도 → env(safe-area-inset-top)이 데스크탑에서 0 → 효과 없음 → 부모 overflow: hidden이 추가 차단 → StatusBar 컴포넌트 자체가 41px 고정 공간 차지가 진짜 원인.
+해결: transparentStatusBar prop 신설. StatusBar를 absolute positioning으로 띄움 + 배경 투명 + 지도가 그 자리 채움.
+jsx// StorePage
+<ScreenContainer transparentStatusBar>
+  // 지도가 StatusBar 41px 자리까지 채움
+  // 시간/배터리 텍스트는 absolute로 떠 있음 (zIndex 10)
+핵심 교훈: "CSS로 해결 안 되면 JS 분기" 전에 진짜 원인 파악이 먼저. 음수 marginTop이 실패한 이유를 알았기 때문에 transparentStatusBar라는 근본 해결 가능.
+17.4 statusBar 페이지별 정책 확립
+페이지본문 배경statusBar이유HomePage회색prop 없음 (회색)본문과 일치HomePageLarge회색prop 없음 (회색)본문과 일치StorePage지도transparentStatusBar지도 풀블리드MyPage회색prop 없음 (회색)본문과 일치HistoryPage흰색surface.card본문과 일치CashbackPage흰색surface.card본문과 일치RefundPage (일반)흰색surface.card본문과 일치RefundPage (큰글씨)회색surface.background큰글씨 디자인 시스템그 외 하위 페이지흰색surface.card헤더 흰색과 일치
+원칙: "statusBar 색 = 본문 첫 화면 색". 별도 색이면 띠로 보임.
+17.5 paddingBottom hack 정리
+ScreenContainer flex column화로 불필요해진 hack 발견
+찾은 hack (12건)
+- BottomNav 있는 페이지: 139px / 120px
+- BottomNav 없는 페이지: 100px
+
+처리
+- BottomNav 있는 7건: 제거 (flex column이 자동 분리)
+- BottomNav 없는 5건: 보류 (다른 목적 가능성)
+AI 활용 패턴: grep으로 12건 전수 발견 → 영향 범위 분석 → 단계적 제거. "한 번에 다 지우지 않고 BottomNav 있는 것만" 판단이 회귀 방지.
+
+18. UX 디테일 개선 사이클 (2026-05-18)
+18.1 잔액 카드 캐시백 통합 박스
+기존 문제 (3가지)
+
+캐시백 진행바 + 직관 메시지 (이전 단계에서 제거됨) → 부활 필요
+자동/수동 토글 대비 불명확 (활성/비활성 구분 안 됨)
+진행바 박스 + 토글이 별개 박스로 따로 노는 느낌
+
+새 통합 박스 구조
+┌─ 다크 블루 카드 ──────────────┐
+│ 강릉페이      180,701원         │
+│ 캐시백          6,173원 (teal)  │
+│                                │
+│ ┌─ 캐시백 통합 박스 (흰 배경) ─┐│
+│ │ 캐시백              58%       ││  ← 라벨 + % 우측
+│ │ [████░░░░░░░]                 ││  ← 진행바 (teal)
+│ │ 이번달 적립  17,451원/30,000원││  ← 금액 정보
+│ │ ─────────────────────────────││  ← 구분선
+│ │ [✓ 자동 사용] [수동 사용]    ││  ← 토글 (활성 primary)
+│ └──────────────────────────────┘│
+│                                │
+│ [충전] [환불] [QR결제]          │
+└────────────────────────────────┘
+UX 의사결정 과정
+
+1차: 직관 메시지("커피 한 잔 값 모았어요") + 아이콘 5개 → 부활
+2차: "초록색이 혼자 튀고 따로 논다" → 글래스 톤으로 수정
+3차: "흰 배경이었어야 했다" → 흰 배경 + teal 진행바로 정정
+4차: "직관 메시지 지우고 캐시백으로" + 토글과 한 박스로 통합
+
+교훈: 시각 디자인은 텍스트 사양만으로 정확히 전달이 어렵다. 시각 검증 → 피드백 → 수정 사이클이 필수. "구려", "혼자 따로 놈" 같은 표현이 정확한 디자인 크리틱.
+자동/수동 토글 대비 강화
+jsx// 활성: primary 배경 + 흰 텍스트 + Check 아이콘
+// 비활성: 흰 배경 + gray-500 텍스트 + gray-200 border 2px
+이전 글래스 톤 (rgba 0.25 / 0.08) → 흰 배경 박스 안에서 색 대비 명확하게 변경.
+18.2 큰글씨 모드 잔액 카드 분리
+큰글씨 모드 (HomePageLarge)에서 잔액 카드를 일반 모드 BalanceCardExpanded와 완전 분리.
+일반 모드큰글씨 모드구조한 다크 카드 (잔액 + 캐시백 + 통합 박스 + 3버튼)잔액 카드 + 캐시백 카드 분리버튼3개 (충전/환불/QR결제)2개 (충전/QR결제)높이일반68px (큰글씨)
+큰글씨 모드 원칙: 정보 밀도 다운 + 강조 확실 (LARGETEXT.md 4.4절). 일반 모드 컴포넌트 재사용 X.
+18.3 이용내역 디테일 개선 3건
+1. 날짜 년도 표시 추가
+문제: 12개월 (2025-06 ~ 2026-05) 데이터에서 월/일만 표시하면 연도 구분 불가.
+해결: 공통 유틸 client/src/utils/date.js 신설
+jsxformatDate(iso)                    // "26.05.17"
+formatDate(iso, { withTime: true }) // "26.05.17 14:30"
+적용
+
+HistoryPage: "26.05.17 14:30" (시:분 중요)
+RefundPage: "26.05.17 14:30" (충전 시각 중요)
+CashbackPage: "26.05.17" (일자만으로 충분)
+
+기존 3개 페이지가 각자 인라인 fmtDate 정의 → 형식도 다 달랐음 (M/D HH:mm / YYYY-MM-DD HH:mm / YYYY.MM.DD). 공통 유틸로 통일.
+2. 기간 선택 X 버튼 제거 + 전체 기간 옵션 추가
+문제: 특정 달 선택 후 옆에 X 버튼이 나타남 → 디자인 시스템에 없는 패턴.
+해결
+
+X 버튼 JSX 제거 + lucide X import orphan 제거
+PeriodPickerModal에 showAll prop 추가 (default false)
+HistoryPage만 showAll 전달 → 맨 위에 "전체 기간" 옵션
+
+설계 의도: CashbackPage는 월별 한도 30K 집계 의미라 "전체 기간"이 부적합. showAll prop으로 호출처 분기 = 캡슐화.
+3. 카드 미신청 시 이용내역 빈 상태
+문제: 카드 없는 사용자가 BottomNav "이용내역" 탭으로 진입 가능. 가상 거래 데이터 노출.
+해결: HistoryPage에 hasCard 분기 추가
+!hasCard → 빈 상태 화면
+  Receipt 아이콘 (80px 원형, primary-50 배경)
+  "아직 이용 내역이 없어요"
+  "카드 신청 후 강릉페이를 이용하시면 이용 내역을 확인할 수 있어요"
+  [카드 신청하기] → /card-apply
+
+hasCard → 기존 거래 목록
+진입 경로 분석: HistoryPage만 BottomNav로 hasCard 무관 진입 가능. CashbackPage/RefundPage는 hasCard 조건 진입 경로라 차단됨 → HistoryPage만 처리.
+18.4 BottomNavBar 정렬 보정
+문제: 아이콘 + 텍스트 그룹이 BottomNavBar 영역에서 약간 위로 치우쳐 보임.
+진단 (정량적)
+NavTab minHeight: 49px
+paddingTop: 8px (spacing[2])
+paddingBottom: 4px
+→ 아이콘+텍스트 실제 위치: 8 + (49-42)/2 = 11.5 ≠ 시각 중앙 24.5
+→ 2px 위로 치우침 확인
+원인 2가지
+
+paddingTop/paddingBottom 비대칭 (8px vs 4px) → 주원인
+외부 컨테이너 alignItems: flex-end (QR 원형 버튼 잔재) → 부원인
+
+수정 (3줄)
+jsx// 외부 컨테이너
+alignItems: 'flex-end' → 'center'
+
+// NavTab
+paddingTop: 8px 제거
+paddingBottom: 4px 제거
+gap: 2px → 4px (토스 패턴)
+padding 제거로 justifyContent: center가 정중앙 담당.
+18.5 MY 페이지 하위 페이지 + 지원금 하위 페이지 statusBar 일괄 통일
+대상: 지원금/혜택 하위 3건 + MY 하위 6건 + 알림 1건 + 기부 3건 = 총 13건
+공통 패턴
+jsx<ScreenContainer statusBarBg={colors.surface.card}>
+SupportDetailPage는 colors import 누락 → orphan 처리 포함.
+
+19. AI 협업 패턴 총정리 (2026-05-18 세션)
+19.1 회귀 방지 워크플로우
+이번 세션에서 회귀 발생 → 진단 → 수정 사이클 10회 이상 반복. 누적 회귀 없이 정착한 패턴.
+1. 진단 (view + grep) → 원인 파악
+2. 사용자 Q1~Qn 결정 요청
+3. 수정 (명시 파일만)
+4. 빌드 0 오류 확인
+5. 사용자 시각 검증
+→ 회귀 발견 시 1로 되돌아가기
+핵심: 사용자 시각 검증이 코드 검증보다 신뢰할 수 있다. "하나도 안 됐어", "구려", "혼자 따로 노는 느낌" 같은 직관적 피드백이 코드 진단의 출발점.
+19.2 자주 쓴 grep 패턴
+bash# statusBar prop 현황 전수
+grep -rn "statusBarBg" client/src/pages --include="*.jsx"
+
+# 100dvh 중복 사용
+grep -rnE "(100vh|100dvh)" client/src/pages client/src/components
+
+# ScreenContainer 사용처
+grep -rn "<ScreenContainer" client/src/pages --include="*.jsx"
+
+# dead code (orphan import)
+grep -rn "import.*from" client/src/pages/SomePage.jsx
+19.3 "사양 정신" 원칙의 실제 적용 사례
+사례 1: 일반 모드 캐시백 카드 분리 회귀
+사용자 의도: "큰글씨 모드만 분리하자"
+AI 수정: 일반 모드까지 분리 → 즉시 회귀
+원칙: 명시하지 않은 영역은 수정 금지. "큰글씨"라는 단어가 있으면 HomePageLarge만.
+사례 2: statusBar 흰색 통일 오류
+사용자 의도: "각 페이지 본문 배경과 일치"
+AI 해석: "흰색으로 통일" → HomePage/HomePageLarge까지 흰색 강제
+원칙: 사용자 표현이 지시처럼 보여도 맥락을 읽어야 함. "흰색 없애" = "이 페이지 본문과 맞춰".
+사례 3: 충전 버튼 테두리 문제
+원인: CardApply 분기 자식 height: 100dvh → ScreenContainer flex column 수정과 충돌. 이중 100dvh.
+해결: 진단에서 발견 → "사양 정신"으로 4개 파일 동시 정리.
+19.4 발표에서 활용할 "회귀 케이스 스터디" 메시지
+"회귀가 발생할 때마다 진단 사이클을 돌렸어요. 단순 수정이 아니라 원인 파악 → 구조적 해결. 10번의 회귀 사이클을 통해 ScreenContainer 아키텍처, statusBar 정책, 날짜 유틸, 캐시백 통합 박스까지 점점 더 정직한 구조로 수렴했어요."
 ---
 
 **문서 작성일**: 2026-05-17

@@ -39,7 +39,7 @@ export default function MyPage() {
     {
       title: '내 카드',
       items: [
-        { label: '카드 관리', href: '/card-lost' },
+        { label: '카드 관리', href: '/card-management' },
         { label: '카드 배송 현황', href: '/card-lost' },
         { label: '주 카드 변경', href: '/card-lost' },
         { label: '분실신고 / 재발급', href: '/card-lost' },

@@ -8,7 +8,7 @@ export default function CouponPage() {
   const navigate = useNavigate()
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <TopAppBarBack title="내 쿠폰" onBack={() => navigate(-1)} />
 
       <div

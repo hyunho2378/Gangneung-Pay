@@ -40,7 +40,7 @@ export default function BottomSheet({ isOpen, onClose, title, children }) {
           borderTopRightRadius: layout.radiusModal,
           boxShadow: shadow.modal,
           maxHeight: '90vh',
-          paddingBottom: 'env(safe-area-inset-bottom)',
+          paddingBottom: `calc(env(safe-area-inset-bottom) + ${spacing[6]})`,
           display: 'flex',
           flexDirection: 'column',
           fontFamily: typography.fontFamily,

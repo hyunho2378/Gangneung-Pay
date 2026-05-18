@@ -1,16 +1,33 @@
 /**
- * CardBackModal (C2-1 rev2)
- * 잔액 카드 영역 내 absolute 포지셔닝 — 카드 밖으로 절대 벗어나지 않음
- * 60초 자동 종료 타이머
- * Nielsen #1 visibility, #3 user control
- * Shneiderman #4 closure
+ * CardBackModal — 통합 인증 + 카드 뒷면 모달
+ * Phase 1 (auth): Face ID Lottie 수동 frame 제어 (iOS HIG 베지어, 2.5초, frame 0→244 전체)
+ * Phase 2 (card): 카드 뒷면 + 60초 카운트다운 (인증 완료 후 시작)
+ * 전환: opacity 200ms 페이드
  */
 
-import { useState, useEffect } from 'react'
-import { X } from 'lucide-react'
-import { colors, typography, layout, spacing } from '../../tokens/tokens'
+import { useState, useEffect, useRef } from 'react'
+import { DotLottieReact } from '@lottiefiles/dotlottie-react'
+import faceIdLottie from '../../assets/lottie/face-id-ios.json?url'
+import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 
-function CardBackSVG() {
+const TOTAL_FRAMES = 244
+const DURATION_MS = 2500
+const AUTH_FALLBACK_MS = 2700
+const FADE_MS = 200
+const COUNTDOWN_SEC = 60
+
+// iOS HIG 톤: 초반 빠름(ease-out) → 중반 linear → 후반 빠름(2제곱 ease-in)
+function easingCurve(t) {
+  if (t < 0.3) {
+    return 0.3 * (1 - Math.pow(1 - t / 0.3, 2))
+  } else if (t < 0.7) {
+    return 0.3 + (t - 0.3) * 0.75
+  } else {
+    return 0.6 + 0.4 * Math.pow((t - 0.7) / 0.3, 2)
+  }
+}
+
+function CardBackSVG({ cardNumber }) {
   return (
     <svg width="100%" viewBox="0 0 280 176" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="280" height="176" rx="12" fill={colors.primary[700]} />
@@ -21,32 +38,61 @@ function CardBackSVG() {
           <stop offset="1" stopColor={colors.primary[800]} />
         </linearGradient>
       </defs>
-      {/* 마그네틱 선 */}
       <rect x="0" y="28" width="280" height="44" fill="rgba(0,0,0,0.55)" />
-      {/* 서명란 */}
       <rect x="16" y="92" width="180" height="32" rx="4" fill="white" fillOpacity="0.9" />
       <text x="24" y="113" fontSize="11" fill={colors.gray[400]} fontFamily="sans-serif">AUTHORIZED SIGNATURE</text>
-      {/* CVC 박스 */}
       <rect x="206" y="92" width="58" height="32" rx="4" fill="white" fillOpacity="0.9" />
       <text x="235" y="112" textAnchor="middle" fontSize="16" fontWeight="700" fill={colors.primary[700]} fontFamily="monospace">123</text>
-      {/* CVC 레이블 */}
       <text x="225" y="86" fontSize="9" fill="rgba(255,255,255,0.65)" fontFamily="sans-serif">CVC</text>
-      {/* 카드번호 */}
-      <text x="16" y="152" fontSize="12" fill="rgba(255,255,255,0.8)" letterSpacing="2.5" fontFamily="monospace">•••• •••• •••• 1234</text>
-      {/* 유효기간 */}
-      <text x="16" y="170" fontSize="9" fill="rgba(255,255,255,0.55)" fontFamily="sans-serif">12/28</text>
+      <text x="16" y="152" fontSize="13" fill="rgba(255,255,255,0.95)" letterSpacing="1.5" fontFamily="monospace">{cardNumber}</text>
+      <text x="16" y="170" fontSize="9" fill="rgba(255,255,255,0.55)" fontFamily="sans-serif">03/36</text>
     </svg>
   )
 }
 
-export default function CardBackModal({ open, onClose }) {
-  const [seconds, setSeconds] = useState(60)
+export default function CardBackModal({ open, onClose, fullCardNumber = '9465-4421-3567-8145' }) {
+  const [phase, setPhase] = useState('auth')
+  const [seconds, setSeconds] = useState(COUNTDOWN_SEC)
+  const [opacity, setOpacity] = useState(1)
+  const fallbackTimer = useRef(null)
+  const fadeTimer = useRef(null)
+  const rafId = useRef(null)
+  const completedRef = useRef(false)
+
+  const switchToCard = () => {
+    if (completedRef.current) return
+    completedRef.current = true
+    if (rafId.current) cancelAnimationFrame(rafId.current)
+    setOpacity(0)
+    fadeTimer.current = setTimeout(() => {
+      setPhase('card')
+      setOpacity(1)
+    }, FADE_MS)
+  }
 
   useEffect(() => {
     if (!open) {
-      setSeconds(60)
+      setPhase('auth')
+      setSeconds(COUNTDOWN_SEC)
+      setOpacity(1)
+      completedRef.current = false
+      if (fallbackTimer.current) clearTimeout(fallbackTimer.current)
+      if (fadeTimer.current) clearTimeout(fadeTimer.current)
+      if (rafId.current) cancelAnimationFrame(rafId.current)
       return
     }
+    fallbackTimer.current = setTimeout(() => {
+      switchToCard()
+    }, AUTH_FALLBACK_MS)
+    return () => {
+      if (fallbackTimer.current) clearTimeout(fallbackTimer.current)
+      if (fadeTimer.current) clearTimeout(fadeTimer.current)
+      if (rafId.current) cancelAnimationFrame(rafId.current)
+    }
+  }, [open])
+
+  useEffect(() => {
+    if (phase !== 'card') return
     const interval = setInterval(() => {
       setSeconds((s) => {
         if (s <= 1) {
@@ -58,80 +104,133 @@ export default function CardBackModal({ open, onClose }) {
       })
     }, 1000)
     return () => clearInterval(interval)
-  }, [open])
+  }, [phase])
 
-  const mm = String(Math.floor(seconds / 60)).padStart(2, '0')
-  const ss = String(seconds % 60).padStart(2, '0')
+  const handleLottieRef = (instance) => {
+    if (!instance) return
+
+    const startRAFLoop = () => {
+      const startTime = performance.now()
+      const tick = (now) => {
+        const elapsed = now - startTime
+        const t = Math.min(1, elapsed / DURATION_MS)
+        const targetFrame = Math.floor(easingCurve(t) * TOTAL_FRAMES)
+        try {
+          if (typeof instance.setFrame === 'function') instance.setFrame(targetFrame)
+        } catch (e) {
+          console.warn('Lottie setFrame failed', e)
+        }
+        if (t < 1) {
+          rafId.current = requestAnimationFrame(tick)
+        } else {
+          switchToCard()
+        }
+      }
+      rafId.current = requestAnimationFrame(tick)
+    }
+
+    if (typeof instance.addEventListener === 'function') {
+      instance.addEventListener('load', startRAFLoop)
+    } else {
+      startRAFLoop()
+    }
+  }
+
+  if (!open) return null
 
   return (
     <div
+      onClick={onClose}
       style={{
-        position: 'absolute',
+        position: 'fixed',
         inset: 0,
-        backgroundColor: colors.surface.card,
-        borderRadius: layout.radiusCard,
-        padding: spacing[4],
-        zIndex: 10,
-        display: 'flex',
-        flexDirection: 'column',
-        transform: open ? 'translateY(0)' : 'translateY(100%)',
-        opacity: open ? 1 : 0,
-        transition: 'transform 300ms cubic-bezier(0.32, 0.72, 0, 1), opacity 300ms',
-        pointerEvents: open ? 'auto' : 'none',
-        fontFamily: typography.fontFamily,
-      }}
-    >
-      {/* 헤더 */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: spacing[3],
-      }}>
-        <span style={{
-          fontSize: typography.size.md,
-          fontWeight: typography.weight.semibold,
-          color: colors.gray[900],
-        }}>
-          카드 뒷면
-        </span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: spacing[3] }}>
-          <span style={{
-            fontSize: typography.size.sm,
-            fontWeight: typography.weight.semibold,
-            color: seconds <= 10 ? colors.error : colors.primary[700],
-            fontVariantNumeric: 'tabular-nums',
-            fontFamily: 'monospace',
-          }}>
-            {mm}:{ss}
-          </span>
-          <button
-            onClick={onClose}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: spacing[1],
-              display: 'flex',
-              alignItems: 'center',
-            }}
-            aria-label="닫기"
-          >
-            <X size={20} color={colors.gray[500]} />
-          </button>
-        </div>
-      </div>
-
-      {/* 카드 뒷면 SVG */}
-      <div style={{
-        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.6)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-      }}>
-        <div style={{ width: '100%' }}>
-          <CardBackSVG />
-        </div>
+        zIndex: 400,
+        padding: spacing[5],
+        fontFamily: typography.fontFamily,
+      }}
+    >
+      <div style={{ opacity, transition: `opacity ${FADE_MS}ms ease` }}>
+        {phase === 'auth' ? (
+          <div style={{
+            width: 150,
+            height: 148,
+            backgroundColor: colors.gray[900],
+            borderRadius: layout.radiusCard,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+            willChange: 'transform',
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden',
+          }}>
+            <DotLottieReact
+              src={faceIdLottie}
+              autoplay={false}
+              loop={false}
+              dotLottieRefCallback={handleLottieRef}
+              style={{ width: '100%', height: '100%' }}
+            />
+          </div>
+        ) : (
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: '100%',
+              maxWidth: '320px',
+              backgroundColor: colors.surface.card,
+              borderRadius: layout.radiusModal,
+              padding: spacing[5],
+              boxShadow: shadow.modal,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <p style={{
+              margin: `0 0 ${spacing[4]} 0`,
+              fontSize: typography.size.lg,
+              fontWeight: typography.weight.bold,
+              color: colors.gray[900],
+              textAlign: 'center',
+            }}>
+              카드 정보
+            </p>
+
+            <CardBackSVG cardNumber={fullCardNumber} />
+
+            <p style={{
+              margin: `${spacing[4]} 0 ${spacing[4]} 0`,
+              fontSize: typography.size.sm,
+              color: seconds <= 10 ? colors.error : colors.gray[500],
+              textAlign: 'center',
+              fontVariantNumeric: 'tabular-nums',
+            }}>
+              {seconds}초 후 자동으로 닫혀요
+            </p>
+
+            <button
+              onClick={onClose}
+              style={{
+                width: '100%',
+                height: 48,
+                backgroundColor: colors.primary[700],
+                color: colors.onDark.primary,
+                border: 'none',
+                borderRadius: layout.radiusButton,
+                fontSize: typography.size.sm,
+                fontWeight: typography.weight.semibold,
+                cursor: 'pointer',
+                fontFamily: typography.fontFamily,
+              }}
+            >
+              닫기
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

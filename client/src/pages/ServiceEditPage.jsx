@@ -83,7 +83,7 @@ export default function ServiceEditPage() {
   const inactiveServices = allServices.filter((s) => !activeServices.includes(s.id))
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <TopAppBarBack title="서비스 바로가기 편집" onBack={() => navigate(-1)} />
 
       <div

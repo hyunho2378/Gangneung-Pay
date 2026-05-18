@@ -8,7 +8,7 @@ export default function WishSupportPage() {
   const navigate = useNavigate()
 
   return (
-    <ScreenContainer>
+    <ScreenContainer statusBarBg={colors.surface.card}>
       <TopAppBarBack title="원하는 지원금" onBack={() => navigate(-1)} />
 
       <div
