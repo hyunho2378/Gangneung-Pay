@@ -4,27 +4,11 @@
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 import BottomSheet from './BottomSheet'
 
-const REFUND_ITEMS = [
-  {
-    id: 1,
-    title: '충전 후 미사용',
-    description: '충전 후 한 번도 사용하지 않은 경우 전액 환불이 가능합니다.',
-  },
-  {
-    id: 2,
-    title: '일부 사용 후 환불',
-    description: '일부 사용 후에는 잔액 기준으로 환불 처리됩니다.',
-  },
-  {
-    id: 3,
-    title: '환불 신청 방법',
-    description: '환불은 고객센터(1588-0000)를 통해 신청하실 수 있습니다.',
-  },
-  {
-    id: 4,
-    title: '환불 처리 기간',
-    description: '환불 신청 후 영업일 기준 3~5일 이내 처리됩니다.',
-  },
+const REFUND_CONDITIONS = [
+  '충전 잔액 기준 일정 비율 이상 사용 시 환불 가능',
+  '충전 금액 1만원 초과: 60% 이상 사용',
+  '충전 금액 1만원 이하: 80% 이상 사용',
+  '과거 월 거래는 환불 불가',
 ]
 
 export default function RefundGuideModal({ isOpen, onClose }) {
@@ -36,17 +20,25 @@ export default function RefundGuideModal({ isOpen, onClose }) {
           fontFamily: typography.fontFamily,
         }}
       >
-        {REFUND_ITEMS.map((item) => (
+        <p style={{
+          margin: `0 0 ${spacing[3]}`,
+          fontSize: typography.size.sm,
+          fontWeight: typography.weight.semibold,
+          color: colors.gray[900],
+        }}>
+          환불 가능 조건
+        </p>
+
+        {REFUND_CONDITIONS.map((text, i) => (
           <div
-            key={item.id}
+            key={i}
             style={{
               display: 'flex',
               gap: spacing[3],
-              marginBottom: spacing[4],
+              marginBottom: spacing[3],
               alignItems: 'flex-start',
             }}
           >
-            {/* 불렛 포인트 */}
             <div
               style={{
                 flexShrink: 0,
@@ -54,29 +46,17 @@ export default function RefundGuideModal({ isOpen, onClose }) {
                 height: '6px',
                 borderRadius: '50%',
                 backgroundColor: colors.primary[700],
-                marginTop: '6px',
+                marginTop: '8px',
               }}
             />
-            <div>
-              <div
-                style={{
-                  fontSize: typography.size.sm,
-                  fontWeight: typography.weight.semibold,
-                  color: colors.gray[900],
-                  marginBottom: '4px',
-                }}
-              >
-                {item.title}
-              </div>
-              <div
-                style={{
-                  fontSize: typography.size.xs,
-                  color: colors.gray[500],
-                  lineHeight: 1.6,
-                }}
-              >
-                {item.description}
-              </div>
+            <div
+              style={{
+                fontSize: typography.size.sm,
+                color: colors.gray[700],
+                lineHeight: 1.6,
+              }}
+            >
+              {text}
             </div>
           </div>
         ))}
@@ -87,6 +67,7 @@ export default function RefundGuideModal({ isOpen, onClose }) {
             backgroundColor: colors.primary[50],
             borderRadius: layout.radiusSmall,
             padding: spacing[3],
+            marginTop: spacing[4],
             marginBottom: spacing[5],
           }}
         >

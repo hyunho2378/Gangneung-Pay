@@ -2,7 +2,7 @@
 // 지도 35% / 목록 시트 65% — 드래그 시트 제거, 탭(가까운곳/QR결제매장)
 
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api'
+import { GoogleMap, useJsApiLoader, OverlayView } from '@react-google-maps/api'
 import { MarkerClusterer } from '@googlemaps/markerclusterer'
 import { Search } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
@@ -188,13 +188,18 @@ export default function StoreMapScreen() {
 
   const suggestions = searchQuery.trim().length > 0 ? searchStores(searchQuery, { limit: 10 }) : []
 
-  const handleStoreClick = (store) => {
+  // 매장 선택 — 강조만 (panTo 없음)
+  const handleStoreSelect = (store) => {
     setSelectedStore(store)
     setSheetOpen(true)
-    if (mapRef) {
-      mapRef.panTo({ lat: store.lat, lng: store.lng })
-      mapRef.setZoom(16)
-    }
+  }
+
+  // 길찾기 — panTo + zoom + 시트 닫기
+  const handleNavigate = () => {
+    if (!selectedStore || !mapRef) return
+    mapRef.panTo({ lat: selectedStore.lat, lng: selectedStore.lng })
+    mapRef.setZoom(17)
+    setSheetOpen(false)
   }
 
   // Marker clusterer: rebuild on visibleStores / map change
@@ -215,13 +220,37 @@ export default function StoreMapScreen() {
         },
         title: store.name,
       })
-      marker.addListener('click', () => handleStoreClick(store))
+      marker.addListener('click', () => handleStoreSelect(store))
       return marker
     })
 
     clustererRef.current = new MarkerClusterer({ map: mapRef, markers })
     return () => { clustererRef.current?.clearMarkers() }
   }, [isLoaded, mapRef, visibleStores])
+
+  // 강조 핀 — selectedStore가 있을 때 1.3배 크기 마커를 클러스터러 위에 별도 표시
+  useEffect(() => {
+    if (!isLoaded || !mapRef || !window.google || !selectedStore) return
+
+    const highlightMarker = new window.google.maps.Marker({
+      position: { lat: selectedStore.lat, lng: selectedStore.lng },
+      map: mapRef,
+      icon: {
+        path: window.google.maps.SymbolPath.CIRCLE,
+        scale: 8,
+        fillColor: selectedStore.isQR ? colors.teal[500] : colors.primary[700],
+        fillOpacity: 1,
+        strokeColor: '#FFFFFF',
+        strokeWeight: 2.5,
+      },
+      zIndex: 1000,
+      clickable: false,
+    })
+
+    return () => {
+      highlightMarker.setMap(null)
+    }
+  }, [isLoaded, mapRef, selectedStore])
 
   // Click outside → close autocomplete
   useEffect(() => {
@@ -244,7 +273,12 @@ export default function StoreMapScreen() {
   const handleSelectSuggestion = (store) => {
     setSearchQuery(store.name)
     setShowSuggestions(false)
-    handleStoreClick(store)
+    setSelectedStore(store)
+    setSheetOpen(true)
+    if (mapRef) {
+      mapRef.panTo({ lat: store.lat, lng: store.lng })
+      mapRef.setZoom(16)
+    }
   }
 
   return (
@@ -268,13 +302,57 @@ export default function StoreMapScreen() {
             zoom={13}
             onLoad={onLoad}
             onUnmount={onUnmount}
+            onClick={() => setSelectedStore(null)}
             options={{
               disableDefaultUI: true,
               zoomControl: false,
               streetViewControl: false,
               mapTypeControl: false,
             }}
-          />
+          >
+            {/* 강조된 매장의 라벨 — 핀 위에 떠있는 박스 + 꼬리 */}
+            {selectedStore && (
+              <OverlayView
+                position={{ lat: selectedStore.lat, lng: selectedStore.lng }}
+                mapPaneName={OverlayView.FLOAT_PANE}
+                getPixelPositionOffset={(width, height) => ({
+                  x: -width / 2,
+                  y: -height - 12,
+                })}
+              >
+                <div style={{
+                  pointerEvents: 'none',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}>
+                  {/* 라벨 박스 */}
+                  <div style={{
+                    backgroundColor: colors.surface.card,
+                    border: `2px solid ${selectedStore.isQR ? colors.teal[500] : colors.primary[700]}`,
+                    borderRadius: layout.radiusSmall,
+                    padding: `${spacing[1]} ${spacing[3]}`,
+                    fontSize: typography.size.xs,
+                    fontWeight: typography.weight.semibold,
+                    color: colors.gray[900],
+                    boxShadow: shadow.card,
+                    whiteSpace: 'nowrap',
+                    fontFamily: typography.fontFamily,
+                  }}>
+                    {selectedStore.name}
+                  </div>
+                  {/* 꼬리 — 핀을 가리키는 작은 삼각형 */}
+                  <div style={{
+                    width: 0,
+                    height: 0,
+                    borderLeft: '6px solid transparent',
+                    borderRight: '6px solid transparent',
+                    borderTop: `6px solid ${selectedStore.isQR ? colors.teal[500] : colors.primary[700]}`,
+                  }} />
+                </div>
+              </OverlayView>
+            )}
+          </GoogleMap>
         ) : (
           <div
             style={{
@@ -451,7 +529,7 @@ export default function StoreMapScreen() {
               <StoreListItem
                 key={store.id}
                 store={store}
-                onClick={() => handleStoreClick(store)}
+                onClick={() => handleStoreSelect(store)}
               />
             ))
           )}
@@ -462,6 +540,7 @@ export default function StoreMapScreen() {
       <StoreDetailSheet
         isOpen={sheetOpen}
         onClose={() => setSheetOpen(false)}
+        onNavigate={handleNavigate}
         store={selectedStore}
       />
     </div>

@@ -11,7 +11,7 @@ function formatDistanceKm(km) {
   return km < 1 ? `${Math.round(km * 1000)}m` : `${km.toFixed(1)}km`
 }
 
-export default function StoreDetailSheet({ isOpen, onClose, store }) {
+export default function StoreDetailSheet({ isOpen, onClose, onNavigate, store }) {
   const [ownerSheetOpen, setOwnerSheetOpen] = useState(false)
 
   const {
@@ -249,6 +249,7 @@ export default function StoreDetailSheet({ isOpen, onClose, store }) {
               전화하기
             </button>
             <button
+              onClick={onNavigate}
               style={{
                 flex: 1,
                 height: '48px',

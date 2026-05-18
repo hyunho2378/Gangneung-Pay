@@ -23,9 +23,10 @@ export default function ChargePage() {
         onCharge={chargeBalance}
         balance={balance}
       />
-      {isRefundOpen && (
-        <RefundGuideModal onClose={() => setIsRefundOpen(false)} />
-      )}
+      <RefundGuideModal
+        isOpen={isRefundOpen}
+        onClose={() => setIsRefundOpen(false)}
+      />
       {showCoach && (
         <CoachMarkOverlay
           targetRect={null}

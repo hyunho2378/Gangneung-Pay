@@ -16,6 +16,7 @@ import QuickAmountChip from './QuickAmountChip'
 import NumPad from './NumPad'
 
 const MAX_AMOUNT = 999999999
+const UNIT_AMOUNT = 10000
 
 // 단계 표시기 — Shneiderman #8, Nielsen #1
 function StepIndicator({ current }) {
@@ -152,7 +153,8 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
   const formattedAmount = amount.toLocaleString('ko-KR')
   const hasAmount = amount > 0
   const isOverLimit = amount > chargeLimit
-  const canProceed = hasAmount && !isOverLimit
+  const isNotUnit10000 = hasAmount && amount % UNIT_AMOUNT !== 0
+  const canProceed = hasAmount && !isOverLimit && !isNotUnit10000
   const newBalance = balance + amount
 
   // 헤더 뒤로가기 동작: step별 분기
@@ -275,12 +277,8 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
                 textUnderlineOffset: '2px',
               }}
             >
-              환불안내보기
+              환불 안내 보기
             </button>
-            {/* C-05: 환불 요약 인라인 (S2, Nielsen #1) */}
-            <span style={{ fontSize: sizes.xxs, color: colors.gray[400] }}>
-              충전금은 언제든지 환불 신청이 가능합니다
-            </span>
           </div>
 
           {/* 빠른 금액 버튼 */}
@@ -343,6 +341,16 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
             {isOverLimit && (
               <p style={{ margin: `${spacing[2]} 0 0`, textAlign: 'center', fontSize: sizes.xs, color: colors.error }}>
                 1회 충전 한도 {chargeLimit.toLocaleString('ko-KR')}원을 초과했습니다
+              </p>
+            )}
+            {isNotUnit10000 && !isOverLimit && (
+              <p style={{
+                margin: `${spacing[2]} 0 0`,
+                textAlign: 'center',
+                fontSize: sizes.xs,
+                color: colors.error,
+              }}>
+                1만 원 단위로만 충전할 수 있습니다
               </p>
             )}
             {!hasAmount && !isOverLimit && (
