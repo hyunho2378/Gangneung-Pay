@@ -9,13 +9,14 @@ import { useState, useEffect, useRef } from 'react'
 import { ArrowLeft, CreditCard, Zap, ZapOff } from 'lucide-react'
 import { Html5Qrcode } from 'html5-qrcode'
 import { useNavigate } from 'react-router-dom'
+import { useUser } from '../../context/UserContext'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 
 const LOW_BALANCE = 10000
-const MOCK_PAYMENT_AMOUNT = 12000
 
-export default function QRScannerScreen({ onClose, balance = 120000, onCharge, cardCount = 1 }) {
+export default function QRScannerScreen({ onClose, balance = 120000, onCharge, cardCount = 1, onScan }) {
   const navigate = useNavigate()
+  const { spendBalance } = useUser()
   const [flashOn, setFlashOn] = useState(false)
   const [scanPulse, setScanPulse] = useState(true)
   // 'init' | 'scanning' | 'permission_denied'
@@ -43,8 +44,14 @@ export default function QRScannerScreen({ onClose, balance = 120000, onCharge, c
         { fps: 10, qrbox: { width: 200, height: 200 } },
         (decodedText) => {
           if (scannedRef.current) return
+          const result = onScan?.(decodedText)
+          if (!result) return  // onScan 없거나 매장 풀 비었음 → 결제 불가
           scannedRef.current = true
-          setScannedData({ amount: MOCK_PAYMENT_AMOUNT, raw: decodedText })
+          setScannedData({
+            amount: result.amount,
+            storeName: result.storeName,
+            raw: decodedText,
+          })
         },
         () => {}
       )
@@ -57,6 +64,9 @@ export default function QRScannerScreen({ onClose, balance = 120000, onCharge, c
   }, [])
 
   const handlePay = () => {
+    if (!scannedData) return
+    // 잔액/캐시백 차감 + 이용내역 추가 + DB 기록(UserContext.spendBalance → logAction)
+    spendBalance(scannedData.amount, scannedData.storeName)
     setPaymentDone(true)
     setTimeout(() => navigate('/'), 1200)
   }
@@ -66,7 +76,8 @@ export default function QRScannerScreen({ onClose, balance = 120000, onCharge, c
   const hasNoBalance = balance === 0
   const hasLowBalance = balance > 0 && balance < LOW_BALANCE
   const formattedBalance = balance.toLocaleString('ko-KR') + '원'
-  const afterBalance = balance - MOCK_PAYMENT_AMOUNT
+  // 결제 확인 시트용 예상 잔액 (캐시백 사용분 미반영, 보수적 표시)
+  const projectedBalance = scannedData ? balance - scannedData.amount : balance
 
   // Shneiderman #4: 결제 완료 화면
   if (paymentDone) {
@@ -94,10 +105,10 @@ export default function QRScannerScreen({ onClose, balance = 120000, onCharge, c
           결제 완료
         </p>
         <p style={{ margin: 0, color: 'rgba(255,255,255,0.85)', fontSize: typography.size.md }}>
-          {MOCK_PAYMENT_AMOUNT.toLocaleString('ko-KR')}원
+          {(scannedData?.amount ?? 0).toLocaleString('ko-KR')}원
         </p>
         <p style={{ margin: 0, color: 'rgba(255,255,255,0.6)', fontSize: typography.size.sm }}>
-          잔액 {afterBalance.toLocaleString('ko-KR')}원
+          잔액 {balance.toLocaleString('ko-KR')}원
         </p>
       </div>
     )
@@ -481,9 +492,23 @@ export default function QRScannerScreen({ onClose, balance = 120000, onCharge, c
               <div style={{ width: '32px', height: '4px', borderRadius: layout.radiusPill, backgroundColor: colors.gray[300] }} />
             </div>
 
-            <p style={{ margin: `0 0 ${spacing[5]}`, fontSize: typography.size.lg, fontWeight: typography.weight.bold, color: colors.gray[900] }}>
+            <p style={{ margin: `0 0 ${spacing[2]}`, fontSize: typography.size.lg, fontWeight: typography.weight.bold, color: colors.gray[900] }}>
               결제 확인
             </p>
+
+            {scannedData?.storeName && (
+              <p style={{
+                margin: `0 0 ${spacing[5]}`,
+                fontSize: typography.size.sm,
+                color: colors.gray[700],
+                lineHeight: 1.5,
+              }}>
+                <span style={{ fontWeight: typography.weight.semibold, color: colors.gray[900] }}>
+                  {scannedData.storeName}
+                </span>
+                에서 결제하시겠습니까?
+              </p>
+            )}
 
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: spacing[3] }}>
               <span style={{ fontSize: typography.size.sm, color: colors.gray[500] }}>결제 금액</span>
@@ -496,7 +521,7 @@ export default function QRScannerScreen({ onClose, balance = 120000, onCharge, c
               <span style={{ fontSize: typography.size.sm, color: colors.gray[500] }}>
                 {balance.toLocaleString('ko-KR')}원 →{' '}
                 <span style={{ fontWeight: typography.weight.semibold, color: colors.primary[700] }}>
-                  {afterBalance.toLocaleString('ko-KR')}원
+                  {projectedBalance.toLocaleString('ko-KR')}원
                 </span>
               </span>
             </div>

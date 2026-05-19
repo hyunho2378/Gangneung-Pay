@@ -299,14 +299,31 @@ export default function HistoryPage() {
                         )}
                       </div>
                     </div>
-                    <span style={{
-                      fontSize: sizes.md,
-                      fontWeight: typography.weight.bold,
-                      color: amountColor,
-                      whiteSpace: 'nowrap',
+                    {/* 우측: 금액 위 + 잔액 아래 (날짜 라인과 같은 높이로 정렬) */}
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-end',
+                      gap: spacing[1],
                     }}>
-                      {sign}{fmt(t.totalAmount)}원
-                    </span>
+                      <span style={{
+                        fontSize: sizes.md,
+                        fontWeight: typography.weight.bold,
+                        color: amountColor,
+                        whiteSpace: 'nowrap',
+                      }}>
+                        {sign}{fmt(t.totalAmount)}원
+                      </span>
+                      {typeof t.balanceAfter === 'number' && (
+                        <span style={{
+                          fontSize: sizes.xs,
+                          color: colors.gray[500],
+                          whiteSpace: 'nowrap',
+                        }}>
+                          잔액 {fmt(t.balanceAfter)}원
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   {/* 결제 수단 분리 (캐시백 사용한 경우만) */}

@@ -41,10 +41,10 @@ export default function StoreRecommendCard({ stores = defaultStores }) {
       {stores.map((store, idx) => (
         <div
           key={store.id}
-          onClick={() => navigate('/store')}
+          onClick={() => navigate('/store', { state: { focusStoreId: store.id } })}
           style={{
-            minWidth: '120px',
-            width: '120px',
+            minWidth: '140px',
+            width: '140px',
             backgroundColor: colors.surface.card,
             borderRadius: layout.radiusButton,
             padding: spacing[3],
@@ -79,6 +79,9 @@ export default function StoreRecommendCard({ stores = defaultStores }) {
               fontWeight: typography.weight.bold,
               color: colors.gray[900],
               lineHeight: 1.3,
+              wordBreak: 'keep-all',
+              overflowWrap: 'break-word',
+              whiteSpace: 'normal',
             }}
           >
             {store.name}

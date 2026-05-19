@@ -2,12 +2,14 @@
 // 지도 35% / 목록 시트 65% — 드래그 시트 제거, 탭(가까운곳/QR결제매장)
 
 import { useState, useEffect, useRef, useMemo } from 'react'
+import { useLocation } from 'react-router-dom'
 import { GoogleMap, useJsApiLoader, OverlayView } from '@react-google-maps/api'
 import { MarkerClusterer } from '@googlemaps/markerclusterer'
 import { Search } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 import {
   CATEGORIES,
+  STORES,
   searchStores,
   getStoresByCategory,
   GANGNEUNG_STATION,
@@ -140,6 +142,7 @@ function TabButton({ label, active, onClick }) {
 }
 
 export default function StoreMapScreen() {
+  const location = useLocation()
   const [activeCategory, setActiveCategory] = useState('전체')
   const [tab, setTab] = useState('nearby')
   const [searchQuery, setSearchQuery] = useState('')
@@ -147,6 +150,7 @@ export default function StoreMapScreen() {
   const [selectedStore, setSelectedStore] = useState(null)
   const [sheetOpen, setSheetOpen] = useState(false)
   const [mapRef, setMapRef] = useState(null)
+  const [currentZoom, setCurrentZoom] = useState(13)
   const clustererRef = useRef(null)
   const [debouncedQuery, setDebouncedQuery] = useState('')
   const searchContainerRef = useRef(null)
@@ -252,6 +256,18 @@ export default function StoreMapScreen() {
     }
   }, [isLoaded, mapRef, selectedStore])
 
+  // 홈 추천 매장 탭 → focusStoreId로 진입한 경우 처리
+  useEffect(() => {
+    const focusId = location.state?.focusStoreId
+    if (!focusId || !mapRef) return
+    const target = STORES.find((s) => s.id === focusId)
+    if (!target) return
+    setSelectedStore(target)
+    setSheetOpen(true)
+    mapRef.panTo({ lat: target.lat, lng: target.lng })
+    mapRef.setZoom(17)
+  }, [location.state?.focusStoreId, mapRef])
+
   // Click outside → close autocomplete
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -303,6 +319,7 @@ export default function StoreMapScreen() {
             onLoad={onLoad}
             onUnmount={onUnmount}
             onClick={() => setSelectedStore(null)}
+            onZoomChanged={() => { if (mapRef) setCurrentZoom(mapRef.getZoom()) }}
             options={{
               disableDefaultUI: true,
               zoomControl: false,
@@ -310,6 +327,34 @@ export default function StoreMapScreen() {
               mapTypeControl: false,
             }}
           >
+            {/* 줌 >= 16 시 개별 핀 이름 라벨 */}
+            {currentZoom >= 16 && visibleStores.map((store) => {
+              if (selectedStore && selectedStore.id === store.id) return null
+              return (
+                <OverlayView
+                  key={`label-${store.id}`}
+                  position={{ lat: store.lat, lng: store.lng }}
+                  mapPaneName={OverlayView.FLOAT_PANE}
+                  getPixelPositionOffset={(width) => ({ x: -width / 2, y: -28 })}
+                >
+                  <div style={{
+                    pointerEvents: 'none',
+                    backgroundColor: colors.surface.card,
+                    borderRadius: layout.radiusSmall,
+                    padding: '2px 6px',
+                    fontSize: typography.size.xxs,
+                    fontWeight: typography.weight.regular,
+                    color: colors.gray[700],
+                    boxShadow: shadow.card,
+                    whiteSpace: 'nowrap',
+                    fontFamily: typography.fontFamily,
+                  }}>
+                    {store.name}
+                  </div>
+                </OverlayView>
+              )
+            })}
+
             {/* 강조된 매장의 라벨 — 핀 위에 떠있는 박스 + 꼬리 */}
             {selectedStore && (
               <OverlayView

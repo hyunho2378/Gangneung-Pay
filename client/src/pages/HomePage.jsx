@@ -4,6 +4,7 @@ import { useApp } from '../context/AppContext'
 import { useUser } from '../context/UserContext'
 import { useOnboarding } from '../context/OnboardingContext'
 import { colors, layout, spacing } from '../tokens/tokens'
+import { STORES, GANGNEUNG_STATION, calculateDistance } from '../data/stores'
 import CoachMarkOverlay from '../components/common/CoachMarkOverlay'
 
 import ScreenContainer from '../components/layout/ScreenContainer'
@@ -21,11 +22,14 @@ import SectionHeader from '../components/home/SectionHeader'
 import StoreRecommendCard from '../components/home/StoreRecommendCard'
 import ExploreScrollCard from '../components/home/ExploreScrollCard'
 
-const mockStores = [
-  { id: 1, name: '초당순두부', category: '음식점', distance: '0.3km' },
-  { id: 2, name: '강릉중앙시장', category: '마트', distance: '1.1km' },
-  { id: 3, name: '보헤미안커피', category: '카페', distance: '0.8km' },
-]
+const FEATURED_IDS = [2630781, 646727, 3401394]
+const featuredStores = FEATURED_IDS
+  .map((id) => STORES.find((s) => s.id === id))
+  .filter(Boolean)
+  .map((s) => {
+    const km = calculateDistance(GANGNEUNG_STATION.lat, GANGNEUNG_STATION.lng, s.lat, s.lng)
+    return { ...s, distance: km < 1 ? `${Math.round(km * 1000)}m` : `${km.toFixed(1)}km` }
+  })
 
 export default function HomePage() {
   const navigate = useNavigate()
@@ -106,7 +110,7 @@ export default function HomePage() {
           title="결제 가능 매장"
           onViewAll={() => navigate('/store')}
         />
-        <StoreRecommendCard stores={mockStores} />
+        <StoreRecommendCard stores={featuredStores} />
 
         {/* 강릉페이 120% 활용하기 */}
         <div style={{ marginTop: spacing[4], marginBottom: spacing[3] }}>
