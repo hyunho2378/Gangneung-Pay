@@ -14,6 +14,7 @@ import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens
 import { useTypography } from '../../hooks/useTypography'
 import QuickAmountChip from './QuickAmountChip'
 import NumPad from './NumPad'
+import PaymentAuthOverlay from '../common/PaymentAuthOverlay'
 
 const MAX_AMOUNT = 999999999
 const UNIT_AMOUNT = 10000
@@ -28,7 +29,7 @@ function StepIndicator({ current }) {
         display: 'flex',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        padding: `${spacing[4]} ${layout.margin} ${spacing[3]}`,
+        padding: `${spacing[3]} ${layout.margin} ${spacing[2]}`,
         backgroundColor: colors.surface.card,
         borderBottom: `1px solid ${colors.gray[100]}`,
       }}
@@ -126,6 +127,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
   const [amount, setAmount] = useState(0)
   const [step, setStep] = useState(1)
   const [charged, setCharged] = useState(false)
+  const [showAuth, setShowAuth] = useState(false)
 
   const handleNumPress = (key) => {
     if (key === 'backspace') {
@@ -230,7 +232,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              padding: `${spacing[5]} ${layout.margin} ${spacing[4]}`,
+              padding: `${spacing[3]} ${layout.margin} ${spacing[3]}`,
               gap: spacing[2],
             }}
           >
@@ -256,11 +258,6 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
               }}
             >
               {hasAmount ? `${formattedAmount}원` : '0원'}
-            </span>
-
-            {/* C-03: 충전 한도 항상 노출 (Nielsen #1, Shneiderman #8) */}
-            <span style={{ fontSize: sizes.xxs, color: colors.gray[400] }}>
-              1회 충전 한도 {chargeLimit.toLocaleString('ko-KR')}원
             </span>
 
             <button
@@ -311,8 +308,8 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
           {/* 충전 버튼 */}
           <div
             style={{
-              padding: `${spacing[4]} ${layout.margin}`,
-              paddingBottom: `calc(${layout.bottomNavHeight} + ${spacing[4]})`,
+              padding: `${spacing[3]} ${layout.margin}`,
+              paddingBottom: `calc(env(safe-area-inset-bottom) + ${spacing[3]})`,
               backgroundColor: colors.surface.card,
               borderTop: `1px solid ${colors.gray[100]}`,
             }}
@@ -452,9 +449,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
             <button
               onClick={() => {
                 if (charged) return
-                setCharged(true)
-                onCharge && onCharge(amount)
-                setStep(3)
+                setShowAuth(true)
               }}
               disabled={charged}
               style={{
@@ -471,7 +466,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
                 fontFamily: typography.fontFamily,
               }}
             >
-              확인 충전
+              충전하기
             </button>
           </div>
         </div>
@@ -582,6 +577,17 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
           </button>
         </div>
       )}
+
+      <PaymentAuthOverlay
+        open={showAuth}
+        onComplete={() => {
+          setShowAuth(false)
+          setCharged(true)
+          onCharge && onCharge(amount)
+          setStep(3)
+        }}
+        onCancel={() => setShowAuth(false)}
+      />
     </div>
   )
 }

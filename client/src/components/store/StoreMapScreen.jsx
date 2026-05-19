@@ -151,6 +151,7 @@ export default function StoreMapScreen() {
   const [sheetOpen, setSheetOpen] = useState(false)
   const [mapRef, setMapRef] = useState(null)
   const [currentZoom, setCurrentZoom] = useState(13)
+  const [currentBounds, setCurrentBounds] = useState(null)
   const clustererRef = useRef(null)
   const [debouncedQuery, setDebouncedQuery] = useState('')
   const searchContainerRef = useRef(null)
@@ -320,6 +321,7 @@ export default function StoreMapScreen() {
             onUnmount={onUnmount}
             onClick={() => setSelectedStore(null)}
             onZoomChanged={() => { if (mapRef) setCurrentZoom(mapRef.getZoom()) }}
+            onBoundsChanged={() => { if (mapRef) setCurrentBounds(mapRef.getBounds()) }}
             options={{
               disableDefaultUI: true,
               zoomControl: false,
@@ -327,33 +329,56 @@ export default function StoreMapScreen() {
               mapTypeControl: false,
             }}
           >
-            {/* 줌 >= 16 시 개별 핀 이름 라벨 */}
-            {currentZoom >= 16 && visibleStores.map((store) => {
-              if (selectedStore && selectedStore.id === store.id) return null
-              return (
-                <OverlayView
-                  key={`label-${store.id}`}
-                  position={{ lat: store.lat, lng: store.lng }}
-                  mapPaneName={OverlayView.FLOAT_PANE}
-                  getPixelPositionOffset={(width) => ({ x: -width / 2, y: -28 })}
-                >
-                  <div style={{
-                    pointerEvents: 'none',
-                    backgroundColor: colors.surface.card,
-                    borderRadius: layout.radiusSmall,
-                    padding: '2px 6px',
-                    fontSize: typography.size.xxs,
-                    fontWeight: typography.weight.regular,
-                    color: colors.gray[700],
-                    boxShadow: shadow.card,
-                    whiteSpace: 'nowrap',
-                    fontFamily: typography.fontFamily,
-                  }}>
-                    {store.name}
-                  </div>
-                </OverlayView>
-              )
-            })}
+            {/* 줌 >= 18 시 개별 핀 이름 라벨 (viewport 안 매장만) */}
+            {currentZoom >= 18 && currentBounds && visibleStores
+              .filter((store) => {
+                if (!currentBounds.contains) return false
+                return currentBounds.contains({ lat: store.lat, lng: store.lng })
+              })
+              .map((store) => {
+                if (selectedStore && selectedStore.id === store.id) return null
+                const borderColor = store.isQR ? colors.teal[500] : colors.primary[700]
+                return (
+                  <OverlayView
+                    key={`label-${store.id}`}
+                    position={{ lat: store.lat, lng: store.lng }}
+                    mapPaneName={OverlayView.FLOAT_PANE}
+                    getPixelPositionOffset={(width, height) => ({
+                      x: -width / 2,
+                      y: -height - 12,
+                    })}
+                  >
+                    <div style={{
+                      pointerEvents: 'none',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                    }}>
+                      <div style={{
+                        backgroundColor: colors.surface.card,
+                        border: `2px solid ${borderColor}`,
+                        borderRadius: layout.radiusSmall,
+                        padding: `${spacing[1]} ${spacing[2]}`,
+                        fontSize: typography.size.xxs,
+                        fontWeight: typography.weight.semibold,
+                        color: colors.gray[900],
+                        boxShadow: shadow.card,
+                        whiteSpace: 'nowrap',
+                        fontFamily: typography.fontFamily,
+                      }}>
+                        {store.name}
+                      </div>
+                      <div style={{
+                        width: 0,
+                        height: 0,
+                        borderLeft: '5px solid transparent',
+                        borderRight: '5px solid transparent',
+                        borderTop: `5px solid ${borderColor}`,
+                      }} />
+                    </div>
+                  </OverlayView>
+                )
+              })}
 
             {/* 강조된 매장의 라벨 — 핀 위에 떠있는 박스 + 꼬리 */}
             {selectedStore && (

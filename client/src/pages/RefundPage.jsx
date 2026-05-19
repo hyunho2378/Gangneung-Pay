@@ -15,6 +15,7 @@ import { colors, typography, layout, spacing, shadow } from '../tokens/tokens'
 import { useTypography } from '../hooks/useTypography'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import BottomNavBar from '../components/layout/BottomNavBar'
+import PaymentAuthOverlay from '../components/common/PaymentAuthOverlay'
 
 export default function RefundPage() {
   const navigate = useNavigate()
@@ -22,6 +23,7 @@ export default function RefundPage() {
   const { transactions, balance, refundTransaction } = useUser()
   const { isLargeText } = useApp()
   const [confirmId, setConfirmId] = useState(null)
+  const [showAuth, setShowAuth] = useState(false)
 
   // 큰글씨 모드: 본문/statusBar 회색 (surface.background)
   // 일반 모드: 흰색 (surface.card)
@@ -233,29 +235,128 @@ export default function RefundPage() {
         )}
       </div>
 
-      {/* 확인 다이얼로그 */}
+      {/* 환불 확인 바텀 시트 */}
       {confirmTarget && (
-        <div style={{
-          position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          zIndex: 200,
-        }}>
-          <div style={{
-            backgroundColor: colors.surface.card,
-            borderRadius: layout.radiusCard,
-            padding: spacing[6],
-            width: 'min(320px, calc(100% - 32px))',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: spacing[4],
-            fontFamily: typography.fontFamily,
-          }}>
-            <h3 style={{ margin: 0, fontSize: sizes.md, fontWeight: typography.weight.bold, color: colors.gray[900] }}>
-              환불하시겠습니까?
+        <>
+          {/* 딤드 — 뷰포트 전체 */}
+          <div
+            onClick={() => setConfirmId(null)}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              zIndex: 200,
+            }}
+          />
+          {/* 시트 — 390px 제한 + 중앙 정렬 */}
+          <div
+            style={{
+              position: 'fixed',
+              left: '50%',
+              bottom: 0,
+              transform: 'translateX(-50%)',
+              width: '100%',
+              maxWidth: layout.viewport,
+              backgroundColor: colors.surface.card,
+              borderTopLeftRadius: layout.radiusModal,
+              borderTopRightRadius: layout.radiusModal,
+              padding: `${spacing[5]} ${spacing[5]} 0`,
+              paddingBottom: `calc(${spacing[6]} + env(safe-area-inset-bottom))`,
+              fontFamily: typography.fontFamily,
+              zIndex: 201,
+            }}
+          >
+            {/* 핸들 바 */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginBottom: spacing[5],
+            }}>
+              <div style={{
+                width: '40px',
+                height: '4px',
+                borderRadius: layout.radiusPill,
+                backgroundColor: colors.gray[300],
+              }} />
+            </div>
+
+            {/* 타이틀 */}
+            <h3 style={{
+              margin: `0 0 ${spacing[2]}`,
+              fontSize: sizes.lg,
+              fontWeight: typography.weight.bold,
+              color: colors.gray[900],
+              textAlign: 'center',
+              lineHeight: 1.4,
+            }}>
+              강릉페이 계좌로<br />
+              {fmt(confirmTarget.totalAmount)} 환불하시겠어요?
             </h3>
-            <p style={{ margin: 0, fontSize: sizes.sm, color: colors.gray[700] }}>
-              {fmt(confirmTarget.totalAmount)}을 환불합니다.
+
+            {/* 서브 텍스트 */}
+            <p style={{
+              margin: `0 0 ${spacing[5]}`,
+              fontSize: sizes.sm,
+              color: colors.gray[500],
+              textAlign: 'center',
+              lineHeight: 1.5,
+            }}>
+              7일 이내 충전한 미사용 금액은 수수료 없이 환불할 수 있어요.
             </p>
+
+            {/* 최종 환불 금액 박스 */}
+            <div style={{
+              backgroundColor: colors.surface.background,
+              borderRadius: layout.radiusCard,
+              padding: `${spacing[4]} ${spacing[4]}`,
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: spacing[4],
+            }}>
+              <span style={{ fontSize: sizes.sm, color: colors.gray[700] }}>
+                최종 환불 금액
+              </span>
+              <span style={{
+                fontSize: sizes.md,
+                fontWeight: typography.weight.bold,
+                color: colors.gray[900],
+              }}>
+                {fmt(confirmTarget.totalAmount)}
+              </span>
+            </div>
+
+            {/* 경고 메시지 */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: spacing[2],
+              marginBottom: spacing[5],
+            }}>
+              <div style={{
+                width: '16px',
+                height: '16px',
+                borderRadius: '50%',
+                backgroundColor: colors.error,
+                color: '#FFFFFF',
+                fontSize: '11px',
+                fontWeight: typography.weight.bold,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                !
+              </div>
+              <span style={{
+                fontSize: sizes.xs,
+                color: colors.error,
+              }}>
+                신청 후에는 취소할 수 없습니다.
+              </span>
+            </div>
+
+            {/* 버튼 2개 */}
             <div style={{ display: 'flex', gap: spacing[2] }}>
               <button
                 onClick={() => setConfirmId(null)}
@@ -264,41 +365,51 @@ export default function RefundPage() {
                   backgroundColor: colors.gray[100],
                   border: 'none',
                   borderRadius: layout.radiusButton,
-                  padding: `${spacing[3]} 0`,
-                  fontSize: sizes.sm,
+                  padding: `${spacing[4]} 0`,
+                  fontSize: sizes.md,
                   fontWeight: typography.weight.semibold,
                   color: colors.gray[700],
                   cursor: 'pointer',
-                  minHeight: layout.touchMin,
+                  minHeight: '52px',
                   fontFamily: typography.fontFamily,
                 }}
               >
-                취소
+                다음에 하기
               </button>
               <button
-                onClick={() => handleRefund(confirmTarget.id)}
+                onClick={() => setShowAuth(true)}
                 style={{
-                  flex: 1,
+                  flex: 1.5,
                   backgroundColor: colors.primary[700],
                   border: 'none',
                   borderRadius: layout.radiusButton,
-                  padding: `${spacing[3]} 0`,
-                  fontSize: sizes.sm,
+                  padding: `${spacing[4]} 0`,
+                  fontSize: sizes.md,
                   fontWeight: typography.weight.semibold,
                   color: colors.onDark.primary,
                   cursor: 'pointer',
-                  minHeight: layout.touchMin,
+                  minHeight: '52px',
                   fontFamily: typography.fontFamily,
+                  boxShadow: shadow.button,
                 }}
               >
-                환불하기
+                신청하기
               </button>
             </div>
           </div>
-        </div>
+        </>
       )}
 
       <BottomNavBar />
+
+      <PaymentAuthOverlay
+        open={showAuth}
+        onComplete={() => {
+          setShowAuth(false)
+          if (confirmTarget) handleRefund(confirmTarget.id)
+        }}
+        onCancel={() => setShowAuth(false)}
+      />
     </ScreenContainer>
   )
 }

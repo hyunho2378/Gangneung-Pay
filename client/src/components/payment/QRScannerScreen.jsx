@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react'
-import { ArrowLeft, CreditCard, Zap, ZapOff } from 'lucide-react'
+import { ArrowLeft, CreditCard } from 'lucide-react'
 import { Html5Qrcode } from 'html5-qrcode'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
@@ -17,7 +17,6 @@ const LOW_BALANCE = 10000
 export default function QRScannerScreen({ onClose, balance = 120000, onCharge, cardCount = 1, onScan }) {
   const navigate = useNavigate()
   const { spendBalance } = useUser()
-  const [flashOn, setFlashOn] = useState(false)
   const [scanPulse, setScanPulse] = useState(true)
   // 'init' | 'scanning' | 'permission_denied'
   const [cameraState, setCameraState] = useState('init')
@@ -41,7 +40,7 @@ export default function QRScannerScreen({ onClose, balance = 120000, onCharge, c
     html5QrCode
       .start(
         { facingMode: 'environment' },
-        { fps: 10, qrbox: { width: 200, height: 200 } },
+        { fps: 10, qrbox: { width: 260, height: 260 } },
         (decodedText) => {
           if (scannedRef.current) return
           const result = onScan?.(decodedText)
@@ -62,6 +61,45 @@ export default function QRScannerScreen({ onClose, balance = 120000, onCharge, c
       html5QrCode.stop().catch(() => {})
     }
   }, [])
+
+  // html5-qrcode video/canvas stretch 방지 — object-fit: cover 강제
+  useEffect(() => {
+    const styleId = 'qr-reader-style-fix'
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement('style')
+      style.id = styleId
+      style.textContent = `
+        #qr-reader video,
+        #qr-reader canvas {
+          width: 100% !important;
+          height: 100% !important;
+          object-fit: cover !important;
+        }
+      `
+      document.head.appendChild(style)
+    }
+  }, [])
+
+  // 3초 후 자동 결제 시트 (시연용) — QR 인식 실패해도 결제 가능
+  useEffect(() => {
+    if (cameraState !== 'scanning') return
+    if (scannedRef.current) return
+
+    const timer = setTimeout(() => {
+      if (scannedRef.current) return
+      if (!onScan) return
+      const result = onScan('AUTO_DEMO_SCAN')
+      if (!result) return
+      scannedRef.current = true
+      setScannedData({
+        amount: result.amount,
+        storeName: result.storeName,
+        raw: 'AUTO_DEMO',
+      })
+    }, 3000)
+
+    return () => clearTimeout(timer)
+  }, [cameraState, onScan])
 
   const handlePay = () => {
     if (!scannedData) return
@@ -171,13 +209,13 @@ export default function QRScannerScreen({ onClose, balance = 120000, onCharge, c
           gap: spacing[4],
         }}
       >
-        <div style={{ position: 'relative', width: '250px', height: '250px' }}>
+        <div style={{ position: 'relative', width: '300px', height: '300px' }}>
           {/* html5-qrcode 마운트 대상 */}
           <div
             id="qr-reader"
             style={{
-              width: '250px',
-              height: '250px',
+              width: '300px',
+              height: '300px',
               borderRadius: layout.radiusSmall,
               overflow: 'hidden',
               backgroundColor: 'rgba(255,255,255,0.06)',
@@ -438,31 +476,6 @@ export default function QRScannerScreen({ onClose, balance = 120000, onCharge, c
           </button>
         </div>
 
-        <div style={{ height: '1px', backgroundColor: colors.gray[100], marginBottom: spacing[4] }} />
-
-        {/* 플래시 토글 */}
-        <button
-          onClick={() => setFlashOn((p) => !p)}
-          style={{
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: spacing[2],
-            backgroundColor: flashOn ? colors.primary[100] : colors.gray[100],
-            border: 'none',
-            borderRadius: layout.radiusButton,
-            padding: spacing[3],
-            fontSize: typography.size.sm,
-            fontWeight: typography.weight.medium,
-            color: flashOn ? colors.primary[700] : colors.gray[500],
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-          }}
-        >
-          {flashOn ? <Zap size={18} /> : <ZapOff size={18} />}
-          {flashOn ? '플래시 켜짐' : '플래시'}
-        </button>
       </div>
 
       {/* 결제 확인 바텀시트 — Shneiderman #4 closure */}

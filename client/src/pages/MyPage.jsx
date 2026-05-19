@@ -220,6 +220,9 @@ export default function MyPage() {
         >
           로그아웃
         </button>
+
+        {/* 하단 여백 — BottomNavBar 위 공간 확보 */}
+        <div style={{ height: spacing[8] }} />
       </div>
 
       <BottomNavBar />
