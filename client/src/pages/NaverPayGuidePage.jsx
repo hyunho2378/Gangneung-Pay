@@ -212,7 +212,7 @@ export default function NaverPayGuidePage() {
             backgroundColor: NAVER_GREEN,
             border: 'none',
             borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
-            color: 'white',
+            color: '#FFFFFF',
             fontSize: typography.size.md,
             fontWeight: typography.weight.bold,
             cursor: 'pointer',

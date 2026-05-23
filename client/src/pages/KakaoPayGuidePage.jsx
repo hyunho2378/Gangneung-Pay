@@ -206,10 +206,10 @@ export default function KakaoPayGuidePage() {
           style={{
             width: '100%',
             padding: '16px',
-            backgroundColor: colors.kakaoYellow,
+            backgroundColor: '#FFEB00',
             border: 'none',
             borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
-            color: colors.kakaoDark,
+            color: '#191919',
             fontSize: typography.size.md,
             fontWeight: typography.weight.bold,
             cursor: 'pointer',
