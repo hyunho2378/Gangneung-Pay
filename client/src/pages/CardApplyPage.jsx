@@ -13,7 +13,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
-import { useApp } from '../context/AppContext'
 import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../tokens/tokens'
 import { useTypography } from '../hooks/useTypography'
@@ -186,7 +185,6 @@ export default function CardApplyPage() {
   const navigate = useNavigate()
   const sizes = useTypography()
   const { cardStatus, applyCard, shipCard, registerCard } = useUser()
-  const { showSnackbar } = useApp()
   const BENEFITS = getBenefits(sizes)
 
   useEffect(() => {
@@ -292,7 +290,7 @@ export default function CardApplyPage() {
               <Button
                 variant="filled"
                 size="lg"
-                onClick={() => { registerCard(); showSnackbar('카드 등록이 완료됐어요'); navigate('/') }}
+                onClick={() => { registerCard(); navigate('/') }}
               >
                 카드 등록하기
               </Button>
