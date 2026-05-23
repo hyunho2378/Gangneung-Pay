@@ -1,5 +1,5 @@
-// UsageGuidePage.jsx — 미니 렌더 4탭 개편
-// 카드신청 / 카드등록 / 충전 / 환불 — 각 단계마다 폰 프레임 + 실제 컴포넌트 스냅샷
+// UsageGuidePage.jsx — 미니 렌더 3탭
+// 카드신청 / 충전 / 환불 — 각 단계마다 폰 프레임 + 실제 컴포넌트 스냅샷
 // 이미지5~8 톤: 파란 그라디언트 배경, 단계 번호(01,02,03)
 
 import { useState, useRef } from 'react'
@@ -12,10 +12,9 @@ import PhoneFrame from '../components/usage-guide/PhoneFrame'
 import HomeCoachMini from '../components/usage-guide/HomeCoachMini'
 import ChargeMini from '../components/usage-guide/ChargeMini'
 import CardApplyMini from '../components/usage-guide/CardApplyMini'
-import CardManageMini from '../components/usage-guide/CardManageMini'
 import RefundMini from '../components/usage-guide/RefundMini'
 
-const TABS = ['카드 신청', '카드 등록', '충전', '환불']
+const TABS = ['카드 신청', '충전', '환불']
 
 // 각 탭의 단계 정의: { no, title, desc, render }
 const GUIDE = {
@@ -27,13 +26,7 @@ const GUIDE = {
       { no: '03', title: '배송 완료 후 카드를 등록해요', desc: '카드가 배송되면 앞면 16자리 번호를 입력해 등록해주세요.', render: <CardApplyMini step="shipped" />, h: 600 },
     ],
   },
-  1: { // 카드 등록(관리)
-    intro: '등록한 카드를 관리하는 화면이에요.',
-    steps: [
-      { no: '01', title: '카드 관리 화면이에요', desc: '잔액 확인, 충전·QR결제, 카드 번호 보기 등을 한 곳에서 관리해요.', render: <CardManageMini balance={112671} />, h: 760 },
-    ],
-  },
-  2: { // 충전
+  1: { // 충전
     intro: '강릉페이를 충전하는 방법이에요.',
     steps: [
       { no: '01', title: '홈에서 충전을 시작해요', desc: '홈 잔액 카드의 [충전] 버튼을 눌러주세요.', render: <HomeCoachMini variant="charge" />, h: 620 },
@@ -42,7 +35,7 @@ const GUIDE = {
       { no: '04', title: '충전이 완료돼요', desc: '얼굴인증이 끝나면 즉시 충전이 완료됩니다.', render: <ChargeMini step={3} amount={50000} balance={120000} />, h: 600 },
     ],
   },
-  3: { // 환불
+  2: { // 환불
     intro: '충전한 금액을 환불하는 방법이에요.',
     steps: [
       { no: '01', title: '홈에서 환불을 시작해요', desc: '홈 잔액 카드의 [환불] 버튼을 눌러주세요.', render: <HomeCoachMini variant="refund" />, h: 620 },
