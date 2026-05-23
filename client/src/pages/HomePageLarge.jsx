@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { useTypography } from '../hooks/useTypography'
+import { usePlatform } from '../hooks/usePlatform'
 import { colors, spacing, layout, shadow, typography } from '../tokens/tokens'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import BottomNavBar from '../components/layout/BottomNavBar'
@@ -8,7 +9,7 @@ import TopAppBarLargeText from '../components/layout/TopAppBarLargeText'
 import { ChevronRight, Receipt, HelpCircle, Check } from 'lucide-react'
 
 // 잔액 카드 (다크) — 강릉페이 + balance + [충전(흰)][QR결제(글래스)]
-function BalanceCardLarge({ balance, sizes, navigate, fmt }) {
+function BalanceCardLarge({ balance, sizes, navigate, fmt, btnRadius }) {
   return (
     <div style={{
       backgroundColor: colors.surface.darkCard,
@@ -52,7 +53,7 @@ function BalanceCardLarge({ balance, sizes, navigate, fmt }) {
             backgroundColor: colors.surface.card,
             color: colors.primary[700],
             border: 'none',
-            borderRadius: layout.radiusButton,
+            borderRadius: btnRadius,
             fontSize: sizes.md,
             fontWeight: typography.weight.bold,
             cursor: 'pointer',
@@ -69,7 +70,7 @@ function BalanceCardLarge({ balance, sizes, navigate, fmt }) {
             backgroundColor: 'rgba(255,255,255,0.15)',
             color: colors.onDark.primary,
             border: '1px solid rgba(255,255,255,0.35)',
-            borderRadius: layout.radiusButton,
+            borderRadius: btnRadius,
             fontSize: sizes.md,
             fontWeight: typography.weight.bold,
             cursor: 'pointer',
@@ -86,14 +87,14 @@ function BalanceCardLarge({ balance, sizes, navigate, fmt }) {
 // 캐시백 카드 (흰) — 캐시백 + cashbackBalance(teal) + [자동][수동] 토글 (대비 강화)
 // 큰글씨 모드의 토글이 일반 모드(BalanceCardExpanded)보다 강조도 높음.
 // 의도: 시니어 가독성 + 정보 밀도 다운 원칙. LARGETEXT.md 5절 참조.
-function CashbackToggleCardLarge({ cashbackBalance, cashbackMode, setCashbackMode, sizes, fmt }) {
+function CashbackToggleCardLarge({ cashbackBalance, cashbackMode, setCashbackMode, sizes, fmt, btnRadius }) {
   const toggleBtn = (active) => ({
     flex: 1,
     height: '68px',
     backgroundColor: active ? colors.primary[700] : colors.surface.card,
     color: active ? colors.onDark.primary : colors.gray[500],
     border: `2px solid ${active ? colors.primary[700] : colors.gray[200]}`,
-    borderRadius: layout.radiusButton,
+    borderRadius: btnRadius,
     fontSize: sizes.md,
     fontWeight: typography.weight.bold,
     cursor: 'pointer',
@@ -153,7 +154,7 @@ function CashbackToggleCardLarge({ cashbackBalance, cashbackMode, setCashbackMod
 }
 
 // 신규 사용자 — 카드 신청 CTA (큰글씨 톤, 단순)
-function CardApplyCTALarge({ sizes, navigate }) {
+function CardApplyCTALarge({ sizes, navigate, btnRadius }) {
   return (
     <div style={{
       backgroundColor: colors.surface.darkCard,
@@ -190,7 +191,7 @@ function CardApplyCTALarge({ sizes, navigate }) {
           height: '68px',
           backgroundColor: 'rgba(255,255,255,0.2)',
           border: '1px solid rgba(255,255,255,0.3)',
-          borderRadius: layout.radiusButton,
+          borderRadius: btnRadius,
           color: colors.onDark.primary,
           fontSize: sizes.md,
           fontWeight: typography.weight.bold,
@@ -370,6 +371,9 @@ function RefundCardLarge({ sizes, onClick }) {
 export default function HomePageLarge() {
   const navigate = useNavigate()
   const sizes = useTypography()
+  const platform = usePlatform()
+  const isAndroid = platform === 'android'
+  const btnRadius = isAndroid ? layout.radiusPill : layout.radiusButton
   const {
     hasCard,
     balance,
@@ -397,7 +401,7 @@ export default function HomePageLarge() {
         gap: spacing[4],
       }}>
         {!hasCard ? (
-          <CardApplyCTALarge sizes={sizes} navigate={navigate} />
+          <CardApplyCTALarge sizes={sizes} navigate={navigate} btnRadius={btnRadius} />
         ) : (
           <>
             <BalanceCardLarge
@@ -405,6 +409,7 @@ export default function HomePageLarge() {
               sizes={sizes}
               navigate={navigate}
               fmt={fmt}
+              btnRadius={btnRadius}
             />
 
             <CashbackToggleCardLarge
@@ -413,6 +418,7 @@ export default function HomePageLarge() {
               setCashbackMode={setCashbackMode}
               sizes={sizes}
               fmt={fmt}
+              btnRadius={btnRadius}
             />
 
             <CashbackCardLarge

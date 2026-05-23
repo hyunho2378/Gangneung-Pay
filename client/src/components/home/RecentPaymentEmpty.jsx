@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
+import Button from '../common/Button'
 
 export default function RecentPaymentEmpty() {
   const navigate = useNavigate()
@@ -44,22 +45,15 @@ export default function RecentPaymentEmpty() {
         최근 결제 내역이 없습니다
       </p>
 
-      <button
+      <Button
+        variant="outlined"
+        size="sm"
+        fullWidth={false}
+        style={{ marginTop: spacing[1] }}
         onClick={() => navigate('/store')}
-        style={{
-          marginTop: spacing[1],
-          background: 'none',
-          border: `1.5px solid ${colors.primary[700]}`,
-          borderRadius: layout.radiusButton,
-          color: colors.primary[700],
-          fontSize: typography.size.sm,
-          fontWeight: typography.weight.semibold,
-          padding: `${spacing[2]} ${spacing[5]}`,
-          cursor: 'pointer',
-        }}
       >
         결제하러 가기
-      </button>
+      </Button>
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { colors, layout, typography, shadow } from '../tokens/tokens'
+import { usePlatform } from '../hooks/usePlatform'
 
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
@@ -8,6 +9,7 @@ import TopAppBarBack from '../components/layout/TopAppBarBack'
 export default function CardLostPage() {
   const navigate = useNavigate()
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const isAndroid = usePlatform() === 'android'
 
   return (
     <ScreenContainer statusBarBg={colors.surface.card}>
@@ -136,7 +138,7 @@ export default function CardLostPage() {
                 padding: '16px',
                 backgroundColor: colors.error,
                 border: 'none',
-                borderRadius: layout.radiusButton,
+                borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
                 color: colors.surface.card,
                 fontSize: typography.size.md,
                 fontWeight: typography.weight.semibold,
@@ -206,7 +208,7 @@ export default function CardLostPage() {
                 padding: '14px 40px',
                 backgroundColor: colors.primary[700],
                 border: 'none',
-                borderRadius: layout.radiusButton,
+                borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
                 color: colors.surface.card,
                 fontSize: typography.size.sm,
                 fontWeight: typography.weight.semibold,

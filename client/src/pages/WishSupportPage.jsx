@@ -3,6 +3,7 @@ import { colors, layout, typography } from '../tokens/tokens'
 
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
+import Button from '../components/common/Button'
 
 export default function WishSupportPage() {
   const navigate = useNavigate()
@@ -71,22 +72,9 @@ export default function WishSupportPage() {
           나에게 맞는 지원금을 찾아{'\n'}별표로 저장해보세요
         </p>
 
-        <button
-          onClick={() => navigate('/support')}
-          style={{
-            marginTop: '32px',
-            padding: '14px 40px',
-            backgroundColor: colors.primary[700],
-            border: 'none',
-            borderRadius: layout.radiusButton,
-            color: colors.surface.card,
-            fontSize: typography.size.sm,
-            fontWeight: typography.weight.semibold,
-            cursor: 'pointer',
-          }}
-        >
+        <Button variant="filled" size="md" fullWidth={false} onClick={() => navigate('/support')} style={{ marginTop: '32px' }}>
           지원금 찾아보기
-        </button>
+        </Button>
       </div>
     </ScreenContainer>
   )

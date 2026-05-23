@@ -3799,6 +3799,721 @@ AI 해석: "흰색으로 통일" → HomePage/HomePageLarge까지 흰색 강제
 해결: 진단에서 발견 → "사양 정신"으로 4개 파일 동시 정리.
 19.4 발표에서 활용할 "회귀 케이스 스터디" 메시지
 "회귀가 발생할 때마다 진단 사이클을 돌렸어요. 단순 수정이 아니라 원인 파악 → 구조적 해결. 10번의 회귀 사이클을 통해 ScreenContainer 아키텍처, statusBar 정책, 날짜 유틸, 캐시백 통합 박스까지 점점 더 정직한 구조로 수렴했어요."
+# 강릉페이 리뉴얼 — 세션 작업 로그
+> 작성일: 2026-05-19 ~ 2026-05-20  
+> 작성자: Claude (claude.ai 대화 세션 기반)  
+> 대상: 기존 문서(CLAUDE.md, DESIGN.md, PROGRESS.md 등) **미수정**, 이 파일만 신규  
+
+---
+
+## 0. 이 파일 사용법
+
+기존 `.md` 문서 파일들은 **일절 건드리지 않음**.  
+이 파일은 이번 세션에서 새로 한 작업만 기록함.  
+Claude Code에 붙여넣을 때 기존 문서 9개 정독 후 이 파일도 추가로 읽으면 됨.
+
+---
+
+## 1. Phase 1 추가 — 거래 카드 잔액 표시 (v6.1)
+
+### 배경
+이용내역 화면의 거래 카드 우측에 `잔액 N원` 표시 추가.  
+농협 앱 스타일 — 날짜·자동/수동 라인과 동일 높이, 우측 정렬.
+
+### 변경 파일
+- `client/src/lib/generateMockData.js`
+  - `balanceAfter` 필드 추가 (시간순 재계산 패스)
+  - 결제 시간대 9~22시 제한 (기존 8~22시 → 수정)
+  - 최종 잔액 30,000~150,000원 정규화
+- `client/src/pages/HistoryPage.jsx`
+  - 거래 카드 우측 column: 금액 위 + `잔액 N원` 아래 (우측 정렬)
+- `client/src/context/UserContext.jsx`
+  - CHARGE_BALANCE, SPEND_BALANCE, REFUND_TRANSACTION reducer에 `balanceAfter` 자동 계산 추가
+
+### 검증 결과
+- balanceAfter 필드 시간순 재계산 3회 통과
+- 거래 카드 우측 정렬 확인
+
+---
+
+## 2. Phase 3 — NeonDB 백엔드 연동 (완전 종료)
+
+### DB 스키마
+
+**server/src/db/init.sql** — actions 테이블
+```sql
+CREATE TABLE IF NOT EXISTS actions (
+  id SERIAL PRIMARY KEY,
+  session_id TEXT NOT NULL,
+  action_type TEXT NOT NULL CHECK (action_type IN ('charge', 'refund', 'qr_pay')),
+  amount INTEGER NOT NULL,
+  store_name TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_actions_session ON actions(session_id);
+CREATE INDEX IF NOT EXISTS idx_actions_created ON actions(created_at);
+```
+
+**server/src/db/sessions_init.sql** — sessions 테이블
+```sql
+CREATE TABLE IF NOT EXISTS sessions (
+  id SERIAL PRIMARY KEY,
+  session_id TEXT UNIQUE NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
+
+### 주요 결정
+| 항목 | 결정값 |
+|------|--------|
+| session_id 형식 | `s_1`, `s_2` 순차 발급 (sessions 테이블) |
+| 시간 저장 | DB는 UTC, 조회 시 KST 변환 (`AT TIME ZONE 'Asia/Seoul'`) |
+| 클라이언트 연동 방식 | fire-and-forget (비동기, UI 블로킹 없음) |
+
+### 변경 파일
+- `server/src/routes/actions.js` — POST /api/log, GET /api/log/stats, POST /api/session
+- `client/src/lib/api.js` — logAction, fetchStats, createSession
+- `client/src/context/AppContext.jsx` — sessionId null → useEffect createSession() → s_N 발급
+  - StrictMode hotfix: useRef guard + `cancelled` 제거 → `sessionRequestedRef`만 유지
+- `client/src/context/UserContext.jsx` — chargeBalance/refundBalance/spendBalance에 logAction fire-and-forget
+
+### Phase 3 QR결제 DB 연동
+- `client/src/components/payment/QRScannerScreen.jsx` — html5-qrcode + 3초 자동 시트
+  - 플래시 제거, 300×300 정사각형 스캔 박스
+- `client/src/pages/QRPage.jsx` — isQR=true 216개 매장 랜덤, 3,000~50,000원 1,000원 단위
+  - 캐시백 모드(자동/수동) 따름, logAction qr_pay 기록
+
+### 발표용 KST 쿼리
+```sql
+SELECT 
+  id,
+  session_id AS 세션,
+  CASE action_type 
+    WHEN 'charge' THEN '충전'
+    WHEN 'refund' THEN '환불'
+    WHEN 'qr_pay' THEN 'QR결제'
+  END AS 종류,
+  amount AS 금액,
+  TO_CHAR(created_at AT TIME ZONE 'Asia/Seoul', 'YYYY-MM-DD HH24:MI:SS') AS 시각
+FROM actions
+ORDER BY id DESC LIMIT 10;
+```
+
+---
+
+## 3. Phase 4 — 페이스 ID 인증 패턴 (v4 기준 완전 종료)
+
+### 최종 사양 (v4)
+
+**파일**: `client/src/components/common/PaymentAuthOverlay.jsx`
+
+| 항목 | 값 |
+|------|-----|
+| 적용 화면 | 충전 STEP 2 "충전하기" 버튼, 환불 "신청하기" 버튼 |
+| 배경 화면 | 강릉페이 실제 앱 톤 간편 비밀번호 키패드 (시각용, 터치 불가) |
+| 페이스 ID 모달 | 150×148 검은 박스, CardBackModal Phase 1과 시각 일치 |
+| 로티 파일 | `face-id-ios.json` |
+| 로티 제어 | `dotLottieRefCallback` + `instance.addEventListener('load')` (CardBackModal 패턴 이식) |
+| RAF 설정 | 2,500ms duration, 244 프레임, iOS easing curve |
+| iOS easing | t<0.3: ease-out / 0.3~0.7: linear×0.75 / t>0.7: ease-in 2제곱 |
+| 폴백 타이머 | 2,700ms |
+| 페이드 아웃 | 100ms ease-out |
+| 앱 고정 너비 | `left:50%` + `transform:translateX(-50%)` + `maxWidth: layout.viewport(390px)` |
+| StatusBar | `StatusBar` 컴포넌트 직접 렌더 + `paddingTop: env(safe-area-inset-top)` |
+| prop 시그니처 | `{ open, onComplete, onCancel }` |
+
+### 키패드 화면 구성
+```
+우상단 X 닫기 (onCancel)
+└ 톱니바퀴 아이콘 (gray[200] 원)
+└ "간편 비밀번호 입력" 타이틀
+└ 빈 점 4개 (gray[300] 가로 막대)
+└ "비밀번호를 잊으셨나요? ›"
+└ "얼굴인증 사용하기" pill (primary[50] 배경)
+└ 빨간 사각형 + "보안키보드 작동 중"
+└ 숫자 키패드 (7-2-0 / 8-6-5 / 4-9-1 / -3-←, 시각용)
+```
+
+### 페이스 ID 모달 등장 시퀀스
+```
+open=true
+  → 100ms 후 setShowFaceId(true)
+  → DotLottieReact 마운트
+  → dotLottieRefCallback(instance)
+  → instance.addEventListener('load', startRAFLoop)
+  → RAF tick 시작 (2,500ms)
+  → t=1 도달 → handleAuthComplete()
+  → setFadingOut(true) (100ms ease-out)
+  → setTimeout(onComplete, 100ms)
+  폴백: 2,700ms 후 handleAuthComplete() (load 이벤트 미발화 대비)
+```
+
+### 연결 파일
+- `client/src/components/payment/ChargeScreen.jsx` — showAuth state, "충전하기" 버튼 트리거
+- `client/src/pages/RefundPage.jsx` — showAuth state, "신청하기" 버튼 트리거
+
+### Patch A / B / C (시각 디테일)
+| 패치 | 내용 |
+|------|------|
+| Patch A | StoreMapScreen.jsx zoom>=18 라벨, PeriodPickerModal 색상, bounds viewport 필터 |
+| Patch B | QRScannerScreen 300×300, 플래시 제거, 3초 자동 시트 |
+| Patch C | ChargeScreen 1회 한도 제거 + bottomNavHeight 패딩 제거, MyPage 하단 여백 추가 |
+
+---
+
+## 4. 환불 바텀시트 수정 (v5)
+
+### 문제
+`maxWidth: '480px'` + flex child → 데스크탑에서 390px 폰 프레임 밖으로 삐져나옴
+
+### 해결
+PeriodPickerModal 표준 패턴 적용:
+```jsx
+// 딤드 — 뷰포트 전체 (zIndex: 200)
+<div onClick={() => setConfirmId(null)} style={{ position:'fixed', inset:0, backgroundColor:'rgba(0,0,0,0.5)', zIndex:200 }} />
+
+// 시트 — 390px 제한 + 중앙 정렬 (zIndex: 201)
+<div style={{
+  position: 'fixed',
+  left: '50%',
+  bottom: 0,
+  transform: 'translateX(-50%)',
+  width: '100%',
+  maxWidth: layout.viewport,
+  paddingBottom: `calc(${spacing[6]} + env(safe-area-inset-bottom))`,
+  zIndex: 201,
+}} />
+```
+
+### 변경 파일
+- `client/src/pages/RefundPage.jsx` (line 238~348, 바텀시트 구조 전면 교체)
+
+---
+
+## 5. IA 검증 + 발표 자료 (완료)
+
+### 생성 파일 (프로젝트 루트)
+| 파일 | 내용 |
+|------|------|
+| `IA_VERIFICATION_REPORT.md` | 라우트 일치율 88.6%, Nielsen 4.8/5, P0→전략적 설계 결정 재분류 |
+| `IA_DIAGRAM.md` | Mermaid 다이어그램 5개 |
+| `IA_PRESENTATION.md` | 발표 슬라이드 7개 |
+
+### 검증 수치 요약
+| 항목 | 수치 |
+|------|------|
+| 총 라우트 (코드) | 35개 + 리다이렉트 1개 |
+| IA 대비 일치 | 31개 (88.6%) |
+| 코드에만 있는 라우트 | 4개 (`/cashback-info`, `/card-management`, `/refund`, `/naver-guide`) |
+| IA에만 있는 라우트 | 0건 (구현 누락 없음) |
+| Nielsen 5항목 평균 | 4.8/5 |
+| Shneiderman 4항목 평균 | 4.75/5 |
+| 디자인 토큰 사용 | 2,524회 (하드코딩 0건) |
+| 큰글씨 모드 적용 | 35개 파일 |
+| 터치 영역 44px+ | 23개 지점 |
+| P0 이슈 | 0건 (HIG 준수 전략적 설계 결정으로 재분류) |
+
+### HIG 준수 핵심 결정
+```
+Apple HIG: "Avoid using a tab bar for actions."
+→ QR결제(액션)를 탭바에서 제거
+→ BalanceCardExpanded 액션 영역으로 이동
+→ 빈 슬롯에 지원금·혜택(강릉 특화) 배치
+→ 탭바 = 네비게이션 전용 / 잔액 카드 = 액션 전용 분리
+```
+
+### IA 정보구조도 (HTML 파일)
+- 생성 파일: `gangneungpay_IA.html` (다운로드 가능)
+- 강릉페이 톤(파란 그라디언트 배경) + 5탭 계층 구조
+- 범례 포함: 총 35개 라우트, Nielsen 4.8/5, Apple HIG 준수, 시니어 친화 35개 파일
+
+---
+
+## 6. UX 리서치 / 설계 결정 사항 (대화 중 확정)
+
+### Dynamic Island 관련 결정
+- Apple Pay 결제 시에만 Dynamic Island 변형 (시스템 레벨)
+- 외부 금융앱(강릉페이 포함)은 풀스크린 비번 화면 + 페이스 ID 표준
+- **결론**: CardBackModal 알약 패턴은 카드 등록 전용 시각 액세서리 / 충전·환불은 PaymentAuthOverlay 풀스크린
+
+### BottomNav QR 제거 근거 (발표 포지션 확정)
+```
+HIG 위배 → 전략적 재설계
+Before: 탭바 중앙 QR 버튼 (액션을 탭에 배치 → HIG 위반)
+After:  잔액 카드 3버튼 (HIG 준수) + 지원금·혜택 탭 추가 (강릉 특화)
+```
+
+### 지역화폐 디자인 시스템 현황 (조사 결과)
+- 코나아이, KT MOS 등 지역화폐 운영사 **디자인 시스템 없음** (공개 안 하는 게 아닌 미존재)
+- SI 외주 구조 → 프로젝트 단위 납품 → 디자인 시스템 유지 불가
+- **발표 포지션**: "지역화폐 업계 최초 iOS HIG + Android MD3 기반 설계"
+
+---
+
+## 7. 다음 예정 작업 (미완료)
+
+### 7-1. Android Material Design 3 버전
+| 항목 | iOS 현재 | Android MD3 예정 |
+|------|---------|----------------|
+| 뒤로가기 | 좌상단 `<` 버튼 | 시스템 Back gesture (버튼 제거) |
+| 탭바 인디케이터 | 아이콘 fill | Pill highlight |
+| 상단 헤더 타이틀 | 중앙 정렬 | 좌측 정렬 (MD3 Top App Bar) |
+| FAB | 없음 | QR결제 FAB 추가 |
+| 버튼 계층 | Primary/Secondary | Filled/Tonal/Outlined/Text 4단계 |
+| 인증 패턴 | FaceID 로티 | Biometric 아이콘으로 교체 |
+| 컬러 시스템 | 수동 tokens.js | Dynamic Color (seedColor #1D4ED8) |
+| 스낵바 | 없음 | MD3 Snackbar 표준 |
+
+**구현 방식**: `?platform=android` URL 파라미터 분기 (단일 코드베이스)
+
+**발표 포지션**:
+> "iOS HIG + Android MD3를 각각 준수하는 강릉페이 전용 듀얼 디자인 시스템. 동일 서비스를 각 플랫폼 사용자의 멘탈 모델에 맞게 설계."
+
+### 7-2. Render 배포 (Express 서버 온라인화)
+- 현재 Express 서버 localhost:4000 → Render 배포 필요
+- 발표장 인터넷 환경에서 시연 가능하게
+
+### 7-3. Figma MCP 연동 (선택)
+- Material Design 3 공식 Figma Kit 기반
+- Claude Code + Figma MCP로 강릉페이 전용 컴포넌트 세트 생성
+- 권장 순서: MD3 Figma Kit import → seedColor 토큰 덮어쓰기 → Figma MCP 연동
+
+---
+
+## 8. 절대 규칙 (기존 문서 동일, 재확인)
+
+- `localStorage` / `sessionStorage` 금지 → Context API만
+- 색상/간격/폰트 하드코딩 금지 → `tokens.js`만
+- 이모지 금지 → `lucide-react`만
+- TypeScript 금지 → JSX만
+- 명시 외 파일 수정 금지 (외과적 수정 원칙)
+---
+# SESSION_LOG_2026-05-23 — 강릉페이 UX/UI 리뉴얼 세션 2 추가 작업
+
+> 이 문서는 PROJECT_DOCUMENTATION.md에 추가할 내용만 담습니다.
+> 이전 세션 작업은 포함하지 않습니다.
+
+---
+
+## 1. 이용약관 페이지 (TermsPage)
+
+### 구현 기능
+- 6탭 구조: 서비스 이용약관 / 개인정보 처리방침 / 전자금융거래 / 위치정보 서비스 / 오픈뱅킹 / 동의서 모음
+- 탭별 실제 약관 전문 탑재 (코나아이 주식회사 공식 약관 기반)
+- 정식 테이블 렌더링 (헤더 + 스트라이프 줄)
+- 조항 번호(제N조) pill 뱃지, [필수]/[선택] 뱃지 구분
+
+### 기술
+- `termsData.js` — 약관 데이터 분리 (6개 탭 × 조항/표/동의서)
+- `TermsPage.jsx` — 탭바 좌우 스크롤 + 활성 언더라인
+- 라우트: `/terms`, MY 페이지 이용약관 메뉴 연결
+
+### UX 근거
+- Nielsen #8 (기억 부담 최소화): 탭으로 약관 분류, 조항 번호 뱃지로 위치 파악
+- 법적 정보를 실제 문서처럼 테이블/섹션으로 구조화
+
+---
+
+## 2. 이용안내 미니 렌더 시스템 (UsageGuidePage 개편)
+
+### 구현 기능
+- 기존 FAQ 아코디언 → **실제 앱 컴포넌트 스냅샷 미니 렌더** 방식으로 전면 개편
+- 4탭: 카드 신청 / 카드 등록 / 충전 / 환불
+- 각 탭: 홈 코치마크 01단계 → 실제 화면 단계별 흐름
+
+### 미니 컴포넌트 목록
+| 파일 | 설명 |
+|------|------|
+| `PhoneFrame.jsx` | 390px 논리화면을 scale 축소해 폰 베젤 안에 렌더 |
+| `HomeCoachMini.jsx` | 홈 화면 + 코치마크 말풍선 정적 스냅샷 (variant: cardApply/charge/refund) |
+| `CardApplyMini.jsx` | 카드 신청/등록 화면 스냅샷 (step: select/shipped) |
+| `CardManageMini.jsx` | 카드 관리 화면 스냅샷 |
+| `ChargeMini.jsx` | 충전 3단계 스냅샷 (step: 1/2/3) |
+| `RefundMini.jsx` | 환불 화면 스냅샷 (step: list/confirm) |
+
+### 기술
+- 실제 컴포넌트 JSX 복제 + Context/Navigate/카메라/Lottie 의존 제거
+- `useTypography` → 고정 sizes 객체로 대체 (Context 의존 제거)
+- `transform: scale(${scale})` + `transformOrigin: 'top left'` — 390px 논리화면 축소
+- `position: absolute` 정적 코치마크 말풍선 (targetRef 없이 고정 좌표)
+- 탭 전환 시 `contentRef.current.scrollTop = 0` — 최상단 리셋
+- 파란 그라디언트 배경: `linear-gradient(180deg, #EAF2FE 0%, #F2F4F8 100%)`
+- `components/usage-guide/` 폴더 분리 — 포트폴리오 사이트 재사용 대비 설계
+
+### UX 근거
+- 실제 앱 화면을 그대로 보여줌 → 스크린샷 대비 항상 최신 상태 유지
+- 강릉페이 실제 앱 이용안내(이미지 가이드) 방식 참조, To-be로 고도화
+- Nielsen #10 (도움말 문서): 텍스트 설명 대신 실제 화면으로 학습 곡선 제거
+
+### 단계 구성
+| 탭 | 01 | 02 | 03 | 04 |
+|---|----|----|----|----|
+| 카드 신청 | 홈 코치마크 (cardApply) | 카드 선택 화면 | 카드 등록 화면 | — |
+| 카드 등록 | 카드 관리 화면 | — | — | — |
+| 충전 | 홈 코치마크 (charge) | 금액 입력 | 충전 확인 | 충전 완료 |
+| 환불 | 홈 코치마크 (refund) | 내역 선택 | 확인 시트 | — |
+
+---
+
+## 3. 홈 화면 개편
+
+### 구현 기능
+- **상단 BannerCarousel SVG 교체**: 기존 인라인 가상 SVG → 실제 Kakao.svg / Naver.svg import
+- **하단 ExploreScrollCard 제거**: "강릉페이 120% 활용하기" 3카드 섹션 삭제
+- **이용안내 단일 카드 추가**: StoreRecommendCard 아래, `/usage-guide` 연결, HelpCircle 아이콘
+- **큰글씨 모드 이용안내** 연결: `/customer-center` → `/usage-guide`로 수정
+
+### 기술
+- `import KakaoLogo from '../../assets/icons/Kakao.svg'` — Vite SVG import
+- `<img src={KakaoLogo} style={{ height: '40px', objectFit: 'contain' }} />`
+- orphan import 정리 (BannerCarousel, ExploreScrollCard)
+
+---
+
+## 4. MY 페이지 정비
+
+### 구현 기능
+- **프로필 편집 버튼**: onClick 제거 (시각 동일, 클릭 무반응)
+- **비활성 메뉴 5개**: 주 카드 변경 / 회원정보 변경 / 비밀번호 변경 / 본인확인 정보 / 공지사항 → onClick만 제거, 스타일 그대로
+- **알림 설정**: `/notification`(목록) → `/settings`(토글) 재연결
+- **이용약관**: 비활성 → `/terms` 연결
+- **카드 배송 현황**: 잘못된 `/card-lost` 연결 제거, hasCard 분기로 상태 표시
+  - hasCard false: "카드 신청 후 확인 가능" (gray[400])
+  - hasCard true: "배송 완료" (success)
+- **계좌 섹션 신규**: 프로필 ~ 내 카드 사이, 은행명 + 마스킹 계좌번호 + 변경 버튼(비활성)
+- **데모 개인정보 교체**: 홍길동/hong@gmail.com → 김초당/chodang@example.com, 카드번호 가상값
+
+### 기술
+- `useUser()` hasCard 값으로 배송현황 분기
+- 계좌 정보: 상수값 (accountBank, accountNumber) — UserContext 연동 준비 구조
+
+---
+
+## 5. 카드 관리 페이지 정비
+
+### 구현 기능
+- **상단 탭("이용내역/카드 관리") 제거**: 이용내역은 별도 탭에 있으므로 중복 제거
+- **우측 "+ 카드 등록" 버튼 제거**: 카드 등록은 카드신청 플로우로 통합
+- **다크 카드 3버튼**: 카드 등록 제거 → QR결제 / 충전 2버튼으로 정리
+- **헤더**: 뒤로가기 + "카드 관리" 중앙 제목 (TopAppBarBack 표준 패턴)
+
+---
+
+## 6. 가맹점 신청 내부 페이지 (MerchantApplyPage)
+
+### 구현 기능
+- 기존 외부링크(`https://with.konacard.co.kr/11-1`) → 내부 페이지 전환
+- 구성: 히어로 배너 / 혜택 4개(2열 그리드) / 신청 절차(4단계) / FAQ(아코디언) / 문의 / 하단 CTA
+- 하단 "가맹점 신청하기" 버튼 → 기존 외부링크 `_blank` 연결 (실제 폼은 기존 시스템)
+
+### 기술
+- `window.open('https://with.konacard.co.kr/11-1', '_blank')` — 내부 진입, 외부 폼
+- 라우트: `/merchant-apply`, MY 페이지 가맹점 신청 메뉴 연결
+- `FaqItem` 컴포넌트 — useState 아코디언 (UsageGuidePage 패턴 동일)
+- 히어로: `linear-gradient(135deg, ${colors.primary[700]} 0%, ${colors.primary[800]} 100%)`
+
+### UX 근거
+- 소비자 앱에서 가맹점 신청 진입점 제공하되, 실제 신청은 기존 웹 시스템 활용
+- To-be: 브랜드 일관성 + 혜택/절차 사전 안내로 전환율 향상
+
+---
+
+## 7. 전역 버그 수정
+
+### CoachMarkOverlay 스크롤 잠금 버그
+- **원인**: `document.body.style.overflow = 'hidden'` cleanup 시 `prevOverflow`가 이미 `'hidden'`인 경우 race condition
+- **수정**: cleanup에서 `prevOverflow` 대신 `''`(빈 문자열)로 항상 복원
+```js
+// 수정 전
+return () => { document.body.style.overflow = prevOverflow }
+// 수정 후
+return () => { document.body.style.overflow = '' }
+```
+
+### 전역 자동 줄바꿈
+- `index.css` 전역 적용:
+```css
+* {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+```
+- 환불 바텀시트, 코치마크 말풍선 등 모든 텍스트 자동 줄바꿈
+
+---
+
+## 8. 설정 페이지 정비 (SettingsPage)
+
+- **생체인증 토글 제거**: MY 페이지 구조 단순화
+- **큰글씨 모드 토글 제거**: MY 페이지에서 직접 토글하므로 중복 제거
+- **언어 설정**: onClick 제거 (클릭 무반응, 준비 중)
+- **알림 설정 토글 유지**: 실제 작동하는 토글
+
+---
+
+## 아키텍처 메모 — 향후 작업 대비
+
+### 포트폴리오 웹사이트 재사용 전략
+- `components/usage-guide/` 폴더의 미니 렌더 컴포넌트 → 포폴 사이트에서 그대로 재사용 가능
+- Context/Navigate 의존 0 설계로 독립 렌더 가능
+- 향후 모노레포 구조(`apps/mobile-web`, `apps/portfolio`, `packages/shared`) 전환 예정
+
+### Android MD3 전환 준비
+- 현재: iOS HIG 기반 웹앱
+- 예정: MD3 디자인 시스템 추가 (`?platform=android` URL 분기 또는 별도 브랜치)
+- 변경 예정 패턴: 시스템 Back gesture / pill 인디케이터 / Top App Bar / FAB(QR) / Dynamic Color
+---
+# 이용약관 페이지 UX 개선
+
+## AS-IS (기존 강릉페이)
+
+- 설정 메뉴에서 약관 항목 클릭 → **외부 PDF 링크**로 연결
+- 각 약관이 개별 PDF 파일로 분리 (강릉페이 전자금융거래 이용약관.pdf 등)
+- 모바일에서 PDF 뷰어 실행 → 작은 글씨, 핀치줌 필요
+- 약관 간 이동 시 매번 뒤로가기 → 목록 → 재진입 반복
+- 표(테이블)가 PDF 고정 레이아웃이라 모바일에서 짤림
+
+## TO-BE (리뉴얼)
+
+### 1. 인앱 약관 페이지 통합
+- 외부 PDF 링크 폐기 → 앱 내 `/terms` 페이지로 통합
+- 6개 약관 전문을 앱 내에서 직접 렌더링
+- 강릉페이 디자인 시스템(tokens.js) 완전 준수
+
+### 2. 아코디언 UX
+- **기존**: 탭 6개 가로 스크롤 → 모바일에서 탭 인지 어려움
+- **개선**: 아코디언 목록 — 전체 약관을 한눈에 파악, 탭해서 펼침
+- 한 번에 하나만 열림 (다른 항목 열면 이전 항목 자동 닫힘)
+- 헤더에 시행일자 표시 → 최신 여부 바로 확인 가능
+
+```
+┌─────────────────────────────────┐
+│ 서비스 이용약관     개정 2025.04 ∨│  ← 탭하면 펼침
+├─────────────────────────────────┤
+│ 개인정보 처리방침   2024.06.20  > │
+├─────────────────────────────────┤
+│ 전자금융거래 이용약관 2020.01.13 > │
+├─────────────────────────────────┤
+│ 위치정보 서비스     2024.09.24  > │
+├─────────────────────────────────┤
+│ 오픈뱅킹           2020.01.20  > │
+├─────────────────────────────────┤
+│ 동의서 모음         7개 동의서   > │
+└─────────────────────────────────┘
+```
+
+### 3. 모바일 최적화 표 렌더링
+- **기존**: 고정 가로 테이블 → 모바일에서 좌측 라벨 칸이 너무 길어 우측 내용 짤림
+- **개선**: 컬럼 수에 따라 자동 분기
+  - 2컬럼 표 → **스택형 카드** (라벨 위 / 값 아래)
+  - 3컬럼 이상 → 가로 스크롤 유지
+
+```
+기존 가로 표:
+┌──────────────────────┬───────────────────────────┐
+│강릉페이 서비스 회원가입│[필수] 성명, 생년월일, 성별 │  ← 좌측 칸이 너무 길어 짤림
+└──────────────────────┴───────────────────────────┘
+
+개선 스택형:
+┌──────────────────────────────────────┐
+│ 강릉페이 서비스 회원가입 시            │  ← 라벨 (회색)
+│ [필수] 성명, 생년월일, 성별, 내국인/   │  ← 값 (전체 너비)
+│ 외국인, 휴대전화번호, 이메일주소...    │
+└──────────────────────────────────────┘
+```
+
+### 4. 조항 구조화
+- 제N조 번호: 파란 pill 뱃지로 강조
+- [필수]/[선택] 구분 뱃지
+- 개인정보 처리방침: 목차 자동 생성
+- 동의서: 항목별 카드 분리
+
+## 기술 구현
+
+| 항목 | 내용 |
+|------|------|
+| 데이터 | `termsData.js` — 6개 탭 약관 전문 분리 관리 |
+| 라우트 | `/terms` — MY 페이지 이용약관 메뉴 연결 |
+| 표 렌더링 | `TermsTable` 컴포넌트 — 컬럼 수 자동 감지 분기 |
+| 아코디언 | `useState(openId)` — 단일 오픈 상태 관리 |
+| 코드량 | 615줄 → 306줄 (탭 제거로 절반 감소) |
+
+## UX 근거
+
+- **Nielsen #6 (인식 vs 기억)**: 아코디언으로 전체 목록 노출 → 탭 스크롤 없이 파악
+- **Nielsen #4 (일관성)**: 앱 디자인 시스템 적용, PDF와 다른 폰트/색상 불일치 해소
+- **Shneiderman #8 (인지 부담 감소)**: 스택형 표로 좌우 시선 이동 없이 위아래로 읽기
+---
+
+# SESSION_LOG_2026-05-23 (후반) — Android MD3 전환 + 휴리스틱 검증
+
+> 이전 SESSION_LOG_2026-05-23.md 이후 작업 추가분
+> PROJECT_DOCUMENTATION.md에 붙여넣기용
+
+---
+
+## 1. Android MD3 듀얼 디자인 시스템 구현
+
+### 아키텍처 — 플랫폼 분기 전략
+
+**방식**: 한 파일 안에서 `usePlatform()` 훅으로 분기. 코드 복사/깃허브 분리 없음.
+
+```js
+// hooks/usePlatform.js
+// 개발: ?platform=android URL 파라미터 → sessionStorage 저장 (페이지 이동 유지)
+// 배포 분리 시: import.meta.env.VITE_PLATFORM 으로 함수 하나만 교체
+export function getPlatform() {
+  const params = new URLSearchParams(window.location.search)
+  const urlPlatform = params.get('platform')
+  if (urlPlatform) {
+    sessionStorage.setItem('gnp_platform', urlPlatform)
+    return urlPlatform
+  }
+  return sessionStorage.getItem('gnp_platform') || 'ios'
+}
+```
+
+- `gangneung-pay.vercel.app` → iOS
+- `gangneung-pay.vercel.app?platform=android` → Android
+- 배포 분리 시: Vercel 2개 + 환경변수 `VITE_PLATFORM` (깃허브 1개 유지)
+
+### 구현 컴포넌트 전체 목록
+
+| 컴포넌트 | iOS (HIG) | Android (MD3) |
+|----------|-----------|---------------|
+| **StatusBar** | 41px, iOS 아이콘 SVG | 삼성 One UI SVG + 실시간 시계 42px |
+| **헤더(TopAppBarBack)** | 제목 중앙 | 제목 좌측 (뒤로가기 옆) |
+| **버튼** | filled 12px radius, 52px, 그림자 | filled full pill, 48px, 그림자 없음 |
+| **버튼 4종** | 단일 스타일 | Filled/Tonal/Outlined/Text 위계 |
+| **터치 영역** | 44px (HIG) | 48dp (MD3) |
+| **폰트** | Pretendard (Apple SD Gothic Neo 대체) | Noto Sans KR |
+| **생체인증** | Face ID 로티, 화면 중앙 | 지문 로티, 화면 하단 + "지문을 인식해주세요" |
+| **탭바** | 색상만 활성 표시 | pill 인디케이터 (56×28 primary[100]) |
+| **토글** | 통짜 둥근 트랙 + 큰 노브 | 트랙 + on/off 노브 크기 변화 |
+| **바텀시트** | 핸들바 40×4, radius 20px | 핸들바 32×4, radius 28px, scrim |
+| **필터칩** | 캡슐형, 색상 변화 | 체크마크 + 8px radius (MD3 Filter Chip) |
+| **금액칩** | 기존 스타일 | MD3 Assist Chip (8px radius) |
+| **입력 필드** | 둥근 outline | MD3 filled text field (회색 배경 + 하단 밑줄) |
+| **로딩 스피너** | iOS 스피너 | MD3 CircularProgressIndicator |
+| **큰글씨 헤더** | 텍스트 pill | 동일 (시니어 접근성 우선 — 아이콘 대신 텍스트 유지) |
+| **스낵바** | 없음 (HIG에 없는 패턴) | Android 시그니처 — 하단 슬라이드업, 2.8초 |
+| **코치마크 버튼** | radius 12px | radius full pill |
+| **카카오/네이버 버튼** | 브랜드색 + 12px | 브랜드색 유지 + full pill |
+
+### 폰트 전략
+
+```
+iOS:  -apple-system → Pretendard (웹폰트 CDN)
+       → 맥/윈도우 어디서나 동일하게 Apple SD Gothic Neo 느낌
+
+Android: body.platform-android * { font-family: 'Noto Sans KR' !important }
+          → 전역 CSS 한 줄로 앱 전체 폰트 전환
+```
+
+CDN (index.html):
+- Pretendard: jsdelivr.net
+- Noto Sans KR: fonts.googleapis.com
+
+### 스낵바 — Shneiderman #3 위반 수정
+
+환불 완료에 아무 피드백이 없던 문제 해결:
+
+| 지점 | 메시지 |
+|------|--------|
+| 환불 완료 | "N원 환불이 완료됐어요" |
+| 충전 완료 후 홈 복귀 | "충전이 완료됐어요" |
+| 카드 등록 완료 | "카드 등록이 완료됐어요" |
+
+iOS는 기존 완료화면 유지, Android만 스낵바 추가 (플랫폼 관습 준수)
+
+---
+
+## 2. iOS HIG 추가 정비
+
+### 이용약관 UX 개편
+
+- AS-IS: 외부 PDF 링크 → 모바일에서 작고 불편
+- TO-BE: 인앱 아코디언 (탭 6개 → 목록 펼치기)
+- 표 렌더링: 2컬럼 → 스택형 카드 (좌측 라벨 짤림 해결)
+- 코드: 615줄 → 306줄
+
+### 이용안내 미니 렌더 시스템
+
+실제 앱 컴포넌트를 Context/Navigate 의존 없이 복제:
+- PhoneFrame (scale 분기 + 노치 제거)
+- HomeCoachMini (variant: cardApply/charge/refund)
+- ChargeMini / CardApplyMini / CardManageMini / RefundMini
+
+### 전역 버그 수정
+
+- CoachMarkOverlay 스크롤 잠금: `overflow = prevOverflow` → `overflow = ''`
+- 전역 줄바꿈: `word-break: keep-all; overflow-wrap: break-word`
+
+---
+
+## 3. 휴리스틱 검증
+
+### Nielsen 10 원칙
+
+| 원칙 | 적용 사례 |
+|------|----------|
+| **#1 가시성** | 스낵바(환불/충전 완료 피드백), 코치마크(기능 진입점 시각화), 이용안내 미니 렌더(실제 화면으로 학습) |
+| **#2 실세계 관습** | iOS 헤더 중앙 정렬, Android 헤더 좌측 정렬 — 각 플랫폼 네이티브 관습 준수 |
+| **#3 사용자 제어** | 환불 확인 시트 "다음에 하기" 버튼, 코치마크 "건너뛰기", 아코디언 단일 열림 |
+| **#4 일관성** | 디자인 토큰(tokens.js) 단일 출처, Button 컴포넌트 4종 위계 통일, iOS/Android 각각 플랫폼 내 일관성 |
+| **#5 오류 방지** | 환불 조건 검증(사용비율), 죽은 버튼 제거(QR 카드변경), 비활성 상태 명확히 |
+| **#6 인식 vs 기억** | 이용약관 아코디언(전체 목록 노출), 이용안내 미니 렌더(텍스트 대신 실제 화면) |
+| **#7 유연성** | 큰글씨 모드(시니어 접근성), Android 48dp 터치(일반 44pt 대비 확대) |
+| **#8 심미적 미니멀** | ExploreScrollCard 제거(불필요한 3카드 → 이용안내 단일 카드), 스플래시 간소화 |
+| **#9 오류 복구** | 환불 불가 사유 명시("60% 이상 사용 후 환불 가능"), 충전 실패 안내 |
+| **#10 도움말** | 이용안내 미니 렌더(실제 화면으로 사용법 안내), 코치마크(첫 진입 가이드) |
+
+### Shneiderman 8황금규칙
+
+| 규칙 | 적용 사례 |
+|------|----------|
+| **#1 일관성** | tokens.js 디자인 토큰 단일 출처, 모든 버튼/색상/간격 동일 규칙 |
+| **#2 단축키** | 빠른 금액 칩(충전 화면), BannerCarousel 스와이프 제스처 |
+| **#3 피드백** | 스낵바(환불/충전 완료), 코치마크 단계표시(1/2), 충전 3단계 완료화면 |
+| **#4 완료감** | 충전 step3 완료화면(체크 + 잔액 요약), 카드등록 완료 스낵바 |
+| **#5 오류 방지** | 환불 조건 사전 안내, 비활성 버튼 명확히, 죽은 버튼 제거 |
+| **#6 되돌리기** | 환불 "다음에 하기", 코치마크 "건너뛰기", 이용약관 아코디언 접기 |
+| **#7 내적 통제감** | 코치마크(사용자가 다음/건너뛰기 선택), 큰글씨 토글(사용자 직접 제어) |
+| **#8 인지 부담** | 이용약관 아코디언(PDF→인앱), 이용안내 미니 렌더(텍스트→실제 화면) |
+
+### 위반 발견 → 개선 사례
+
+| 위반 | 원칙 | AS-IS | TO-BE |
+|------|------|-------|-------|
+| 환불 무피드백 | Nielsen #1, Shneiderman #3 | 바텀시트만 닫힘 | 스낵바 "N원 환불 완료" |
+| 이용약관 PDF | Nielsen #6, #10 | 외부 PDF, 작은 글씨 | 인앱 아코디언 |
+| 약관 표 짤림 | Nielsen #4 | 가로 고정 테이블 | 2컬럼 → 스택형 카드 |
+| 스크롤 잠금 버그 | Nielsen #3 | 코치마크 후 스크롤 불가 | cleanup에서 overflow='' |
+| 죽은 버튼 | Nielsen #1, #5 | QR "카드 변경" onClick 없음 | 버튼 제거 |
+| 탭 가로스크롤 | Nielsen #6 | 이용안내 3탭 가로 | 4탭(카드신청/등록/충전/환불) |
+| 진입점 부재 | Nielsen #10 | 텍스트 FAQ | 코치마크 + 미니 렌더 |
+
+---
+
+## 4. 발표 포지셔닝
+
+### "업계 최초 듀얼 디자인 시스템"
+
+- 지역화폐 앱은 디자인 시스템 부재 (SI 외주, 프로젝트 단위)
+- iOS HIG + Android MD3 양 플랫폼 네이티브 경험 동시 구현
+- 한국 시니어 사용자 = 갤럭시 다수 → Android MD3 48dp 터치, Noto Sans KR
+
+### 기술 근거
+
+- HIG 3원칙 (Clarity/Deference/Depth) 준수 검증 완료 (라운드값/폰트/색상 전수 검증)
+- MD3 최신 스펙 (M3 Expressive, Compose Material3 1.5) 기반
+- Nielsen 10 + Shneiderman 8 위반 6건 발견 → 전부 개선
+- 플랫폼 분기: 코드 1개, 배포 1개, URL 파라미터로 전환 (확장성 확보)
+## 9. 발표 D-Day 카운트 기준 (2026-05-20 기준)
+
+- 발표: 2026-05-31 (D-11)
+- 배포 URL: https://gangneung-pay.vercel.app (클라이언트 Vercel)
+- 서버: localhost:4000 → Render 배포 예정
 ---
 
 **문서 작성일**: 2026-05-17

@@ -41,7 +41,7 @@ function ToggleSwitch({ on, onChange }) {
         width: 24,
         height: 24,
         borderRadius: '50%',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: colors.surface.card,
         transition: 'left 200ms',
         boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
       }} />

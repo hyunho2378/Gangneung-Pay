@@ -17,7 +17,8 @@ export default function PhoneFrame({ children, scale = 0.62, screenHeight = 600 
     return (
         <div style={{
             display: 'flex',
-            justifyContent: 'center',
+            flexDirection: 'column',
+            alignItems: 'center',
             padding: `${spacing[5]} 0`,
         }}>
             {/* 폰 외곽 (베젤) */}
@@ -37,15 +38,19 @@ export default function PhoneFrame({ children, scale = 0.62, screenHeight = 600 
                     overflow: 'hidden',
                     backgroundColor: colors.surface.background,
                     position: 'relative',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'flex-start',
                 }}>
                     {/* 내부 화면 — 390px 논리 너비로 렌더 후 scale 축소 */}
                     <div style={{
                         width: `${LOGICAL_WIDTH}px`,
                         height: `${screenHeight}px`,
                         transform: `scale(${scale})`,
-                        transformOrigin: 'top left',
+                        transformOrigin: 'top center',
                         display: 'flex',
                         flexDirection: 'column',
+                        flexShrink: 0,
                     }}>
                         {children}
                     </div>

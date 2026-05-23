@@ -2,8 +2,10 @@
 // 설정 토글 행
 
 import { colors, typography, layout, spacing } from '../../tokens/tokens'
+import { usePlatform } from '../../hooks/usePlatform'
 
 export default function SettingsToggleRow({ label, description, value, onChange }) {
+  const isAndroid = usePlatform() === 'android'
   return (
     <div
       style={{
@@ -48,8 +50,8 @@ export default function SettingsToggleRow({ label, description, value, onChange 
         aria-checked={value}
         style={{
           flexShrink: 0,
-          width: '48px',
-          height: '28px',
+          width: isAndroid ? '52px' : '48px',
+          height: isAndroid ? '32px' : '28px',
           borderRadius: layout.radiusPill,
           backgroundColor: value ? colors.primary[700] : colors.gray[300],
           border: 'none',
@@ -62,15 +64,14 @@ export default function SettingsToggleRow({ label, description, value, onChange 
         <span
           style={{
             position: 'absolute',
-            // 장식 예외: vertical-align 미세 보정 (디자인시스템 단계 3-B)
-            top: '3px',
-            left: value ? '23px' : '3px',
-            width: '22px',
-            height: '22px',
+            top: isAndroid ? (value ? '4px' : '8px') : '3px',
+            left: isAndroid ? (value ? '24px' : '4px') : (value ? '23px' : '3px'),
+            width: isAndroid ? (value ? '24px' : '16px') : '22px',
+            height: isAndroid ? (value ? '24px' : '16px') : '22px',
             borderRadius: '50%',
-            backgroundColor: colors.surface.card,
+            backgroundColor: isAndroid && !value ? colors.gray[500] : colors.surface.card,
             boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
-            transition: 'left 0.2s ease',
+            transition: 'all 0.2s ease',
             display: 'block',
           }}
         />

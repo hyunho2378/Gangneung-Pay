@@ -4,6 +4,7 @@ import { colors, layout, typography, shadow } from '../tokens/tokens'
 
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
+import Button from '../components/common/Button'
 
 const ageOptions = ['10대', '20대', '30대', '40대', '50대', '60대이상']
 const interestOptions = ['청년', '노인', '복지', '교육', '문화', '취업']
@@ -192,22 +193,9 @@ export default function CustomInfoPage() {
           flexShrink: 0,
         }}
       >
-        <button
-          onClick={handleSave}
-          style={{
-            width: '100%',
-            padding: '16px',
-            backgroundColor: colors.primary[700],
-            border: 'none',
-            borderRadius: layout.radiusButton,
-            color: colors.surface.card,
-            fontSize: typography.size.md,
-            fontWeight: typography.weight.semibold,
-            cursor: 'pointer',
-          }}
-        >
+        <Button variant="filled" size="lg" onClick={handleSave}>
           저장하기
-        </button>
+        </Button>
       </div>
     </ScreenContainer>
   )

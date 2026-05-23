@@ -11,6 +11,7 @@ import { Calendar, ChevronDown } from 'lucide-react'
 import { useUser } from '../context/UserContext'
 import { colors, typography, layout, spacing } from '../tokens/tokens'
 import { useTypography } from '../hooks/useTypography'
+import { usePlatform } from '../hooks/usePlatform'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
 import PeriodPickerModal from '../components/common/PeriodPickerModal'
@@ -264,6 +265,7 @@ export default function CashbackPage() {
   const navigate = useNavigate()
   const sizes = useTypography()
   const { transactions, cashbackBalance } = useUser()
+  const isAndroid = usePlatform() === 'android'
 
   const [tab, setTab] = useState('earned')
   const [periodOpen, setPeriodOpen] = useState(false)
@@ -372,7 +374,7 @@ export default function CashbackPage() {
               padding: `${spacing[2]} ${spacing[3]}`,
               backgroundColor: colors.surface.card,
               border: `1px solid ${colors.gray[200]}`,
-              borderRadius: layout.radiusChip,
+              borderRadius: isAndroid ? layout.radiusPill : layout.radiusChip,
               cursor: 'pointer',
               fontFamily: typography.fontFamily,
               minHeight: layout.touchMin,

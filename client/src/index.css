@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+body.platform-android,
+body.platform-android * {
+  font-family: 'Noto Sans KR', sans-serif !important;
+}
+
 @theme {
   /* Brand primary */
   --color-primary-50: #EFF6FF;

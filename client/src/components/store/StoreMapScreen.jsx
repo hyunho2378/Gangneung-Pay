@@ -18,6 +18,7 @@ import {
 import CategoryFilterChip from './CategoryFilterChip'
 import StoreListItem from './StoreListItem'
 import StoreDetailSheet from './StoreDetailSheet'
+import { usePlatform } from '../../hooks/usePlatform'
 
 // St-03: 카테고리 아이콘 (S6, Nielsen #6)
 const CATEGORY_ICONS = {
@@ -155,6 +156,8 @@ export default function StoreMapScreen() {
   const clustererRef = useRef(null)
   const [debouncedQuery, setDebouncedQuery] = useState('')
   const searchContainerRef = useRef(null)
+  const [searchFocused, setSearchFocused] = useState(false)
+  const isAndroid = usePlatform() === 'android'
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -451,20 +454,23 @@ export default function StoreMapScreen() {
         >
           <div
             style={{
-              backgroundColor: colors.surface.card,
-              borderRadius: layout.radiusPill,
+              backgroundColor: isAndroid ? colors.gray[100] : colors.surface.card,
+              borderRadius: isAndroid ? '8px 8px 0 0' : layout.radiusPill,
+              border: isAndroid ? 'none' : undefined,
+              borderBottom: isAndroid ? `2px solid ${searchFocused ? colors.primary[700] : colors.gray[400]}` : undefined,
               padding: `${spacing[3]} ${spacing[4]}`,
               display: 'flex',
               alignItems: 'center',
               gap: spacing[2],
-              boxShadow: shadow.card,
+              boxShadow: isAndroid ? 'none' : shadow.card,
             }}
           >
             <Search size={18} color={colors.gray[400]} />
             <input
               value={searchQuery}
               onChange={(e) => { setSearchQuery(e.target.value); setShowSuggestions(true) }}
-              onFocus={() => setShowSuggestions(true)}
+              onFocus={() => { setShowSuggestions(true); setSearchFocused(true) }}
+              onBlur={() => setSearchFocused(false)}
               placeholder="매장 검색"
               style={{
                 border: 'none',

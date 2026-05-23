@@ -3,12 +3,13 @@ import { X, Settings } from 'lucide-react'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 import { colors, typography, layout, spacing } from '../../tokens/tokens'
 import faceIdLottie from '../../assets/lottie/face-id-ios.json?url'
+import fingerprintLottie from '../../assets/lottie/Fingerprint.json?url'
 import StatusBar from '../layout/StatusBar'
+import { usePlatform } from '../../hooks/usePlatform'
 
 const FACE_ID_DELAY = 100        // 키패드 진입 후 페이스 ID 등장
 const RAF_DURATION = 2500        // CardBackModal과 동일
 const FALLBACK_MS = 2700         // CardBackModal과 동일
-const TOTAL_FRAMES = 244         // CardBackModal과 동일
 const FADE_OUT = 100             // 완료 후 페이드 아웃 (자연스럽고 빠름)
 
 // CardBackModal Phase 1과 동일한 iOS-style easing
@@ -39,6 +40,12 @@ export default function PaymentAuthOverlay({ open, onComplete, onCancel }) {
   const startTimeRef = useRef(null)
   const fallbackTimerRef = useRef(null)
   const cleanupListenersRef = useRef(null)
+
+  const platform = usePlatform()
+  const isAndroid = platform === 'android'
+  const authLottie = isAndroid ? fingerprintLottie : faceIdLottie
+  const TOTAL_FRAMES = isAndroid ? 180 : 244
+  const authLabel = isAndroid ? '지문을 인식해주세요' : null
 
   // open 변경 시 리셋
   useEffect(() => {
@@ -242,7 +249,7 @@ export default function PaymentAuthOverlay({ open, onComplete, onCancel }) {
           fontWeight: typography.weight.semibold,
           color: colors.primary[700],
         }}>
-          얼굴인증 사용하기
+          {isAndroid ? '지문인증 사용하기' : '얼굴인증 사용하기'}
         </div>
         <div style={{
           display: 'flex',
@@ -292,22 +299,24 @@ export default function PaymentAuthOverlay({ open, onComplete, onCancel }) {
         ))}
       </div>
 
-      {/* ─────── 페이스 ID 모달 (CardBackModal Phase 1 이식) ─────── */}
+      {/* ─────── 생체인증 모달 (iOS: 얼굴인증 중앙 / Android: 지문 하단) ─────── */}
       {showFaceId && (
         <div style={{
           position: 'absolute',
           inset: 0,
           backgroundColor: 'rgba(0,0,0,0.6)',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: isAndroid ? 'flex-end' : 'center',
+          paddingBottom: isAndroid ? '120px' : '0',
           zIndex: 10,
           pointerEvents: 'auto',
         }}>
           <div style={{
             width: 150,
             height: 148,
-            backgroundColor: colors.gray[900],
+            backgroundColor: isAndroid ? 'transparent' : colors.gray[900],
             borderRadius: layout.radiusCard,
             overflow: 'hidden',
             willChange: 'transform',
@@ -316,13 +325,25 @@ export default function PaymentAuthOverlay({ open, onComplete, onCancel }) {
             boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
           }}>
             <DotLottieReact
-              src={faceIdLottie}
+              src={authLottie}
               autoplay={false}
               loop={false}
               dotLottieRefCallback={handleLottieRef}
               style={{ width: '100%', height: '100%' }}
             />
           </div>
+          {isAndroid && (
+            <p style={{
+              marginTop: spacing[5],
+              fontSize: typography.size.md,
+              fontWeight: typography.weight.semibold,
+              color: colors.onDark.primary,
+              textAlign: 'center',
+              fontFamily: typography.fontFamily,
+            }}>
+              지문을 인식해주세요
+            </p>
+          )}
         </div>
       )}
     </div>

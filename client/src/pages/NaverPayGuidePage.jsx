@@ -1,13 +1,14 @@
 import { useNavigate } from 'react-router-dom'
 import { colors, layout, typography, shadow, spacing } from '../tokens/tokens'
+import { usePlatform } from '../hooks/usePlatform'
 import NaverLogo from '../assets/icons/Naver.svg'
 
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
 
-const NAVER_GREEN = '#03C75A'
-const NAVER_GREEN_DARK = '#15803D'
-const NAVER_BG = '#E6F9EC'
+const NAVER_GREEN = colors.success
+const NAVER_GREEN_DARK = colors.explore.emeraldDark
+const NAVER_BG = colors.greenBg
 
 const steps = [
   { step: 1, title: '네이버 앱 실행', desc: '"Na.페이 > 결제 > 카드 관리"로 이동하세요' },
@@ -19,6 +20,7 @@ const steps = [
 
 export default function NaverPayGuidePage() {
   const navigate = useNavigate()
+  const isAndroid = usePlatform() === 'android'
 
   const openNaverApp = () => {
     const ua = navigator.userAgent
@@ -57,20 +59,7 @@ export default function NaverPayGuidePage() {
             alignItems: 'center',
           }}
         >
-          <div
-            style={{
-              width: '80px',
-              height: '80px',
-              backgroundColor: NAVER_GREEN,
-              borderRadius: layout.radiusModal,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: '16px',
-            }}
-          >
-            <img src={NaverLogo} alt="네이버페이" style={{ height: '36px', objectFit: 'contain' }} />
-          </div>
+          <img src={NaverLogo} alt="네이버페이" style={{ height: '36px', objectFit: 'contain', marginBottom: '16px' }} />
           <p
             style={{
               fontSize: typography.size.lg,
@@ -222,7 +211,7 @@ export default function NaverPayGuidePage() {
             padding: '16px',
             backgroundColor: NAVER_GREEN,
             border: 'none',
-            borderRadius: layout.radiusButton,
+            borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
             color: 'white',
             fontSize: typography.size.md,
             fontWeight: typography.weight.bold,

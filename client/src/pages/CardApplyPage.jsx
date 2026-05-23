@@ -13,10 +13,12 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
+import { useApp } from '../context/AppContext'
 import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../tokens/tokens'
 import { useTypography } from '../hooks/useTypography'
 import ScreenContainer from '../components/layout/ScreenContainer'
+import Button from '../components/common/Button'
 
 // B1: 140×88 축소 (viewBox 좌표계 220×138 유지)
 function CardSVG({ type }) {
@@ -184,6 +186,7 @@ export default function CardApplyPage() {
   const navigate = useNavigate()
   const sizes = useTypography()
   const { cardStatus, applyCard, shipCard, registerCard } = useUser()
+  const { showSnackbar } = useApp()
   const BENEFITS = getBenefits(sizes)
 
   useEffect(() => {
@@ -286,23 +289,13 @@ export default function CardApplyPage() {
               padding: `${spacing[3]} ${layout.margin}`,
               paddingBottom: `calc(env(safe-area-inset-bottom) + ${spacing[3]})`,
             }}>
-              <button
-                onClick={() => { registerCard(); navigate('/') }}
-                style={{
-                  width: '100%',
-                  height: '52px',
-                  backgroundColor: colors.primary[700],
-                  border: 'none',
-                  borderRadius: layout.radiusButton,
-                  color: colors.onDark.primary,
-                  fontSize: sizes.md,
-                  fontWeight: typography.weight.semibold,
-                  cursor: 'pointer',
-                  fontFamily: typography.fontFamily,
-                }}
+              <Button
+                variant="filled"
+                size="lg"
+                onClick={() => { registerCard(); showSnackbar('카드 등록이 완료됐어요'); navigate('/') }}
               >
                 카드 등록하기
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -342,23 +335,13 @@ export default function CardApplyPage() {
             padding: `${spacing[3]} ${layout.margin}`,
             paddingBottom: `calc(env(safe-area-inset-bottom) + ${spacing[3]})`,
           }}>
-            <button
+            <Button
+              variant="filled"
+              size="lg"
               disabled
-              style={{
-                width: '100%',
-                height: '52px',
-                backgroundColor: colors.gray[200],
-                color: colors.gray[400],
-                border: 'none',
-                borderRadius: layout.radiusButton,
-                fontSize: sizes.md,
-                fontWeight: typography.weight.semibold,
-                cursor: 'default',
-                fontFamily: typography.fontFamily,
-              }}
             >
               카드 발송 중...
-            </button>
+            </Button>
           </div>
         </div>
       </ScreenContainer>
@@ -675,23 +658,13 @@ export default function CardApplyPage() {
           padding: `${spacing[3]} ${layout.margin}`,
           paddingBottom: `calc(env(safe-area-inset-bottom) + ${spacing[3]})`,
         }}>
-          <button
+          <Button
+            variant="filled"
+            size="lg"
             onClick={applyCard}
-            style={{
-              width: '100%',
-              height: '48px',
-              backgroundColor: colors.primary[700],
-              color: colors.onDark.primary,
-              border: 'none',
-              borderRadius: layout.radiusButton,
-              fontSize: sizes.md,
-              fontWeight: typography.weight.semibold,
-              cursor: 'pointer',
-              fontFamily: typography.fontFamily,
-            }}
           >
             간편 신청하기
-          </button>
+          </Button>
         </div>
       </div>
     </ScreenContainer>

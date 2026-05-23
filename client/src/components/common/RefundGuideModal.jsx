@@ -3,6 +3,7 @@
 
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 import BottomSheet from './BottomSheet'
+import { usePlatform } from '../../hooks/usePlatform'
 
 const REFUND_CONDITIONS = [
   '충전 잔액 기준 일정 비율 이상 사용 시 환불 가능',
@@ -12,6 +13,7 @@ const REFUND_CONDITIONS = [
 ]
 
 export default function RefundGuideModal({ isOpen, onClose }) {
+  const isAndroid = usePlatform() === 'android'
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} title="환불 안내">
       <div
@@ -92,7 +94,7 @@ export default function RefundGuideModal({ isOpen, onClose }) {
             backgroundColor: colors.primary[700],
             color: colors.onDark.primary,
             border: 'none',
-            borderRadius: layout.radiusButton,
+            borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
             fontSize: typography.size.md,
             fontWeight: typography.weight.semibold,
             cursor: 'pointer',

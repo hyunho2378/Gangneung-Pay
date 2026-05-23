@@ -10,11 +10,13 @@
 
 import { useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
+import { useApp } from '../../context/AppContext'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 import { useTypography } from '../../hooks/useTypography'
 import QuickAmountChip from './QuickAmountChip'
 import NumPad from './NumPad'
 import PaymentAuthOverlay from '../common/PaymentAuthOverlay'
+import Button from '../common/Button'
 
 const MAX_AMOUNT = 999999999
 const UNIT_AMOUNT = 10000
@@ -124,6 +126,7 @@ function StepIndicator({ current }) {
 
 export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance = 120000, chargeLimit = 500000 }) {
   const sizes = useTypography()
+  const { showSnackbar } = useApp()
   const [amount, setAmount] = useState(0)
   const [step, setStep] = useState(1)
   const [charged, setCharged] = useState(false)
@@ -314,26 +317,14 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
               borderTop: `1px solid ${colors.gray[100]}`,
             }}
           >
-            <button
-              onClick={() => canProceed && setStep(2)}
+            <Button
+              variant="filled"
+              size="lg"
               disabled={!canProceed}
-              style={{
-                width: '100%',
-                height: '52px',
-                backgroundColor: canProceed ? colors.primary[700] : colors.gray[200],
-                color: canProceed ? colors.onDark.primary : colors.gray[400],
-                border: 'none',
-                borderRadius: layout.radiusButton,
-                fontSize: sizes.md,
-                fontWeight: typography.weight.semibold,
-                cursor: canProceed ? 'pointer' : 'not-allowed',
-                transition: 'background-color 0.2s ease',
-                boxShadow: canProceed ? shadow.button : 'none',
-                fontFamily: typography.fontFamily,
-              }}
+              onClick={() => setStep(2)}
             >
               다음
-            </button>
+            </Button>
             {/* C-04: Disabled 버튼 사유 명시 (Nielsen #5, #9 — 한국어 평문) */}
             {isOverLimit && (
               <p style={{ margin: `${spacing[2]} 0 0`, textAlign: 'center', fontSize: sizes.xs, color: colors.error }}>
@@ -426,48 +417,37 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
 
           {/* 하단 버튼 2개 */}
           <div style={{ display: 'flex', gap: spacing[3] }}>
-            <button
+            <Button
+              variant="outlined"
+              size="lg"
+              fullWidth={false}
+              style={{
+                flex: 1,
+                backgroundColor: colors.surface.card,
+                border: `1px solid ${colors.gray[200]}`,
+                color: colors.gray[700],
+                fontWeight: typography.weight.medium,
+              }}
               onClick={() => {
                 setStep(1)
                 setCharged(false)
               }}
-              style={{
-                flex: 1,
-                height: '52px',
-                backgroundColor: colors.surface.card,
-                border: `1px solid ${colors.gray[200]}`,
-                borderRadius: layout.radiusButton,
-                fontSize: sizes.md,
-                fontWeight: typography.weight.medium,
-                color: colors.gray[700],
-                cursor: 'pointer',
-                fontFamily: typography.fontFamily,
-              }}
             >
               수정
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="filled"
+              size="lg"
+              fullWidth={false}
+              style={{ flex: 2 }}
+              disabled={charged}
               onClick={() => {
                 if (charged) return
                 setShowAuth(true)
               }}
-              disabled={charged}
-              style={{
-                flex: 2,
-                height: '52px',
-                backgroundColor: colors.primary[700],
-                border: 'none',
-                borderRadius: layout.radiusButton,
-                fontSize: sizes.md,
-                fontWeight: typography.weight.semibold,
-                color: colors.onDark.primary,
-                cursor: 'pointer',
-                boxShadow: shadow.button,
-                fontFamily: typography.fontFamily,
-              }}
             >
               충전하기
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -557,24 +537,13 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
           </div>
 
           {/* 홈으로 버튼 — Shneiderman #4 closure */}
-          <button
-            onClick={onClose}
-            style={{
-              width: '100%',
-              height: '52px',
-              backgroundColor: colors.primary[700],
-              border: 'none',
-              borderRadius: layout.radiusButton,
-              fontSize: sizes.md,
-              fontWeight: typography.weight.semibold,
-              color: colors.onDark.primary,
-              cursor: 'pointer',
-              boxShadow: shadow.button,
-              fontFamily: typography.fontFamily,
-            }}
+          <Button
+            variant="filled"
+            size="lg"
+            onClick={() => { showSnackbar('충전이 완료됐어요'); onClose() }}
           >
             홈으로 가기
-          </button>
+          </Button>
         </div>
       )}
 

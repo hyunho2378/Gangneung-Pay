@@ -6,6 +6,7 @@ import { Phone, MapPin, Clock, ExternalLink } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 import BottomSheet from '../common/BottomSheet'
 import { GANGNEUNG_STATION, calculateDistance } from '../../data/stores'
+import { usePlatform } from '../../hooks/usePlatform'
 
 function formatDistanceKm(km) {
   return km < 1 ? `${Math.round(km * 1000)}m` : `${km.toFixed(1)}km`
@@ -13,6 +14,7 @@ function formatDistanceKm(km) {
 
 export default function StoreDetailSheet({ isOpen, onClose, onNavigate, store }) {
   const [ownerSheetOpen, setOwnerSheetOpen] = useState(false)
+  const isAndroid = usePlatform() === 'android'
 
   const {
     name = '매장명',
@@ -235,7 +237,7 @@ export default function StoreDetailSheet({ isOpen, onClose, onNavigate, store })
                 backgroundColor: 'transparent',
                 color: phoneNumber ? colors.primary[700] : colors.gray[400],
                 border: `1.5px solid ${phoneNumber ? colors.primary[700] : colors.gray[200]}`,
-                borderRadius: layout.radiusButton,
+                borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
                 fontSize: typography.size.sm,
                 fontWeight: typography.weight.semibold,
                 cursor: phoneNumber ? 'pointer' : 'not-allowed',
@@ -256,7 +258,7 @@ export default function StoreDetailSheet({ isOpen, onClose, onNavigate, store })
                 backgroundColor: colors.primary[700],
                 color: colors.onDark.primary,
                 border: 'none',
-                borderRadius: layout.radiusButton,
+                borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
                 fontSize: typography.size.sm,
                 fontWeight: typography.weight.semibold,
                 cursor: 'pointer',
@@ -287,7 +289,6 @@ export default function StoreDetailSheet({ isOpen, onClose, onNavigate, store })
                 cursor: 'pointer',
                 fontSize: typography.size.xs,
                 color: colors.gray[500],
-                fontFamily: typography.fontFamily,
                 textDecoration: 'underline',
                 textUnderlineOffset: '2px',
               }}
@@ -349,7 +350,7 @@ export default function StoreDetailSheet({ isOpen, onClose, onNavigate, store })
               height: '52px',
               backgroundColor: colors.primary[700],
               border: 'none',
-              borderRadius: layout.radiusButton,
+              borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
               fontSize: typography.size.md,
               fontWeight: typography.weight.semibold,
               color: '#FFFFFF',
@@ -359,7 +360,6 @@ export default function StoreDetailSheet({ isOpen, onClose, onNavigate, store })
               justifyContent: 'center',
               gap: spacing[2],
               boxShadow: shadow.button,
-              fontFamily: typography.fontFamily,
             }}
           >
             <ExternalLink size={18} />
@@ -376,7 +376,6 @@ export default function StoreDetailSheet({ isOpen, onClose, onNavigate, store })
               cursor: 'pointer',
               fontSize: typography.size.sm,
               color: colors.gray[500],
-              fontFamily: typography.fontFamily,
               marginTop: spacing[3],
             }}
           >

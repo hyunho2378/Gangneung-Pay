@@ -15,6 +15,7 @@ import { useTypography } from '../hooks/useTypography'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import BottomNavBar from '../components/layout/BottomNavBar'
 import PeriodPickerModal from '../components/common/PeriodPickerModal'
+import Button from '../components/common/Button'
 
 const TYPE_FILTERS = [
   { key: 'all', label: '전체' },
@@ -104,24 +105,9 @@ export default function HistoryPage() {
             </p>
           </div>
 
-          <button
-            onClick={() => navigate('/card-apply')}
-            style={{
-              width: '100%',
-              maxWidth: '280px',
-              height: '52px',
-              backgroundColor: colors.primary[700],
-              color: colors.onDark.primary,
-              border: 'none',
-              borderRadius: layout.radiusButton,
-              fontSize: sizes.md,
-              fontWeight: typography.weight.bold,
-              cursor: 'pointer',
-              fontFamily: typography.fontFamily,
-            }}
-          >
+          <Button variant="filled" size="lg" onClick={() => navigate('/card-apply')} style={{ maxWidth: '280px' }}>
             카드 신청하기
-          </button>
+          </Button>
         </div>
 
         <BottomNavBar />

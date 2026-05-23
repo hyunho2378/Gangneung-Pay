@@ -9,10 +9,13 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { Home, Store, Gift, Receipt, User } from 'lucide-react'
 import { colors, typography, layout, shadow, spacing } from '../../tokens/tokens'
 import { useTypography } from '../../hooks/useTypography'
+import { usePlatform } from '../../hooks/usePlatform'
 
 export default function BottomNavBar() {
   const navigate = useNavigate()
   const location = useLocation()
+  const platform = usePlatform()
+  const isAndroid = platform === 'android'
 
   function getActiveKey() {
     const p = location.pathname
@@ -49,6 +52,7 @@ export default function BottomNavBar() {
         active={activeKey === 'home'}
         onClick={() => navigate('/')}
         height={NAV_HEIGHT}
+        isAndroid={isAndroid}
       />
       <NavTab
         label="결제매장"
@@ -56,6 +60,7 @@ export default function BottomNavBar() {
         active={activeKey === 'store'}
         onClick={() => navigate('/store')}
         height={NAV_HEIGHT}
+        isAndroid={isAndroid}
       />
       <NavTab
         label="이용내역"
@@ -63,6 +68,7 @@ export default function BottomNavBar() {
         active={activeKey === 'history'}
         onClick={() => navigate('/history')}
         height={NAV_HEIGHT}
+        isAndroid={isAndroid}
       />
       <NavTab
         label="지원금·혜택"
@@ -70,6 +76,7 @@ export default function BottomNavBar() {
         active={activeKey === 'support'}
         onClick={() => navigate('/support')}
         height={NAV_HEIGHT}
+        isAndroid={isAndroid}
       />
       <NavTab
         label="MY"
@@ -77,12 +84,13 @@ export default function BottomNavBar() {
         active={activeKey === 'my'}
         onClick={() => navigate('/my')}
         height={NAV_HEIGHT}
+        isAndroid={isAndroid}
       />
     </div>
   )
 }
 
-function NavTab({ label, icon, active, onClick, height }) {
+function NavTab({ label, icon, active, onClick, height, isAndroid }) {
   const sizes = useTypography()
   const color = active ? colors.primary[700] : colors.gray[400]
   return (
@@ -102,7 +110,20 @@ function NavTab({ label, icon, active, onClick, height }) {
         color,
       }}
     >
-      <span style={{ color, display: 'flex' }}>{icon}</span>
+      <span style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color,
+        ...(isAndroid ? {
+          width: '56px',
+          height: '28px',
+          borderRadius: layout.radiusPill,
+          backgroundColor: active ? colors.primary[100] : 'transparent',
+          transition: 'background-color 150ms',
+          marginBottom: '2px',
+        } : {}),
+      }}>{icon}</span>
       <span style={{
         fontSize: sizes.nav,
         fontWeight: active ? typography.weight.medium : typography.weight.regular,

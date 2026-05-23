@@ -11,12 +11,15 @@ import { Html5Qrcode } from 'html5-qrcode'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
+import { usePlatform } from '../../hooks/usePlatform'
+import Button from '../common/Button'
 
 const LOW_BALANCE = 10000
 
 export default function QRScannerScreen({ onClose, balance = 120000, onCharge, cardCount = 1, onScan }) {
   const navigate = useNavigate()
   const { spendBalance } = useUser()
+  const isAndroid = usePlatform() === 'android'
   const [scanPulse, setScanPulse] = useState(true)
   // 'init' | 'scanning' | 'permission_denied'
   const [cameraState, setCameraState] = useState('init')
@@ -237,12 +240,22 @@ export default function QRScannerScreen({ onClose, balance = 120000, onCharge, c
                 pointerEvents: 'none',
               }}
             >
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <circle cx="14" cy="14" r="11" stroke="rgba(255,255,255,0.2)" strokeWidth="2.5" fill="none" />
-                <path d="M14 3 A11 11 0 0 1 25 14" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" strokeLinecap="round" fill="none">
-                  <animateTransform attributeName="transform" type="rotate" from="0 14 14" to="360 14 14" dur="0.9s" repeatCount="indefinite" />
-                </path>
-              </svg>
+              {isAndroid ? (
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                  <circle cx="20" cy="20" r="16" stroke="rgba(255,255,255,0.15)" strokeWidth="4" fill="none" />
+                  <circle cx="20" cy="20" r="16" stroke={colors.primary[700]} strokeWidth="4" fill="none"
+                    strokeDasharray="75 25" strokeLinecap="round">
+                    <animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="1s" repeatCount="indefinite" />
+                  </circle>
+                </svg>
+              ) : (
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                  <circle cx="14" cy="14" r="11" stroke="rgba(255,255,255,0.2)" strokeWidth="2.5" fill="none" />
+                  <path d="M14 3 A11 11 0 0 1 25 14" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" strokeLinecap="round" fill="none">
+                    <animateTransform attributeName="transform" type="rotate" from="0 14 14" to="360 14 14" dur="0.9s" repeatCount="indefinite" />
+                  </path>
+                </svg>
+              )}
               <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: typography.size.xxs }}>카메라 준비 중</span>
             </div>
           )}
@@ -364,23 +377,15 @@ export default function QRScannerScreen({ onClose, balance = 120000, onCharge, c
             <p style={{ margin: 0, fontSize: typography.size.xs, color: colors.error }}>
               충전 후 결제해주세요.
             </p>
-            <button
+            <Button
+              variant="filled"
+              size="sm"
+              fullWidth={false}
               onClick={handleCharge}
-              style={{
-                alignSelf: 'flex-start',
-                backgroundColor: colors.error,
-                border: 'none',
-                borderRadius: layout.radiusButton,
-                color: '#FFFFFF',
-                fontSize: typography.size.xs,
-                fontWeight: typography.weight.semibold,
-                padding: `${spacing[1]} ${spacing[3]}`,
-                cursor: 'pointer',
-                fontFamily: typography.fontFamily,
-              }}
+              style={{ alignSelf: 'flex-start', backgroundColor: colors.error, boxShadow: 'none' }}
             >
               충전하러 가기
-            </button>
+            </Button>
           </div>
         )}
 
@@ -401,22 +406,15 @@ export default function QRScannerScreen({ onClose, balance = 120000, onCharge, c
             <p style={{ margin: 0, fontSize: typography.size.xs, fontWeight: typography.weight.medium, color: colors.warning }}>
               잔액이 부족할 수 있습니다 ({formattedBalance})
             </p>
-            <button
+            <Button
+              variant="filled"
+              size="sm"
+              fullWidth={false}
               onClick={handleCharge}
-              style={{
-                backgroundColor: 'transparent',
-                border: `1px solid ${colors.warning}`,
-                borderRadius: layout.radiusButton,
-                color: colors.warning,
-                fontSize: typography.size.xs,
-                fontWeight: typography.weight.semibold,
-                padding: `2px ${spacing[2]}`,
-                cursor: 'pointer',
-                fontFamily: typography.fontFamily,
-              }}
+              style={{ backgroundColor: 'transparent', border: `1px solid ${colors.warning}`, color: colors.warning, boxShadow: 'none' }}
             >
               충전
-            </button>
+            </Button>
           </div>
         )}
 
@@ -460,20 +458,6 @@ export default function QRScannerScreen({ onClose, balance = 120000, onCharge, c
               </div>
             </div>
           </div>
-          <button
-            style={{
-              backgroundColor: 'transparent',
-              border: `1px solid ${colors.gray[200]}`,
-              borderRadius: layout.radiusButton,
-              padding: `${spacing[1]} ${spacing[3]}`,
-              fontSize: typography.size.xs,
-              fontWeight: typography.weight.medium,
-              color: colors.gray[700],
-              cursor: 'pointer',
-            }}
-          >
-            카드 변경
-          </button>
         </div>
 
       </div>
@@ -540,42 +524,27 @@ export default function QRScannerScreen({ onClose, balance = 120000, onCharge, c
             </div>
 
             <div style={{ display: 'flex', gap: spacing[3] }}>
-              <button
+              <Button
+                variant="outlined"
+                size="md"
+                fullWidth={false}
+                style={{ flex: 1, color: colors.gray[700], border: `1px solid ${colors.gray[200]}` }}
                 onClick={() => {
                   scannedRef.current = false
                   setScannedData(null)
                 }}
-                style={{
-                  flex: 1,
-                  height: '48px',
-                  backgroundColor: 'transparent',
-                  border: `1.5px solid ${colors.gray[200]}`,
-                  borderRadius: layout.radiusButton,
-                  fontSize: typography.size.sm,
-                  fontWeight: typography.weight.semibold,
-                  color: colors.gray[700],
-                  cursor: 'pointer',
-                }}
               >
                 취소
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="filled"
+                size="md"
+                fullWidth={false}
+                style={{ flex: 2 }}
                 onClick={handlePay}
-                style={{
-                  flex: 2,
-                  height: '48px',
-                  backgroundColor: colors.primary[700],
-                  border: 'none',
-                  borderRadius: layout.radiusButton,
-                  fontSize: typography.size.sm,
-                  fontWeight: typography.weight.semibold,
-                  color: '#FFFFFF',
-                  cursor: 'pointer',
-                  boxShadow: shadow.button,
-                }}
               >
                 결제하기
-              </button>
+              </Button>
             </div>
           </div>
         </div>

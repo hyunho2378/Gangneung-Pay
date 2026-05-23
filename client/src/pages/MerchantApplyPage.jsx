@@ -9,6 +9,7 @@ import { ChevronDown, ChevronUp, Phone, MessageCircle } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from '../tokens/tokens'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
+import Button from '../components/common/Button'
 
 // ── 혜택 데이터 ──
 const BENEFITS = [
@@ -175,7 +176,7 @@ export default function MerchantApplyPage() {
                                         width: '36px', height: '36px', borderRadius: '50%',
                                         backgroundColor: colors.primary[700], display: 'flex', alignItems: 'center', justifyContent: 'center',
                                     }}>
-                                        <span style={{ fontSize: typography.size.xs, fontWeight: typography.weight.bold, color: '#fff', fontFamily: typography.fontFamily }}>{s.no}</span>
+                                        <span style={{ fontSize: typography.size.xs, fontWeight: typography.weight.bold, color: colors.onDark.primary, fontFamily: typography.fontFamily }}>{s.no}</span>
                                     </div>
                                     {i < STEPS.length - 1 && (
                                         <div style={{ width: '2px', height: '24px', backgroundColor: colors.gray[200], marginTop: '4px' }} />
@@ -229,18 +230,9 @@ export default function MerchantApplyPage() {
                 borderTop: `1px solid ${colors.gray[100]}`,
                 flexShrink: 0,
             }}>
-                <button
-                    onClick={handleApply}
-                    style={{
-                        width: '100%', height: '52px', backgroundColor: colors.primary[700],
-                        border: 'none', borderRadius: layout.radiusButton,
-                        color: colors.onDark.primary, fontSize: typography.size.md,
-                        fontWeight: typography.weight.bold, cursor: 'pointer',
-                        fontFamily: typography.fontFamily, boxShadow: shadow.button,
-                    }}
-                >
+                <Button variant="filled" size="lg" onClick={handleApply}>
                     가맹점 신청하기
-                </button>
+                </Button>
             </div>
         </ScreenContainer>
     )

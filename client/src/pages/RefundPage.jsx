@@ -13,15 +13,18 @@ import { useApp } from '../context/AppContext'
 import { formatDate } from '../utils/date'
 import { colors, typography, layout, spacing, shadow } from '../tokens/tokens'
 import { useTypography } from '../hooks/useTypography'
+import { usePlatform } from '../hooks/usePlatform'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import BottomNavBar from '../components/layout/BottomNavBar'
 import PaymentAuthOverlay from '../components/common/PaymentAuthOverlay'
+import Button from '../components/common/Button'
 
 export default function RefundPage() {
   const navigate = useNavigate()
   const sizes = useTypography()
   const { transactions, balance, refundTransaction } = useUser()
-  const { isLargeText } = useApp()
+  const { isLargeText, showSnackbar } = useApp()
+  const isAndroid = usePlatform() === 'android'
   const [confirmId, setConfirmId] = useState(null)
   const [showAuth, setShowAuth] = useState(false)
 
@@ -43,7 +46,9 @@ export default function RefundPage() {
   const fmtDate = (iso) => formatDate(iso, { withTime: true })
 
   const handleRefund = (id) => {
+    const tx = chargeList.find((t) => t.id === id)
     refundTransaction(id)
+    if (tx) showSnackbar(`${tx.totalAmount.toLocaleString('ko-KR')}원 환불이 완료됐어요`)
     setConfirmId(null)
   }
 
@@ -202,7 +207,7 @@ export default function RefundPage() {
                             backgroundColor: 'transparent',
                             border: `1px solid ${colors.primary[700]}`,
                             color: colors.primary[700],
-                            borderRadius: layout.radiusButton,
+                            borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
                             padding: `${spacing[2]} ${spacing[4]}`,
                             fontSize: sizes.sm,
                             fontWeight: typography.weight.semibold,
@@ -338,7 +343,7 @@ export default function RefundPage() {
                 height: '16px',
                 borderRadius: '50%',
                 backgroundColor: colors.error,
-                color: '#FFFFFF',
+                color: colors.onDark.primary,
                 fontSize: '11px',
                 fontWeight: typography.weight.bold,
                 display: 'flex',
@@ -358,43 +363,24 @@ export default function RefundPage() {
 
             {/* 버튼 2개 */}
             <div style={{ display: 'flex', gap: spacing[2] }}>
-              <button
+              <Button
+                variant="text"
+                size="lg"
+                fullWidth={false}
+                style={{ flex: 1, backgroundColor: colors.gray[100], color: colors.gray[700] }}
                 onClick={() => setConfirmId(null)}
-                style={{
-                  flex: 1,
-                  backgroundColor: colors.gray[100],
-                  border: 'none',
-                  borderRadius: layout.radiusButton,
-                  padding: `${spacing[4]} 0`,
-                  fontSize: sizes.md,
-                  fontWeight: typography.weight.semibold,
-                  color: colors.gray[700],
-                  cursor: 'pointer',
-                  minHeight: '52px',
-                  fontFamily: typography.fontFamily,
-                }}
               >
                 다음에 하기
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="filled"
+                size="lg"
+                fullWidth={false}
+                style={{ flex: 1.5 }}
                 onClick={() => setShowAuth(true)}
-                style={{
-                  flex: 1.5,
-                  backgroundColor: colors.primary[700],
-                  border: 'none',
-                  borderRadius: layout.radiusButton,
-                  padding: `${spacing[4]} 0`,
-                  fontSize: sizes.md,
-                  fontWeight: typography.weight.semibold,
-                  color: colors.onDark.primary,
-                  cursor: 'pointer',
-                  minHeight: '52px',
-                  fontFamily: typography.fontFamily,
-                  boxShadow: shadow.button,
-                }}
               >
                 신청하기
-              </button>
+              </Button>
             </div>
           </div>
         </>

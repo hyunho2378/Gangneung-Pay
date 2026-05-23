@@ -12,6 +12,7 @@ import { useTypography } from '../hooks/useTypography'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import BottomNavBar from '../components/layout/BottomNavBar'
 import MyMenuGroup from '../components/mypage/MyMenuGroup'
+import Button from '../components/common/Button'
 
 const USER_PROFILE = {
   name: '김초당',
@@ -256,21 +257,9 @@ export default function MyPage() {
         </div>
 
         {/* 로그아웃 */}
-        <button
-          onClick={() => alert('로그아웃')}
-          style={{
-            width: '100%',
-            padding: `${spacing[4]} ${spacing[4]}`,
-            backgroundColor: 'transparent',
-            border: 'none',
-            fontSize: sizes.sm,
-            color: colors.gray[500],
-            cursor: 'pointer',
-            fontFamily: typography.fontFamily,
-          }}
-        >
+        <Button variant="text" onClick={() => alert('로그아웃')}>
           로그아웃
-        </button>
+        </Button>
 
         {/* 하단 여백 — BottomNavBar 위 공간 확보 */}
         <div style={{ height: spacing[8] }} />

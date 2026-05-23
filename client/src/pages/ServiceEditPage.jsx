@@ -4,6 +4,7 @@ import { colors, layout, typography, shadow } from '../tokens/tokens'
 
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
+import Button from '../components/common/Button'
 
 const allServices = [
   { id: 'qr', label: 'QR 결제', icon: (
@@ -291,22 +292,9 @@ export default function ServiceEditPage() {
           flexShrink: 0,
         }}
       >
-        <button
-          onClick={handleSave}
-          style={{
-            width: '100%',
-            padding: '16px',
-            backgroundColor: colors.primary[700],
-            border: 'none',
-            borderRadius: layout.radiusButton,
-            color: colors.surface.card,
-            fontSize: typography.size.md,
-            fontWeight: typography.weight.semibold,
-            cursor: 'pointer',
-          }}
-        >
+        <Button variant="filled" size="lg" onClick={handleSave}>
           저장
-        </button>
+        </Button>
       </div>
     </ScreenContainer>
   )

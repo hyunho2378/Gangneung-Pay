@@ -8,8 +8,10 @@
 
 import { useState, useLayoutEffect, useEffect } from 'react'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
+import { usePlatform } from '../../hooks/usePlatform'
 
 export default function CoachMarkOverlay({ targetRef, message, step, totalSteps, onNext, onSkip, placement = 'top' }) {
+  const isAndroid = usePlatform() === 'android'
   const [containerRect, setContainerRect] = useState(null)
   const [targetRect, setTargetRect] = useState(null)
 
@@ -192,7 +194,7 @@ export default function CoachMarkOverlay({ targetRef, message, step, totalSteps,
               style={{
                 backgroundColor: colors.primary[700],
                 border: 'none',
-                borderRadius: layout.radiusButton,
+                borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
                 color: colors.onDark.primary,
                 fontSize: typography.size.sm,
                 fontWeight: typography.weight.semibold,

@@ -93,7 +93,7 @@ export default function UsageGuidePage() {
         ref={contentRef}
         style={{
           flex: 1, overflowY: 'auto',
-          background: 'linear-gradient(180deg, #EAF2FE 0%, #F2F4F8 100%)',
+          background: `linear-gradient(180deg, ${colors.primary[50]} 0%, ${colors.surface.background} 100%)`,
           padding: `${spacing[5]} ${layout.margin} ${spacing[10]}`,
         }}
       >

@@ -1,5 +1,6 @@
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 import TagChip from './TagChip'
+import { usePlatform } from '../../hooks/usePlatform'
 
 const defaultGrant = {
   tag: '서비스',
@@ -40,6 +41,7 @@ function SectionBlock({ title, content }) {
 }
 
 export default function SupportGrantDetail({ grant = defaultGrant, onLearnMore, onApply }) {
+  const isAndroid = usePlatform() === 'android'
   return (
     <div
       style={{
@@ -148,7 +150,7 @@ export default function SupportGrantDetail({ grant = defaultGrant, onLearnMore, 
             backgroundColor: 'none',
             background: 'none',
             border: `1.5px solid ${colors.primary[700]}`,
-            borderRadius: layout.radiusButton,
+            borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
             color: colors.primary[700],
             fontSize: typography.size.sm,
             fontWeight: typography.weight.semibold,
@@ -166,7 +168,7 @@ export default function SupportGrantDetail({ grant = defaultGrant, onLearnMore, 
             height: '52px',
             backgroundColor: colors.primary[700],
             border: 'none',
-            borderRadius: layout.radiusButton,
+            borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
             color: colors.onDark.primary,
             fontSize: typography.size.sm,
             fontWeight: typography.weight.bold,

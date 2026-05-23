@@ -16,6 +16,7 @@ export function AppProvider({ children }) {
   const [showAnnouncement, setShowAnnouncement] = useState(true)
   // 초기값은 null — 서버 응답 후 채워짐
   const [sessionId, setSessionId] = useState(null)
+  const [snackbar, setSnackbar] = useState(null)
   const sessionRequestedRef = useRef(false)
 
   // Provider 마운트 시 서버에서 세션 발급
@@ -40,6 +41,9 @@ export function AppProvider({ children }) {
       showAnnouncement,
       closeAnnouncement: () => setShowAnnouncement(false),
       sessionId,
+      snackbar,
+      showSnackbar: (message, actionLabel = null) => setSnackbar({ message, actionLabel }),
+      hideSnackbar: () => setSnackbar(null),
     }}>
       {children}
     </AppContext.Provider>

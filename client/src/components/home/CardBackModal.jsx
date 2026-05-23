@@ -8,9 +8,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 import faceIdLottie from '../../assets/lottie/face-id-ios.json?url'
+import fingerprintLottie from '../../assets/lottie/Fingerprint.json?url'
+import { usePlatform } from '../../hooks/usePlatform'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
-
-const TOTAL_FRAMES = 244
 const DURATION_MS = 2500
 const AUTH_FALLBACK_MS = 2700
 const FADE_MS = 200
@@ -51,6 +51,11 @@ function CardBackSVG({ cardNumber }) {
 }
 
 export default function CardBackModal({ open, onClose, fullCardNumber = '9465-4421-3567-8145' }) {
+  const platform = usePlatform()
+  const isAndroid = platform === 'android'
+  const authLottie = isAndroid ? fingerprintLottie : faceIdLottie
+  const TOTAL_FRAMES = isAndroid ? 180 : 244
+
   const [phase, setPhase] = useState('auth')
   const [seconds, setSeconds] = useState(COUNTDOWN_SEC)
   const [opacity, setOpacity] = useState(1)
@@ -146,36 +151,51 @@ export default function CardBackModal({ open, onClose, fullCardNumber = '9465-44
         inset: 0,
         backgroundColor: 'rgba(0,0,0,0.6)',
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: phase === 'auth' && isAndroid ? 'flex-end' : 'center',
+        padding: phase === 'auth' && isAndroid ? `0 0 120px` : spacing[5],
         zIndex: 400,
-        padding: spacing[5],
         fontFamily: typography.fontFamily,
       }}
     >
-      <div style={{ opacity, transition: `opacity ${FADE_MS}ms ease` }}>
+      <div style={{ opacity, transition: `opacity ${FADE_MS}ms ease`, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         {phase === 'auth' ? (
-          <div style={{
-            width: 150,
-            height: 148,
-            backgroundColor: colors.gray[900],
-            borderRadius: layout.radiusCard,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            overflow: 'hidden',
-            willChange: 'transform',
-            transform: 'translateZ(0)',
-            backfaceVisibility: 'hidden',
-          }}>
-            <DotLottieReact
-              src={faceIdLottie}
-              autoplay={false}
-              loop={false}
-              dotLottieRefCallback={handleLottieRef}
-              style={{ width: '100%', height: '100%' }}
-            />
-          </div>
+          <>
+            <div style={{
+              width: 150,
+              height: 148,
+              backgroundColor: isAndroid ? 'transparent' : colors.gray[900],
+              borderRadius: layout.radiusCard,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden',
+              willChange: 'transform',
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden',
+            }}>
+              <DotLottieReact
+                src={authLottie}
+                autoplay={false}
+                loop={false}
+                dotLottieRefCallback={handleLottieRef}
+                style={{ width: '100%', height: '100%' }}
+              />
+            </div>
+            {isAndroid && (
+              <p style={{
+                marginTop: spacing[5],
+                fontSize: typography.size.md,
+                fontWeight: typography.weight.semibold,
+                color: colors.onDark.primary,
+                textAlign: 'center',
+                fontFamily: typography.fontFamily,
+              }}>
+                지문을 인식해주세요
+              </p>
+            )}
+          </>
         ) : (
           <div
             onClick={(e) => e.stopPropagation()}
@@ -220,7 +240,7 @@ export default function CardBackModal({ open, onClose, fullCardNumber = '9465-44
                 backgroundColor: colors.primary[700],
                 color: colors.onDark.primary,
                 border: 'none',
-                borderRadius: layout.radiusButton,
+                borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
                 fontSize: typography.size.sm,
                 fontWeight: typography.weight.semibold,
                 cursor: 'pointer',

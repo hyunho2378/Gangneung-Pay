@@ -2,8 +2,10 @@
 // 빠른 금액 추가 칩
 
 import { colors, typography, layout } from '../../tokens/tokens'
+import { usePlatform } from '../../hooks/usePlatform'
 
 export default function QuickAmountChip({ label, onClick }) {
+  const isAndroid = usePlatform() === 'android'
   return (
     <button
       onClick={onClick}
@@ -14,7 +16,7 @@ export default function QuickAmountChip({ label, onClick }) {
         backgroundColor: colors.primary[50],
         color: colors.primary[700],
         border: 'none',
-        borderRadius: layout.radiusPill,
+        borderRadius: isAndroid ? layout.radiusSmall : layout.radiusPill,
         padding: '6px 14px',
         fontSize: typography.size.sm,
         fontWeight: typography.weight.semibold,

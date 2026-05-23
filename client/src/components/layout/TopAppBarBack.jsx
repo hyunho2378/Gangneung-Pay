@@ -1,9 +1,12 @@
 import { ArrowLeft } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { colors, typography, layout } from '../../tokens/tokens'
+import { colors, typography, layout, spacing } from '../../tokens/tokens'
+import { usePlatform } from '../../hooks/usePlatform'
 
 export default function TopAppBarBack({ title, onBack, rightAction }) {
   const navigate = useNavigate()
+  const platform = usePlatform()
+  const isAndroid = platform === 'android'
 
   function handleBack() {
     if (onBack) {
@@ -44,15 +47,16 @@ export default function TopAppBarBack({ title, onBack, rightAction }) {
         <ArrowLeft size={22} color={colors.gray[900]} strokeWidth={2} />
       </button>
 
-      {/* 제목 — 중앙 */}
+      {/* 제목 — iOS: 중앙 / Android: 좌측 */}
       <span style={{
         flex: 1,
-        textAlign: 'center',
+        textAlign: isAndroid ? 'left' : 'center',
+        marginLeft: isAndroid ? spacing[2] : 0,
         fontSize: typography.size.md,
         fontWeight: typography.weight.semibold,
         color: colors.gray[900],
-        fontFamily: typography.fontFamily,
-        marginRight: rightAction ? '0' : layout.touchMin,
+        fontFamily: isAndroid ? `'Noto Sans KR', ${typography.fontFamily}` : typography.fontFamily,
+        marginRight: isAndroid ? '0' : (rightAction ? '0' : layout.touchMin),
       }}>
         {title}
       </span>

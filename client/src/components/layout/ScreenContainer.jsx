@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react'
 import { colors } from '../../tokens/tokens'
 import StatusBar from './StatusBar'
+import StatusBarAndroid from './StatusBarAndroid'
+import { usePlatform } from '../../hooks/usePlatform'
 
 export default function ScreenContainer({ children, statusBarBg, statusBarLight, fullBleedTop = false, transparentStatusBar = false }) {
   const [isDesktop, setIsDesktop] = useState(false)
+  const platform = usePlatform()
 
   useEffect(() => {
     const check = () => {
@@ -36,7 +39,9 @@ export default function ScreenContainer({ children, statusBarBg, statusBarLight,
       }),
     }}>
       {isDesktop && !fullBleedTop && !transparentStatusBar && (
-        <StatusBar backgroundColor={statusBarBg} light={statusBarLight} />
+        platform === 'android'
+          ? <StatusBarAndroid backgroundColor={statusBarBg} light={statusBarLight} />
+          : <StatusBar backgroundColor={statusBarBg} light={statusBarLight} />
       )}
       {isDesktop && transparentStatusBar && (
         <div style={{
@@ -47,7 +52,10 @@ export default function ScreenContainer({ children, statusBarBg, statusBarLight,
           zIndex: 10,
           pointerEvents: 'none',
         }}>
-          <StatusBar backgroundColor="transparent" light={statusBarLight} />
+          {platform === 'android'
+            ? <StatusBarAndroid backgroundColor="transparent" light={statusBarLight} />
+            : <StatusBar backgroundColor="transparent" light={statusBarLight} />
+          }
         </div>
       )}
       {children}

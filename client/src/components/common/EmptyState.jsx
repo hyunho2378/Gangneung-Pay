@@ -1,4 +1,5 @@
-import { colors, typography, layout, spacing } from '../../tokens/tokens'
+import { colors, typography, spacing } from '../../tokens/tokens'
+import Button from './Button'
 
 export default function EmptyState({ message = '데이터가 없습니다', ctaLabel, onCta }) {
   return (
@@ -39,22 +40,15 @@ export default function EmptyState({ message = '데이터가 없습니다', ctaL
       </p>
 
       {ctaLabel && onCta && (
-        <button
+        <Button
+          variant="filled"
+          size="sm"
+          fullWidth={false}
+          style={{ marginTop: spacing[1] }}
           onClick={onCta}
-          style={{
-            background: 'none',
-            border: `1.5px solid ${colors.primary[700]}`,
-            borderRadius: layout.radiusButton,
-            color: colors.primary[700],
-            fontSize: typography.size.sm,
-            fontWeight: typography.weight.semibold,
-            padding: `${spacing[2]} ${spacing[6]}`,
-            cursor: 'pointer',
-            marginTop: spacing[1],
-          }}
         >
           {ctaLabel}
-        </button>
+        </Button>
       )}
     </div>
   )

@@ -6,6 +6,7 @@ import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
 import PopularKeywords from '../components/search/PopularKeywords'
 import { colors, typography, layout, spacing } from '../tokens/tokens'
+import { usePlatform } from '../hooks/usePlatform'
 
 const MOCK_STORES = [
   { id: 1, name: '초당순두부', category: '음식점', distance: '0.3km' },
@@ -21,6 +22,8 @@ export default function SearchPage() {
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
   const [recentSearches, setRecentSearches] = useState([])
+  const [searchFocused, setSearchFocused] = useState(false)
+  const isAndroid = usePlatform() === 'android'
 
   function addToRecent(keyword) {
     setRecentSearches(prev =>
@@ -49,8 +52,10 @@ export default function SearchPage() {
           display: 'flex',
           alignItems: 'center',
           gap: spacing[2],
-          border: `1px solid ${colors.gray[200]}`,
-          borderRadius: layout.radiusPill,
+          backgroundColor: isAndroid ? colors.gray[100] : undefined,
+          border: isAndroid ? 'none' : `1px solid ${colors.gray[200]}`,
+          borderBottom: isAndroid ? `2px solid ${searchFocused ? colors.primary[700] : colors.gray[400]}` : undefined,
+          borderRadius: isAndroid ? '8px 8px 0 0' : layout.radiusPill,
           padding: `${spacing[2]} ${spacing[4]}`,
         }}>
           <Search size={16} color={colors.gray[400]} strokeWidth={2} />
@@ -60,6 +65,8 @@ export default function SearchPage() {
             onChange={e => setQuery(e.target.value)}
             placeholder="매장·서비스 검색"
             autoFocus
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setSearchFocused(false)}
             style={{
               border: 'none',
               outline: 'none',

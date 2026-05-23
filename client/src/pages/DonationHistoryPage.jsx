@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
-import { colors, layout, typography } from '../tokens/tokens'
-
+import { colors, typography } from '../tokens/tokens'
+import Button from '../components/common/Button'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
 
@@ -77,22 +77,9 @@ export default function DonationHistoryPage() {
           따뜻한 마음을 나눠보세요
         </p>
 
-        <button
-          onClick={() => navigate('/donation')}
-          style={{
-            marginTop: '32px',
-            padding: '14px 40px',
-            backgroundColor: colors.primary[700],
-            border: 'none',
-            borderRadius: layout.radiusButton,
-            color: colors.surface.card,
-            fontSize: typography.size.sm,
-            fontWeight: typography.weight.semibold,
-            cursor: 'pointer',
-          }}
-        >
+        <Button variant="filled" size="md" fullWidth={false} onClick={() => navigate('/donation')} style={{ marginTop: '32px' }}>
           기부하러 가기
-        </button>
+        </Button>
       </div>
     </ScreenContainer>
   )

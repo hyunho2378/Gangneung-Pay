@@ -4,6 +4,7 @@ import { useUser } from '../../context/UserContext'
 import { colors, typography, layout, spacing } from '../../tokens/tokens'
 import KakaoLogo from '../../assets/icons/Kakao.svg'
 import NaverLogo from '../../assets/icons/Naver.svg'
+import { usePlatform } from '../../hooks/usePlatform'
 
 const KAKAO_SLIDE = {
   id: 'kakao',
@@ -88,6 +89,7 @@ const CARD_APPLY_SLIDE = {
 export default function BannerCarousel({ applyButtonRef }) {
   const navigate = useNavigate()
   const { hasCard } = useUser()
+  const isAndroid = usePlatform() === 'android'
   const [currentIndex, setCurrentIndex] = useState(0)
   const [startX, setStartX] = useState(null)
   const intervalRef = useRef(null)
@@ -209,7 +211,7 @@ export default function BannerCarousel({ applyButtonRef }) {
                     backgroundColor: slide.buttonBg || 'rgba(255,255,255,0.25)',
                     color: slide.buttonTextColor || slide.textColor,
                     border: 'none',
-                    borderRadius: layout.radiusButton,
+                    borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
                     padding: `6px 14px`,
                     fontSize: typography.size.xs,
                     fontWeight: typography.weight.semibold,

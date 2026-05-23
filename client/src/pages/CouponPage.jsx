@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
-import { colors, layout, typography } from '../tokens/tokens'
-
+import { colors, typography } from '../tokens/tokens'
+import Button from '../components/common/Button'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
 
@@ -66,22 +66,9 @@ export default function CouponPage() {
           이벤트에 참여하거나 결제 시{'\n'}쿠폰을 받을 수 있어요
         </p>
 
-        <button
-          onClick={() => navigate('/')}
-          style={{
-            marginTop: '32px',
-            padding: '12px 32px',
-            backgroundColor: colors.primary[700],
-            border: 'none',
-            borderRadius: layout.radiusButton,
-            color: colors.surface.card,
-            fontSize: typography.size.sm,
-            fontWeight: typography.weight.semibold,
-            cursor: 'pointer',
-          }}
-        >
+        <Button variant="filled" size="md" fullWidth={false} onClick={() => navigate('/')} style={{ marginTop: '32px' }}>
           이벤트 보러 가기
-        </button>
+        </Button>
       </div>
     </ScreenContainer>
   )

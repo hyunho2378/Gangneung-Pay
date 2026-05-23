@@ -2,8 +2,10 @@
 // 바텀시트 베이스 컴포넌트
 
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
+import { usePlatform } from '../../hooks/usePlatform'
 
 export default function BottomSheet({ isOpen, onClose, title, children }) {
+  const isAndroid = usePlatform() === 'android'
   if (!isOpen) return null
 
   return (
@@ -23,7 +25,7 @@ export default function BottomSheet({ isOpen, onClose, title, children }) {
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: colors.surface.overlay,
+          backgroundColor: isAndroid ? 'rgba(0,0,0,0.32)' : colors.surface.overlay,
         }}
       />
 
@@ -36,8 +38,8 @@ export default function BottomSheet({ isOpen, onClose, title, children }) {
           marginLeft: 'auto',
           marginRight: 'auto',
           backgroundColor: colors.surface.card,
-          borderTopLeftRadius: layout.radiusModal,
-          borderTopRightRadius: layout.radiusModal,
+          borderTopLeftRadius: isAndroid ? '28px' : layout.radiusModal,
+          borderTopRightRadius: isAndroid ? '28px' : layout.radiusModal,
           boxShadow: shadow.modal,
           maxHeight: '90vh',
           paddingBottom: `calc(env(safe-area-inset-bottom) + ${spacing[6]})`,
@@ -58,10 +60,10 @@ export default function BottomSheet({ isOpen, onClose, title, children }) {
         >
           <div
             style={{
-              width: '32px',
+              width: isAndroid ? '32px' : '40px',
               height: '4px',
               borderRadius: layout.radiusPill,
-              backgroundColor: colors.gray[300],
+              backgroundColor: isAndroid ? colors.gray[400] : colors.gray[300],
             }}
           />
         </div>

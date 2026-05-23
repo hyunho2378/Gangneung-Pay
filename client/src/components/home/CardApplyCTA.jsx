@@ -5,9 +5,11 @@
 
 import { useNavigate } from 'react-router-dom'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
+import { usePlatform } from '../../hooks/usePlatform'
 
 export default function CardApplyCTA({ applyButtonRef }) {
   const navigate = useNavigate()
+  const isAndroid = usePlatform() === 'android'
 
   return (
     <div style={{ margin: layout.margin }}>
@@ -47,7 +49,7 @@ export default function CardApplyCTA({ applyButtonRef }) {
               alignSelf: 'flex-start',
               backgroundColor: 'rgba(255,255,255,0.2)',
               border: '1px solid rgba(255,255,255,0.3)',
-              borderRadius: layout.radiusButton,
+              borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
               color: colors.onDark.primary,
               fontSize: typography.size.sm,
               fontWeight: typography.weight.semibold,

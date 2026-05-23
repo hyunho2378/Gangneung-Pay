@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { colors, layout, typography, shadow } from '../tokens/tokens'
+import { usePlatform } from '../hooks/usePlatform'
 import KakaoLogo from '../assets/icons/Kakao.svg'
 
 import ScreenContainer from '../components/layout/ScreenContainer'
@@ -15,6 +16,7 @@ const steps = [
 
 export default function KakaoPayGuidePage() {
   const navigate = useNavigate()
+  const isAndroid = usePlatform() === 'android'
 
   return (
     <ScreenContainer statusBarBg={colors.surface.card}>
@@ -38,20 +40,7 @@ export default function KakaoPayGuidePage() {
             alignItems: 'center',
           }}
         >
-          <div
-            style={{
-              width: '80px',
-              height: '80px',
-              backgroundColor: colors.kakaoYellow,
-              borderRadius: layout.radiusModal,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: '16px',
-            }}
-          >
-            <img src={KakaoLogo} alt="카카오페이" style={{ height: '36px', objectFit: 'contain' }} />
-          </div>
+          <img src={KakaoLogo} alt="카카오페이" style={{ height: '36px', objectFit: 'contain', marginBottom: '16px' }} />
           <p
             style={{
               fontSize: typography.size.lg,
@@ -219,7 +208,7 @@ export default function KakaoPayGuidePage() {
             padding: '16px',
             backgroundColor: colors.kakaoYellow,
             border: 'none',
-            borderRadius: layout.radiusButton,
+            borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
             color: colors.kakaoDark,
             fontSize: typography.size.md,
             fontWeight: typography.weight.bold,

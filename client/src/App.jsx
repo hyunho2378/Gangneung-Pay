@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { applyPlatformClass } from './hooks/usePlatform'
 import { AppProvider } from './context/AppContext'
 import { OnboardingProvider } from './context/OnboardingContext'
 import { UserProvider } from './context/UserContext'
@@ -43,11 +44,16 @@ import SearchPage from './pages/SearchPage'
 import CardApplyPage from './pages/CardApplyPage'
 import CardManagementPage from './pages/CardManagementPage'
 import RefundPage from './pages/RefundPage'
+import Snackbar from './components/common/Snackbar'
 import TermsPage from './pages/TermsPage'
 import MerchantApplyPage from './pages/MerchantApplyPage'
 
 function App() {
   const [showSplash, setShowSplash] = useState(true)
+
+  useEffect(() => {
+    applyPlatformClass()
+  }, [])
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 1000)
@@ -120,6 +126,7 @@ function App() {
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/merchant-apply" element={<MerchantApplyPage />} />
         </Routes>
+        <Snackbar />
       </BrowserRouter>
       </OnboardingProvider>
       </UserProvider>
