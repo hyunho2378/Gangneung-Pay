@@ -11,8 +11,6 @@ import faceIdLottie from '../../assets/lottie/face-id-ios.json?url'
 import fingerprintLottie from '../../assets/lottie/Fingerprint.json?url'
 import { usePlatform } from '../../hooks/usePlatform'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
-const DURATION_MS = 2500
-const AUTH_FALLBACK_MS = 2700
 const FADE_MS = 200
 const COUNTDOWN_SEC = 60
 
@@ -55,6 +53,8 @@ export default function CardBackModal({ open, onClose, fullCardNumber = '9465-44
   const isAndroid = platform === 'android'
   const authLottie = isAndroid ? fingerprintLottie : faceIdLottie
   const TOTAL_FRAMES = isAndroid ? 180 : 244
+  const DURATION_MS = isAndroid ? 3000 : 2500
+  const AUTH_FALLBACK_MS = isAndroid ? 3200 : 2700
 
   const [phase, setPhase] = useState('auth')
   const [seconds, setSeconds] = useState(COUNTDOWN_SEC)

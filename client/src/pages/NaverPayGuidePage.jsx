@@ -6,8 +6,8 @@ import NaverLogo from '../assets/icons/Naver.svg'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
 
-const NAVER_GREEN = colors.success
-const NAVER_GREEN_DARK = colors.explore.emeraldDark
+const NAVER_GREEN = '#00DE5A'
+const NAVER_GREEN_DARK = '#00B44A'
 const NAVER_BG = colors.greenBg
 
 const steps = [

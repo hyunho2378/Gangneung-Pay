@@ -55,7 +55,7 @@ export default function KakaoPayGuidePage() {
           <p
             style={{
               fontSize: typography.size.sm,
-              color: colors.gray[600],
+              color: colors.gray[500],
               margin: 0,
               textAlign: 'center',
               lineHeight: 1.5,
@@ -99,7 +99,7 @@ export default function KakaoPayGuidePage() {
                     width: '32px',
                     height: '32px',
                     borderRadius: '50%',
-                    backgroundColor: colors.kakaoYellow,
+                    backgroundColor: '#FFEB00',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -110,7 +110,7 @@ export default function KakaoPayGuidePage() {
                     style={{
                       fontSize: typography.size.sm,
                       fontWeight: typography.weight.bold,
-                      color: colors.kakaoDark,
+                      color: colors.gray[900],
                     }}
                   >
                     {item.step}
@@ -150,7 +150,7 @@ export default function KakaoPayGuidePage() {
               padding: layout.margin,
             }}
           >
-            <p style={{ fontSize: typography.size.xs, fontWeight: typography.weight.semibold, color: colors.gray[600], margin: '0 0 6px' }}>
+            <p style={{ fontSize: typography.size.xs, fontWeight: typography.weight.semibold, color: colors.gray[500], margin: '0 0 6px' }}>
               주의사항
             </p>
             {[

@@ -13,6 +13,7 @@ import { ArrowLeft } from 'lucide-react'
 import { useApp } from '../../context/AppContext'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
 import { useTypography } from '../../hooks/useTypography'
+import { usePlatform } from '../../hooks/usePlatform'
 import QuickAmountChip from './QuickAmountChip'
 import NumPad from './NumPad'
 import PaymentAuthOverlay from '../common/PaymentAuthOverlay'
@@ -127,6 +128,7 @@ function StepIndicator({ current }) {
 export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance = 120000, chargeLimit = 500000 }) {
   const sizes = useTypography()
   const { showSnackbar } = useApp()
+  const isAndroid = usePlatform() === 'android'
   const [amount, setAmount] = useState(0)
   const [step, setStep] = useState(1)
   const [charged, setCharged] = useState(false)
@@ -288,7 +290,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
               display: 'flex',
               flexDirection: 'row',
               gap: spacing[2],
-              padding: `${spacing[3]} ${layout.margin} ${spacing[4]}`,
+              padding: `${isAndroid ? spacing[4] : spacing[3]} ${layout.margin} ${spacing[4]}`,
               borderBottom: `1px solid ${colors.gray[100]}`,
             }}
           >
