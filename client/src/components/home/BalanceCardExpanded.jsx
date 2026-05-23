@@ -194,7 +194,7 @@ export default function BalanceCardExpanded({
               <div style={{ display: 'flex', gap: spacing[2] }}>
                 <button onClick={() => setCashbackMode('auto')} style={modeBtn(cashbackMode === 'auto')}>
                   {cashbackMode === 'auto' && <Check size={14} />}
-                  자동 사용
+                  자동 충전
                 </button>
                 <button onClick={() => setCashbackMode('manual')} style={modeBtn(cashbackMode === 'manual')}>
                   {cashbackMode === 'manual' && <Check size={14} />}

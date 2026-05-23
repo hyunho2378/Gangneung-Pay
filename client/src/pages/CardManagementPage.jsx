@@ -12,6 +12,7 @@ import { colors, typography, layout, spacing, shadow } from '../tokens/tokens'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
 import CardBackModal from '../components/home/CardBackModal'
+import { usePlatform } from '../hooks/usePlatform'
 
 const MASKED_CARD = '1234-56**-****-7890 | 03/36'
 const FULL_CARD = '1234-5678-0000-7890'
@@ -25,7 +26,7 @@ function ToggleSwitch({ on, onChange }) {
       style={{
         width: 48,
         height: 28,
-        borderRadius: 999,
+        borderRadius: layout.radiusPill,
         backgroundColor: on ? colors.primary[700] : colors.gray[300],
         border: 'none',
         cursor: 'pointer',
@@ -171,6 +172,7 @@ export default function CardManagementPage() {
   const [autoFillOn, setAutoFillOn] = useState(true)
   const [scheduleOn, setScheduleOn] = useState(false)
 
+  const isAndroid = usePlatform() === 'android'
   const fmt = (n) => n.toLocaleString('ko-KR') + '원'
 
   const handleViewCardNumber = () => {
@@ -243,7 +245,7 @@ export default function CardManagementPage() {
                 height: 44,
                 backgroundColor: 'rgba(255,255,255,0.2)',
                 border: '1px solid rgba(255,255,255,0.3)',
-                borderRadius: layout.radiusSmall,
+                borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
                 color: colors.onDark.primary,
                 fontSize: typography.size.sm,
                 fontWeight: typography.weight.medium,
@@ -260,7 +262,7 @@ export default function CardManagementPage() {
                 height: 44,
                 backgroundColor: 'rgba(255,255,255,0.2)',
                 border: '1px solid rgba(255,255,255,0.3)',
-                borderRadius: layout.radiusSmall,
+                borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
                 color: colors.onDark.primary,
                 fontSize: typography.size.sm,
                 fontWeight: typography.weight.medium,
@@ -277,7 +279,7 @@ export default function CardManagementPage() {
                 height: 44,
                 backgroundColor: colors.primary[700],
                 border: '1px solid rgba(255,255,255,0.4)',
-                borderRadius: layout.radiusSmall,
+                borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
                 color: colors.onDark.primary,
                 fontSize: typography.size.sm,
                 fontWeight: typography.weight.bold,
