@@ -442,7 +442,7 @@ export default function HomePageLarge() {
           iconBg={colors.gray[100]}
           iconColor={colors.gray[700]}
           sizes={sizes}
-          onClick={() => navigate('/customer-center')}
+          onClick={() => navigate('/usage-guide')}
         />
       </div>
 

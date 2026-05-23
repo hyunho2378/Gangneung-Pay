@@ -6,6 +6,7 @@ export default function MyMenuGroup({ title, items }) {
   const navigate = useNavigate()
 
   const handleClick = (item) => {
+    if (item.disabled) return
     if (item.onClick) item.onClick()
     else if (item.href) navigate(item.href)
   }
@@ -35,7 +36,8 @@ export default function MyMenuGroup({ title, items }) {
           style={{
             width: '100%',
             border: 'none',
-            cursor: 'pointer',
+            cursor: item.disabled ? 'default' : 'pointer',
+            pointerEvents: item.disabled ? 'none' : 'auto',
             textAlign: 'left',
             backgroundColor: colors.surface.card,
             display: 'flex',
@@ -49,7 +51,7 @@ export default function MyMenuGroup({ title, items }) {
         >
           <span style={{
             fontSize: typography.size.md,
-            color: colors.gray[900],
+            color: item.disabled ? (item.labelColor || colors.gray[300]) : colors.gray[900],
           }}>
             {item.label}
           </span>
@@ -61,12 +63,14 @@ export default function MyMenuGroup({ title, items }) {
             {item.value && (
               <span style={{
                 fontSize: typography.size.sm,
-                color: colors.gray[500],
+                color: item.disabled
+                  ? (item.valueColor || colors.gray[300])
+                  : colors.gray[500],
               }}>
                 {item.value}
               </span>
             )}
-            <ChevronRight size={20} color={colors.gray[400]} />
+            {!item.disabled && <ChevronRight size={20} color={colors.gray[400]} />}
           </div>
         </button>
       ))}

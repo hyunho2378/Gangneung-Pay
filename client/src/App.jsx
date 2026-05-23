@@ -43,6 +43,8 @@ import SearchPage from './pages/SearchPage'
 import CardApplyPage from './pages/CardApplyPage'
 import CardManagementPage from './pages/CardManagementPage'
 import RefundPage from './pages/RefundPage'
+import TermsPage from './pages/TermsPage'
+import MerchantApplyPage from './pages/MerchantApplyPage'
 
 function App() {
   const [showSplash, setShowSplash] = useState(true)
@@ -115,6 +117,8 @@ function App() {
           <Route path="/news" element={<NewsListPage />} />
           <Route path="/news/:id" element={<NewsDetailPage />} />
           <Route path="/place/:id" element={<PlaceDetailPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/merchant-apply" element={<MerchantApplyPage />} />
         </Routes>
       </BrowserRouter>
       </OnboardingProvider>

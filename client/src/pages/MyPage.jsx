@@ -6,7 +6,7 @@
 
 import { CheckCircle } from 'lucide-react'
 import { useApp } from '../context/AppContext'
-import { useNavigate } from 'react-router-dom'
+import { useUser } from '../context/UserContext'
 import { colors, typography, layout, spacing, shadow } from '../tokens/tokens'
 import { useTypography } from '../hooks/useTypography'
 import ScreenContainer from '../components/layout/ScreenContainer'
@@ -14,10 +14,13 @@ import BottomNavBar from '../components/layout/BottomNavBar'
 import MyMenuGroup from '../components/mypage/MyMenuGroup'
 
 const USER_PROFILE = {
-  name: '홍길동',
-  email: 'hong@gmail.com',
-  phone: '010-1234-5678',
+  name: '김초당',
+  email: 'chodang@example.com',
+  phone: '010-0000-0000',
 }
+
+const ACCOUNT_BANK = '지역농협'
+const ACCOUNT_NUMBER = '351-06****-**-***'
 
 function maskEmail(email) {
   const [local, domain] = email.split('@')
@@ -29,9 +32,9 @@ function maskPhone(phone) {
 }
 
 export default function MyPage() {
-  const navigate = useNavigate()
   const sizes = useTypography()
   const { isLargeText, toggleLargeText } = useApp()
+  const { hasCard } = useUser()
 
   const initial = USER_PROFILE.name.charAt(0)
 
@@ -40,17 +43,19 @@ export default function MyPage() {
       title: '내 카드',
       items: [
         { label: '카드 관리', href: '/card-management' },
-        { label: '카드 배송 현황', href: '/card-lost' },
-        { label: '주 카드 변경', href: '/card-lost' },
+        hasCard
+          ? { label: '카드 배송 현황', disabled: true, labelColor: colors.gray[900], value: '배송 완료', valueColor: colors.success }
+          : { label: '카드 배송 현황', disabled: true, labelColor: colors.gray[900], value: '배송 중', valueColor: colors.gray[400] },
+        { label: '주 카드 변경' },
         { label: '분실신고 / 재발급', href: '/card-lost' },
       ],
     },
     {
       title: '회원정보',
       items: [
-        { label: '회원 정보 변경', href: '/settings' },
-        { label: '비밀번호 변경', href: '/settings' },
-        { label: '본인확인 정보', href: '/settings' },
+        { label: '회원 정보 변경' },
+        { label: '비밀번호 변경' },
+        { label: '본인확인 정보' },
       ],
     },
     {
@@ -58,14 +63,15 @@ export default function MyPage() {
       items: [
         { label: '고객센터', href: '/customer-center' },
         { label: '자주 묻는 질문', href: '/customer-center' },
-        { label: '공지사항', href: '/notification' },
-        { label: '이용약관', href: '/settings' },
+        { label: '공지사항' },
+        { label: '이용약관', href: '/terms' },
       ],
     },
     {
       title: '설정',
       items: [
-        { label: '알림 설정', href: '/notification' },
+        // 수정 5: /notification(알림 목록) → /settings(알림 토글 있는 곳)
+        { label: '알림 설정', href: '/settings' },
         { label: '언어 설정', value: '한국어', href: '/settings' },
         { label: '큰글씨 모드', value: isLargeText ? '켜짐' : '꺼짐', onClick: toggleLargeText },
       ],
@@ -73,7 +79,7 @@ export default function MyPage() {
     {
       title: '가맹점 신청',
       items: [
-        { label: '가맹점 신청 / 관리', href: '/service-edit' },
+        { label: '가맹점 신청 / 관리', href: '/merchant-apply' },
       ],
     },
   ]
@@ -139,7 +145,6 @@ export default function MyPage() {
 
           {/* 편집 버튼 */}
           <button
-            onClick={() => navigate('/settings')}
             style={{
               padding: `${spacing[2]} ${spacing[3]}`,
               backgroundColor: 'transparent',
@@ -153,6 +158,52 @@ export default function MyPage() {
             }}
           >
             편집
+          </button>
+        </div>
+
+        {/* 계좌 정보 */}
+        <div style={{
+          margin: `0 ${layout.margin} ${layout.margin}`,
+          padding: spacing[5],
+          backgroundColor: colors.surface.card,
+          borderRadius: layout.radiusCard,
+          boxShadow: shadow.card,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+          <div>
+            <div style={{
+              fontSize: sizes.xs,
+              color: colors.gray[500],
+              fontFamily: typography.fontFamily,
+              marginBottom: spacing[1],
+            }}>
+              {ACCOUNT_BANK}
+            </div>
+            <div style={{
+              fontSize: sizes.md,
+              fontWeight: typography.weight.semibold,
+              color: colors.gray[900],
+              fontFamily: typography.fontFamily,
+            }}>
+              {ACCOUNT_NUMBER}
+            </div>
+          </div>
+          <button
+            disabled
+            style={{
+              padding: `${spacing[2]} ${spacing[3]}`,
+              backgroundColor: 'transparent',
+              border: `1px solid ${colors.gray[200]}`,
+              borderRadius: layout.radiusPill,
+              fontSize: sizes.xs,
+              color: colors.gray[300],
+              cursor: 'default',
+              fontFamily: typography.fontFamily,
+            }}
+          >
+            변경
           </button>
         </div>
 

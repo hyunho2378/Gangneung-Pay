@@ -114,8 +114,16 @@ export default function SupportPage() {
         ))}
       </div>
 
-      {/* 맞춤 정보 설정 버튼 */}
-      <div style={{ padding: `12px ${layout.margin} 0`, flexShrink: 0, backgroundColor: colors.surface.background }}>
+      {/* 스크롤 영역 */}
+      <div
+        style={{
+          overflowY: 'auto',
+          flex: 1,
+          backgroundColor: colors.surface.background,
+          padding: `12px ${layout.margin} 139px`,
+        }}
+      >
+        {/* 맞춤 정보 설정 버튼 */}
         <button
           onClick={() => navigate('/custom-info')}
           style={{
@@ -128,6 +136,7 @@ export default function SupportPage() {
             alignItems: 'center',
             justifyContent: 'space-between',
             cursor: 'pointer',
+            marginBottom: spacing[3],
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: spacing[2] }}>
@@ -149,17 +158,7 @@ export default function SupportPage() {
             <path d="M6 4l4 4-4 4" stroke={colors.primary[700]} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
-      </div>
 
-      {/* 스크롤 영역 */}
-      <div
-        style={{
-          overflowY: 'auto',
-          flex: 1,
-          backgroundColor: colors.surface.background,
-          padding: `12px ${layout.margin} 139px`,
-        }}
-      >
         <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[3] }}>
           {mockGrants.map((grant) => (
             <SupportGrantCard

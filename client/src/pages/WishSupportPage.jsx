@@ -65,6 +65,7 @@ export default function WishSupportPage() {
             margin: 0,
             textAlign: 'center',
             lineHeight: 1.5,
+            whiteSpace: 'pre-line',
           }}
         >
           나에게 맞는 지원금을 찾아{'\n'}별표로 저장해보세요

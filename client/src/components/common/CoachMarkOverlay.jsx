@@ -14,10 +14,9 @@ export default function CoachMarkOverlay({ targetRef, message, step, totalSteps,
   const [targetRect, setTargetRect] = useState(null)
 
   useEffect(() => {
-    const prevOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => {
-      document.body.style.overflow = prevOverflow
+      document.body.style.overflow = ''
     }
   }, [])
 
@@ -160,6 +159,8 @@ export default function CoachMarkOverlay({ targetRef, message, step, totalSteps,
             fontSize: typography.size.sm,
             color: colors.gray[900],
             lineHeight: 1.6,
+            wordBreak: 'keep-all',
+            overflowWrap: 'break-word',
           }}>
             {message}
           </p>

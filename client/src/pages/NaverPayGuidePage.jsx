@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { colors, layout, typography, shadow, spacing } from '../tokens/tokens'
+import NaverLogo from '../assets/icons/Naver.svg'
 
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
@@ -68,9 +69,7 @@ export default function NaverPayGuidePage() {
               marginBottom: '16px',
             }}
           >
-            <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-              <path d="M9 7 L9 37 L16 37 L16 23 L28 37 L35 37 L35 7 L28 7 L28 21 L16 7 Z" fill="white" />
-            </svg>
+            <img src={NaverLogo} alt="네이버페이" style={{ height: '36px', objectFit: 'contain' }} />
           </div>
           <p
             style={{

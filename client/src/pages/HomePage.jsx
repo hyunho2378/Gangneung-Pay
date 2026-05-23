@@ -1,9 +1,10 @@
 import { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { HelpCircle } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { useUser } from '../context/UserContext'
 import { useOnboarding } from '../context/OnboardingContext'
-import { colors, layout, spacing } from '../tokens/tokens'
+import { colors, layout, spacing, shadow, typography } from '../tokens/tokens'
 import { STORES, GANGNEUNG_STATION, calculateDistance } from '../data/stores'
 import CoachMarkOverlay from '../components/common/CoachMarkOverlay'
 
@@ -20,7 +21,6 @@ import CardApplyCTA from '../components/home/CardApplyCTA'
 import CashbackEntryCard from '../components/home/CashbackEntryCard'
 import SectionHeader from '../components/home/SectionHeader'
 import StoreRecommendCard from '../components/home/StoreRecommendCard'
-import ExploreScrollCard from '../components/home/ExploreScrollCard'
 
 const FEATURED_IDS = [2630781, 646727, 3401394]
 const featuredStores = FEATURED_IDS
@@ -83,10 +83,8 @@ export default function HomePage() {
         {/* H-01: 위젯 추가 배너 */}
         <WidgetAddBanner />
 
-        {/* 캐러셀 */}
-        <div style={{ marginBottom: spacing[3] }}>
-          <BannerCarousel />
-        </div>
+        {/* 배너 캐러셀 */}
+        <BannerCarousel applyButtonRef={applyButtonRef} />
 
         {/* B4: 카드 보유 여부 분기 */}
         {hasCard ? (
@@ -112,12 +110,44 @@ export default function HomePage() {
         />
         <StoreRecommendCard stores={featuredStores} />
 
-        {/* 강릉페이 120% 활용하기 */}
-        <div style={{ marginTop: spacing[4], marginBottom: spacing[3] }}>
-          <ExploreScrollCard />
+        {/* 이용안내 카드 */}
+        <div
+          onClick={() => navigate('/usage-guide')}
+          style={{
+            margin: layout.margin,
+            backgroundColor: colors.surface.card,
+            borderRadius: layout.radiusCard,
+            boxShadow: shadow.card,
+            padding: spacing[5],
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            cursor: 'pointer',
+          }}
+        >
+          <span style={{
+            fontSize: typography.size.md,
+            fontWeight: typography.weight.bold,
+            color: colors.gray[900],
+            fontFamily: typography.fontFamily,
+          }}>
+            강릉페이 이용안내
+          </span>
+          <div style={{
+            width: '48px',
+            height: '48px',
+            borderRadius: layout.radiusCard,
+            backgroundColor: colors.gray[100],
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            <HelpCircle size={24} color={colors.gray[700]} />
+          </div>
         </div>
 
-        <div style={{ height: layout.margin }} />
+        <div style={{ height: layout.bottomNavHeight }} />
       </div>
 
       <BottomNavBar />

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { colors, typography, layout, spacing } from '../../tokens/tokens'
 
 const CARDS = [
@@ -12,12 +13,13 @@ const CARDS = [
   },
   {
     id: 2,
-    title: '교통카드 기능',
-    description: '버스·택시 결제까지',
-    bg: colors.primary[100],
-    titleColor: colors.primary[700],
-    descColor: colors.primary[600],
-    arrowColor: colors.primary[700],
+    title: '강릉페이 이용안내',
+    description: '사용법을 알아보세요',
+    bg: colors.gray[100],
+    titleColor: colors.gray[700],
+    descColor: colors.gray[500],
+    arrowColor: colors.gray[400],
+    path: '/usage-guide',
   },
   {
     id: 3,
@@ -28,18 +30,10 @@ const CARDS = [
     descColor: colors.explore.emeraldDark,
     arrowColor: colors.success,
   },
-  {
-    id: 4,
-    title: '소통참여',
-    description: '지역 커뮤니티와 함께',
-    bg: colors.purpleBg,
-    titleColor: colors.explore.purpleDarker,
-    descColor: colors.purpleAccent,
-    arrowColor: colors.explore.purpleMid,
-  },
 ]
 
 export default function ExploreScrollCard() {
+  const navigate = useNavigate()
   return (
     <div>
       {/* 섹션 제목 */}
@@ -73,6 +67,7 @@ export default function ExploreScrollCard() {
         {CARDS.map((card) => (
           <div
             key={card.id}
+            onClick={() => card.path && navigate(card.path)}
             style={{
               minWidth: '160px',
               width: '160px',
@@ -83,7 +78,7 @@ export default function ExploreScrollCard() {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              cursor: 'pointer',
+              cursor: card.path ? 'pointer' : 'default',
               flexShrink: 0,
             }}
           >

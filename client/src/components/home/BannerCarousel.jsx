@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
 import { colors, typography, layout, spacing } from '../../tokens/tokens'
+import KakaoLogo from '../../assets/icons/Kakao.svg'
+import NaverLogo from '../../assets/icons/Naver.svg'
 
 const KAKAO_SLIDE = {
   id: 'kakao',
@@ -11,18 +13,11 @@ const KAKAO_SLIDE = {
   title: '카카오페이로도\n결제하세요',
   description: '카카오페이와 연결하면 더 편리해요',
   illustration: (
-    <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* 카카오톡 말풍선 isometric 스타일 */}
-      <rect x="10" y="16" width="50" height="34" rx="10" fill="#FEE500" />
-      <path d="M28 50 L32 58 L40 50" fill="#FEE500" />
-      <circle cx="25" cy="33" r="3.5" fill="#3C1E1E" />
-      <circle cx="35" cy="33" r="3.5" fill="#3C1E1E" />
-      <circle cx="45" cy="33" r="3.5" fill="#3C1E1E" />
-      {/* 입체 그림자 */}
-      <rect x="13" y="19" width="50" height="34" rx="10" fill="#F5C800" opacity="0.5" style={{zIndex: -1}} />
-      <circle cx="62" cy="18" r="6" fill="#FEE500" opacity="0.6" />
-      <circle cx="14" cy="56" r="4" fill="#FEE500" opacity="0.4" />
-    </svg>
+    <img
+      src={KakaoLogo}
+      alt="카카오페이"
+      style={{ height: '40px', objectFit: 'contain' }}
+    />
   ),
 }
 
@@ -34,11 +29,11 @@ const NAVER_SLIDE = {
   title: '네이버페이로도\n결제하세요',
   description: '네이버페이와 연결하면 더 편리해요',
   illustration: (
-    <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-      <rect x="8" y="8" width="48" height="48" rx="10" fill="#03C75A" />
-      <rect x="10" y="10" width="48" height="48" rx="10" fill="#15803D" opacity="0.4" />
-      <path d="M22 18 L22 46 L28 46 L28 30 L36 46 L42 46 L42 18 L36 18 L36 34 L28 18 Z" fill="white" />
-    </svg>
+    <img
+      src={NaverLogo}
+      alt="네이버페이"
+      style={{ height: '40px', objectFit: 'contain' }}
+    />
   ),
 }
 
@@ -201,7 +196,7 @@ export default function BannerCarousel({ applyButtonRef }) {
               }}>
                 {slide.description}
               </p>
-              {slide.buttonLabel && slide.id !== 'kakao' && (
+              {slide.buttonLabel && slide.id !== 'kakao' && hasCard && (
                 <button
                   ref={slide.id === 'cardApply' ? applyButtonRef : undefined}
                   onClick={(e) => {

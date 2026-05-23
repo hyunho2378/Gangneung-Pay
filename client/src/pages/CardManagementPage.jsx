@@ -6,15 +6,15 @@
 
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { PlusCircle, ChevronRight } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 import { useUser } from '../context/UserContext'
 import { colors, typography, layout, spacing, shadow } from '../tokens/tokens'
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
 import CardBackModal from '../components/home/CardBackModal'
 
-const MASKED_CARD = '9465-44**-****-8145 | 03/36'
-const FULL_CARD = '9465-4421-3567-8145'
+const MASKED_CARD = '1234-56**-****-7890 | 03/36'
+const FULL_CARD = '1234-5678-0000-7890'
 
 function ToggleSwitch({ on, onChange }) {
   return (
@@ -183,69 +183,7 @@ export default function CardManagementPage() {
       <TopAppBarBack
         title="카드 관리"
         onBack={() => navigate(-1)}
-        rightAction={
-          <button
-            onClick={() => navigate('/card-apply')}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: spacing[1],
-              background: 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-              padding: `${spacing[1]} ${spacing[2]}`,
-              fontSize: typography.size.sm,
-              fontWeight: typography.weight.medium,
-              color: colors.primary[700],
-              fontFamily: typography.fontFamily,
-            }}
-          >
-            <PlusCircle size={16} />
-            카드 등록
-          </button>
-        }
       />
-
-      {/* 탭 (이용내역 / 카드 관리) */}
-      <div style={{
-        display: 'flex',
-        backgroundColor: colors.surface.card,
-        borderBottom: `1px solid ${colors.gray[100]}`,
-      }}>
-        <button
-          onClick={() => navigate('/history')}
-          style={{
-            flex: 1,
-            height: 48,
-            background: 'none',
-            border: 'none',
-            borderBottom: '2px solid transparent',
-            fontSize: typography.size.sm,
-            fontWeight: typography.weight.regular,
-            color: colors.gray[500],
-            cursor: 'pointer',
-            fontFamily: typography.fontFamily,
-          }}
-        >
-          이용내역
-        </button>
-        <button
-          style={{
-            flex: 1,
-            height: 48,
-            background: 'none',
-            border: 'none',
-            borderBottom: `2px solid ${colors.primary[700]}`,
-            fontSize: typography.size.sm,
-            fontWeight: typography.weight.semibold,
-            color: colors.primary[700],
-            cursor: 'default',
-            fontFamily: typography.fontFamily,
-          }}
-        >
-          카드 관리
-        </button>
-      </div>
 
       <div style={{
         flex: 1,

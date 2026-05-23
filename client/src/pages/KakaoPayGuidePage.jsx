@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { colors, layout, typography, shadow } from '../tokens/tokens'
+import KakaoLogo from '../assets/icons/Kakao.svg'
 
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
@@ -49,15 +50,7 @@ export default function KakaoPayGuidePage() {
               marginBottom: '16px',
             }}
           >
-            <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-              <path
-                d="M22 8C13.2 8 6 13.8 6 21c0 4.9 3 9.2 7.5 11.8L12 36l5.8-2.4c1.4.4 2.8.5 4.2.5 8.8 0 16-5.8 16-13s-7.2-13-16-13z"
-                fill="#3C1E1E"
-              />
-              <circle cx="16" cy="21" r="2" fill="#FEF08A" />
-              <circle cx="22" cy="21" r="2" fill="#FEF08A" />
-              <circle cx="28" cy="21" r="2" fill="#FEF08A" />
-            </svg>
+            <img src={KakaoLogo} alt="카카오페이" style={{ height: '36px', objectFit: 'contain' }} />
           </div>
           <p
             style={{

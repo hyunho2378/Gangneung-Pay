@@ -1,202 +1,86 @@
-import { useState } from 'react'
+// UsageGuidePage.jsx — 미니 렌더 4탭 개편
+// 카드신청 / 카드등록 / 충전 / 환불 — 각 단계마다 폰 프레임 + 실제 컴포넌트 스냅샷
+// 이미지5~8 톤: 파란 그라디언트 배경, 단계 번호(01,02,03)
+
+import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { colors, layout, typography, shadow } from '../tokens/tokens'
+import { colors, layout, typography, spacing } from '../tokens/tokens'
 
 import ScreenContainer from '../components/layout/ScreenContainer'
 import TopAppBarBack from '../components/layout/TopAppBarBack'
+import PhoneFrame from '../components/usage-guide/PhoneFrame'
+import HomeCoachMini from '../components/usage-guide/HomeCoachMini'
+import ChargeMini from '../components/usage-guide/ChargeMini'
+import CardApplyMini from '../components/usage-guide/CardApplyMini'
+import CardManageMini from '../components/usage-guide/CardManageMini'
+import RefundMini from '../components/usage-guide/RefundMini'
 
-const chargeFaqs = [
-  {
-    id: 1,
-    question: '어떻게 충전하나요?',
-    answer: '앱 홈 화면에서 "충전" 버튼을 탭하세요. 충전 금액을 입력하거나 빠른 금액을 선택 후 결제수단(계좌이체)을 선택해 충전할 수 있습니다. 1회 최소 충전금액은 1,000원, 최대 50만원입니다.',
-  },
-  {
-    id: 2,
-    question: '충전 후 즉시 사용 가능한가요?',
-    answer: '네, 충전 즉시 사용 가능합니다. 은행 점검 시간(매일 23:30~00:30)에는 충전이 지연될 수 있습니다.',
-  },
-  {
-    id: 3,
-    question: '충전 취소는 어떻게 하나요?',
-    answer: '충전 직후 취소는 고객센터(1566-4335)로 연락하시거나 앱 내 "이용내역"에서 해당 거래를 찾아 취소를 요청하세요. 충전 후 사용이 시작된 금액은 취소가 불가합니다.',
-  },
-  {
-    id: 4,
-    question: '충전 한도가 있나요?',
-    answer: '1회 최대 50만원, 1일 최대 100만원, 월 최대 300만원까지 충전 가능합니다. 잔액 한도는 100만원입니다.',
-  },
-  {
-    id: 5,
-    question: '충전 실패 시 어떻게 하나요?',
-    answer: '충전 실패 시 결제 금액은 자동으로 환불됩니다. 환불은 1~3 영업일 소요됩니다. 문제가 지속되면 고객센터에 문의하세요.',
-  },
-]
+const TABS = ['카드 신청', '카드 등록', '충전', '환불']
 
-const cardApplicationSteps = [
-  {
-    step: 1,
-    title: '앱 설치 및 회원가입',
-    desc: '강릉페이 앱을 설치하고 본인인증 후 회원가입을 완료하세요.',
+// 각 탭의 단계 정의: { no, title, desc, render }
+const GUIDE = {
+  0: { // 카드 신청
+    intro: '강릉페이 카드를 신청하는 방법이에요.',
+    steps: [
+      { no: '01', title: '홈에서 카드 신청을 시작해요', desc: '홈 화면의 [신청하기] 버튼을 눌러 카드 신청을 시작해요.', render: <HomeCoachMini variant="cardApply" />, h: 600 },
+      { no: '02', title: '혜택받을 카드를 선택해요', desc: '강릉페이 카드의 혜택을 확인하고 [간편 신청하기]를 눌러주세요.', render: <CardApplyMini step="select" />, h: 760 },
+      { no: '03', title: '배송 완료 후 카드를 등록해요', desc: '카드가 배송되면 앞면 16자리 번호를 입력해 등록해주세요.', render: <CardApplyMini step="shipped" />, h: 600 },
+    ],
   },
-  {
-    step: 2,
-    title: '카드 신청',
-    desc: '홈 화면에서 "카드 신청" 또는 전체메뉴 > 카드 신청을 선택하세요.',
+  1: { // 카드 등록(관리)
+    intro: '등록한 카드를 관리하는 화면이에요.',
+    steps: [
+      { no: '01', title: '카드 관리 화면이에요', desc: '잔액 확인, 충전·QR결제, 카드 번호 보기 등을 한 곳에서 관리해요.', render: <CardManageMini balance={112671} />, h: 760 },
+    ],
   },
-  {
-    step: 3,
-    title: '배송지 입력',
-    desc: '카드를 받을 주소를 입력하세요. 강릉시 거주자만 신청 가능합니다.',
+  2: { // 충전
+    intro: '강릉페이를 충전하는 방법이에요.',
+    steps: [
+      { no: '01', title: '홈에서 충전을 시작해요', desc: '홈 잔액 카드의 [충전] 버튼을 눌러주세요.', render: <HomeCoachMini variant="charge" />, h: 620 },
+      { no: '02', title: '충전 금액을 입력해요', desc: '빠른 금액 버튼을 누르거나 직접 입력한 뒤 [다음]을 눌러주세요.', render: <ChargeMini step={1} amount={50000} balance={120000} />, h: 720 },
+      { no: '03', title: '충전 내용을 확인해요', desc: '충전 금액과 충전 후 잔액을 확인하고 [충전하기]를 눌러주세요.', render: <ChargeMini step={2} amount={50000} balance={120000} />, h: 600 },
+      { no: '04', title: '충전이 완료돼요', desc: '얼굴인증이 끝나면 즉시 충전이 완료됩니다.', render: <ChargeMini step={3} amount={50000} balance={120000} />, h: 600 },
+    ],
   },
-  {
-    step: 4,
-    title: '신청 완료',
-    desc: '신청 완료 후 영업일 기준 3~5일 내 배송됩니다.',
+  3: { // 환불
+    intro: '충전한 금액을 환불하는 방법이에요.',
+    steps: [
+      { no: '01', title: '홈에서 환불을 시작해요', desc: '홈 잔액 카드의 [환불] 버튼을 눌러주세요.', render: <HomeCoachMini variant="refund" />, h: 620 },
+      { no: '02', title: '충전 내역에서 환불을 선택해요', desc: '환불 가능한 충전 건의 [환불] 버튼을 눌러주세요. 조건 미충족 시 사유가 표시됩니다.', render: <RefundMini step="list" balance={112671} />, h: 720 },
+      { no: '03', title: '환불 내용을 확인하고 신청해요', desc: '환불 금액을 확인하고 [신청하기]를 누르면 얼굴인증 후 환불이 진행됩니다.', render: <RefundMini step="confirm" balance={112671} />, h: 720 },
+    ],
   },
-  {
-    step: 5,
-    title: '카드 수령 및 활성화',
-    desc: '카드 수령 후 앱에서 활성화하면 즉시 사용 가능합니다.',
-  },
-]
-
-const etcFaqs = [
-  {
-    id: 1,
-    question: '가맹점은 어디서 확인하나요?',
-    answer: '앱 하단 탭에서 "매장" 탭을 선택하면 지도 또는 리스트로 강릉페이 사용 가능 가맹점을 확인할 수 있습니다.',
-  },
-  {
-    id: 2,
-    question: '캐시백은 언제 적립되나요?',
-    answer: '결제 완료 시 즉시 캐시백이 적립됩니다. 캐시백 비율은 결제 금액의 1~3%이며 이벤트 기간에는 최대 10%까지 적립됩니다.',
-  },
-  {
-    id: 3,
-    question: '지원금은 어떻게 받나요?',
-    answer: '"지원금" 탭에서 맞춤 지원금을 확인하고 신청하세요. 지원 기관에 따라 별도 신청 절차가 있을 수 있습니다.',
-  },
-  {
-    id: 4,
-    question: '비밀번호를 잊어버렸어요',
-    answer: '로그인 화면에서 "비밀번호 찾기"를 선택하거나 고객센터(1566-4335)에 문의하세요.',
-  },
-]
-
-function AccordionItem({ question, answer }) {
-  const [isOpen, setIsOpen] = useState(false)
-
-  return (
-    <div>
-      <button
-        onClick={() => setIsOpen((v) => !v)}
-        style={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '14px 16px',
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          textAlign: 'left',
-          gap: '8px',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1 }}>
-          <span
-            style={{
-              fontSize: typography.size.xs,
-              fontWeight: typography.weight.bold,
-              color: colors.primary[700],
-              flexShrink: 0,
-            }}
-          >
-            Q
-          </span>
-          <span
-            style={{
-              fontSize: typography.size.sm,
-              fontWeight: typography.weight.medium,
-              color: colors.gray[900],
-            }}
-          >
-            {question}
-          </span>
-        </div>
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          style={{
-            flexShrink: 0,
-            transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)',
-            transition: 'transform 0.2s ease',
-          }}
-        >
-          <path d="M6 4l4 4-4 4" stroke={colors.gray[400]} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </button>
-
-      {isOpen && (
-        <div
-          style={{
-            padding: '0 16px 14px 36px',
-            backgroundColor: colors.gray[50],
-          }}
-        >
-          <p
-            style={{
-              fontSize: typography.size.sm,
-              color: colors.gray[600],
-              margin: 0,
-              lineHeight: 1.6,
-            }}
-          >
-            {answer}
-          </p>
-        </div>
-      )}
-    </div>
-  )
 }
-
-const tabs = ['충전/충전취소', '카드 신청', '기타']
 
 export default function UsageGuidePage() {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState(0)
+  const contentRef = useRef(null)
+  const guide = GUIDE[activeTab]
 
   return (
     <ScreenContainer statusBarBg={colors.surface.card}>
       <TopAppBarBack title="이용안내" onBack={() => navigate(-1)} />
 
       {/* 탭 바 */}
-      <div
-        style={{
-          display: 'flex',
-          backgroundColor: colors.surface.card,
-          borderBottom: `1px solid ${colors.gray[200]}`,
-          flexShrink: 0,
-        }}
-      >
-        {tabs.map((tab, index) => (
+      <div style={{
+        display: 'flex', backgroundColor: colors.surface.card,
+        borderBottom: `1px solid ${colors.gray[200]}`, flexShrink: 0,
+      }}>
+        {TABS.map((tab, index) => (
           <button
             key={index}
-            onClick={() => setActiveTab(index)}
+            onClick={() => {
+                setActiveTab(index)
+                if (contentRef.current) contentRef.current.scrollTop = 0
+              }}
             style={{
-              flex: 1,
-              padding: '13px 0',
-              background: 'none',
-              border: 'none',
+              flex: 1, padding: '13px 0', background: 'none', border: 'none',
               borderBottom: activeTab === index ? `2px solid ${colors.primary[700]}` : '2px solid transparent',
               color: activeTab === index ? colors.primary[700] : colors.gray[500],
               fontSize: typography.size.sm,
               fontWeight: activeTab === index ? typography.weight.semibold : typography.weight.medium,
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
+              cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: typography.fontFamily,
             }}
           >
             {tab}
@@ -204,161 +88,68 @@ export default function UsageGuidePage() {
         ))}
       </div>
 
-      {/* 탭 콘텐츠 */}
+      {/* 콘텐츠 — 파란 그라디언트 배경 (이미지5~8 톤) */}
       <div
+        ref={contentRef}
         style={{
-          flex: 1,
-          overflowY: 'auto',
-          backgroundColor: colors.surface.background,
-          padding: `${layout.margin} ${layout.margin} 24px`,
+          flex: 1, overflowY: 'auto',
+          background: 'linear-gradient(180deg, #EAF2FE 0%, #F2F4F8 100%)',
+          padding: `${spacing[5]} ${layout.margin} ${spacing[10]}`,
         }}
       >
-        {/* 충전/충전취소 탭 */}
-        {activeTab === 0 && (
-          <div
-            style={{
-              backgroundColor: colors.surface.card,
-              borderRadius: layout.radiusCard,
-              overflow: 'hidden',
-              boxShadow: shadow.card,
-            }}
-          >
-            {chargeFaqs.map((faq, index) => (
-              <div key={faq.id}>
-                <AccordionItem question={faq.question} answer={faq.answer} />
-                {index < chargeFaqs.length - 1 && (
-                  <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: `0 ${layout.margin}` }} />
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+        {/* 인트로 */}
+        <p style={{
+          margin: `0 0 ${spacing[6]}`, textAlign: 'center', fontSize: typography.size.sm,
+          color: colors.gray[600], fontFamily: typography.fontFamily, lineHeight: 1.5,
+        }}>
+          {guide.intro}
+        </p>
 
-        {/* 카드 신청 탭 */}
-        {activeTab === 1 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {cardApplicationSteps.map((item) => (
-              <div
-                key={item.step}
-                style={{
-                  backgroundColor: colors.surface.card,
-                  borderRadius: layout.radiusCard,
-                  padding: layout.margin,
-                  boxShadow: shadow.card,
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: '14px',
-                }}
-              >
-                <div
-                  style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    backgroundColor: colors.primary[700],
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: typography.size.xs,
-                      fontWeight: typography.weight.bold,
-                      color: colors.surface.card,
-                    }}
-                  >
-                    {item.step}
-                  </span>
-                </div>
-                <div>
-                  <p
-                    style={{
-                      fontSize: typography.size.sm,
-                      fontWeight: typography.weight.semibold,
-                      color: colors.gray[900],
-                      margin: '0 0 4px',
-                    }}
-                  >
-                    {item.title}
-                  </p>
-                  <p
-                    style={{
-                      fontSize: typography.size.xs,
-                      color: colors.gray[500],
-                      margin: 0,
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    {item.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
-
-            {/* 카드 신청 주의사항 */}
-            <div
-              style={{
-                backgroundColor: colors.gray[100],
-                borderRadius: layout.radiusCard,
-                padding: layout.margin,
-              }}
-            >
-              <p style={{ fontSize: typography.size.xs, fontWeight: typography.weight.semibold, color: colors.gray[600], margin: '0 0 6px' }}>
-                신청 전 확인사항
-              </p>
-              {[
-                '강릉시 거주자만 신청 가능합니다',
-                '1인 1카드만 발급됩니다',
-                '카드 발급 수수료는 무료입니다',
-              ].map((note, i) => (
-                <p key={i} style={{ fontSize: typography.size.xs, color: colors.gray[500], margin: i > 0 ? '4px 0 0' : 0, lineHeight: 1.5 }}>
-                  • {note}
-                </p>
-              ))}
+        {/* 단계별 */}
+        {guide.steps.map((s, i) => (
+          <div key={i} style={{ marginBottom: spacing[8] }}>
+            {/* 단계 번호 */}
+            <div style={{ textAlign: 'center', marginBottom: spacing[2] }}>
+              <span style={{
+                display: 'inline-block', fontSize: typography.size.xl, fontWeight: typography.weight.bold,
+                color: colors.primary[700], fontFamily: typography.fontFamily,
+              }}>
+                {s.no}
+              </span>
             </div>
+            {/* 제목 */}
+            <p style={{
+              margin: `0 0 ${spacing[2]}`, textAlign: 'center', fontSize: typography.size.lg,
+              fontWeight: typography.weight.bold, color: colors.gray[900], fontFamily: typography.fontFamily, lineHeight: 1.4,
+            }}>
+              {s.title}
+            </p>
+            {/* 설명 */}
+            <p style={{
+              margin: `0 auto ${spacing[2]}`, maxWidth: '300px', textAlign: 'center', fontSize: typography.size.sm,
+              color: colors.gray[500], fontFamily: typography.fontFamily, lineHeight: 1.6,
+            }}>
+              {s.desc}
+            </p>
+            {/* 폰 프레임 + 미니 렌더 */}
+            <PhoneFrame scale={0.62} screenHeight={s.h}>
+              {s.render}
+            </PhoneFrame>
           </div>
-        )}
+        ))}
 
-        {/* 기타 탭 */}
-        {activeTab === 2 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div
-              style={{
-                backgroundColor: colors.surface.card,
-                borderRadius: layout.radiusCard,
-                overflow: 'hidden',
-                boxShadow: shadow.card,
-              }}
-            >
-              {etcFaqs.map((faq, index) => (
-                <div key={faq.id}>
-                  <AccordionItem question={faq.question} answer={faq.answer} />
-                  {index < etcFaqs.length - 1 && (
-                    <div style={{ height: '1px', backgroundColor: colors.gray[100], margin: `0 ${layout.margin}` }} />
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* 고객센터 안내 */}
-            <div
-              style={{
-                backgroundColor: colors.primary[100],
-                borderRadius: layout.radiusCard,
-                padding: layout.margin,
-              }}
-            >
-              <p style={{ fontSize: typography.size.sm, fontWeight: typography.weight.semibold, color: colors.primary[700], margin: '0 0 4px' }}>
-                더 궁금한 점이 있으신가요?
-              </p>
-              <p style={{ fontSize: typography.size.xs, color: colors.primary[700], margin: 0, lineHeight: 1.5 }}>
-                고객센터 1566-4335 (평일 09:00~18:00)
-              </p>
-            </div>
-          </div>
-        )}
+        {/* 하단 안내 */}
+        <div style={{
+          backgroundColor: colors.surface.card, borderRadius: layout.radiusCard, padding: layout.margin,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+        }}>
+          <p style={{ margin: `0 0 ${spacing[1]}`, fontSize: typography.size.sm, fontWeight: typography.weight.semibold, color: colors.primary[700], fontFamily: typography.fontFamily }}>
+            더 궁금한 점이 있으신가요?
+          </p>
+          <p style={{ margin: 0, fontSize: typography.size.xs, color: colors.gray[500], fontFamily: typography.fontFamily, lineHeight: 1.5 }}>
+            고객센터 1566-4335 (평일 09:00~18:00)
+          </p>
+        </div>
       </div>
     </ScreenContainer>
   )
