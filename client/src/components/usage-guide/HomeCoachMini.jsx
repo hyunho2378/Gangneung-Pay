@@ -210,7 +210,7 @@ export default function HomeCoachMini({ variant = 'cardApply' }) {
     // 말풍선 위치
     // cardApply: MiniTopBar(52) + banner margin(12) + banner(120) + CTA margin(16) + padding(20) + h3(47) + gap(12) + p(21) + gap(12) + marginTop(8) ≈ 320px
     // charge/refund: MiniTopBar(52) + banner margin(12) + banner(120) + balance margin(16) + balance(~160) ≈ 370px
-    const tooltipTop = isApply ? '320px' : '370px'
+    const tooltipTop = isApply ? '375px' : '370px'
 
     return (
         <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', backgroundColor: colors.surface.background, fontFamily: typography.fontFamily, position: 'relative' }}>
