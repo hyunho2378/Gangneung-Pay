@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { Check } from 'lucide-react'
 import { useUser } from '../../context/UserContext'
 import { colors, typography, layout, spacing, shadow } from '../../tokens/tokens'
+import { usePlatform } from '../../hooks/usePlatform'
 
 export default function BalanceCardExpanded({
   chargeButtonRef,
@@ -16,6 +17,7 @@ export default function BalanceCardExpanded({
 }) {
   const navigate = useNavigate()
   const { balance, cashbackBalance, cashbackMode, setCashbackMode, monthlyAccumulated } = useUser()
+  const isAndroid = usePlatform() === 'android'
 
   const fmt = (n) => n.toLocaleString('ko-KR') + '원'
 
@@ -24,7 +26,7 @@ export default function BalanceCardExpanded({
     height: '48px',
     backgroundColor: 'rgba(255,255,255,0.2)',
     border: '1px solid rgba(255,255,255,0.3)',
-    borderRadius: layout.radiusSmall,
+    borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
     color: colors.onDark.primary,
     fontSize: typography.size.sm,
     fontWeight: typography.weight.medium,
@@ -105,7 +107,7 @@ export default function BalanceCardExpanded({
             backgroundColor: active ? colors.primary[700] : colors.surface.card,
             border: `2px solid ${active ? colors.primary[700] : colors.gray[200]}`,
             color: active ? colors.onDark.primary : colors.gray[500],
-            borderRadius: layout.radiusButton,
+            borderRadius: isAndroid ? layout.radiusPill : layout.radiusButton,
             fontSize: typography.size.sm,
             fontWeight: typography.weight.bold,
             cursor: 'pointer',
