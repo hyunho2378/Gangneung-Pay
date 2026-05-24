@@ -1,22 +1,34 @@
+import researchData from '../data/research.json';
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 
-const PRIMARY_PAINS = [
-  '글자 작고 충전 과정 복잡',
-  '계산대 앞 잔액 확인 실패 → 민망',
-  '앱 로딩 지연으로 삼성페이 전환',
-];
-
-const REFERENCES = [
-  { label: 'REFERENCE A', name: '소상공인', desc: '가맹점 등록·정산 관리. B2B 기능 분리 요구.' },
-  { label: 'REFERENCE B', name: '여행객', desc: '강릉 방문 단기 사용. 지역 가맹점 지도 탐색.' },
-];
+const { primary, secondary, reference } = researchData.persona;
 
 export default function Persona() {
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [primaryRef, primaryVisible] = useReveal({ threshold: 0.05 });
   const [secondaryRef, secondaryVisible] = useReveal({ threshold: 0.05 });
   const [refRef, refVisible] = useReveal({ threshold: 0.05 });
+
+  const eyebrowStyle = {
+    fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
+    letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
+    margin: '0 0 12px', fontFamily: font.family,
+  };
+
+  const painItem = (pain) => (
+    <div
+      key={pain}
+      style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginBottom: 8 }}
+    >
+      <span style={{ color: color.warn, fontWeight: 700, flexShrink: 0, lineHeight: 1.5, fontFamily: font.family }}>
+        —
+      </span>
+      <span style={{ fontSize: 14, color: color.inkMuted, lineHeight: 1.5, fontFamily: font.family }}>
+        {pain}
+      </span>
+    </div>
+  );
 
   return (
     <section
@@ -39,11 +51,7 @@ export default function Persona() {
             marginBottom: 'clamp(40px,5vw,64px)',
           }}
         >
-          <p style={{
-            fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
-            letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-            color: color.brand, margin: '0 0 24px',
-          }}>
+          <p style={{ ...eyebrowStyle, color: color.brand, margin: '0 0 24px' }}>
             PERSONA
           </p>
           <h2 style={{
@@ -64,19 +72,17 @@ export default function Persona() {
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
             background: color.brandPale,
             borderRadius: layout.rLg,
-            borderLeft: `4px solid ${color.brand}`,
             padding: 'clamp(32px,4vw,56px)',
             marginBottom: 'clamp(16px,2vw,24px)',
           }}
         >
           <span style={{
             display: 'inline-block',
-            fontSize: 11, fontWeight: 800, letterSpacing: '0.1em',
+            fontSize: 14, fontWeight: 800, letterSpacing: '0em',
             textTransform: 'uppercase',
             background: color.brand, color: color.white,
             padding: '4px 12px', borderRadius: 100,
-            marginBottom: 20,
-            fontFamily: font.family,
+            marginBottom: 20, fontFamily: font.family,
           }}>
             PRIMARY
           </span>
@@ -84,17 +90,15 @@ export default function Persona() {
           <h3 style={{
             fontSize: 'clamp(24px,3vw,40px)', fontWeight: 800,
             lineHeight: 1.22, letterSpacing: '-0.03em',
-            color: color.ink, margin: '0 0 10px',
-            fontFamily: font.family,
+            color: color.ink, margin: '0 0 10px', fontFamily: font.family,
           }}>
-            시니어 5060 헤비유저
+            {primary.name}
           </h3>
           <p style={{
             fontSize: t.lead.size, lineHeight: 1.65,
-            color: color.inkMuted, margin: '0 0 32px',
-            fontFamily: font.family,
+            color: color.inkMuted, margin: '0 0 32px', fontFamily: font.family,
           }}>
-            경제적 혜택 민감. 실물카드 익숙, 스마트폰 결제 과도기.
+            {primary.trait} · {primary.habit}
           </p>
 
           <div style={{
@@ -103,55 +107,19 @@ export default function Persona() {
             gap: 'clamp(24px,3vw,40px)',
           }}>
             <div>
-              <p style={{
-                fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
-                letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-                color: color.brand, margin: '0 0 12px',
-              }}>
-                핵심 동기
-              </p>
+              <p style={{ ...eyebrowStyle, color: color.brand }}>핵심 동기</p>
               <p style={{
                 fontSize: t.h3.size, fontWeight: 700,
                 lineHeight: t.h3.lh, color: color.ink,
-                margin: '0 0 4px', fontFamily: font.family,
+                margin: '0 0 6px', fontFamily: font.family,
               }}>
-                10% 캐시백
-              </p>
-              <p style={{
-                fontSize: 13, color: color.inkMuted,
-                margin: 0, fontFamily: font.family,
-              }}>
-                월 30만 한도 · 최대 3만원 · 소득공제 30%
+                {primary.motivation}
               </p>
             </div>
 
             <div>
-              <p style={{
-                fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
-                letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-                color: color.brand, margin: '0 0 12px',
-              }}>
-                페인포인트
-              </p>
-              {PRIMARY_PAINS.map((pain) => (
-                <div
-                  key={pain}
-                  style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginBottom: 8 }}
-                >
-                  <span style={{
-                    color: color.warn, fontWeight: 700, flexShrink: 0,
-                    lineHeight: 1.5, fontFamily: font.family,
-                  }}>
-                    —
-                  </span>
-                  <span style={{
-                    fontSize: 14, color: color.inkMuted,
-                    lineHeight: 1.5, fontFamily: font.family,
-                  }}>
-                    {pain}
-                  </span>
-                </div>
-              ))}
+              <p style={{ ...eyebrowStyle, color: color.brand }}>페인포인트</p>
+              {primary.pains.map(painItem)}
             </div>
           </div>
         </div>
@@ -171,12 +139,11 @@ export default function Persona() {
         >
           <span style={{
             display: 'inline-block',
-            fontSize: 11, fontWeight: 800, letterSpacing: '0.1em',
+            fontSize: 11, fontWeight: 800, letterSpacing: '0em',
             textTransform: 'uppercase',
             background: color.inkFaint, color: color.white,
             padding: '4px 12px', borderRadius: 100,
-            marginBottom: 20,
-            fontFamily: font.family,
+            marginBottom: 20, fontFamily: font.family,
           }}>
             SECONDARY
           </span>
@@ -184,17 +151,15 @@ export default function Persona() {
           <h3 style={{
             fontSize: 'clamp(20px,2.5vw,32px)', fontWeight: 800,
             lineHeight: 1.22, letterSpacing: '-0.02em',
-            color: color.ink, margin: '0 0 10px',
-            fontFamily: font.family,
+            color: color.ink, margin: '0 0 10px', fontFamily: font.family,
           }}>
-            2030 청년 이탈자 / 잠재 사용자
+            {secondary.name}
           </h3>
           <p style={{
             fontSize: t.lead.size, lineHeight: 1.65,
-            color: color.inkMuted, margin: '0 0 28px',
-            fontFamily: font.family,
+            color: color.inkMuted, margin: '0 0 28px', fontFamily: font.family,
           }}>
-            편의성 최우선. 삼성페이 의존. UI 심미성 민감.
+            {secondary.trait}
           </p>
 
           <div style={{
@@ -203,49 +168,30 @@ export default function Persona() {
             gap: 'clamp(24px,3vw,40px)',
           }}>
             <div>
-              <p style={{
-                fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
-                letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-                color: color.inkMuted, margin: '0 0 10px',
-              }}>
-                이탈 트리거
-              </p>
+              <p style={{ ...eyebrowStyle, color: color.inkMuted }}>이탈 트리거</p>
               <p style={{
                 fontSize: 14, fontWeight: 700,
-                color: color.ink, margin: '0 0 4px',
-                fontFamily: font.family,
+                color: color.ink, margin: '0 0 6px', fontFamily: font.family,
               }}>
-                삼성페이 미지원
+                {secondary.trigger}
+              </p>
+              <p style={{
+                fontSize: 13, color: color.inkMuted,
+                margin: '0 0 12px', fontFamily: font.family,
+              }}>
+                주결제: {secondary.main_payment}
               </p>
               <p style={{
                 fontSize: 13, color: color.inkMuted,
                 margin: 0, fontStyle: 'italic', fontFamily: font.family,
               }}>
-                "혜택 때문에 억지로 쓰는 낡은 앱"
+                &ldquo;{secondary.perception}&rdquo;
               </p>
             </div>
 
             <div>
-              <p style={{
-                fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
-                letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-                color: color.inkMuted, margin: '0 0 10px',
-              }}>
-                재유입 조건
-              </p>
-              <p style={{
-                fontSize: 14, fontWeight: 700,
-                color: color.ink, margin: '0 0 4px',
-                fontFamily: font.family,
-              }}>
-                삼성페이 지원 + 네이티브 UI
-              </p>
-              <p style={{
-                fontSize: 13, color: color.inkMuted,
-                margin: 0, fontFamily: font.family,
-              }}>
-                카카오·네이버페이 동일 혜택 적용
-              </p>
+              <p style={{ ...eyebrowStyle, color: color.inkMuted }}>페인포인트</p>
+              {secondary.pains.map(painItem)}
             </div>
           </div>
         </div>
@@ -262,21 +208,10 @@ export default function Persona() {
             flexWrap: 'wrap',
           }}
         >
-          {REFERENCES.map(({ label, name, desc }) => (
-            <div
-              key={name}
-              style={{
-                flex: 1, minWidth: 200,
-                borderTop: `2px solid ${color.line}`,
-                paddingTop: 20,
-              }}
-            >
-              <p style={{
-                fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
-                letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-                color: color.inkFaint, margin: '0 0 8px',
-              }}>
-                {label}
+          {reference.map(({ name, note }) => (
+            <div key={name} style={{ flex: 1, minWidth: 200, paddingTop: 20 }}>
+              <p style={{ ...eyebrowStyle, color: color.inkFaint }}>
+                REFERENCE
               </p>
               <p style={{
                 fontSize: t.h3.size, fontWeight: 700,
@@ -285,11 +220,8 @@ export default function Persona() {
               }}>
                 {name}
               </p>
-              <p style={{
-                fontSize: 13, color: color.inkMuted,
-                margin: 0, fontFamily: font.family,
-              }}>
-                {desc}
+              <p style={{ fontSize: 13, color: color.inkMuted, margin: 0, fontFamily: font.family }}>
+                {note}
               </p>
             </div>
           ))}

@@ -26,7 +26,7 @@ const STRATEGIES = [
   {
     id: 'S3', num: 'S3',
     title: '캐시백 체감',
-    oneliner: '숫자를 일상의 언어로 바꿨습니다',
+    oneliner: null,
     quote: null,
     attribution: null,
     evidence: '"1,345원 적립" → "커피 한 잔 값 아꼈어요"',
@@ -36,7 +36,7 @@ const STRATEGIES = [
   {
     id: 'S4', num: 'S4',
     title: '충전 3단계 압축',
-    oneliner: '6단계를 3단계로 줄였습니다',
+    oneliner: '충전 중 잔액 확인이 가능합니다',
     quote: '충전해야 하는 방식이 가장 귀찮습니다',
     attribution: '인터뷰 B1',
     evidence: null,
@@ -46,7 +46,7 @@ const STRATEGIES = [
   {
     id: 'S5', num: 'S5',
     title: '잔액 부족 사전 차단',
-    oneliner: '계산대 앞 당황을 미리 막습니다',
+    oneliner: null,
     quote: null,
     attribution: '설문 68명',
     evidence: '62.5% — 계산대 당황 경험',
@@ -123,14 +123,11 @@ export default function UxStrategy() {
         <div ref={listRef}>
           {STRATEGIES.map((s, i) => {
             const isOpen = openId === s.id;
-            const isLast = i === STRATEGIES.length - 1;
 
             return (
               <div
                 key={s.id}
                 style={{
-                  borderTop: `1px solid ${color.line}`,
-                  borderBottom: isLast ? `1px solid ${color.line}` : 'none',
                   opacity: listVisible ? 1 : 0,
                   transform: listVisible ? 'none' : 'translateY(20px)',
                   transition: `opacity 0.6s ease-out ${i * 0.06}s, transform 0.6s ease-out ${i * 0.06}s`,
@@ -176,13 +173,15 @@ export default function UxStrategy() {
                     }}>
                       {s.title}
                     </p>
-                    <p style={{
-                      fontSize: 14, fontWeight: 500,
-                      lineHeight: 1.5, color: color.inkMuted,
-                      margin: 0, fontFamily: font.family,
-                    }}>
-                      {s.oneliner}
-                    </p>
+                    {s.oneliner && (
+                      <p style={{
+                        fontSize: 14, fontWeight: 500,
+                        lineHeight: 1.5, color: color.inkMuted,
+                        margin: 0, fontFamily: font.family,
+                      }}>
+                        {s.oneliner}
+                      </p>
+                    )}
                   </div>
 
                   {/* Expand indicator */}
@@ -229,7 +228,6 @@ export default function UxStrategy() {
                       {/* Quoted evidence */}
                       {s.quote && (
                         <div style={{
-                          borderLeft: `3px solid ${color.brand}`,
                           paddingLeft: 'clamp(12px,1.5vw,20px)',
                           marginBottom: 20,
                         }}>

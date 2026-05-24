@@ -173,7 +173,6 @@ export default function DualDesignSystem() {
                 padding: `clamp(14px,1.8vw,20px) 24px`,
                 fontSize: t.body.size, lineHeight: t.body.lh,
                 color: color.ink, fontFamily: font.family,
-                borderLeft: `2px solid ${IOS_COLOR}`,
               }}>
                 {ios}
               </div>
@@ -183,7 +182,6 @@ export default function DualDesignSystem() {
                 padding: `clamp(14px,1.8vw,20px) 24px`,
                 fontSize: t.body.size, lineHeight: t.body.lh,
                 color: color.ink, fontFamily: font.family,
-                borderLeft: `2px solid ${AND_COLOR}`,
               }}>
                 {android}
               </div>

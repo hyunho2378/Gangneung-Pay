@@ -61,7 +61,7 @@ function AsIsPlaceholder({ scale = 0.62, screenHeight = 600 }) {
         }}>
           <span style={{
             fontSize: 10, fontWeight: 800,
-            letterSpacing: '0.1em', textTransform: 'uppercase',
+            letterSpacing: '0em', textTransform: 'uppercase',
             color: 'rgba(0,0,0,0.3)', fontFamily: font.family,
             textAlign: 'center',
           }}>
@@ -133,7 +133,7 @@ function ScreenPair({ screen, visible, delay }) {
           }}>
             <span style={{
               fontSize: 11, fontWeight: 800,
-              letterSpacing: '0.12em', textTransform: 'uppercase',
+              letterSpacing: '0em', textTransform: 'uppercase',
               color: color.inkFaint, fontFamily: font.family,
             }}>AS-IS</span>
             <div style={{ flex: 1, height: 1, background: color.line }} />
@@ -161,7 +161,7 @@ function ScreenPair({ screen, visible, delay }) {
           }}>
             <span style={{
               fontSize: 11, fontWeight: 800,
-              letterSpacing: '0.12em', textTransform: 'uppercase',
+              letterSpacing: '0em', textTransform: 'uppercase',
               color: color.brand, fontFamily: font.family,
             }}>TO-BE</span>
             <div style={{ flex: 1, height: 1, background: color.brand, opacity: 0.3 }} />

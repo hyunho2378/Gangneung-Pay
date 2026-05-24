@@ -201,7 +201,7 @@ export default function Process() {
                   background: color.white,
                   borderRadius: layout.rMd,
                   padding: 'clamp(20px,2.5vw,32px)',
-                  borderTop: `3px solid ${color.brand}`,
+                  boxShadow: '0 4px 24px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)',
                 }}>
                   <p style={{
                     fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
@@ -330,7 +330,6 @@ export default function Process() {
                   padding: 'clamp(12px,1.5vw,16px) 12px',
                   fontSize: t.caption.size, lineHeight: t.caption.lh,
                   color: color.inkMuted, fontFamily: font.family,
-                  borderLeft: `2px solid ${color.warn}`,
                 }}>
                   {before}
                 </div>
@@ -338,14 +337,13 @@ export default function Process() {
                   padding: 'clamp(12px,1.5vw,16px) 12px',
                   fontSize: t.caption.size, lineHeight: t.caption.lh,
                   color: color.ink, fontFamily: font.family,
-                  borderLeft: `2px solid ${color.ok}`,
                   fontWeight: 600,
                 }}>
                   {after}
                 </div>
                 <div style={{
                   padding: 'clamp(12px,1.5vw,16px) 12px',
-                  fontSize: 11, fontWeight: 700,
+                  fontSize: 13, fontWeight: 700,
                   color: color.brand, fontFamily: font.family,
                   display: 'flex', alignItems: 'center',
                   letterSpacing: '0.04em',

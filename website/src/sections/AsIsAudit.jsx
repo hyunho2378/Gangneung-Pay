@@ -132,8 +132,8 @@ export default function AsIsAudit() {
                 }}
               >
                 <p style={{
-                  fontSize: 'clamp(11px,1vw,13px)', fontWeight: 800,
-                  letterSpacing: '0.12em', textTransform: 'uppercase',
+                  fontSize: 14, fontWeight: 800,
+                  letterSpacing: '0em', textTransform: 'uppercase',
                   color: color.brand, margin: '0 0 10px',
                   fontFamily: font.family,
                 }}>

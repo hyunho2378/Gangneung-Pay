@@ -101,7 +101,7 @@ export default function DeskResearch() {
                     color: i === 1 ? color.white : color.inkFaint,
                     fontSize: 11,
                     fontWeight: 700,
-                    letterSpacing: '0.12em',
+                    letterSpacing: '0em',
                     textTransform: 'uppercase',
                     borderRight: i < TABLE.headers.length - 1 ? `1px solid ${color.line}` : 'none',
                     fontFamily: font.family,
@@ -119,7 +119,6 @@ export default function DeskResearch() {
                 style={{
                   display: 'grid',
                   gridTemplateColumns: COL,
-                  borderTop: `1px solid ${color.line}`,
                 }}
               >
                 {row.map((cell, ci) => (
@@ -129,9 +128,9 @@ export default function DeskResearch() {
                       padding: '16px 20px',
                       background: ci === 1 ? color.brandPale : color.white,
                       color: ci === 0 ? color.inkMuted : ci === 1 ? color.brand : color.ink,
-                      fontSize: ci === 0 ? 11 : 14,
+                      fontSize: ci === 0 ? 14 : 14,
                       fontWeight: ci === 0 ? 700 : ci === 1 ? 700 : 400,
-                      letterSpacing: ci === 0 ? '0.1em' : '-0.01em',
+                      letterSpacing: ci === 0 ? '0em' : '-0.01em',
                       textTransform: ci === 0 ? 'uppercase' : 'none',
                       borderRight: ci < row.length - 1 ? `1px solid ${color.line}` : 'none',
                       fontFamily: font.family,

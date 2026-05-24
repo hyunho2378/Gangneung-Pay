@@ -2,12 +2,12 @@ import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 
 const MEMBERS = [
-  { name: '김민경', role: '팀장' },
-  { name: '주현호', role: 'UX/UI · FE' },
-  { name: '윤현아', role: '' },
-  { name: '김성경', role: '' },
-  { name: '조영은', role: '' },
-  { name: '김호진', role: '' },
+  { name: '김민경', role: 'PM, VISUAL DESIGNER' },
+  { name: '주현호', role: 'UX/UI DESIGNER, DEVELOPER' },
+  { name: '윤현아', role: 'UX/UI DESIGNER' },
+  { name: '김성경', role: 'UX RESEARCHER' },
+  { name: '조영은', role: 'UX RESEARCHER' },
+  { name: '김호진', role: 'UX RESEARCHER' },
 ];
 
 export default function Outro() {
@@ -55,7 +55,7 @@ export default function Outro() {
             color: 'rgba(255,255,255,0.72)',
             margin: 0, fontFamily: font.family,
           }}>
-            강릉시 지역화폐, 다시 태어나다
+            내 돈이 내 편인 앱, 강릉페이
           </p>
         </div>
 
@@ -74,7 +74,7 @@ export default function Outro() {
             color: 'rgba(255,255,255,0.5)',
             margin: '0 0 24px', fontFamily: font.family,
           }}>
-            TEAM MAKAMOYE
+            Team 마카모예
           </p>
 
           <div style={{
@@ -129,14 +129,14 @@ export default function Outro() {
               color: 'rgba(255,255,255,0.5)',
               margin: 0, fontFamily: font.family,
             }}>
-              한림대학교 디지털인문예술전공 · 2026
+              한림대학교 디지털인문예술전공 UX 디자인
             </p>
             <p style={{
               fontSize: t.caption.size, lineHeight: t.caption.lh,
               color: 'rgba(255,255,255,0.35)',
               margin: 0, fontFamily: font.family,
             }}>
-              UX/UI Renewal Project · Presented 2026.05.31
+              2026 Gangeneung Pay Redesign UX Project
             </p>
           </div>
         </div>

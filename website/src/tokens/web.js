@@ -30,7 +30,7 @@ export const type = {
   lead:    { size: 'clamp(16px,1.4vw,20px)', lh: 1.75, weight: 400 },
   body:    { size: '16px',                   lh: 1.78, weight: 400 },
   caption: { size: '13px',                   lh: 1.55, weight: 500 },
-  eyebrow: { size: '12px', weight: 800, ls: '0.16em', transform: 'uppercase' },
+  eyebrow: { size: '19px', weight: 800, ls: '0em', transform: 'uppercase' },
 };
 
 export const layout = {

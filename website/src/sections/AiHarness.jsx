@@ -1,15 +1,40 @@
+import { useState } from 'react';
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 
 const DOCS = [
-  { name: 'CLAUDE.md', desc: '행동지침·금지규칙' },
-  { name: 'AGENTS.md', desc: '에이전트 역할·경계' },
-  { name: 'DESIGN.md', desc: '토큰·컴포넌트 계약' },
-  { name: 'IA.md', desc: '라우트·화면 계층' },
-  { name: 'Components.md', desc: '70+ 컴포넌트 스펙' },
-  { name: 'Patterns.md', desc: '재사용 인터랙션 패턴' },
-  { name: 'Routes.md', desc: '30개 화면 목록' },
-  { name: 'PROGRESS.md', desc: '진행 상태·완료 목록' },
+  {
+    name: 'CLAUDE.md', desc: '행동지침·금지규칙',
+    preview: `# CLAUDE.md\n## 1. Think Before Coding\nState assumptions explicitly.\nIf multiple interpretations exist,\npresent them — don't pick silently.\n## 2. Simplicity First\nMinimum code that solves the problem.\nNo features beyond what was asked.`,
+  },
+  {
+    name: 'AGENTS.md', desc: '에이전트 역할·경계',
+    preview: `# AGENTS.md — 에이전트 실행 구조\nPHASE 0  초기 세팅    (1개 에이전트)\nPHASE 1  병렬 구현    (3개 동시 실행)\nPHASE 2  검증 및 연동 (1개, PHASE 1 후)\n---\n실행 원칙: 명세를 벗어나는 결정\n스스로 내리지 않는다.`,
+  },
+  {
+    name: 'DESIGN.md', desc: '토큰·컴포넌트 계약',
+    preview: `# DESIGN.md — 강릉페이 Phase 2\nUX Concept: "내 돈이 내 편인 앱"\n두 축:\n  1. 투명한 정보 노출\n  2. 막힘없는 직진형 프로세스\n7대 전략: S1 ~ S7`,
+  },
+  {
+    name: 'IA.md', desc: '라우트·화면 계층',
+    preview: `# IA.md — 강릉페이 Phase 2 IA\n바텀 탭 (5개):\n  [홈][결제매장][QR결제][이용내역][MY]\n핵심 변경:\n  - 햄버거 메뉴 완전 삭제 → MY 탭\n  - QR결제를 중앙 강조 위치로`,
+  },
+  {
+    name: 'COMPONENTS.md', desc: '33개 컴포넌트 스펙',
+    preview: `# COMPONENTS.md — 강릉페이 스펙\n총 33개 | Phase 1 AS-IS 복제 기준\nL01 TopAppBar.jsx\nL04 BottomNavBar.jsx\nL06 ScreenContainer.jsx\nH03 BalanceCard.jsx\nH04 BalanceCardExpanded.jsx`,
+  },
+  {
+    name: 'ROUTES.md', desc: '30개 화면 목록',
+    preview: `# ROUTES.md — 라우팅 구조\nPhase 3 | React Router v6\n/         → HomePage\n/store    → StorePage\n/qr       → QRPage\n/history  → HistoryPage\n/my       → MyPage`,
+  },
+  {
+    name: 'PROGRESS.md', desc: '진행 상태·완료 목록',
+    preview: `# PROGRESS.md\nPhase 1 완료\nPhase 2 완료\nPhase 3 완료`,
+  },
+  {
+    name: 'DESIGN_WEB.md', desc: '웹 포트폴리오 계약',
+    preview: `# DESIGN_WEB.md\n강릉페이 포트폴리오 웹사이트\n토큰: website/src/tokens/web.js\nJSX only · 인라인 스타일\nlocalStorage 금지\n색·간격·폰트 하드코딩 금지`,
+  },
 ];
 
 const AGENTS = [
@@ -50,10 +75,27 @@ const METRICS = [
 const QUOTE =
   'AI는 How를 잘한다. 사람은 Why를 결정한다. 핵심 결정(시니어 우선·환불 동등위계·캐시백 직관메시지·13,000개 전부 등록)은 사람이 했다. AI는 그 의도를 정확히 구현하는 파트너였다.';
 
+const CLAUDE_TOOLS = [
+  { abbr: 'R',  name: 'Read',          desc: '파일 읽기' },
+  { abbr: 'W',  name: 'Write',         desc: '파일 생성' },
+  { abbr: 'E',  name: 'Edit',          desc: '정밀 편집' },
+  { abbr: '>_', name: 'Bash',          desc: '터미널 실행' },
+  { abbr: 'A',  name: 'Agent',         desc: '병렬 에이전트' },
+  { abbr: 'WS', name: 'WebSearch',     desc: '웹 검색' },
+  { abbr: 'WF', name: 'WebFetch',      desc: 'URL 불러오기' },
+  { abbr: 'T',  name: 'TodoWrite',     desc: '작업 관리' },
+  { abbr: 'SK', name: 'ScheduleWakeup',desc: '루프 제어' },
+  { abbr: 'M',  name: 'Monitor',       desc: '프로세스 감시' },
+  { abbr: 'TS', name: 'ToolSearch',    desc: '도구 스키마 조회' },
+  { abbr: 'EP', name: 'ExitPlanMode',  desc: '계획 승인' },
+];
+
 export default function AiHarness() {
+  const [openDoc, setOpenDoc] = useState(null);
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [metricsRef, metricsVisible] = useReveal({ threshold: 0.05 });
   const [blocksRef, blocksVisible] = useReveal({ threshold: 0.03 });
+  const [toolsRef, toolsVisible] = useReveal({ threshold: 0.05 });
   const [quoteRef, quoteVisible] = useReveal({ threshold: 0.05 });
 
   return (
@@ -172,35 +214,60 @@ export default function AiHarness() {
             }}>
               문서 기반 컨텍스트 주입
             </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {DOCS.map((doc) => (
-                <div
-                  key={doc.name}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 12,
-                    padding: '8px 12px',
-                    background: color.white,
-                    borderRadius: layout.rSm,
-                  }}
-                >
-                  <span style={{
-                    fontSize: 11, fontWeight: 700,
-                    letterSpacing: '0.04em',
-                    color: color.brand, fontFamily: "'SFMono-Regular','Consolas','Monaco',monospace",
-                    minWidth: 112, flexShrink: 0,
-                  }}>
-                    {doc.name}
-                  </span>
-                  <span style={{
-                    fontSize: t.caption.size, lineHeight: t.caption.lh,
-                    color: color.inkMuted, fontFamily: font.family,
-                  }}>
-                    {doc.desc}
-                  </span>
-                </div>
-              ))}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              {DOCS.map((doc) => {
+                const isOpen = openDoc === doc.name;
+                return (
+                  <div key={doc.name}>
+                    <button
+                      onClick={() => setOpenDoc(isOpen ? null : doc.name)}
+                      style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        width: '100%', gap: 12, padding: '8px 12px',
+                        background: color.white, borderRadius: isOpen ? `${layout.rSm} ${layout.rSm} 0 0` : layout.rSm,
+                        border: 'none', cursor: 'pointer', textAlign: 'left',
+                      }}
+                    >
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+                        <span style={{
+                          fontSize: 11, fontWeight: 700, letterSpacing: '0.04em',
+                          color: color.brand, fontFamily: "'SFMono-Regular','Consolas','Monaco',monospace",
+                          flexShrink: 0,
+                        }}>
+                          {doc.name}
+                        </span>
+                        <span style={{
+                          fontSize: t.caption.size, lineHeight: t.caption.lh,
+                          color: color.inkMuted, fontFamily: font.family,
+                        }}>
+                          {doc.desc}
+                        </span>
+                      </span>
+                      <span style={{
+                        fontSize: 16, fontWeight: 300, color: color.brand, flexShrink: 0,
+                        transition: 'transform 0.25s ease-out',
+                        transform: isOpen ? 'rotate(45deg)' : 'none',
+                        display: 'inline-block',
+                      }}>
+                        +
+                      </span>
+                    </button>
+                    {isOpen && (
+                      <pre style={{
+                        margin: 0, padding: '12px 14px',
+                        background: '#1E1E1E',
+                        borderRadius: `0 0 ${layout.rSm} ${layout.rSm}`,
+                        fontSize: 11, lineHeight: 1.75,
+                        color: '#D4D4D4',
+                        fontFamily: "'SFMono-Regular','Consolas','Monaco',monospace",
+                        overflowX: 'auto', whiteSpace: 'pre',
+                      }}>
+                        {doc.preview}
+                      </pre>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -239,7 +306,7 @@ export default function AiHarness() {
                       padding: '12px',
                       background: color.white,
                       borderRadius: layout.rSm,
-                      borderTop: `3px solid ${ag.color}`,
+                      boxShadow: '0 4px 24px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)',
                     }}
                   >
                     <div style={{
@@ -249,13 +316,13 @@ export default function AiHarness() {
                       {ag.id}
                     </div>
                     <div style={{
-                      fontSize: 11, fontWeight: 700,
+                      fontSize: 13, fontWeight: 700,
                       color: color.ink, fontFamily: font.family, marginBottom: 4,
                     }}>
                       {ag.label}
                     </div>
                     <div style={{
-                      fontSize: 11, lineHeight: 1.5,
+                      fontSize: 13, lineHeight: 1.5,
                       color: color.inkMuted, fontFamily: font.family,
                     }}>
                       {ag.desc}
@@ -276,7 +343,7 @@ export default function AiHarness() {
                   padding: '14px 16px',
                   background: color.white,
                   borderRadius: layout.rSm,
-                  borderTop: `3px solid ${AGENTS[3].color}`,
+                  boxShadow: '0 4px 24px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 12,
@@ -290,13 +357,13 @@ export default function AiHarness() {
                 </span>
                 <div>
                   <div style={{
-                    fontSize: 11, fontWeight: 700,
+                    fontSize: 13, fontWeight: 700,
                     color: color.ink, fontFamily: font.family, marginBottom: 2,
                   }}>
                     {AGENTS[3].label}
                   </div>
                   <div style={{
-                    fontSize: 11, color: color.inkMuted, fontFamily: font.family,
+                    fontSize: 13, color: color.inkMuted, fontFamily: font.family,
                   }}>
                     {AGENTS[3].desc}
                   </div>
@@ -345,7 +412,7 @@ export default function AiHarness() {
                     padding: '16px',
                     background: color.white,
                     borderRadius: layout.rSm,
-                    borderTop: `3px solid ${color.brand}`,
+                    boxShadow: '0 4px 24px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)',
                   }}
                 >
                   <div style={{
@@ -376,9 +443,8 @@ export default function AiHarness() {
                     ))}
                   </div>
                   <p style={{
-                    fontSize: 11, color: color.inkMuted,
+                    fontSize: 13, color: color.inkMuted,
                     fontFamily: font.family, margin: 0,
-                    borderTop: `1px solid ${color.line}`,
                     paddingTop: 8,
                   }}>
                     {m.note}
@@ -449,7 +515,7 @@ export default function AiHarness() {
                     </span>
                   </div>
                   <span style={{
-                    fontSize: 12, fontWeight: 800,
+                    fontSize: 13, fontWeight: 800,
                     color: color.ok, fontFamily: font.family,
                     letterSpacing: '0.04em',
                   }}>
@@ -461,6 +527,69 @@ export default function AiHarness() {
           </div>
         </div>
 
+        {/* Tool grid */}
+        <div
+          ref={toolsRef}
+          style={{
+            opacity: toolsVisible ? 1 : 0,
+            transform: toolsVisible ? 'none' : 'translateY(20px)',
+            transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
+            marginBottom: 'clamp(64px,8vw,112px)',
+          }}
+        >
+          <p style={{
+            fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
+            letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
+            color: color.brand, margin: '0 0 20px', fontFamily: font.family,
+          }}>
+            CLAUDE CODE — 12개 툴
+          </p>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+            gap: 10,
+          }}>
+            {CLAUDE_TOOLS.map((tool, i) => (
+              <div
+                key={tool.name}
+                style={{
+                  background: color.bg,
+                  borderRadius: layout.rSm,
+                  padding: '14px 16px',
+                  opacity: toolsVisible ? 1 : 0,
+                  transition: `opacity 0.45s ease-out ${i * 0.04}s`,
+                }}
+              >
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                  width: 32, height: 32, borderRadius: layout.rSm,
+                  background: color.brand, marginBottom: 10,
+                }}>
+                  <span style={{
+                    fontSize: 10, fontWeight: 800, color: color.white,
+                    fontFamily: "'SFMono-Regular','Consolas','Monaco',monospace",
+                    letterSpacing: '-0.02em',
+                  }}>
+                    {tool.abbr}
+                  </span>
+                </div>
+                <p style={{
+                  margin: '0 0 2px', fontSize: 13, fontWeight: 700,
+                  color: color.ink, fontFamily: font.family,
+                }}>
+                  {tool.name}
+                </p>
+                <p style={{
+                  margin: 0, fontSize: 11, lineHeight: 1.5,
+                  color: color.inkMuted, fontFamily: font.family,
+                }}>
+                  {tool.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Closing quote */}
         <div
           ref={quoteRef}
@@ -468,8 +597,6 @@ export default function AiHarness() {
             opacity: quoteVisible ? 1 : 0,
             transform: quoteVisible ? 'none' : 'translateY(20px)',
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-            borderLeft: `4px solid ${color.brand}`,
-            paddingLeft: 'clamp(20px,2.5vw,36px)',
           }}
         >
           <p style={{

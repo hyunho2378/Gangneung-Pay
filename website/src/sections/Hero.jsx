@@ -4,10 +4,10 @@ import { useReveal } from '../lib/useReveal.js';
 import { useCountUp } from '../lib/useCountUp.js';
 
 const META = [
-  { label: 'PROJECT', value: '강릉페이 UX/UI 개선' },
+  { label: 'PROJECT', value: '강릉페이 UX 개선' },
   { label: 'TEAM', value: '마카모예' },
-  { label: 'PERIOD', value: '2026.03 — 05' },
-  { label: 'TOOL', value: 'Figma · React · Claude Code' },
+  { label: 'PERIOD', value: '2026.03 ~ 2026.06' },
+  { label: 'TOOL', value: 'Figma · Antigravity · Claude Code · Vercel · Neon DB' },
 ];
 
 const STATS = [
@@ -69,7 +69,7 @@ export default function Hero() {
               margin: '0 0 24px',
             }}
           >
-            UX/UI Case Study
+            UX Project
           </p>
 
           <h1
@@ -214,7 +214,7 @@ export default function Hero() {
                   style={{
                     fontSize: 10,
                     fontWeight: 700,
-                    letterSpacing: '0.14em',
+                    letterSpacing: '0em',
                     textTransform: 'uppercase',
                     color: color.whiteA50,
                   }}
@@ -383,7 +383,7 @@ function StatCountUp({ target, suffix, label }) {
         style={{
           fontSize: 10,
           fontWeight: 700,
-          letterSpacing: '0.14em',
+          letterSpacing: '0em',
           textTransform: 'uppercase',
           color: color.whiteA50,
         }}

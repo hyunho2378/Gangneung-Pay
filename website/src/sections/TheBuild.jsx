@@ -125,7 +125,7 @@ function S1Block({ visible }) {
             앱을 열지 않아도 잔액이 보입니다
           </p>
           <FlowRow problem="앱 실행해야만 잔액 확인" solution="홈 위젯·잠금화면 즉시 노출" />
-          <div style={{ borderLeft: `3px solid ${color.brand}`, paddingLeft: 'clamp(12px,1.5vw,20px)', marginBottom: 20 }}>
+          <div style={{ paddingLeft: 'clamp(12px,1.5vw,20px)', marginBottom: 20 }}>
             <p style={{ margin: '0 0 4px', fontSize: t.body.size, fontStyle: 'italic', lineHeight: t.body.lh, color: color.ink, fontFamily: font.family }}>
               &ldquo;식당 자리에서 먼저 확인하고 본 다음에 안심하고 갑니다&rdquo;
             </p>
@@ -205,9 +205,6 @@ function S3Block({ visible }) {
         <h3 style={{ margin: '0 0 6px', fontSize: t.h2.size, fontWeight: t.h2.weight, lineHeight: t.h2.lh, letterSpacing: t.h2.ls, color: color.ink, fontFamily: font.family }}>
           캐시백 체감
         </h3>
-        <p style={{ margin: '0 0 4px', fontSize: t.lead.size, fontWeight: 400, lineHeight: t.lead.lh, color: color.inkMuted, fontFamily: font.family }}>
-          숫자를 일상의 언어로 바꿨습니다
-        </p>
         <FlowRow problem='"1,345원 적립" — 숫자만 표시, 감각 없음' solution="getCashbackIntuition() 5단계 직관 메시지" />
 
         {/* 5단계 아이콘 스트립 */}
@@ -236,7 +233,7 @@ function S3Block({ visible }) {
               {confirmed && (
                 <span style={{
                   position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)',
-                  fontSize: 10, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase',
+                  fontSize: 10, fontWeight: 800, letterSpacing: '0em', textTransform: 'uppercase',
                   color: color.white, background: color.brand,
                   padding: '3px 10px', borderRadius: 100,
                   fontFamily: font.family, whiteSpace: 'nowrap',
@@ -299,10 +296,10 @@ function S4Block({ visible }) {
             충전 3단계 압축
           </h3>
           <p style={{ margin: '0 0 4px', fontSize: t.lead.size, fontWeight: 400, lineHeight: t.lead.lh, color: color.inkMuted, fontFamily: font.family }}>
-            6단계를 3단계로 줄였습니다
+            충전 중 잔액 확인이 가능합니다
           </p>
           <FlowRow problem="6단계 충전 플로우" solution="금액 선택 → 확인 → 완료" />
-          <div style={{ borderLeft: `3px solid ${color.brand}`, paddingLeft: 'clamp(12px,1.5vw,20px)', marginBottom: 20 }}>
+          <div style={{ paddingLeft: 'clamp(12px,1.5vw,20px)', marginBottom: 20 }}>
             <p style={{ margin: '0 0 4px', fontSize: t.body.size, fontStyle: 'italic', lineHeight: t.body.lh, color: color.ink, fontFamily: font.family }}>
               &ldquo;충전해야 하는 방식이 가장 귀찮습니다&rdquo;
             </p>
@@ -344,16 +341,13 @@ function S5Block({ visible }) {
         <h3 style={{ margin: '0 0 6px', fontSize: t.h2.size, fontWeight: t.h2.weight, lineHeight: t.h2.lh, letterSpacing: t.h2.ls, color: color.ink, fontFamily: font.family }}>
           잔액 부족 사전 차단
         </h3>
-        <p style={{ margin: '0 0 4px', fontSize: t.lead.size, fontWeight: 400, lineHeight: t.lead.lh, color: color.inkMuted, fontFamily: font.family }}>
-          계산대 앞 당황을 미리 막습니다
-        </p>
         <FlowRow problem="한도 초과 입력 → 결제 실패까지 알 수 없음" solution="isOverLimit() → 버튼 disabled + 빨간 안내" />
 
         {/* Before/After 카드 */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(12px,2vw,24px)', margin: 'clamp(24px,3vw,40px) 0' }}>
           {/* Before */}
           <div style={{ background: color.white, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)', border: `1px solid ${color.line}` }}>
-            <p style={{ margin: '0 0 16px', fontSize: 11, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: color.inkFaint, fontFamily: font.family }}>
+            <p style={{ margin: '0 0 16px', fontSize: 11, fontWeight: 800, letterSpacing: '0em', textTransform: 'uppercase', color: color.inkFaint, fontFamily: font.family }}>
               AS-IS
             </p>
             <div style={{ background: color.bg, borderRadius: layout.rSm, padding: '12px 16px', marginBottom: 12, fontFamily: font.family }}>
@@ -374,7 +368,7 @@ function S5Block({ visible }) {
 
           {/* After */}
           <div style={{ background: color.white, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)', border: `1px solid ${color.brand}` }}>
-            <p style={{ margin: '0 0 16px', fontSize: 11, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: color.brand, fontFamily: font.family }}>
+            <p style={{ margin: '0 0 16px', fontSize: 11, fontWeight: 800, letterSpacing: '0em', textTransform: 'uppercase', color: color.brand, fontFamily: font.family }}>
               TO-BE
             </p>
             <div style={{ background: color.bg, borderRadius: layout.rSm, padding: '12px 16px', marginBottom: 12, border: `1px solid ${color.warn}`, fontFamily: font.family }}>
@@ -458,7 +452,7 @@ function S6Block({ visible }) {
               fontFamily: font.family,
             }}
           >
-            {count.toLocaleString('ko-KR')}
+            {count.toLocaleString('ko-KR')}개
           </span>
           <span style={{
             display: 'block',
@@ -468,12 +462,12 @@ function S6Block({ visible }) {
             marginTop: 8,
             fontFamily: font.family,
           }}>
-            개 실제 가맹점 데이터
+            실제 가맹점 데이터
           </span>
         </div>
 
         {/* Quote */}
-        <div style={{ borderLeft: `3px solid ${color.brand}`, paddingLeft: 'clamp(12px,1.5vw,20px)', marginBottom: 'clamp(32px,4vw,56px)', maxWidth: '56ch' }}>
+        <div style={{ paddingLeft: 'clamp(12px,1.5vw,20px)', marginBottom: 'clamp(32px,4vw,56px)', maxWidth: '56ch' }}>
           <p style={{ margin: '0 0 4px', fontSize: t.body.size, fontStyle: 'italic', lineHeight: t.body.lh, color: color.ink, fontFamily: font.family }}>
             &ldquo;가게 들어가서 여기 강릉페이 돼요? 라고 물어봐야 하는데&rdquo;
           </p>
@@ -494,11 +488,11 @@ function S6Block({ visible }) {
           gap: 8,
           marginBottom: 'clamp(28px,3.5vw,48px)',
         }}>
-          <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: color.inkFaint, fontFamily: font.family }}>
-            Google Maps 클러스터링 캡처 교체 예정
+          <span style={{ fontSize: 'clamp(15px,1.8vw,20px)', fontWeight: 700, color: color.inkMuted, fontFamily: font.family }}>
+            13,021개 가맹점 지도
           </span>
-          <span style={{ fontSize: 12, color: color.inkFaint, fontFamily: font.family }}>
-            konacard 실데이터 13,021개 · MarkerClusterer
+          <span style={{ fontSize: 13, color: color.inkFaint, fontFamily: font.family }}>
+            배포 시 활성화
           </span>
         </div>
 
@@ -580,6 +574,176 @@ function S7Block({ visible }) {
   );
 }
 
+const SCREENS_30 = [
+  { name: '홈', path: '/', tag: '바텀탭' },
+  { name: '결제매장', path: '/store', tag: '바텀탭' },
+  { name: 'QR결제', path: '/qr', tag: '바텀탭' },
+  { name: '이용내역', path: '/history', tag: '바텀탭' },
+  { name: 'MY', path: '/my', tag: '바텀탭' },
+  { name: '검색', path: '/search', tag: '신규' },
+  { name: '카드신청', path: '/card-apply', tag: '신규' },
+  { name: '충전', path: '/charge', tag: '결제' },
+  { name: '캐시백', path: '/cashback', tag: '결제' },
+  { name: '서비스편집', path: '/service-edit', tag: '안내' },
+  { name: '카카오페이안내', path: '/kakao-guide', tag: '안내' },
+  { name: '교통카드', path: '/transport-card', tag: '안내' },
+  { name: '이용안내', path: '/usage-guide', tag: '안내' },
+  { name: '설정', path: '/settings', tag: '설정' },
+  { name: '알림', path: '/notification', tag: '설정' },
+  { name: '고객센터', path: '/customer-center', tag: '설정' },
+  { name: '챗봇', path: '/chatbot', tag: '설정' },
+  { name: '카드분실', path: '/card-lost', tag: '설정' },
+  { name: '쿠폰', path: '/coupon', tag: '설정' },
+  { name: '지원금상세', path: '/support/:id', tag: '지원금' },
+  { name: '지원금신청', path: '/support-wish', tag: '지원금' },
+  { name: '맞춤정보', path: '/custom-info', tag: '지원금' },
+  { name: '기부', path: '/donation', tag: '소통' },
+  { name: '기부상세', path: '/donation/:id', tag: '소통' },
+  { name: '기부내역', path: '/donation-history', tag: '소통' },
+  { name: '뉴스', path: '/news', tag: '소통' },
+  { name: '뉴스상세', path: '/news/:id', tag: '소통' },
+  { name: '장소상세', path: '/place/:id', tag: '소통' },
+  { name: '생활편의', path: '/life', tag: '숨김탭' },
+  { name: '소통참여', path: '/community', tag: '숨김탭' },
+];
+
+const TAG_COLOR = {
+  '바텀탭': { bg: color.brandPale, text: color.brand },
+  '신규':   { bg: color.bg, text: color.ok },
+  '결제':   { bg: color.bg, text: color.warn },
+  '안내':   { bg: color.brandPale, text: color.inkMuted },
+  '설정':   { bg: color.bg, text: color.inkMuted },
+  '지원금': { bg: color.bg, text: color.ink },
+  '소통':   { bg: color.brandPale, text: color.inkMuted },
+  '숨김탭': { bg: color.bg, text: color.inkFaint },
+};
+
+const TECH_CHALLENGES = [
+  { label: 'CoachMarkOverlay', desc: 'ScreenContainer.getBoundingClientRect() 절대좌표 기반 말풍선' },
+  { label: 'MarkerClusterer', desc: 'konacard 13,021개 실데이터 + Google Maps 클러스터링' },
+  { label: 'Face ID Lottie', desc: '@lottiefiles/dotlottie-react 디버깅 — 30분 추적' },
+  { label: 'getCashbackIntuition()', desc: '5단계 직관 메시지 변환 함수 (금액 → 실생활 표현)' },
+  { label: 'isOverLimit()', desc: '입력 시점 잔액 검증 — 버튼 disabled + 인라인 빨간 안내' },
+];
+
+// ── S_Features: 화면 목록 + 기술 과제 ──
+function FeaturesBlock({ visible }) {
+  return (
+    <div style={{
+      background: color.bg,
+      padding: SEC_PAD,
+      opacity: visible ? 1 : 0,
+      transform: visible ? 'none' : 'translateY(32px)',
+      transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
+    }}>
+      <div style={{ maxWidth: layout.container, margin: '0 auto' }}>
+        <p style={{
+          margin: '0 0 8px',
+          fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
+          letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
+          color: color.brand, fontFamily: font.family,
+        }}>
+          THE BUILD — FULL SCOPE
+        </p>
+        <h3 style={{
+          margin: '0 0 clamp(32px,4vw,48px)',
+          fontSize: t.h2.size, fontWeight: t.h2.weight,
+          lineHeight: t.h2.lh, letterSpacing: t.h2.ls,
+          color: color.ink, fontFamily: font.family,
+        }}>
+          30개 화면 · 7개 핵심 기능 · 5개 기술 과제
+        </h3>
+
+        {/* Screens grid */}
+        <p style={{
+          margin: '0 0 16px', fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
+          letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
+          color: color.inkFaint, fontFamily: font.family,
+        }}>
+          화면 목록 (ROUTES.md 기준)
+        </p>
+        <div style={{
+          display: 'flex', flexWrap: 'wrap', gap: 8,
+          marginBottom: 'clamp(40px,5vw,64px)',
+        }}>
+          {SCREENS_30.map(({ name, path, tag }) => {
+            const tc = TAG_COLOR[tag] || TAG_COLOR['설정'];
+            return (
+              <div
+                key={path}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  background: color.white,
+                  border: `1px solid ${color.line}`,
+                  borderRadius: 100,
+                  padding: '5px 12px',
+                }}
+              >
+                <span style={{
+                  fontSize: 10, fontWeight: 800, letterSpacing: '0.04em',
+                  color: tc.text, background: tc.bg,
+                  padding: '1px 6px', borderRadius: 100,
+                  fontFamily: font.family, whiteSpace: 'nowrap',
+                }}>
+                  {tag}
+                </span>
+                <span style={{
+                  fontSize: 13, fontWeight: 600,
+                  color: color.ink, fontFamily: font.family,
+                }}>
+                  {name}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Technical challenges */}
+        <p style={{
+          margin: '0 0 16px', fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
+          letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
+          color: color.inkFaint, fontFamily: font.family,
+        }}>
+          기술 과제
+        </p>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+          gap: 12,
+        }}>
+          {TECH_CHALLENGES.map(({ label, desc }) => (
+            <div
+              key={label}
+              style={{
+                background: color.white,
+                border: `1px solid ${color.line}`,
+                borderRadius: layout.rSm,
+                padding: '16px 20px',
+              }}
+            >
+              <p style={{
+                margin: '0 0 6px',
+                fontSize: 13, fontWeight: 800,
+                color: color.brand,
+                fontFamily: "'SFMono-Regular','Consolas','Monaco',monospace",
+                letterSpacing: '-0.01em',
+              }}>
+                {label}
+              </p>
+              <p style={{
+                margin: 0, fontSize: 13, lineHeight: 1.6,
+                color: color.inkMuted, fontFamily: font.family,
+              }}>
+                {desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── 메인 ──
 export default function TheBuild() {
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
@@ -590,6 +754,7 @@ export default function TheBuild() {
   const [s5Ref, s5Visible] = useReveal({ threshold: 0.04 });
   const [s6Ref, s6Visible] = useReveal({ threshold: 0.04 });
   const [s7Ref, s7Visible] = useReveal({ threshold: 0.04 });
+  const [sfRef, sfVisible] = useReveal({ threshold: 0.04 });
 
   return (
     <section id="build" style={{ background: color.bg, fontFamily: font.family }}>
@@ -629,6 +794,7 @@ export default function TheBuild() {
       <div ref={s5Ref}><S5Block visible={s5Visible} /></div>
       <div ref={s6Ref}><S6Block visible={s6Visible} /></div>
       <div ref={s7Ref}><S7Block visible={s7Visible} /></div>
+      <div ref={sfRef}><FeaturesBlock visible={sfVisible} /></div>
 
     </section>
   );

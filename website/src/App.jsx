@@ -35,6 +35,8 @@ export default function App() {
         minHeight: '100vh',
         WebkitFontSmoothing: 'antialiased',
         MozOsxFontSmoothing: 'grayscale',
+        wordBreak: 'keep-all',
+        overflowWrap: 'break-word',
       }}
     >
       <Nav />

@@ -86,8 +86,6 @@ export default function ServiceSafari() {
                 alignItems: 'flex-start',
                 gap: 'clamp(24px,3vw,48px)',
                 padding: 'clamp(20px,2.5vw,32px) 0',
-                borderTop: `1px solid ${color.line}`,
-                borderBottom: i === MISSIONS.length - 1 ? `1px solid ${color.line}` : 'none',
               }}
             >
               {/* Mission number */}
