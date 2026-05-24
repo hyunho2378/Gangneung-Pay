@@ -23,19 +23,21 @@ export const font = {
 };
 
 export const type = {
-  display: { size: 'clamp(44px,6.5vw,96px)', lh: 1.22, weight: 800, ls: '-0.04em' },
-  h1:      { size: 'clamp(32px,4.5vw,64px)', lh: 1.22, weight: 800, ls: '-0.03em' },
-  h2:      { size: 'clamp(26px,3.2vw,48px)', lh: 1.25, weight: 700, ls: '-0.02em' },
-  h3:      { size: 'clamp(20px,1.9vw,28px)', lh: 1.35, weight: 700, ls: '-0.01em' },
-  lead:    { size: 'clamp(16px,1.4vw,20px)', lh: 1.75, weight: 400 },
-  body:    { size: '16px',                   lh: 1.78, weight: 400 },
-  caption: { size: '13px',                   lh: 1.55, weight: 500 },
-  eyebrow: { size: '19px', weight: 800, ls: '0em', transform: 'uppercase' },
+  display: { size: 'clamp(37px,5.4vw,80px)',   lh: 1.22, weight: 800, ls: '-0.04em' },
+  h1:      { size: 'clamp(27px,3.75vw,53px)',  lh: 1.22, weight: 800, ls: '-0.03em' },
+  h2:      { size: 'clamp(22px,2.67vw,40px)',  lh: 1.25, weight: 700, ls: '-0.02em' },
+  h3:      { size: 'clamp(17px,1.58vw,23px)',  lh: 1.35, weight: 700, ls: '-0.01em' },
+  lead:    { size: 'clamp(13px,1.17vw,17px)',  lh: 1.75, weight: 400 },
+  body:    { size: 'clamp(11px,0.9vw,13px)',   lh: 1.78, weight: 400 },
+  caption: { size: 'clamp(10px,0.76vw,11px)',  lh: 1.55, weight: 500 },
+  eyebrow: { size: 'clamp(13px,1vw,16px)', weight: 800, ls: '0em', transform: 'uppercase' },
 };
 
 export const layout = {
   container: '1440px',
-  gut:       'clamp(80px, 10vw, 160px)',
-  sectionY:  'clamp(100px, 14vh, 200px)',
-  rLg: '24px', rMd: '16px', rSm: '8px',
+  gut:       'clamp(67px, 8.3vw, 133px)',
+  sectionY:  'clamp(83px, 10.4vw, 167px)',
+  rLg: 'clamp(12px, 1.5vw, 24px)',
+  rMd: 'clamp(8px, 1vw, 16px)',
+  rSm: 'clamp(4px, 0.5vw, 8px)',
 };

@@ -1,8 +1,9 @@
 import { color, font } from './tokens/web.js';
 import Nav from './components/Nav.jsx';
 import Hero from './sections/Hero.jsx';
-import ProjectOverview from './sections/ProjectOverview.jsx';
 import ServiceAnalysis from './sections/ServiceAnalysis.jsx';
+import AppOverview from './sections/AppOverview.jsx';
+import DoubleDiamondSection from './sections/DoubleDiamondSection.jsx';
 import TheTwist from './sections/TheTwist.jsx';
 import DeskResearch from './sections/DeskResearch.jsx';
 import UserResearch from './sections/UserResearch.jsx';
@@ -17,6 +18,8 @@ import UxConcept from './sections/UxConcept.jsx';
 import UxStrategy from './sections/UxStrategy.jsx';
 import UserRequirements from './sections/UserRequirements.jsx';
 import DesignSystem from './sections/DesignSystem.jsx';
+import UserFlow from './sections/UserFlow.jsx';
+import InformationArchitecture from './sections/InformationArchitecture.jsx';
 import KeyScreens from './sections/KeyScreens.jsx';
 import TheBuild from './sections/TheBuild.jsx';
 import DualDesignSystem from './sections/DualDesignSystem.jsx';
@@ -42,8 +45,9 @@ export default function App() {
       <Nav />
       <main>
         <Hero />
-        <ProjectOverview />
         <ServiceAnalysis />
+        <AppOverview />
+        <DoubleDiamondSection />
         <TheTwist />
         <DeskResearch />
         <UserResearch />
@@ -58,6 +62,8 @@ export default function App() {
         <UxStrategy />
         <UserRequirements />
         <DesignSystem />
+        <UserFlow />
+        <InformationArchitecture />
         <KeyScreens />
         <TheBuild />
         <DualDesignSystem />

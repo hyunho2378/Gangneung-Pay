@@ -2,6 +2,8 @@ import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { IOSBottomNav, AndroidBottomNav } from '../mini/BottomNavBar.jsx';
+import iosStatusBar from '../assets/11status-bar-ios.svg';
+import androidStatusBar from '../assets/11status-bar-android.svg';
 
 // [8] white swatch added to end of PRIMARY palette
 const PRIMARY = [
@@ -465,23 +467,16 @@ export default function DesignSystem() {
           </div>
 
           {/* STATUS BAR - [1] SVG heights increased, [7] android card bg, [9] labels */}
+          {console.log('[DesignSystem] iosStatusBar:', iosStatusBar, '| androidStatusBar:', androidStatusBar)}
           <p style={{ fontSize: 11, fontWeight: 700, color: color.inkFaint, margin: '0 0 12px', letterSpacing: '0em', textTransform: 'uppercase' }}>STATUS BAR</p>
           <div style={{ ...panelGrid, marginBottom: 'clamp(32px,4vw,48px)' }}>
             <div style={panelCard}>
               <p style={panelLabel}>HIG — 41px</p>
-              <div style={{ height: 41, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: color.white, borderRadius: 8, padding: '0 4px' }}>
-                <span style={{ fontSize: 17, fontWeight: 600 }}>9:41</span>
-                <img src="/icons/status-bar-ios.svg" alt="" style={{ width: '100%', height: 'auto' }} onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'inline'; }} />
-                <span style={{ display: 'none', fontSize: 13 }}>▪▪▪ ▾ ▉</span>
-              </div>
+              <img src={iosStatusBar} alt="" style={{ width: '100%', height: 'auto' }} />
             </div>
             <div style={panelCard}>
               <p style={panelLabel}>Google Material 3 — 42px</p>
-              <div style={{ height: 42, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: 8 }}>
-                <span style={{ fontSize: 14, fontFamily: "'Noto Sans KR', sans-serif" }}>9:41</span>
-                <img src="/icons/status-bar-android.svg" alt="" style={{ width: '100%', height: 'auto' }} onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'inline'; }} />
-                <span style={{ display: 'none', fontSize: 13 }}>▪▪▪ ▾ ▉</span>
-              </div>
+              <img src={androidStatusBar} alt="" style={{ width: '100%', height: 'auto' }} />
             </div>
           </div>
 
