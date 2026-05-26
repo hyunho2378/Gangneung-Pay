@@ -35,9 +35,10 @@ export default function UserJourneyMap() {
           <h2 style={{
             fontSize: t.h1.size, fontWeight: t.h1.weight,
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
-            color: color.ink, margin: 0, maxWidth: '28ch',
+            color: color.ink, margin: 0,
+            wordBreak: 'keep-all',
           }}>
-            사용자가 겪는 5단계 여정과 마찰점
+            사용자가 겪는 5단계 여정과 마찰점.
           </h2>
         </div>
 
@@ -47,12 +48,16 @@ export default function UserJourneyMap() {
             opacity: mapVisible ? 1 : 0,
             transform: mapVisible ? 'none' : 'translateY(24px)',
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
+            overflowX: 'auto',
+            scrollbarWidth: 'thin',
+            scrollbarColor: `${color.brand} ${color.brandPale}`,
+            paddingBottom: 8,
           }}
         >
           <img
             src="/cjm.svg"
             alt="강릉페이 사용자 여정 지도"
-            style={{ width: '100%', height: 'auto', display: 'block' }}
+            style={{ width: 'max(100%, 1400px)', height: 'auto', display: 'block' }}
           />
         </div>
 

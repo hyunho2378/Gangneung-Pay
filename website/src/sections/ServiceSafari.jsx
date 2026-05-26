@@ -61,7 +61,6 @@ export default function ServiceSafari() {
               letterSpacing: t.h1.ls,
               color: color.ink,
               margin: 0,
-              maxWidth: '24ch',
             }}
           >
             사용자의 손가락이 멈추는 곳을 기록했습니다.
@@ -75,6 +74,9 @@ export default function ServiceSafari() {
             opacity: listVisible ? 1 : 0,
             transform: listVisible ? 'none' : 'translateY(28px)',
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(5, 1fr)',
+            gap: 'clamp(8px,1.5vw,16px)',
             marginBottom: 'clamp(56px,6vw,88px)',
           }}
         >
@@ -82,33 +84,33 @@ export default function ServiceSafari() {
             <div
               key={num}
               style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: 'clamp(24px,3vw,48px)',
-                padding: 'clamp(20px,2.5vw,32px) 0',
+                background: color.white,
+                borderRadius: layout.rMd,
+                padding: 'clamp(12px,1.5vw,20px)',
+                boxShadow: '0 1px 6px rgba(0,0,0,0.06)',
               }}
             >
               {/* Mission number */}
               <span
                 style={{
-                  fontSize: 'clamp(36px,4vw,56px)',
+                  fontSize: 13,
                   fontWeight: 800,
                   color: color.brand,
                   lineHeight: 1,
-                  flexShrink: 0,
-                  width: '2.2ch',
-                  letterSpacing: '-0.03em',
+                  letterSpacing: '-0.01em',
                   fontFamily: font.family,
+                  marginBottom: 8,
+                  display: 'block',
                 }}
               >
                 {num}
               </span>
 
               {/* Content */}
-              <div style={{ flex: 1, paddingTop: 4 }}>
+              <div style={{ marginTop: 4 }}>
                 <h3
                   style={{
-                    fontSize: t.h3.size,
+                    fontSize: 14,
                     fontWeight: t.h3.weight,
                     lineHeight: t.h3.lh,
                     letterSpacing: t.h3.ls,
@@ -120,7 +122,7 @@ export default function ServiceSafari() {
                 </h3>
                 <p
                   style={{
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: 600,
                     color: color.inkMuted,
                     letterSpacing: '-0.01em',

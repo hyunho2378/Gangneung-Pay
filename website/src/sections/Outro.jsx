@@ -20,8 +20,8 @@ export default function Outro() {
       style={{
         background: color.brand,
         fontFamily: font.family,
-        padding: `${layout.sectionY} clamp(20px,5vw,80px)`,
-        minHeight: '80vh',
+        padding: `clamp(20px,2.5vw,36px) clamp(20px,5vw,80px)`,
+        minHeight: '28vh',
         display: 'flex',
         alignItems: 'center',
       }}
@@ -35,11 +35,11 @@ export default function Outro() {
             opacity: headVisible ? 1 : 0,
             transform: headVisible ? 'none' : 'translateY(28px)',
             transition: 'opacity 0.8s ease-out, transform 0.8s ease-out',
-            marginBottom: 'clamp(64px,9vw,120px)',
+            marginBottom: 'clamp(24px,3vw,40px)',
           }}
         >
           <h2 style={{
-            fontSize: 'clamp(48px,8vw,128px)',
+            fontSize: t.h3.size,
             fontWeight: 800,
             lineHeight: 1.1,
             letterSpacing: '-0.04em',
@@ -79,16 +79,16 @@ export default function Outro() {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridTemplateColumns: 'repeat(6, 1fr)',
             gap: '2px',
-            marginBottom: 'clamp(48px,6vw,80px)',
+            marginBottom: 'clamp(16px,2vw,28px)',
             maxWidth: 640,
           }}>
             {MEMBERS.map((m, i) => (
               <div
                 key={m.name}
                 style={{
-                  padding: 'clamp(16px,2vw,24px)',
+                  padding: 'clamp(10px,1.2vw,16px)',
                   background: 'rgba(255,255,255,0.10)',
                   opacity: creditsVisible ? 1 : 0,
                   transition: `opacity 0.5s ease-out ${i * 0.08}s`,

@@ -25,36 +25,6 @@ const STRATEGIES = [
   },
   {
     id: 'S3', num: 'S3',
-    title: '캐시백 체감',
-    oneliner: null,
-    quote: null,
-    attribution: null,
-    evidence: '"1,345원 적립" → "커피 한 잔 값 아꼈어요"',
-    solution: '5단계 직관 메시지로 캐시백 금액을 감각적으로 전달합니다.',
-    ur: 'UR-F03',
-  },
-  {
-    id: 'S4', num: 'S4',
-    title: '충전 3단계 압축',
-    oneliner: '충전 중 잔액 확인이 가능합니다',
-    quote: '충전해야 하는 방식이 가장 귀찮습니다',
-    attribution: '인터뷰 B1',
-    evidence: null,
-    solution: '금액 선택 → 확인 → 완료. 빠른금액 칩(+1만/+5만/+10만)으로 반복 충전 시 1탭.',
-    ur: 'UR-U04',
-  },
-  {
-    id: 'S5', num: 'S5',
-    title: '잔액 부족 사전 차단',
-    oneliner: null,
-    quote: null,
-    attribution: '설문 68명',
-    evidence: '62.5% — 계산대 당황 경험',
-    solution: '입력 시점 한도 검증. 잔액 부족 예상 시 버튼 disabled + 인라인 빨간 안내.',
-    ur: 'UR-U05',
-  },
-  {
-    id: 'S6', num: 'S6',
     title: '가맹점 실시간 신뢰',
     oneliner: '13,021개 실데이터로 신뢰를 만들었습니다',
     quote: '가게 들어가서 여기 강릉페이 돼요? 라고 물어봐야',
@@ -64,7 +34,7 @@ const STRATEGIES = [
     ur: 'UR-U06',
   },
   {
-    id: 'S7', num: 'S7',
+    id: 'S4', num: 'S4',
     title: '코치마크 단계 안내',
     oneliner: '첫 사용자도 혼자 완주할 수 있습니다',
     quote: null,
@@ -113,9 +83,9 @@ export default function UxStrategy() {
           <h2 style={{
             fontSize: t.h1.size, fontWeight: t.h1.weight,
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
-            color: color.ink, margin: 0,
+            color: color.ink, margin: 0, wordBreak: 'keep-all',
           }}>
-            7가지 전략으로 구체화했습니다.
+            4가지 전략으로 구체화했습니다.
           </h2>
         </div>
 
@@ -244,7 +214,7 @@ export default function UxStrategy() {
                             color: color.inkFaint, letterSpacing: '0.04em',
                             fontFamily: font.family,
                           }}>
-                            — {s.attribution}
+                            · {s.attribution}
                           </span>
                         </div>
                       )}
@@ -274,7 +244,7 @@ export default function UxStrategy() {
                               color: color.inkFaint, letterSpacing: '0.04em',
                               fontFamily: font.family,
                             }}>
-                              — {s.attribution}
+                              · {s.attribution}
                             </span>
                           )}
                         </div>

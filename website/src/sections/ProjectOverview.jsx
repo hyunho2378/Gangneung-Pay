@@ -49,7 +49,6 @@ export default function ProjectOverview() {
               letterSpacing: '-0.035em',
               color: color.ink,
               margin: '0 0 24px',
-              maxWidth: '14ch',
             }}
           >
             We Rebuild the Local Currency Experience
@@ -60,9 +59,8 @@ export default function ProjectOverview() {
               fontSize: t.lead.size,
               fontWeight: t.lead.weight,
               lineHeight: t.lead.lh,
-              color: color.inkMuted,
+              color: color.ink,
               margin: '0 0 56px',
-              maxWidth: 540,
             }}
           >
             강릉시 지역화폐 강릉페이를 처음부터 다시 설계했습니다.
@@ -70,23 +68,23 @@ export default function ProjectOverview() {
 
           <div style={{ display: 'flex', gap: 'clamp(24px,4vw,56px)', flexWrap: 'wrap' }}>
             {META.map(({ label, value }) => (
-              <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 <span
                   style={{
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: 700,
-                    letterSpacing: '0em',
+                    letterSpacing: '0.02em',
                     textTransform: 'uppercase',
-                    color: color.inkFaint,
+                    color: color.inkMuted,
                   }}
                 >
                   {label}
                 </span>
                 <span
                   style={{
-                    fontSize: 13,
+                    fontSize: 16,
                     fontWeight: 600,
-                    color: color.inkMuted,
+                    color: color.ink,
                     letterSpacing: '-0.01em',
                   }}
                 >

@@ -42,17 +42,17 @@ function Node({ text, dashed = false }) {
   return (
     <div
       style={{
-        padding: '8px 14px',
+        padding: '10px 18px',
         borderRadius: 12,
         background: color.white,
         border: `2px ${dashed ? 'dashed' : 'solid'} ${color.brand}`,
-        fontSize: t.caption.size,
+        fontSize: t.body.size,
         fontWeight: 600,
         color: dashed ? color.inkMuted : color.ink,
         textAlign: 'center',
         whiteSpace: 'pre-wrap',
-        minWidth: 80,
-        maxWidth: 140,
+        minWidth: 96,
+        maxWidth: 200,
         lineHeight: 1.4,
         flexShrink: 0,
         wordBreak: 'keep-all',
@@ -70,7 +70,7 @@ function SolidArrow() {
         display: 'flex',
         alignItems: 'center',
         flexShrink: 0,
-        width: 28,
+        width: 36,
       }}
     >
       <div
@@ -105,7 +105,7 @@ function DashedArrow() {
         display: 'flex',
         alignItems: 'center',
         flexShrink: 0,
-        width: 28,
+        width: 36,
       }}
     >
       <div
@@ -179,7 +179,7 @@ function FlowRow({ flow, visible, delay }) {
       <div
         style={{
           display: 'flex',
-          alignItems: 'flex-start',
+          alignItems: 'center',
           overflowX: 'auto',
           paddingBottom: flow.branch ? 0 : 4,
         }}
@@ -198,7 +198,7 @@ function FlowRow({ flow, visible, delay }) {
                     top: -22,
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    background: color.ok,
+                    background: color.brand,
                     color: color.white,
                     fontSize: '10px',
                     fontWeight: 700,
@@ -283,9 +283,9 @@ export default function UserFlow() {
           <h2 style={{
             fontSize: t.h1.size, fontWeight: t.h1.weight,
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
-            color: color.ink, margin: '0 0 16px',
+            color: color.ink, margin: '0 0 16px', wordBreak: 'keep-all',
           }}>
-            네 갈래의 핵심 흐름을 다시 그렸습니다
+            네 갈래의 핵심 흐름을 다시 그렸습니다.
           </h2>
           <p style={{
             fontSize: t.lead.size, fontWeight: 400,

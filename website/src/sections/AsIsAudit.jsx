@@ -1,5 +1,6 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import beforeImg from '../assets/before.png';
 
 const POINTS = [
   {
@@ -67,9 +68,10 @@ export default function AsIsAudit() {
           <h2 style={{
             fontSize: t.h1.size, fontWeight: t.h1.weight,
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
-            color: color.ink, margin: 0, maxWidth: '28ch',
+            color: color.ink, margin: 0,
+            wordBreak: 'keep-all',
           }}>
-            리뉴얼 이후에도<br />살아남은 구조적 결함
+            리뉴얼 이후에도 살아남은 구조적 결함.
           </h2>
         </div>
 
@@ -87,33 +89,14 @@ export default function AsIsAudit() {
             marginBottom: 'clamp(48px,6vw,80px)',
           }}
         >
-          {/* Screenshot placeholder */}
+          {/* Screenshot */}
           <div style={{ flex: '0 0 clamp(160px,26%,320px)' }}>
-            <div
-              style={{
-                background: color.line,
-                borderRadius: layout.rMd,
-                aspectRatio: '9/16',
-                filter: 'grayscale(1)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 10,
-              }}
-            >
-              <span style={{
-                fontSize: 11, fontWeight: 700, letterSpacing: '0.08em',
-                textTransform: 'uppercase', color: color.inkFaint,
-                fontFamily: font.family,
-              }}>
-                AS-IS 스크린샷
-              </span>
-              <span style={{
-                fontSize: 11, color: color.inkFaint, fontFamily: font.family,
-              }}>
-                이미지 교체 예정
-              </span>
+            <div style={{ aspectRatio: '9/16', overflow: 'hidden', borderRadius: layout.rMd }}>
+              <img
+                src={beforeImg}
+                alt="강릉페이 AS-IS 화면"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              />
             </div>
           </div>
 
@@ -177,9 +160,9 @@ export default function AsIsAudit() {
           <p style={{
             fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
             letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-            color: color.inkFaint, margin: '0 0 16px',
+            color: color.inkMuted, margin: '0 0 16px',
           }}>
-            HEURISTIC VIOLATIONS — 6건
+            HEURISTIC VIOLATIONS · 6건
           </p>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {VIOLATIONS.map(({ code, label }) => (

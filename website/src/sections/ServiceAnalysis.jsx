@@ -50,9 +50,10 @@ export default function ServiceAnalysis() {
           <h2 style={{
             fontSize: t.h1.size, fontWeight: t.h1.weight,
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
-            color: color.ink, margin: 0, maxWidth: '32ch',
+            color: color.ink, margin: 0,
+            wordBreak: 'keep-all',
           }}>
-            강릉페이, 강릉 시민의 스마트한 일상 소비와 지역 상권을 잇는 모바일 지갑
+            강릉페이, 강릉 시민의 스마트한 일상 소비와<br/>지역 상권을 잇는 모바일 지갑.
           </h2>
         </div>
 
@@ -74,7 +75,7 @@ export default function ServiceAnalysis() {
               <span style={{
                 fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
                 letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-                color: color.inkFaint, paddingTop: 2,
+                color: color.inkMuted, paddingTop: 2,
               }}>
                 {label}
               </span>

@@ -9,7 +9,7 @@ const TABS = [
   { label: 'MY',       Icon: User },
 ];
 
-export function IOSBottomNav({ activeIndex = 0 }) {
+export function IOSBottomNav({ activeIndex = 0, onSelect }) {
   return (
     <div style={{
       background: color.white, borderRadius: 12, height: 56,
@@ -20,7 +20,7 @@ export function IOSBottomNav({ activeIndex = 0 }) {
         const active = i === activeIndex;
         const col = active ? color.brand : color.inkFaint;
         return (
-          <div key={label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+          <div key={label} onClick={() => onSelect?.(i)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, cursor: 'pointer' }}>
             <Icon size={22} strokeWidth={1.8} color={col} />
             <span style={{ fontSize: 10, color: col, fontWeight: active ? 700 : 400, fontFamily: font.family }}>{label}</span>
           </div>
@@ -30,7 +30,7 @@ export function IOSBottomNav({ activeIndex = 0 }) {
   );
 }
 
-export function AndroidBottomNav({ activeIndex = 0 }) {
+export function AndroidBottomNav({ activeIndex = 0, onSelect }) {
   return (
     <div style={{
       background: color.white, borderRadius: 12, height: 56,
@@ -41,7 +41,7 @@ export function AndroidBottomNav({ activeIndex = 0 }) {
         const active = i === activeIndex;
         const col = active ? color.brand : color.inkFaint;
         return (
-          <div key={label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+          <div key={label} onClick={() => onSelect?.(i)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, cursor: 'pointer' }}>
             {active ? (
               <div style={{ background: color.brandPale, borderRadius: 999, width: 56, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Icon size={20} strokeWidth={1.8} color={col} />

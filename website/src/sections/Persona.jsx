@@ -1,34 +1,65 @@
-import researchData from '../data/research.json';
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 
-const { primary, secondary, reference } = researchData.persona;
+const PERSONA = {
+  name: '김정숙',
+  age: '53세',
+  role: '주부',
+  location: '강릉 거주 20년',
+  tags: ['지역 경제 관심', '소상공인 지원'],
+  quote: '내 돈이 어떻게 되는지 항상 알고 막힘없이 쓰고 싶다',
+  personality: ['실용적', '관계 중심', '정보 탐색형', '지역 충성도 높음'],
+  behaviors: [
+    { label: '의사결정 방식', lo: '신중한 비교 검토', hi: '빠른 판단 실행', val: 22 },
+    { label: '정보 처리 스타일', lo: '상세 정독형', hi: '핵심만 빠르게', val: 28 },
+    { label: '앱 확인 패턴', lo: '필요시에만', hi: '매일 확인', val: 25 },
+    { label: '소비 성향', lo: '보수적 신중', hi: '적극적 즉시', val: 20 },
+    { label: '도움 요청 방식', lo: '도움 요청형', hi: '스스로 해결형', val: 32 },
+    { label: '지역 상권 이용', lo: '낮음', hi: '높음', val: 90 },
+  ],
+  narrative: '강릉에서 오래 살며 동네 가게를 주로 이용합니다. 강릉페이로 지역 상권을 돕고 싶지만, 앱 조작이 어렵고 잔액 확인이 불편합니다.',
+  pains: [
+    '앱을 열어야만 잔액을 알 수 있어 계산대에서 당황함',
+    '환불 메뉴를 찾는 데 시간이 너무 걸림',
+    "'강릉머니'가 뭔지 몰라 기능을 포기",
+  ],
+  needs: [
+    '앱 없이도 잔액을 즉시 확인할 수 있는 방법',
+    '충전·환불이 같은 자리에 있는 직관적인 메뉴',
+    '쉬운 우리말로 된 메뉴 명칭',
+  ],
+};
+
+function Slider({ label, lo, hi, val }) {
+  return (
+    <div style={{ marginBottom: 12 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+        <span style={{ fontSize: 13, fontWeight: 600, color: color.ink, fontFamily: font.family }}>{label}</span>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span style={{ fontSize: 11, color: color.inkFaint, fontFamily: font.family, flexShrink: 0, minWidth: 'auto', maxWidth: 90, whiteSpace: 'nowrap', textAlign: 'right' }}>{lo}</span>
+        <div style={{ flex: 1, height: 6, background: color.line, borderRadius: 99, position: 'relative' }}>
+          <div style={{
+            position: 'absolute', left: 0, top: 0, bottom: 0,
+            width: `${val}%`, background: color.brand, borderRadius: 99,
+          }} />
+          <div style={{
+            position: 'absolute', top: '50%', left: `${val}%`,
+            transform: 'translate(-50%, -50%)',
+            width: 14, height: 14, borderRadius: '50%',
+            background: color.brand, border: `2px solid ${color.white}`,
+            boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+          }} />
+        </div>
+        <span style={{ fontSize: 11, color: color.inkFaint, fontFamily: font.family, flexShrink: 0, minWidth: 'auto', maxWidth: 90, whiteSpace: 'nowrap' }}>{hi}</span>
+      </div>
+    </div>
+  );
+}
 
 export default function Persona() {
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
-  const [primaryRef, primaryVisible] = useReveal({ threshold: 0.05 });
-  const [secondaryRef, secondaryVisible] = useReveal({ threshold: 0.05 });
-  const [refRef, refVisible] = useReveal({ threshold: 0.05 });
-
-  const eyebrowStyle = {
-    fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
-    letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-    margin: '0 0 12px', fontFamily: font.family,
-  };
-
-  const painItem = (pain) => (
-    <div
-      key={pain}
-      style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginBottom: 8 }}
-    >
-      <span style={{ color: color.warn, fontWeight: 700, flexShrink: 0, lineHeight: 1.5, fontFamily: font.family }}>
-        —
-      </span>
-      <span style={{ fontSize: 14, color: color.inkMuted, lineHeight: 1.5, fontFamily: font.family }}>
-        {pain}
-      </span>
-    </div>
-  );
+  const [cardRef, cardVisible] = useReveal({ threshold: 0.05 });
 
   return (
     <section
@@ -51,180 +82,226 @@ export default function Persona() {
             marginBottom: 'clamp(40px,5vw,64px)',
           }}
         >
-          <p style={{ ...eyebrowStyle, color: color.brand, margin: '0 0 24px' }}>
+          <p style={{
+            fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
+            letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
+            color: color.brand, margin: '0 0 24px', fontFamily: font.family,
+          }}>
             PERSONA
           </p>
           <h2 style={{
             fontSize: t.h1.size, fontWeight: t.h1.weight,
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
-            color: color.ink, margin: 0,
+            color: color.ink, margin: 0, wordBreak: 'keep-all',
           }}>
-            누가 강릉페이를 쓰는가
+            누가 강릉페이를 씁니까.
           </h2>
         </div>
 
-        {/* Primary */}
+        {/* Persona card */}
         <div
-          ref={primaryRef}
+          ref={cardRef}
           style={{
-            opacity: primaryVisible ? 1 : 0,
-            transform: primaryVisible ? 'none' : 'translateY(28px)',
+            opacity: cardVisible ? 1 : 0,
+            transform: cardVisible ? 'none' : 'translateY(28px)',
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
             background: color.brandPale,
             borderRadius: layout.rLg,
-            padding: 'clamp(32px,4vw,56px)',
-            marginBottom: 'clamp(16px,2vw,24px)',
+            padding: 'clamp(28px,4vw,48px)',
           }}
         >
           <span style={{
             display: 'inline-block',
-            fontSize: 14, fontWeight: 800, letterSpacing: '0em',
+            fontSize: 13, fontWeight: 800, letterSpacing: '0em',
             textTransform: 'uppercase',
             background: color.brand, color: color.white,
             padding: '4px 12px', borderRadius: 100,
-            marginBottom: 20, fontFamily: font.family,
+            marginBottom: 24, fontFamily: font.family,
           }}>
             PRIMARY
           </span>
 
-          <h3 style={{
-            fontSize: 'clamp(24px,3vw,40px)', fontWeight: 800,
-            lineHeight: 1.22, letterSpacing: '-0.03em',
-            color: color.ink, margin: '0 0 10px', fontFamily: font.family,
-          }}>
-            {primary.name}
-          </h3>
-          <p style={{
-            fontSize: t.lead.size, lineHeight: 1.65,
-            color: color.inkMuted, margin: '0 0 32px', fontFamily: font.family,
-          }}>
-            {primary.trait} · {primary.habit}
-          </p>
-
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: 'clamp(24px,3vw,40px)',
+            gridTemplateColumns: 'clamp(140px,20%,200px) 1fr',
+            gap: 'clamp(24px,4vw,56px)',
+            alignItems: 'flex-start',
           }}>
+
+            {/* Left: profile */}
             <div>
-              <p style={{ ...eyebrowStyle, color: color.brand }}>핵심 동기</p>
-              <p style={{
-                fontSize: t.h3.size, fontWeight: 700,
-                lineHeight: t.h3.lh, color: color.ink,
-                margin: '0 0 6px', fontFamily: font.family,
+              {/* Photo placeholder */}
+              <div style={{
+                width: '100%',
+                aspectRatio: '1/1',
+                background: color.brand,
+                borderRadius: layout.rMd,
+                marginBottom: 16,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                opacity: 0.15,
               }}>
-                {primary.motivation}
-              </p>
-            </div>
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <circle cx="12" cy="8" r="4" fill={color.brand} />
+                  <path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" fill={color.brand} />
+                </svg>
+              </div>
 
-            <div>
-              <p style={{ ...eyebrowStyle, color: color.brand }}>페인포인트</p>
-              {primary.pains.map(painItem)}
-            </div>
-          </div>
-        </div>
-
-        {/* Secondary */}
-        <div
-          ref={secondaryRef}
-          style={{
-            opacity: secondaryVisible ? 1 : 0,
-            transform: secondaryVisible ? 'none' : 'translateY(28px)',
-            transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-            background: color.bg,
-            borderRadius: layout.rLg,
-            padding: 'clamp(24px,3vw,40px)',
-            marginBottom: 'clamp(40px,5vw,64px)',
-          }}
-        >
-          <span style={{
-            display: 'inline-block',
-            fontSize: 11, fontWeight: 800, letterSpacing: '0em',
-            textTransform: 'uppercase',
-            background: color.inkFaint, color: color.white,
-            padding: '4px 12px', borderRadius: 100,
-            marginBottom: 20, fontFamily: font.family,
-          }}>
-            SECONDARY
-          </span>
-
-          <h3 style={{
-            fontSize: 'clamp(20px,2.5vw,32px)', fontWeight: 800,
-            lineHeight: 1.22, letterSpacing: '-0.02em',
-            color: color.ink, margin: '0 0 10px', fontFamily: font.family,
-          }}>
-            {secondary.name}
-          </h3>
-          <p style={{
-            fontSize: t.lead.size, lineHeight: 1.65,
-            color: color.inkMuted, margin: '0 0 28px', fontFamily: font.family,
-          }}>
-            {secondary.trait}
-          </p>
-
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: 'clamp(24px,3vw,40px)',
-          }}>
-            <div>
-              <p style={{ ...eyebrowStyle, color: color.inkMuted }}>이탈 트리거</p>
               <p style={{
-                fontSize: 14, fontWeight: 700,
-                color: color.ink, margin: '0 0 6px', fontFamily: font.family,
+                fontSize: 'clamp(20px,2.5vw,28px)', fontWeight: 800,
+                letterSpacing: '-0.02em', color: color.ink,
+                margin: '0 0 4px', fontFamily: font.family, lineHeight: 1.2,
               }}>
-                {secondary.trigger}
+                {PERSONA.name}
               </p>
               <p style={{
-                fontSize: 13, color: color.inkMuted,
+                fontSize: t.caption.size, color: color.inkMuted,
                 margin: '0 0 12px', fontFamily: font.family,
               }}>
-                주결제: {secondary.main_payment}
+                {PERSONA.age} · {PERSONA.role}
               </p>
               <p style={{
-                fontSize: 13, color: color.inkMuted,
-                margin: 0, fontStyle: 'italic', fontFamily: font.family,
+                fontSize: t.caption.size, color: color.inkMuted,
+                margin: '0 0 16px', fontFamily: font.family,
               }}>
-                &ldquo;{secondary.perception}&rdquo;
+                {PERSONA.location}
               </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {PERSONA.tags.map(tag => (
+                  <span key={tag} style={{
+                    fontSize: 11, fontWeight: 700,
+                    color: color.brand, background: color.white,
+                    padding: '3px 10px', borderRadius: 100,
+                    fontFamily: font.family,
+                  }}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
 
+            {/* Right: content */}
             <div>
-              <p style={{ ...eyebrowStyle, color: color.inkMuted }}>페인포인트</p>
-              {secondary.pains.map(painItem)}
+              {/* Quote */}
+              <blockquote style={{
+                margin: '0 0 28px',
+                padding: '16px 20px',
+                background: color.white,
+                borderLeft: `4px solid ${color.brand}`,
+                borderRadius: `0 ${layout.rSm} ${layout.rSm} 0`,
+              }}>
+                <p style={{
+                  fontSize: t.lead.size, fontWeight: 600,
+                  lineHeight: 1.6, color: color.ink,
+                  margin: 0, fontFamily: font.family, wordBreak: 'keep-all',
+                }}>
+                  "{PERSONA.quote}"
+                </p>
+              </blockquote>
+
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: 'clamp(20px,3vw,40px)',
+                marginBottom: 28,
+              }}>
+                {/* Personality */}
+                <div>
+                  <p style={{
+                    fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
+                    letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
+                    color: color.brand, margin: '0 0 12px', fontFamily: font.family,
+                  }}>
+                    Personality
+                  </p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                    {PERSONA.personality.map(p => (
+                      <span key={p} style={{
+                        fontSize: 13, fontWeight: 600,
+                        color: color.ink, background: color.white,
+                        padding: '5px 12px', borderRadius: 100,
+                        fontFamily: font.family,
+                        border: `1px solid ${color.line}`,
+                      }}>
+                        {p}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Narrative */}
+                <div>
+                  <p style={{
+                    fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
+                    letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
+                    color: color.brand, margin: '0 0 12px', fontFamily: font.family,
+                  }}>
+                    Context
+                  </p>
+                  <p style={{
+                    fontSize: t.caption.size, lineHeight: 1.7,
+                    color: color.inkMuted, margin: 0, fontFamily: font.family,
+                    wordBreak: 'keep-all',
+                  }}>
+                    {PERSONA.narrative}
+                  </p>
+                </div>
+              </div>
+
+              {/* Behavior sliders */}
+              <div style={{ marginBottom: 28 }}>
+                <p style={{
+                  fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
+                  letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
+                  color: color.brand, margin: '0 0 16px', fontFamily: font.family,
+                }}>
+                  Behavior Pattern
+                </p>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '0 clamp(20px,3vw,40px)',
+                }}>
+                  {PERSONA.behaviors.map(b => (
+                    <Slider key={b.label} {...b} />
+                  ))}
+                </div>
+              </div>
+
+              {/* Pain points + Needs */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(20px,3vw,40px)' }}>
+                <div>
+                  <p style={{
+                    fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
+                    letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
+                    color: color.warn, margin: '0 0 12px', fontFamily: font.family,
+                  }}>
+                    Pain Points
+                  </p>
+                  {PERSONA.pains.map((pain, i) => (
+                    <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'flex-start' }}>
+                      <span style={{ color: color.warn, fontWeight: 700, flexShrink: 0, lineHeight: 1.5, fontFamily: font.family }}>·</span>
+                      <span style={{ fontSize: 13, color: color.inkMuted, lineHeight: 1.55, fontFamily: font.family, wordBreak: 'keep-all' }}>{pain}</span>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <p style={{
+                    fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
+                    letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
+                    color: color.brand, margin: '0 0 12px', fontFamily: font.family,
+                  }}>
+                    Needs
+                  </p>
+                  {PERSONA.needs.map((need, i) => (
+                    <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'flex-start' }}>
+                      <span style={{ color: color.brand, fontWeight: 700, flexShrink: 0, lineHeight: 1.5, fontFamily: font.family }}>·</span>
+                      <span style={{ fontSize: 13, color: color.inkMuted, lineHeight: 1.55, fontFamily: font.family, wordBreak: 'keep-all' }}>{need}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Reference */}
-        <div
-          ref={refRef}
-          style={{
-            opacity: refVisible ? 1 : 0,
-            transform: refVisible ? 'none' : 'translateY(20px)',
-            transition: 'opacity 0.6s ease-out, transform 0.6s ease-out',
-            display: 'flex',
-            gap: 'clamp(24px,4vw,56px)',
-            flexWrap: 'wrap',
-          }}
-        >
-          {reference.map(({ name, note }) => (
-            <div key={name} style={{ flex: 1, minWidth: 200, paddingTop: 20 }}>
-              <p style={{ ...eyebrowStyle, color: color.inkFaint }}>
-                REFERENCE
-              </p>
-              <p style={{
-                fontSize: t.h3.size, fontWeight: 700,
-                lineHeight: t.h3.lh, color: color.ink,
-                margin: '0 0 6px', fontFamily: font.family,
-              }}>
-                {name}
-              </p>
-              <p style={{ fontSize: 13, color: color.inkMuted, margin: 0, fontFamily: font.family }}>
-                {note}
-              </p>
-            </div>
-          ))}
         </div>
 
       </div>

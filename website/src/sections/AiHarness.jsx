@@ -5,35 +5,35 @@ import { useReveal } from '../lib/useReveal.js';
 const DOCS = [
   {
     name: 'CLAUDE.md', desc: '행동지침·금지규칙',
-    preview: `# CLAUDE.md\n## 1. Think Before Coding\nState assumptions explicitly.\nIf multiple interpretations exist,\npresent them — don't pick silently.\n## 2. Simplicity First\nMinimum code that solves the problem.\nNo features beyond what was asked.`,
+    preview: `# CLAUDE.md\nBehavioral guidelines to reduce common LLM coding mistakes.\n\n## 1. Think Before Coding\n- State your assumptions explicitly. If uncertain, ask.\n- If multiple interpretations exist, present them. Don't pick silently.\n- If a simpler approach exists, say so. Push back when warranted.\n- If something is unclear, stop. Name what's confusing. Ask.\n\n## 2. Simplicity First\n- Minimum code that solves the problem. Nothing speculative.\n- No features beyond what was asked.\n- No abstractions for single-use code.\n- No error handling for impossible scenarios.\n- If you write 200 lines and it could be 50, rewrite it.\n\n## 3. Surgical Changes\n- Touch only what you must. Clean up only your own mess.\n- Don't "improve" adjacent code, comments, or formatting.\n- Don't refactor things that aren't broken.\n\n## 4. Goal-Driven Execution\n- Define success criteria. Loop until verified.\n- Every changed line should trace directly to the user's request.`,
   },
   {
     name: 'AGENTS.md', desc: '에이전트 역할·경계',
-    preview: `# AGENTS.md — 에이전트 실행 구조\nPHASE 0  초기 세팅    (1개 에이전트)\nPHASE 1  병렬 구현    (3개 동시 실행)\nPHASE 2  검증 및 연동 (1개, PHASE 1 후)\n---\n실행 원칙: 명세를 벗어나는 결정\n스스로 내리지 않는다.`,
+    preview: `# AGENTS.md — 에이전트 실행 구조\n\n## 실행 원칙\n에이전트는 명세를 벗어나는 결정을 스스로 내리지 않는다.\n명세에 없는 상황은 반드시 사용자에게 물어보고 대기한다.\n\nPHASE 0  초기 세팅     (1개 에이전트 단독)\nPHASE 1  병렬 구현     (3개 에이전트 동시 실행)\nPHASE 2  검증 및 연동  (1개 에이전트, PHASE 1 완료 후)\n\n## CHECKLIST\n- 빌드 오류 0건\n- localStorage 사용 0건\n- 하드코딩 색상 0건\n- 이모지 사용 없음\n- 명시 외 수정 없음\n\n커밋 규칙:\n[A0] chore: 초기 세팅\n[A1] feat: 기반 데이터 + 라우팅\n[A2] feat: 페이지 흐름\n[A3] feat: 재사용 컴포넌트\n[AR] fix: REVIEW 수정사항 반영`,
   },
   {
     name: 'DESIGN.md', desc: '토큰·컴포넌트 계약',
-    preview: `# DESIGN.md — 강릉페이 Phase 2\nUX Concept: "내 돈이 내 편인 앱"\n두 축:\n  1. 투명한 정보 노출\n  2. 막힘없는 직진형 프로세스\n7대 전략: S1 ~ S7`,
+    preview: `# DESIGN.md — 강릉페이 Phase 2 리디자인\n팀: 마카모예 | UX Concept: 내 돈이 내 편인 앱\n\n두 축:\n1. 투명한 정보 노출\n2. 막힘없는 직진형 프로세스\n\n## 7대 전략\nS1  앱 진입 전 잔액 선제 노출 (위젯)   — 투명\nS2  환불의 동등한 위계 노출           — 투명\nS3  혜택 현황의 즉각 체감 구조        — 투명\nS4  충전 플로우 3단계 압축            — 직진\nS5  잔액 부족 사전 차단 알림          — 직진\nS6  가맹점 정보 실시간 신뢰 구조       — 투명\nS7  첫 사용자 단계별 맥락 안내        — 직진\n\n절대 금지: 이모지, 색상 하드코딩,\nB2B 콘텐츠 B2C 화면 노출, localStorage`,
   },
   {
     name: 'IA.md', desc: '라우트·화면 계층',
-    preview: `# IA.md — 강릉페이 Phase 2 IA\n바텀 탭 (5개):\n  [홈][결제매장][QR결제][이용내역][MY]\n핵심 변경:\n  - 햄버거 메뉴 완전 삭제 → MY 탭\n  - QR결제를 중앙 강조 위치로`,
+    preview: `# IA.md — 강릉페이 Phase 2 IA\n업데이트: 2026-05-15 피드백 반영\n\n바텀 네비게이션 (5개):\n[홈] [결제매장] [QR결제 중앙] [이용내역] [MY]\n\n핵심 변경:\n- 햄버거 메뉴 완전 삭제 → MY 탭으로 흡수\n- QR결제를 중앙 강조 위치로\n- 이용내역을 기존 QR결제 자리로\n\n상단 헤더:\n[로고 강릉페이] [큰글씨] [검색] [알림종]\n\n라우트:\n/ (홈)         /store (결제매장)\n/qr (QR)       /history (이용내역)\n/my (MY — 신규)`,
   },
   {
     name: 'COMPONENTS.md', desc: '33개 컴포넌트 스펙',
-    preview: `# COMPONENTS.md — 강릉페이 스펙\n총 33개 | Phase 1 AS-IS 복제 기준\nL01 TopAppBar.jsx\nL04 BottomNavBar.jsx\nL06 ScreenContainer.jsx\nH03 BalanceCard.jsx\nH04 BalanceCardExpanded.jsx`,
+    preview: `# COMPONENTS.md — 강릉페이 컴포넌트 스펙\n총 33개 | Phase 1 AS-IS 복제 기준\n\n레이아웃 (6개):\nL01 TopAppBar.jsx\nL04 BottomNavBar.jsx\nL06 ScreenContainer.jsx\n\n홈 (13개):\nH03 BalanceCard.jsx          다크 블루 잔액 카드\nH04 BalanceCardExpanded.jsx  카드 확장 (카드관리|충전)\nH05 CashbackProgressCard.jsx 캐시백 10% 진행바\n\n결제/충전 (6개):\nP01 QRScannerScreen.jsx  QR 스캔 전체화면\nP02 ChargeScreen.jsx     충전 금액 입력\n\n결제매장 (4개):\nM01 StoreMapScreen.jsx  지도 + 검색바 + 필터칩\nM04 CategoryFilterChip.jsx`,
   },
   {
     name: 'ROUTES.md', desc: '30개 화면 목록',
-    preview: `# ROUTES.md — 라우팅 구조\nPhase 3 | React Router v6\n/         → HomePage\n/store    → StorePage\n/qr       → QRPage\n/history  → HistoryPage\n/my       → MyPage`,
+    preview: `# ROUTES.md — 강릉페이 라우팅 구조\nPhase 3 반영 | React Router v6\n\n바텀 네비게이션 5탭:\n  /         → HomePage\n  /store    → StorePage\n  /qr       → QRPage (중앙 강조)\n  /history  → HistoryPage\n  /my       → MyPage (Phase 3 신규)\n\n추가 라우트:\n  /search        → SearchPage\n  /card-apply    → CardApplyPage\n  /charge        → ChargePage\n  /settings      → SettingsPage\n  /menu          → Navigate to="/my"\n\n숨김 처리 (라우트 유지):\n  /life  /support  /community`,
   },
   {
     name: 'PROGRESS.md', desc: '진행 상태·완료 목록',
-    preview: `# PROGRESS.md\nPhase 1 완료\nPhase 2 완료\nPhase 3 완료`,
+    preview: `# PROGRESS.md\n\nPhase 1  앱 컴포넌트 33개 구현   완료\nPhase 2  UX 개선 반영          완료\nPhase 3  MY 탭·QR·검색 신규    완료\n포트폴리오 웹사이트             완료`,
   },
   {
     name: 'DESIGN_WEB.md', desc: '웹 포트폴리오 계약',
-    preview: `# DESIGN_WEB.md\n강릉페이 포트폴리오 웹사이트\n토큰: website/src/tokens/web.js\nJSX only · 인라인 스타일\nlocalStorage 금지\n색·간격·폰트 하드코딩 금지`,
+    preview: `# DESIGN_WEB.md — 강릉페이 포트폴리오 웹\n앱 DESIGN.md와 별개. 웹 전용 디자인 시스템.\n목표: 한림대 UX 전시회 출품. 수상.\n\n핵심 철학: "시니어 UX 에이전시 수준"\n타이포그래피가 디자인이다.\n\n금지 패턴:\n- 아이콘+제목+설명 카드 그리드 (SaaS 클리셰)\n- 좌텍스트/우폰 레이아웃 반복 (Framer 템플릿)\n- 그라디언트 배경 (아마추어 신호)\n\n토큰:\nbg #F5F5F5 · brand #1D4ED8 · Pretendard\nJSX only · 인라인 스타일 · localStorage 금지\n스택: React 18 + Vite + tokens/web.js`,
   },
 ];
 
@@ -48,12 +48,12 @@ const MODELS = [
   {
     name: 'Sonnet',
     uses: ['단순 매핑', '컴포넌트 교체', '스타일 수정', '반복 작업'],
-    note: '속도 우선 — 결과 예측 가능',
+    note: '속도 우선 · 결과 예측 가능',
   },
   {
     name: 'Opus',
     uses: ['아키텍처 설계', '디버깅', '검증 에이전트', '트레이드오프 판단'],
-    note: '정확도 우선 — 복잡한 의존성',
+    note: '정확도 우선 · 복잡한 의존성',
   },
 ];
 
@@ -66,37 +66,10 @@ const CHECKS = [
   { label: '명시 외 수정', target: '0건' },
 ];
 
-const METRICS = [
-  { value: '199건', label: 'spacing 자동검증' },
-  { value: '13,643 → 13,021', label: '불필요 코드 제거' },
-  { value: '30분', label: 'Face ID 디버깅' },
-];
-
-const QUOTE =
-  'AI는 How를 잘한다. 사람은 Why를 결정한다. 핵심 결정(시니어 우선·환불 동등위계·캐시백 직관메시지·13,000개 전부 등록)은 사람이 했다. AI는 그 의도를 정확히 구현하는 파트너였다.';
-
-const CLAUDE_TOOLS = [
-  { abbr: 'R',  name: 'Read',          desc: '파일 읽기' },
-  { abbr: 'W',  name: 'Write',         desc: '파일 생성' },
-  { abbr: 'E',  name: 'Edit',          desc: '정밀 편집' },
-  { abbr: '>_', name: 'Bash',          desc: '터미널 실행' },
-  { abbr: 'A',  name: 'Agent',         desc: '병렬 에이전트' },
-  { abbr: 'WS', name: 'WebSearch',     desc: '웹 검색' },
-  { abbr: 'WF', name: 'WebFetch',      desc: 'URL 불러오기' },
-  { abbr: 'T',  name: 'TodoWrite',     desc: '작업 관리' },
-  { abbr: 'SK', name: 'ScheduleWakeup',desc: '루프 제어' },
-  { abbr: 'M',  name: 'Monitor',       desc: '프로세스 감시' },
-  { abbr: 'TS', name: 'ToolSearch',    desc: '도구 스키마 조회' },
-  { abbr: 'EP', name: 'ExitPlanMode',  desc: '계획 승인' },
-];
-
 export default function AiHarness() {
   const [openDoc, setOpenDoc] = useState(null);
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
-  const [metricsRef, metricsVisible] = useReveal({ threshold: 0.05 });
   const [blocksRef, blocksVisible] = useReveal({ threshold: 0.03 });
-  const [toolsRef, toolsVisible] = useReveal({ threshold: 0.05 });
-  const [quoteRef, quoteVisible] = useReveal({ threshold: 0.05 });
 
   return (
     <section
@@ -130,52 +103,10 @@ export default function AiHarness() {
             fontSize: t.h1.size, fontWeight: t.h1.weight,
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
             color: color.ink, margin: '0 0 16px', fontFamily: font.family,
+            wordBreak: 'keep-all',
           }}>
-            AI는 How를 잘한다.<br />사람은 Why를 결정한다.
+            AI는 How를 잘한다. 사람은 Why를 결정합니다.
           </h2>
-        </div>
-
-        {/* Metrics strip */}
-        <div
-          ref={metricsRef}
-          style={{
-            opacity: metricsVisible ? 1 : 0,
-            transform: metricsVisible ? 'none' : 'translateY(20px)',
-            transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: 'clamp(16px,2vw,32px)',
-            marginBottom: 'clamp(64px,8vw,112px)',
-            padding: 'clamp(24px,3vw,40px)',
-            background: color.bg,
-            borderRadius: layout.rMd,
-          }}
-        >
-          {METRICS.map((m, i) => (
-            <div
-              key={i}
-              style={{
-                textAlign: 'center',
-                padding: 'clamp(16px,2vw,24px) 0',
-                opacity: metricsVisible ? 1 : 0,
-                transition: `opacity 0.5s ease-out ${i * 0.1}s`,
-              }}
-            >
-              <div style={{
-                fontSize: 'clamp(20px,2.4vw,32px)', fontWeight: 800,
-                letterSpacing: '-0.03em', color: color.brand,
-                fontFamily: font.family, marginBottom: 8,
-              }}>
-                {m.value}
-              </div>
-              <div style={{
-                fontSize: t.caption.size, lineHeight: t.caption.lh,
-                color: color.inkMuted, fontFamily: font.family,
-              }}>
-                {m.label}
-              </div>
-            </div>
-          ))}
         </div>
 
         {/* 4 blocks 2x2 */}
@@ -185,7 +116,6 @@ export default function AiHarness() {
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
             gap: 'clamp(20px,2.5vw,40px)',
-            marginBottom: 'clamp(64px,8vw,112px)',
           }}
         >
 
@@ -370,13 +300,6 @@ export default function AiHarness() {
                 </div>
               </div>
             </div>
-            <p style={{
-              margin: '16px 0 0',
-              fontSize: t.caption.size, lineHeight: t.caption.lh,
-              color: color.brand, fontFamily: font.family, fontWeight: 700,
-            }}>
-              1일치 작업을 반나절에
-            </p>
           </div>
 
           {/* Block 3 — 모델 선택 기준 */}
@@ -387,7 +310,7 @@ export default function AiHarness() {
               transition: 'opacity 0.65s ease-out 0.2s, transform 0.65s ease-out 0.2s',
               background: color.bg,
               borderRadius: layout.rMd,
-              padding: 'clamp(24px,3vw,40px)',
+              padding: 'clamp(20px,2vw,28px)',
             }}
           >
             <p style={{
@@ -400,7 +323,7 @@ export default function AiHarness() {
             <h3 style={{
               fontSize: t.h3.size, fontWeight: t.h3.weight,
               lineHeight: t.h3.lh, letterSpacing: t.h3.ls,
-              color: color.ink, margin: '0 0 24px', fontFamily: font.family,
+              color: color.ink, margin: '0 0 20px', fontFamily: font.family,
             }}>
               모델 선택 기준
             </h3>
@@ -409,7 +332,7 @@ export default function AiHarness() {
                 <div
                   key={m.name}
                   style={{
-                    padding: '16px',
+                    padding: '14px',
                     background: color.white,
                     borderRadius: layout.rSm,
                     boxShadow: '0 4px 24px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)',
@@ -417,11 +340,11 @@ export default function AiHarness() {
                 >
                   <div style={{
                     fontSize: 15, fontWeight: 800,
-                    color: color.brand, fontFamily: font.family, marginBottom: 12,
+                    color: color.brand, fontFamily: font.family, marginBottom: 10,
                   }}>
                     {m.name}
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 12 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginBottom: 10 }}>
                     {m.uses.map((u) => (
                       <div
                         key={u}
@@ -445,7 +368,7 @@ export default function AiHarness() {
                   <p style={{
                     fontSize: 13, color: color.inkMuted,
                     fontFamily: font.family, margin: 0,
-                    paddingTop: 8,
+                    paddingTop: 6,
                   }}>
                     {m.note}
                   </p>
@@ -462,7 +385,7 @@ export default function AiHarness() {
               transition: 'opacity 0.65s ease-out 0.3s, transform 0.65s ease-out 0.3s',
               background: color.bg,
               borderRadius: layout.rMd,
-              padding: 'clamp(24px,3vw,40px)',
+              padding: 'clamp(20px,2vw,28px)',
             }}
           >
             <p style={{
@@ -475,11 +398,11 @@ export default function AiHarness() {
             <h3 style={{
               fontSize: t.h3.size, fontWeight: t.h3.weight,
               lineHeight: t.h3.lh, letterSpacing: t.h3.ls,
-              color: color.ink, margin: '0 0 24px', fontFamily: font.family,
+              color: color.ink, margin: '0 0 20px', fontFamily: font.family,
             }}>
               자기검증 의무
             </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {CHECKS.map((c, i) => (
                 <div
                   key={i}
@@ -487,7 +410,7 @@ export default function AiHarness() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '12px 16px',
+                    padding: '10px 14px',
                     background: color.white,
                     borderRadius: layout.rSm,
                   }}
@@ -496,7 +419,7 @@ export default function AiHarness() {
                     <div style={{
                       width: 18, height: 18,
                       borderRadius: '50%',
-                      background: color.ok,
+                      background: color.brand,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       flexShrink: 0,
                     }}>
@@ -516,7 +439,7 @@ export default function AiHarness() {
                   </div>
                   <span style={{
                     fontSize: 13, fontWeight: 800,
-                    color: color.ok, fontFamily: font.family,
+                    color: color.brand, fontFamily: font.family,
                     letterSpacing: '0.04em',
                   }}>
                     {c.target}
@@ -525,87 +448,6 @@ export default function AiHarness() {
               ))}
             </div>
           </div>
-        </div>
-
-        {/* Tool grid */}
-        <div
-          ref={toolsRef}
-          style={{
-            opacity: toolsVisible ? 1 : 0,
-            transform: toolsVisible ? 'none' : 'translateY(20px)',
-            transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-            marginBottom: 'clamp(64px,8vw,112px)',
-          }}
-        >
-          <p style={{
-            fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
-            letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-            color: color.brand, margin: '0 0 20px', fontFamily: font.family,
-          }}>
-            CLAUDE CODE — 12개 툴
-          </p>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
-            gap: 10,
-          }}>
-            {CLAUDE_TOOLS.map((tool, i) => (
-              <div
-                key={tool.name}
-                style={{
-                  background: color.bg,
-                  borderRadius: layout.rSm,
-                  padding: '14px 16px',
-                  opacity: toolsVisible ? 1 : 0,
-                  transition: `opacity 0.45s ease-out ${i * 0.04}s`,
-                }}
-              >
-                <div style={{
-                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                  width: 32, height: 32, borderRadius: layout.rSm,
-                  background: color.brand, marginBottom: 10,
-                }}>
-                  <span style={{
-                    fontSize: 10, fontWeight: 800, color: color.white,
-                    fontFamily: "'SFMono-Regular','Consolas','Monaco',monospace",
-                    letterSpacing: '-0.02em',
-                  }}>
-                    {tool.abbr}
-                  </span>
-                </div>
-                <p style={{
-                  margin: '0 0 2px', fontSize: 13, fontWeight: 700,
-                  color: color.ink, fontFamily: font.family,
-                }}>
-                  {tool.name}
-                </p>
-                <p style={{
-                  margin: 0, fontSize: 11, lineHeight: 1.5,
-                  color: color.inkMuted, fontFamily: font.family,
-                }}>
-                  {tool.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Closing quote */}
-        <div
-          ref={quoteRef}
-          style={{
-            opacity: quoteVisible ? 1 : 0,
-            transform: quoteVisible ? 'none' : 'translateY(20px)',
-            transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-          }}
-        >
-          <p style={{
-            fontSize: t.lead.size, lineHeight: t.lead.lh,
-            color: color.ink, fontFamily: font.family,
-            margin: 0, fontStyle: 'normal',
-          }}>
-            {QUOTE}
-          </p>
         </div>
 
       </div>

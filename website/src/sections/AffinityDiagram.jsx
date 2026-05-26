@@ -11,7 +11,7 @@ const CLUSTERS = [
   {
     letter: 'B',
     name: '환불/충전 자금 통제 불능',
-    desc: '4인 전원 환불 메뉴 탐색 실패. 충전은 복잡하고 환불은 더 어렵다.',
+    desc: '4인 전원 환불 메뉴 탐색 실패. 충전은 복잡하고 환불은 더 어렵습니다.',
     accent: false,
   },
   {
@@ -79,7 +79,7 @@ export default function AffinityDiagram() {
               letterSpacing: t.h1.ls,
               color: color.ink,
               margin: 0,
-              maxWidth: '22ch',
+              wordBreak: 'keep-all',
             }}
           >
             87개 메모에서 5개의 패턴이 나왔습니다.
@@ -88,7 +88,7 @@ export default function AffinityDiagram() {
 
         {/* Cluster list */}
         <div ref={clustersRef}>
-          {CLUSTERS.map(({ letter, name, desc, accent }, i) => (
+          {CLUSTERS.map(({ letter, name, desc }, i) => (
             <div
               key={letter}
               style={{
@@ -107,7 +107,7 @@ export default function AffinityDiagram() {
                   fontSize: 'clamp(64px,8vw,100px)',
                   fontWeight: 800,
                   lineHeight: 1,
-                  color: accent ? color.brand : color.line,
+                  color: color.brand,
                   flexShrink: 0,
                   letterSpacing: '-0.04em',
                   fontFamily: font.family,
@@ -122,10 +122,10 @@ export default function AffinityDiagram() {
                 <h3
                   style={{
                     fontSize: t.h3.size,
-                    fontWeight: accent ? 800 : t.h3.weight,
+                    fontWeight: t.h3.weight,
                     lineHeight: t.h3.lh,
                     letterSpacing: t.h3.ls,
-                    color: accent ? color.brand : color.ink,
+                    color: color.ink,
                     margin: '0 0 10px',
                   }}
                 >

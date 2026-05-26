@@ -30,7 +30,7 @@ export default function DesignDirection() {
     <section
       id="direction"
       style={{
-        background: color.white,
+        background: `linear-gradient(180deg, ${color.white} 60%, ${color.brandSky} 100%)`,
         fontFamily: font.family,
         padding: `${layout.sectionY} clamp(20px,5vw,80px)`,
       }}
@@ -57,9 +57,10 @@ export default function DesignDirection() {
           <h2 style={{
             fontSize: t.h1.size, fontWeight: t.h1.weight,
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
-            color: color.ink, margin: 0, maxWidth: '22ch',
+            color: color.ink, margin: 0,
+            wordBreak: 'keep-all',
           }}>
-            두 개의 축으로<br />방향을 잡았습니다.
+            두 개의 축으로 방향을 잡았습니다.
           </h2>
         </div>
 
@@ -136,8 +137,8 @@ export default function DesignDirection() {
                       fontSize: 14, flexShrink: 0,
                       lineHeight: 1.65, fontFamily: font.family,
                     }}>
-                      —
-                    </span>
+                      ·
+</span>
                     <span style={{
                       fontSize: 'clamp(15px,1.4vw,18px)',
                       fontWeight: 500,

@@ -7,7 +7,6 @@ import DoubleDiamondSection from './sections/DoubleDiamondSection.jsx';
 import TheTwist from './sections/TheTwist.jsx';
 import DeskResearch from './sections/DeskResearch.jsx';
 import UserResearch from './sections/UserResearch.jsx';
-import ServiceSafari from './sections/ServiceSafari.jsx';
 import AffinityDiagram from './sections/AffinityDiagram.jsx';
 import KeyInsights from './sections/KeyInsights.jsx';
 import AsIsAudit from './sections/AsIsAudit.jsx';
@@ -20,7 +19,6 @@ import UserRequirements from './sections/UserRequirements.jsx';
 import DesignSystem from './sections/DesignSystem.jsx';
 import UserFlow from './sections/UserFlow.jsx';
 import InformationArchitecture from './sections/InformationArchitecture.jsx';
-import KeyScreens from './sections/KeyScreens.jsx';
 import TheBuild from './sections/TheBuild.jsx';
 import DualDesignSystem from './sections/DualDesignSystem.jsx';
 import AiHarness from './sections/AiHarness.jsx';
@@ -51,7 +49,6 @@ export default function App() {
         <TheTwist />
         <DeskResearch />
         <UserResearch />
-        <ServiceSafari />
         <AffinityDiagram />
         <KeyInsights />
         <AsIsAudit />
@@ -64,7 +61,6 @@ export default function App() {
         <DesignSystem />
         <UserFlow />
         <InformationArchitecture />
-        <KeyScreens />
         <TheBuild />
         <DualDesignSystem />
         <AiHarness />

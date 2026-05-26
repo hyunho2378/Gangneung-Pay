@@ -2,8 +2,6 @@ import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 import PhoneFrame from '../mini/PhoneFrame.jsx';
 import RefundMini from '../mini/RefundMini.jsx';
-import HomeCoachMini from '../mini/HomeCoachMini.jsx';
-import ChargeMini from '../mini/ChargeMini.jsx';
 
 const SCREENS = [
   {
@@ -13,22 +11,6 @@ const SCREENS = [
     problem: '환불 메뉴를 찾지 못해 탐색 실패',
     solution: '잔액 카드에 충전·환불·QR결제 3슬롯 동일 위계 배치',
     tobeLabel: '환불 화면 — 잔액 카드 + 환불 내역',
-  },
-  {
-    id: 'S3',
-    strategy: 'S3',
-    title: '캐시백 체감',
-    problem: '"1,345원 적립" — 숫자만 보여줌',
-    solution: '5단계 메시지로 캐시백을 일상 언어로 번역',
-    tobeLabel: '홈 코치마크 — 충전 버튼 안내',
-  },
-  {
-    id: 'S4',
-    strategy: 'S4',
-    title: '충전 3단계 압축',
-    problem: '6단계 충전 플로우 — 귀찮아서 포기',
-    solution: '금액 선택 → 확인 → 완료, 빠른금액 칩 1탭',
-    tobeLabel: '충전 화면 Step 1 — 빠른금액 칩 + 숫자패드',
   },
 ];
 
@@ -82,8 +64,6 @@ function AsIsPlaceholder({ scale = 0.62, screenHeight = 600 }) {
 
 function ToBe({ id }) {
   if (id === 'S2') return <PhoneFrame scale={0.62} screenHeight={640}><RefundMini step="list" /></PhoneFrame>;
-  if (id === 'S3') return <PhoneFrame scale={0.62} screenHeight={640}><HomeCoachMini variant="charge" /></PhoneFrame>;
-  if (id === 'S4') return <PhoneFrame scale={0.62} screenHeight={640}><ChargeMini step={1} amount={50000} balance={120000} /></PhoneFrame>;
   return null;
 }
 
@@ -217,8 +197,9 @@ export default function KeyScreens() {
             fontSize: t.h1.size, fontWeight: t.h1.weight,
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
             color: color.ink, margin: 0, maxWidth: '22ch',
+            wordBreak: 'keep-all',
           }}>
-            전략이 화면이 되는 순간
+            전략이 화면이 되는 순간.
           </h2>
         </div>
 

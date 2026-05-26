@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 
@@ -12,18 +11,11 @@ const TABLE = {
   ],
 };
 
-const TIMELINE = [
-  { label: '카카오페이 도입', date: '3/23', accent: false },
-  { label: '네이버페이', date: '4/13', accent: false },
-  { label: '삼성페이 예정', date: '7~8월', accent: true },
-];
-
 const COL = '1.2fr 1.5fr 1fr 1fr 1fr';
 
 export default function DeskResearch() {
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [tableRef, tableVisible] = useReveal({ threshold: 0.05 });
-  const [tlRef, tlVisible] = useReveal({ threshold: 0.1 });
 
   return (
     <section
@@ -66,10 +58,10 @@ export default function DeskResearch() {
               letterSpacing: t.h1.ls,
               color: color.ink,
               margin: 0,
-              maxWidth: '22ch',
+              wordBreak: 'keep-all',
             }}
           >
-            10% 캐시백, 강력한 혜택. 그런데 왜 안 쓸까?
+            10% 캐시백이라는 강력한 혜택, 그런데 왜 쓰지 않을까요?
           </h2>
         </div>
 
@@ -80,13 +72,13 @@ export default function DeskResearch() {
             opacity: tableVisible ? 1 : 0,
             transform: tableVisible ? 'none' : 'translateY(28px)',
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-            marginBottom: 'clamp(48px,5vw,80px)',
+            marginBottom: 0,
           }}
         >
           <div
             style={{
               borderRadius: layout.rLg,
-              border: `1px solid ${color.line}`,
+              border: `1px solid ${color.brand}`,
               overflow: 'hidden',
             }}
           >
@@ -98,8 +90,8 @@ export default function DeskResearch() {
                   style={{
                     padding: '14px 20px',
                     background: i === 1 ? color.brand : color.bg,
-                    color: i === 1 ? color.white : color.inkFaint,
-                    fontSize: 11,
+                    color: i === 1 ? color.white : color.inkMuted,
+                    fontSize: 15,
                     fontWeight: 700,
                     letterSpacing: '0em',
                     textTransform: 'uppercase',
@@ -128,7 +120,7 @@ export default function DeskResearch() {
                       padding: '16px 20px',
                       background: ci === 1 ? color.brandPale : color.white,
                       color: ci === 0 ? color.inkMuted : ci === 1 ? color.brand : color.ink,
-                      fontSize: ci === 0 ? 14 : 14,
+                      fontSize: ci === 0 ? 18 : 18,
                       fontWeight: ci === 0 ? 700 : ci === 1 ? 700 : 400,
                       letterSpacing: ci === 0 ? '0em' : '-0.01em',
                       textTransform: ci === 0 ? 'uppercase' : 'none',
@@ -145,75 +137,6 @@ export default function DeskResearch() {
           </div>
         </div>
 
-        {/* Timeline */}
-        <div
-          ref={tlRef}
-          style={{
-            opacity: tlVisible ? 1 : 0,
-            transform: tlVisible ? 'none' : 'translateY(20px)',
-            transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-            {TIMELINE.map((item, i) => (
-              <Fragment key={item.label}>
-                {i > 0 && (
-                  <div
-                    style={{
-                      flex: 1,
-                      height: 1,
-                      background: color.line,
-                      marginTop: 5,
-                      minWidth: 32,
-                    }}
-                  />
-                )}
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    flexShrink: 0,
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 10,
-                      height: 10,
-                      borderRadius: '50%',
-                      background: item.accent ? color.brand : color.inkFaint,
-                      marginBottom: 10,
-                    }}
-                  />
-                  <span
-                    style={{
-                      fontSize: 13,
-                      fontWeight: item.accent ? 700 : 500,
-                      color: item.accent ? color.brand : color.ink,
-                      letterSpacing: '-0.01em',
-                      marginBottom: 4,
-                      textAlign: 'center',
-                      fontFamily: font.family,
-                    }}
-                  >
-                    {item.label}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 500,
-                      color: item.accent ? color.brandAlt : color.inkFaint,
-                      letterSpacing: '0.02em',
-                      fontFamily: font.family,
-                    }}
-                  >
-                    {item.date}
-                  </span>
-                </div>
-              </Fragment>
-            ))}
-          </div>
-        </div>
 
       </div>
     </section>

@@ -15,20 +15,13 @@ export default function InformationArchitecture() {
         padding: `${layout.sectionY} 0`,
       }}
     >
-      {/* Scrollbar style — targets the scroll container by id */}
-      <style>{`
-        #ia-scroll::-webkit-scrollbar { height: 4px; }
-        #ia-scroll::-webkit-scrollbar-track { background: ${color.brandPale}; }
-        #ia-scroll::-webkit-scrollbar-thumb { background: ${color.brand}; border-radius: 2px; }
-      `}</style>
-
       {/* Header */}
       <div
         ref={headRef}
         style={{
           padding: `0 clamp(20px,5vw,80px)`,
-          maxWidth: layout.container,
-          margin: `0 auto clamp(40px,5vw,64px)`,
+          margin: `0 0 clamp(40px,5vw,64px)`,
+          textAlign: 'center',
           opacity: headVisible ? 1 : 0,
           transform: headVisible ? 'none' : 'translateY(28px)',
           transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
@@ -44,30 +37,26 @@ export default function InformationArchitecture() {
         <h2 style={{
           fontSize: t.h1.size, fontWeight: t.h1.weight,
           lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
-          color: color.ink, margin: '0 0 16px',
+          color: color.brand, margin: '0 0 16px', wordBreak: 'keep-all',
         }}>
-          정보를 다시 배열했습니다
+          정보를 다시 배열했습니다.
         </h2>
         <p style={{
           fontSize: t.lead.size, fontWeight: 400,
-          lineHeight: t.lead.lh, color: color.inkMuted,
+          lineHeight: t.lead.lh, color: color.brand,
           margin: 0,
         }}>
           햄버거 메뉴를 걷어내고 바텀 네비게이션 5개로 재편했습니다.
         </p>
       </div>
 
-      {/* Horizontally scrollable SVG — original size preserved */}
+      {/* SVG — centered, responsive */}
       <div
-        id="ia-scroll"
         ref={imgRef}
         style={{
-          overflowX: 'auto',
           paddingLeft: 'clamp(20px,5vw,80px)',
           paddingRight: 'clamp(20px,5vw,80px)',
           paddingBottom: 8,
-          scrollbarWidth: 'thin',
-          scrollbarColor: `${color.brand} ${color.brandPale}`,
           opacity: imgVisible ? 1 : 0,
           transform: imgVisible ? 'none' : 'translateY(24px)',
           transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
@@ -76,7 +65,7 @@ export default function InformationArchitecture() {
         <img
           src={iaSvg}
           alt="강릉페이 정보 구조도"
-          style={{ width: 1764, height: 563, display: 'block' }}
+          style={{ width: 1100, height: 351, display: 'block', margin: '0 auto' }}
         />
       </div>
     </section>

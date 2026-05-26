@@ -95,7 +95,7 @@ export default function UxConcept() {
           marginRight: 'auto',
           fontFamily: font.family,
         }}>
-          묻지 않아도 보이는, 헤매지 않는 금융 경험
+          묻지 않아도 보이는, 헤매지 않는 금융 경험.
         </p>
       </div>
     </section>

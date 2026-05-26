@@ -2,162 +2,228 @@ import { useState, useEffect } from 'react';
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 
-// Desktop viewBox: 980 × 490  (2 : 1)
-// Diamond 1 vertices: (0,245) (243,0) (486,245) (243,490)
-// Diamond 2 vertices: (494,245) (737,0) (980,245) (737,490)
-// Gap between touching vertices: 8px  →  URQ dot at (490,245)
-// Dashed center guides: x=243, x=737
+// SVG viewBox: 980 × 700
+// Diamonds shifted down 105px (Y_OFFSET=105):
+//   D1: (0,350) (243,105) (486,350) (243,595)
+//   D2: (494,350) (737,105) (980,350) (737,595)
+// Slope of diamond edges: S = 245/243
 
-const BRAND_FAINT = color.brandPale;
+const VW = 980;
+const VH = 700;
+const S = 245 / 243;
 
-const PHASES = [
+// Callout dot positions (on diamond edges)
+const CALLOUTS = [
   {
-    id: 'D1', label: 'Discover', pct: 12.4, diamond: 1,
+    id: 'D1', label: 'Discover',
     detail: '데스크 리서치 · 서비스 사파리 · 유저 리서치 · 앱스토어 리뷰 분석',
+    dotX: 121.5, dotY: 350 - S * 121.5,     // upper-left edge of D1 ≈ 227.5
+    lineEndY: 58, side: 'top',
   },
   {
-    id: 'D2', label: 'Define', pct: 37.2, diamond: 1,
+    id: 'D2', label: 'Define',
     detail: '어피니티 다이어그램 · Key Insight · AS-IS 감사 · 페르소나 · 유저 저니맵',
+    dotX: 364.6, dotY: 595 - S * (364.6 - 243),  // lower-right edge of D1 ≈ 472.5
+    lineEndY: 648, side: 'bottom',
   },
   {
-    id: 'URQ', label: 'User Requirements', pct: 50, diamond: 0,
-    detail: '리서치를 요구사항으로 수렴한 지점',
+    id: 'D3', label: 'Develop',
+    detail: '디자인 디렉션 · UX 컨셉·전략 · 정보 위계 재설계 · 듀얼 디자인 시스템',
+    dotX: 615.4, dotY: 350 - S * (615.4 - 494),  // upper-left edge of D2 ≈ 227.5
+    lineEndY: 58, side: 'top',
   },
   {
-    id: 'D3', label: 'Develop', pct: 62.8, diamond: 2,
-    detail: '디자인 디렉션 · UX 컨셉·전략 · 정보 위계 재설계 · 듀얼 디자인 시스템(HIG / Google Material 3)',
-  },
-  {
-    id: 'D4', label: 'Deliver', pct: 87.6, diamond: 2,
+    id: 'D4', label: 'Deliver',
     detail: '핵심 화면 · 유저 테스트 · 프로토타입 배포',
+    dotX: 858.5, dotY: 595 - S * (858.5 - 737),  // lower-right edge of D2 ≈ 472.5
+    lineEndY: 648, side: 'bottom',
   },
 ];
 
-function LabelBlock({ id, label, detail, size = 'md' }) {
-  const isURQ = id === 'URQ';
-  return (
-    <div style={{ textAlign: 'center' }}>
-      <div style={{
-        fontSize: size === 'sm' ? t.caption.size : t.h3.size,
-        fontWeight: 800,
-        color: color.brand,
-        lineHeight: 1.2,
-      }}>
-        {id}
-      </div>
-      <div style={{
-        fontSize: size === 'sm' ? '10px' : t.caption.size,
-        fontWeight: 700,
-        color: color.ink,
-        marginTop: 2,
-        marginBottom: isURQ ? 4 : 3,
-      }}>
-        {label}
-      </div>
-      <div style={{
-        fontSize: '10px',
-        color: color.inkMuted,
-        lineHeight: 1.65,
-        wordBreak: 'keep-all',
-      }}>
-        {detail}
-      </div>
-    </div>
-  );
-}
+const BRAND_FAINT = color.brandPale;
 
 function DesktopDiagram() {
   return (
-    <div>
-      {/* Aspect-ratio container: paddingBottom = (490/980)*100 = 50% */}
-      <div style={{ position: 'relative', paddingBottom: '50%', overflow: 'visible' }}>
-        <div style={{ position: 'absolute', inset: 0 }}>
+    <div style={{ position: 'relative', paddingBottom: `${(VH / VW) * 100}%`, overflow: 'visible' }}>
+      <div style={{ position: 'absolute', inset: 0 }}>
 
-          {/* SVG: shapes only, no text */}
-          <svg
-            viewBox="0 0 980 490"
-            style={{ width: '100%', height: '100%', display: 'block' }}
-            aria-hidden="true"
-          >
-            {/* Dashed center-phase guides */}
-            <line x1={243} y1={0} x2={243} y2={490}
-              stroke={BRAND_FAINT} strokeWidth={2} strokeDasharray="10 10" />
-            <line x1={737} y1={0} x2={737} y2={490}
-              stroke={BRAND_FAINT} strokeWidth={2} strokeDasharray="10 10" />
+        {/* SVG: shapes, guides, dots, callout lines only */}
+        <svg
+          viewBox={`0 0 ${VW} ${VH}`}
+          style={{ width: '100%', height: '100%', display: 'block', overflow: 'visible' }}
+          aria-hidden="true"
+        >
+          {/* Phase-center guides (at diamond midpoints) */}
+          <line x1={243} y1={105} x2={243} y2={595}
+            stroke={BRAND_FAINT} strokeWidth={1.5} strokeDasharray="8 8" />
+          <line x1={737} y1={105} x2={737} y2={595}
+            stroke={BRAND_FAINT} strokeWidth={1.5} strokeDasharray="8 8" />
 
-            {/* Diamond 1  — white fill, brand stroke */}
-            <polygon
-              points="0,245 243,0 486,245 243,490"
-              fill={color.white}
-              stroke={color.brand}
-              strokeWidth={4}
-            />
-            {/* Diamond 2 */}
-            <polygon
-              points="494,245 737,0 980,245 737,490"
-              fill={color.white}
-              stroke={color.brand}
-              strokeWidth={4}
-            />
-            {/* URQ waist dot */}
-            <circle cx={490} cy={245} r={6} fill={color.brand} />
-          </svg>
+          {/* Diamond 1 */}
+          <polygon
+            points="0,350 243,105 486,350 243,595"
+            fill={color.white}
+            stroke={color.brand}
+            strokeWidth={3}
+          />
+          {/* Diamond 2 */}
+          <polygon
+            points="494,350 737,105 980,350 737,595"
+            fill={color.white}
+            stroke={color.brand}
+            strokeWidth={3}
+          />
 
-          {/* HTML label overlay — same coordinate space as SVG */}
-          {PHASES.map(p => (
-            <div
-              key={p.id}
-              style={{
-                position: 'absolute',
-                left: `${p.pct}%`,
-                top: '50%',
-                transform: 'translate(-50%, -50%)',
-                maxWidth: p.id === 'URQ' ? '11%' : '19%',
-                pointerEvents: 'none',
-                zIndex: 1,
-              }}
-            >
-              <LabelBlock id={p.id} label={p.label} detail={p.detail} />
-            </div>
+          {/* Callout lines + dots */}
+          {CALLOUTS.map(c => (
+            <g key={c.id}>
+              <line
+                x1={c.dotX} y1={c.dotY}
+                x2={c.dotX} y2={c.lineEndY}
+                stroke={color.brand} strokeWidth={1.5} strokeDasharray="4 4" opacity={0.45}
+              />
+              <circle cx={c.dotX} cy={c.dotY} r={5} fill={color.brand} />
+            </g>
           ))}
 
+          {/* URQ waist dot + line */}
+          <circle cx={490} cy={350} r={6} fill={color.brand} />
+          <line
+            x1={490} y1={350} x2={490} y2={435}
+            stroke={color.brand} strokeWidth={1.5} strokeDasharray="4 4" opacity={0.45}
+          />
+        </svg>
+
+        {/* HTML label overlays */}
+        {CALLOUTS.map(c => (
+          <div
+            key={c.id}
+            style={{
+              position: 'absolute',
+              left: `${(c.dotX / VW) * 100}%`,
+              top: `${(c.lineEndY / VH) * 100}%`,
+              transform: c.side === 'top' ? 'translate(-50%, -100%)' : 'translate(-50%, 0%)',
+              textAlign: 'center',
+              maxWidth: '19%',
+              pointerEvents: 'none',
+              paddingBottom: c.side === 'top' ? 6 : 0,
+              paddingTop: c.side === 'bottom' ? 6 : 0,
+            }}
+          >
+            <span style={{
+              display: 'block',
+              fontSize: t.eyebrow.size,
+              fontWeight: 800,
+              color: color.brand,
+              lineHeight: 1.2,
+              letterSpacing: '0.04em',
+              fontFamily: font.family,
+            }}>
+              {c.id}
+            </span>
+            <span style={{
+              display: 'block',
+              fontSize: t.h3.size,
+              fontWeight: 800,
+              color: color.ink,
+              lineHeight: 1.2,
+              marginTop: 3,
+              fontFamily: font.family,
+            }}>
+              {c.label}
+            </span>
+            <span style={{
+              display: 'block',
+              fontSize: 11,
+              color: color.inkMuted,
+              lineHeight: 1.55,
+              marginTop: 5,
+              wordBreak: 'keep-all',
+              fontFamily: font.family,
+            }}>
+              {c.detail}
+            </span>
+          </div>
+        ))}
+
+        {/* URQ label — below waist dot */}
+        <div style={{
+          position: 'absolute',
+          left: '50%',
+          top: `${(435 / VH) * 100}%`,
+          transform: 'translate(-50%, 0%)',
+          textAlign: 'center',
+          maxWidth: '14%',
+          pointerEvents: 'none',
+          paddingTop: 6,
+        }}>
+          <span style={{
+            display: 'block',
+            fontSize: 11,
+            fontWeight: 800,
+            color: color.brand,
+            letterSpacing: '0.04em',
+            textTransform: 'uppercase',
+            fontFamily: font.family,
+            lineHeight: 1.2,
+          }}>
+            URQ
+          </span>
+          <span style={{
+            display: 'block',
+            fontSize: t.caption.size,
+            fontWeight: 700,
+            color: color.ink,
+            marginTop: 3,
+            fontFamily: font.family,
+            lineHeight: 1.2,
+          }}>
+            User Requirements
+          </span>
+          <span style={{
+            display: 'block',
+            fontSize: 10,
+            color: color.inkMuted,
+            lineHeight: 1.5,
+            marginTop: 4,
+            wordBreak: 'keep-all',
+            fontFamily: font.family,
+          }}>
+            리서치를 요구사항으로 수렴한 지점
+          </span>
         </div>
+
       </div>
     </div>
   );
 }
 
 function MobileDiagram() {
-  const d1Phases = PHASES.filter(p => p.diamond === 1);
-  const d2Phases = PHASES.filter(p => p.diamond === 2);
-  const urq = PHASES.find(p => p.id === 'URQ');
+  const d1Phases = CALLOUTS.filter(c => c.id === 'D1' || c.id === 'D2');
+  const d2Phases = CALLOUTS.filter(c => c.id === 'D3' || c.id === 'D4');
+  const urq = { id: 'URQ', label: 'User Requirements', detail: '리서치를 요구사항으로 수렴한 지점' };
 
   const singleDiamond = (phases) => (
-    <div>
-      {/* 1:1 aspect ratio for single diamond */}
-      <div style={{ position: 'relative', paddingBottom: '100%' }}>
-        <div style={{ position: 'absolute', inset: 0 }}>
-          <svg viewBox="0 0 490 490" style={{ width: '100%', height: '100%', display: 'block' }} aria-hidden="true">
-            <line x1={245} y1={0} x2={245} y2={490}
-              stroke={BRAND_FAINT} strokeWidth={2} strokeDasharray="10 10" />
-            <polygon
-              points="0,245 245,0 490,245 245,490"
-              fill={color.white}
-              stroke={color.brand}
-              strokeWidth={4}
-            />
-          </svg>
-          {/* Labels overlay — D1 left half, D2 right half */}
-          <div style={{
-            position: 'absolute', inset: 0,
-            display: 'flex', alignItems: 'center',
-          }}>
-            {phases.map(p => (
-              <div key={p.id} style={{ flex: 1, padding: '0 6px' }}>
-                <LabelBlock id={p.id} label={p.label} detail={p.detail} size="sm" />
-              </div>
-            ))}
-          </div>
+    <div style={{ position: 'relative', paddingBottom: '100%' }}>
+      <div style={{ position: 'absolute', inset: 0 }}>
+        <svg viewBox="0 0 490 490" style={{ width: '100%', height: '100%', display: 'block' }} aria-hidden="true">
+          <line x1={245} y1={0} x2={245} y2={490}
+            stroke={BRAND_FAINT} strokeWidth={2} strokeDasharray="8 8" />
+          <polygon
+            points="0,245 245,0 490,245 245,490"
+            fill={color.white}
+            stroke={color.brand}
+            strokeWidth={4}
+          />
+        </svg>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center' }}>
+          {phases.map(p => (
+            <div key={p.id} style={{ flex: 1, padding: '0 8px', textAlign: 'center' }}>
+              <span style={{ display: 'block', fontSize: 11, fontWeight: 800, color: color.brand, letterSpacing: '0.04em', fontFamily: font.family }}>{p.id}</span>
+              <span style={{ display: 'block', fontSize: t.caption.size, fontWeight: 800, color: color.ink, marginTop: 2, fontFamily: font.family }}>{p.label}</span>
+              <span style={{ display: 'block', fontSize: 10, color: color.inkMuted, lineHeight: 1.5, marginTop: 4, wordBreak: 'keep-all', fontFamily: font.family }}>{p.detail}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -166,18 +232,16 @@ function MobileDiagram() {
   return (
     <div>
       {singleDiamond(d1Phases)}
-
-      {/* URQ waist */}
       <div style={{
-        textAlign: 'center',
-        padding: '20px 0',
+        textAlign: 'center', padding: '16px 0',
         borderTop: `1px dashed ${color.brand}`,
         borderBottom: `1px dashed ${color.brand}`,
         margin: '12px 0',
       }}>
-        <LabelBlock id={urq.id} label={urq.label} detail={urq.detail} size="sm" />
+        <span style={{ display: 'block', fontSize: 11, fontWeight: 800, color: color.brand, letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: font.family }}>{urq.id}</span>
+        <span style={{ display: 'block', fontSize: t.caption.size, fontWeight: 700, color: color.ink, marginTop: 2, fontFamily: font.family }}>{urq.label}</span>
+        <span style={{ display: 'block', fontSize: 10, color: color.inkMuted, marginTop: 4, fontFamily: font.family }}>{urq.detail}</span>
       </div>
-
       {singleDiamond(d2Phases)}
     </div>
   );
@@ -201,51 +265,51 @@ export default function DoubleDiamondSection() {
       style={{
         background: color.bg,
         fontFamily: font.family,
-        padding: `${layout.sectionY} clamp(20px,5vw,80px)`,
+        padding: `${layout.sectionY} clamp(20px,5vw,80px) clamp(100px,12vw,160px)`,
       }}
     >
       <div style={{ maxWidth: layout.container, margin: '0 auto' }}>
 
-        {/* Header */}
         <div
           ref={headRef}
           style={{
             opacity: headVisible ? 1 : 0,
             transform: headVisible ? 'none' : 'translateY(28px)',
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-            marginBottom: 'clamp(48px,6vw,80px)',
+            marginBottom: 'clamp(64px,7vw,96px)',
           }}
         >
           <p style={{
             fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
             letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
+            lineHeight: t.eyebrow.lh,
             color: color.brand, margin: '0 0 24px',
           }}>
-            PROCESS
+            Double Diamond Process
           </p>
           <h2 style={{
             fontSize: t.h1.size, fontWeight: t.h1.weight,
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
-            color: color.ink, margin: '0 0 16px',
+            color: color.ink, margin: '0 0 16px', wordBreak: 'keep-all',
           }}>
-            발산과 수렴을 두 번 반복했습니다
+            더블 다이아몬드 프로세스
           </h2>
           <p style={{
             fontSize: t.lead.size, fontWeight: 400,
             lineHeight: t.lead.lh, color: color.inkMuted, margin: 0,
+            wordBreak: 'keep-all',
           }}>
             더블 다이아몬드는 문제를 넓게 탐색해 정의하고, 해결안을 넓게 펼쳐 구현하는 디자인 프로세스입니다.
           </p>
         </div>
 
-        {/* Diagram */}
         <div
           ref={diagramRef}
           style={{
             opacity: diagramVisible ? 1 : 0,
             transform: diagramVisible ? 'none' : 'translateY(24px)',
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-            maxWidth: 980,
+            maxWidth: 580,
             margin: '0 auto',
           }}
         >

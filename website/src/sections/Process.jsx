@@ -48,7 +48,7 @@ const VIOLATIONS = [
   {
     code: 'N#2',
     label: '사용자 언어',
-    before: "'강릉머니' — 4인 전원 미인지",
+    before: "'강릉머니' · 4인 전원 미인지",
     after: '메뉴명 사용자 언어 통일',
     ur: 'UR-N02',
   },
@@ -268,7 +268,7 @@ export default function Process() {
             letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
             color: color.inkFaint, margin: '0 0 20px', fontFamily: font.family,
           }}>
-            HEURISTIC VIOLATIONS — BEFORE / AFTER
+            HEURISTIC VIOLATIONS · BEFORE / AFTER
           </p>
 
           {/* Table header */}

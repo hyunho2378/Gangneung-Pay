@@ -33,9 +33,9 @@ export default function AppOverview() {
           <h2 style={{
             fontSize: t.h1.size, fontWeight: t.h1.weight,
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
-            color: color.ink, margin: '0 0 32px',
+            color: color.ink, margin: '0 0 32px', wordBreak: 'keep-all',
           }}>
-            강력한 혜택, 그러나 정착하지 못한 앱
+            강력한 혜택, 그러나 정착하지 못한 앱.
           </h2>
           <p style={{
             fontSize: t.lead.size, fontWeight: 400,
