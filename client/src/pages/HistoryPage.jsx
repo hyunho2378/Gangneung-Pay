@@ -115,6 +115,9 @@ export default function HistoryPage() {
     )
   }
 
+  console.log('[RENDER] total transactions:', transactions.length)
+  console.log('[RENDER] refund items:', transactions.filter(t => t.type === 'refund'))
+
   const filtered = transactions.filter((t) => {
     if (typeFilter !== 'all' && t.type !== typeFilter) return false
     if (periodFilter) {

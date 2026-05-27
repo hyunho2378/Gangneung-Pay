@@ -40,6 +40,7 @@ function userReducer(state, action) {
     }
 
     case 'CHARGE_BALANCE': {
+      console.log('[CHARGE] reducer called', { amount: action.payload.amount, timestamp: Date.now() })
       const { id, amount, date } = action.payload
       const newBalance = state.balance + amount
       const newTransaction = {
@@ -102,16 +103,14 @@ function userReducer(state, action) {
     }
 
     case 'REFUND_TRANSACTION': {
+      console.log('[REFUND] dispatched', { transactionId: action.payload.transactionId, timestamp: Date.now() })
       const { transactionId } = action.payload
       const target = state.transactions.find((t) => t.id === transactionId)
 
       if (!target || target.type !== 'charge') return state
 
       const refundAmount = target.paidByBalance
-
-      if (refundAmount > state.balance) return state
-
-      const newBalance = state.balance - refundAmount
+      const newBalance = state.balance + refundAmount
       const newTransaction = {
         id: Date.now(),
         date: new Date().toISOString(),
@@ -123,16 +122,21 @@ function userReducer(state, action) {
         cashbackEarned: 0,
         cashbackMode: null,
         balanceAfter: newBalance,
+        linkedTransactionId: transactionId,
       }
 
-      return {
+      const nextState = {
         ...state,
         balance: newBalance,
         transactions: [
           newTransaction,
-          ...state.transactions.filter((t) => t.id !== transactionId),
+          ...state.transactions.map((t) =>
+            t.id === transactionId ? { ...t, refunded: true } : t
+          ),
         ],
       }
+      console.log('[REFUND] new transactions count:', nextState.transactions.length)
+      return nextState
     }
 
     case 'SET_CASHBACK_MODE': {
@@ -150,6 +154,7 @@ function userReducer(state, action) {
 // ─── Provider ────────────────────────────────────────────────────────────────
 
 export function UserProvider({ children }) {
+  console.log('[PROVIDER] render')
   const { sessionId } = useApp()
   const [hasCard, setHasCard] = useState(false)
   const [cardStatus, setCardStatus] = useState('none')

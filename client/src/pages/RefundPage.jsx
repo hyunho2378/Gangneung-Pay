@@ -46,6 +46,7 @@ export default function RefundPage() {
   const fmtDate = (iso) => formatDate(iso, { withTime: true })
 
   const handleRefund = (id) => {
+    console.log('[HANDLER] called', { id, timestamp: Date.now() })
     const tx = chargeList.find((t) => t.id === id)
     refundTransaction(id)
     if (tx) showSnackbar(`${tx.totalAmount.toLocaleString('ko-KR')}원 환불이 완료됐어요`)
@@ -55,12 +56,9 @@ export default function RefundPage() {
   const confirmTarget = chargeList.find((t) => t.id === confirmId)
 
   const isRefundable = (chargeTx) => {
+    if (chargeTx.refunded) return { ok: false, reason: '이미 환불됨' }
     if (balance <= 0) return { ok: false, reason: '잔액이 없습니다' }
     if (chargeTx.totalAmount > balance) return { ok: false, reason: '잔액 부족' }
-    const d = new Date(chargeTx.date)
-    if (!(d.getFullYear() === 2026 && d.getMonth() === 4)) {
-      return { ok: false, reason: '환불 불가 (과거 거래)' }
-    }
     const chargeDate = new Date(chargeTx.date).getTime()
     const spentAfter = transactions
       .filter((t) => t.type === 'spend' && new Date(t.date).getTime() >= chargeDate)
@@ -137,8 +135,7 @@ export default function RefundPage() {
           </p>
           <p style={{ margin: `0 0 ${spacing[1]} 0` }}>• 충전 잔액 기준 일정 비율 이상 사용 시 환불 가능</p>
           <p style={{ margin: `0 0 ${spacing[1]} 0` }}>• 충전 금액 1만원 초과: 60% 이상 사용</p>
-          <p style={{ margin: `0 0 ${spacing[1]} 0` }}>• 충전 금액 1만원 이하: 80% 이상 사용</p>
-          <p style={{ margin: 0 }}>• 과거 월 거래는 환불 불가</p>
+          <p style={{ margin: 0 }}>• 충전 금액 1만원 이하: 80% 이상 사용</p>
         </div>
 
         <h2 style={{

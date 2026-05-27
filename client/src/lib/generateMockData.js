@@ -38,9 +38,6 @@ function randomChargeAmount() {
   return randomChoice([10000, 30000, 50000, 100000, 200000])
 }
 
-function randomRefundAmount() {
-  return randomChoice([10000, 20000, 30000])
-}
 
 export function generateMockData() {
   // 1. 시계열 시뮬레이션 상태
@@ -71,7 +68,6 @@ export function generateMockData() {
   const totalDays = 365
   const targetSpends = randomBetween(220, 260)
   const targetCharges = randomBetween(40, 55)
-  const targetRefunds = randomBetween(15, 25)
 
   const allEvents = []
 
@@ -87,13 +83,6 @@ export function generateMockData() {
     const date = new Date(START_DATE.getTime() + dayOffset * 86400000)
     date.setHours(randomBetween(10, 22), randomBetween(0, 59), 0, 0)
     allEvents.push({ type: 'charge', date })
-  }
-
-  for (let i = 0; i < targetRefunds; i++) {
-    const dayOffset = randomBetween(0, totalDays - 1)
-    const date = new Date(START_DATE.getTime() + dayOffset * 86400000)
-    date.setHours(randomBetween(10, 22), randomBetween(0, 59), 0, 0)
-    allEvents.push({ type: 'refund', date })
   }
 
   // 첫 거래(09:00) 이후로만 (혹시 같은 날 09:00 이전 시간 들어왔을 경우 방어)
@@ -118,27 +107,6 @@ export function generateMockData() {
         totalAmount: amount,
         paidByCashback: 0,
         paidByBalance: amount,
-        cashbackEarned: 0,
-        cashbackMode: null,
-        storeName: null,
-        storeId: null,
-        balanceAfter: balance,
-      })
-    }
-
-    else if (event.type === 'refund') {
-      const refundAmount = randomRefundAmount()
-      // 환불해도 MIN_BALANCE 유지 가능한지 체크
-      if (balance - refundAmount < MIN_BALANCE) continue
-      if (refundAmount < 5000) continue
-      balance -= refundAmount
-      transactions.push({
-        id: nextId++,
-        date: event.date.toISOString(),
-        type: 'refund',
-        totalAmount: refundAmount,
-        paidByCashback: 0,
-        paidByBalance: -refundAmount,  // 음수로 표시 (잔액 빠짐)
         cashbackEarned: 0,
         cashbackMode: null,
         storeName: null,
@@ -210,6 +178,38 @@ export function generateMockData() {
         balanceAfter: balance,
       })
     }
+  }
+
+  // ─────────────────────────────────────────
+  // 5.5. mock 환불 생성 — charge 항목 선택 후 REFUND_TRANSACTION 동일 구조로 생성
+  // ─────────────────────────────────────────
+  const chargeTransactions = transactions.filter(t => t.type === 'charge')
+  const targetRefunds = randomBetween(15, 25)
+  const actualRefundCount = Math.min(targetRefunds, Math.floor(chargeTransactions.length * 0.4))
+  const shuffledCharges = [...chargeTransactions].sort(() => Math.random() - 0.5)
+  const selectedForRefund = shuffledCharges.slice(0, actualRefundCount)
+
+  for (const charge of selectedForRefund) {
+    const refundAmount = charge.paidByBalance
+    const refundDate = new Date(new Date(charge.date).getTime() + randomBetween(1, 7) * 86400000)
+    if (refundDate > END_DATE) continue
+
+    charge.refunded = true
+    balance += refundAmount
+    transactions.push({
+      id: nextId++,
+      date: refundDate.toISOString(),
+      type: 'refund',
+      totalAmount: refundAmount,
+      paidByCashback: 0,
+      paidByBalance: refundAmount,
+      cashbackEarned: 0,
+      cashbackMode: null,
+      storeName: null,
+      storeId: null,
+      balanceAfter: balance,
+      linkedTransactionId: charge.id,
+    })
   }
 
   // ─────────────────────────────────────────
@@ -323,8 +323,7 @@ export function generateMockData() {
       // 충전: 잔액 증가
       runningBalance += tx.totalAmount
     } else if (tx.type === 'refund') {
-      // 환불: 잔액 감소 (paidByBalance 부호 무관, totalAmount 기준)
-      runningBalance -= tx.totalAmount
+      runningBalance += tx.totalAmount
     } else if (tx.type === 'spend') {
       // 결제: 캐시백 사용분 제외, 강릉페이 차감분만 잔액에서 빠짐
       runningBalance -= tx.paidByBalance
@@ -375,7 +374,7 @@ export function _devValidate() {
   let inconsistent = null
   for (const tx of chrono) {
     if (tx.type === 'charge') check += tx.totalAmount
-    else if (tx.type === 'refund') check -= tx.totalAmount
+    else if (tx.type === 'refund') check += tx.totalAmount
     else if (tx.type === 'spend') check -= tx.paidByBalance
     if (tx.balanceAfter !== check) {
       inconsistent = { id: tx.id, expected: check, actual: tx.balanceAfter, type: tx.type }

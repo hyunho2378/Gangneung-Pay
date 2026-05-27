@@ -554,6 +554,7 @@ export default function ChargeScreen({ onClose, onRefundGuide, onCharge, balance
         onComplete={() => {
           setShowAuth(false)
           setCharged(true)
+          console.log('[CHARGE_HANDLER] called', { amount, timestamp: Date.now() })
           onCharge && onCharge(amount)
           setStep(3)
         }}
