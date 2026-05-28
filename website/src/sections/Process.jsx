@@ -1,5 +1,6 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 
 const PHASES = [
   {
@@ -8,11 +9,10 @@ const PHASES = [
     title: '리서치',
     period: '2026.03.29 – 04.06',
     items: [
-      '설문 68명',
-      'IDI 심층인터뷰 6인',
-      '현장 관찰 4인',
-      '어피니티 다이어그램 5클러스터',
-      '3대 핵심 인사이트 도출',
+      '데스크 리서치: 경쟁 서비스 4종 비교',
+      '서비스 사파리: 현장 관찰 4인, 5개 미션',
+      '설문조사 68명',
+      '심층 인터뷰 (IDI) 6인',
     ],
   },
   {
@@ -21,11 +21,14 @@ const PHASES = [
     title: '설계',
     period: '04.06 – 05.01',
     items: [
+      '어피니티 다이어그램: 메모 87개, 5클러스터',
+      'Key Insight 3개 도출',
       'AS-IS 휴리스틱 감사',
       '29개 이슈 → 전부 해결',
-      '7대 UX 전략',
-      'UR 14개 정의',
-      '듀얼 디자인 시스템',
+      '페르소나 수립',
+      '유저 저니맵 5단계',
+      '7대 UX 전략, UR 14개 정의',
+      '정보 구조 재설계 (IA)',
     ],
     highlight: '29개 이슈 → 전부 해결',
   },
@@ -35,11 +38,12 @@ const PHASES = [
     title: '구현',
     period: '05.01 – 05.31',
     items: [
-      '30페이지 화면 구현',
-      '70+ 컴포넌트',
-      '상점 13,021개 등록',
+      '듀얼 디자인 시스템 (HIG / Google Material 3)',
+      '핵심 화면 30페이지, 70+ 컴포넌트',
+      '상점 13,021개 데이터 등록',
       'AI 하네스 병렬 구현',
-      '발표 및 케이스스터디',
+      '프로토타입 (iOS / Android)',
+      '유저 테스트 진행',
     ],
   },
 ];
@@ -48,7 +52,7 @@ const VIOLATIONS = [
   {
     code: 'N#2',
     label: '사용자 언어',
-    before: "'강릉머니' · 4인 전원 미인지",
+    before: "'강릉머니', 4인 전원 미인지",
     after: '메뉴명 사용자 언어 통일',
     ur: 'UR-N02',
   },
@@ -69,7 +73,7 @@ const VIOLATIONS = [
   {
     code: 'N#10',
     label: '도움말',
-    before: '충전·환불 절차 안내 없음',
+    before: '충전, 환불 절차 안내 없음',
     after: '코치마크 단계별 자동 안내',
     ur: 'UR-U03',
   },
@@ -83,7 +87,7 @@ const VIOLATIONS = [
   {
     code: 'S#8',
     label: '단순 오류',
-    before: "'강릉머니' — 내부 용어 사용",
+    before: "'강릉머니', 내부 용어 사용",
     after: '일관된 브랜드 언어 적용',
     ur: 'UR-N02',
   },
@@ -93,6 +97,7 @@ export default function Process() {
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [timelineRef, timelineVisible] = useReveal({ threshold: 0.03 });
   const [tableRef, tableVisible] = useReveal({ threshold: 0.03 });
+  const { isMobile } = useBreakpoint();
 
   return (
     <section
@@ -126,8 +131,9 @@ export default function Process() {
             fontSize: t.h1.size, fontWeight: t.h1.weight,
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
             color: color.ink, margin: '0 0 16px', fontFamily: font.family,
+            wordBreak: 'keep-all',
           }}>
-            리서치 → 설계 → 구현
+            사용자를 직접 만나 문제를 찾고, 7개 전략으로 설계하고, 화면으로 구현했습니다.
           </h2>
           <p style={{
             fontSize: t.lead.size, fontWeight: 500,
@@ -145,26 +151,28 @@ export default function Process() {
             opacity: timelineVisible ? 1 : 0,
             transform: timelineVisible ? 'none' : 'translateY(24px)',
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-            marginBottom: 'clamp(64px,8vw,112px)',
+            marginBottom: 'clamp(40px,5vw,72px)',
           }}
         >
           {/* Connector line */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3,1fr)',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)',
             gap: 'clamp(16px,2.5vw,40px)',
             position: 'relative',
           }}>
-            {/* Background connector */}
-            <div style={{
-              position: 'absolute',
-              top: 28,
-              left: '16.67%',
-              right: '16.67%',
-              height: 2,
-              background: color.line,
-              zIndex: 0,
-            }} />
+            {/* Background connector (desktop only) */}
+            {!isMobile && (
+              <div style={{
+                position: 'absolute',
+                top: 28,
+                left: '16.67%',
+                right: '16.67%',
+                height: 2,
+                background: color.line,
+                zIndex: 0,
+              }} />
+            )}
 
             {PHASES.map((phase, i) => (
               <div
@@ -268,9 +276,10 @@ export default function Process() {
             letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
             color: color.inkMuted, margin: '0 0 20px', fontFamily: font.family,
           }}>
-            HEURISTIC VIOLATIONS · BEFORE / AFTER
+            HEURISTIC VIOLATIONS, BEFORE / AFTER
           </p>
 
+          <div style={{ overflowX: 'auto' }}>
           {/* Table header */}
           <div style={{
             display: 'grid',
@@ -293,7 +302,7 @@ export default function Process() {
             ))}
           </div>
 
-          <div style={{ overflowX: 'auto' }}>
+          <div>
             {VIOLATIONS.map(({ code, label, before, after, ur }, i) => (
               <div
                 key={code}
@@ -354,6 +363,7 @@ export default function Process() {
                 </div>
               </div>
             ))}
+          </div>
           </div>
         </div>
 

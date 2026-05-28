@@ -82,8 +82,9 @@ export default function DeskResearch() {
               overflow: 'hidden',
             }}
           >
+            <div style={{ overflowX: 'auto' }}>
             {/* Header row */}
-            <div style={{ display: 'grid', gridTemplateColumns: COL }}>
+            <div style={{ display: 'grid', gridTemplateColumns: COL, minWidth: 560 }}>
               {TABLE.headers.map((h, i) => (
                 <div
                   key={h}
@@ -111,6 +112,7 @@ export default function DeskResearch() {
                 style={{
                   display: 'grid',
                   gridTemplateColumns: COL,
+                  minWidth: 560,
                 }}
               >
                 {row.map((cell, ci) => (
@@ -134,6 +136,7 @@ export default function DeskResearch() {
                 ))}
               </div>
             ))}
+            </div>
           </div>
         </div>
 

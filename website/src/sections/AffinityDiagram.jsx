@@ -16,7 +16,7 @@ const CLUSTERS = [
   },
   {
     letter: 'C',
-    name: '용어·IA 정보 위계 붕괴',
+    name: '용어, IA 정보 위계 붕괴',
     desc: '"강릉머니" 등 사용자 비언어. 큰글씨모드에서만 환불 노출 = 다크 패턴.',
     accent: false,
   },

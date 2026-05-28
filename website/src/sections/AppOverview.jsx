@@ -34,7 +34,7 @@ export default function AppOverview() {
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
             color: color.ink, margin: '0 0 32px', wordBreak: 'keep-all',
           }}>
-            강력한 혜택, 그러나 정착하지 못한 앱.
+            높은 혜택에도 불구하고, 일상 결제 경험으로 이어지지 못한 앱입니다.
           </h2>
           <p style={{
             fontSize: t.lead.size, fontWeight: 500,

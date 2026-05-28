@@ -42,7 +42,7 @@ export default function PhoneFrame({ children, scale = 0.62, screenHeight = 600 
                     justifyContent: 'center',
                     alignItems: 'flex-start',
                 }}>
-                    {/* 내부 화면 — 390px 논리 너비로 렌더 후 scale 축소 */}
+                    {/* 내부 화면: 390px 논리 너비로 렌더 후 scale 축소 */}
                     <div style={{
                         width: `${LOGICAL_WIDTH}px`,
                         height: `${screenHeight}px`,

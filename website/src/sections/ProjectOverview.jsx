@@ -3,7 +3,7 @@ import { useReveal } from '../lib/useReveal.js';
 
 const META = [
   { label: 'TEAM', value: '마카모예' },
-  { label: 'PERIOD', value: '2026.03.29 — 04.06' },
+  { label: 'PERIOD', value: '2026.03.29 - 04.06' },
   { label: 'PRESENTED', value: '2026.05.31' },
 ];
 
@@ -43,12 +43,13 @@ export default function ProjectOverview() {
 
           <h2
             style={{
-              fontSize: 'clamp(40px,5vw,80px)',
-              fontWeight: 800,
-              lineHeight: 1.22,
-              letterSpacing: '-0.035em',
+              fontSize: t.display.size,
+              fontWeight: t.display.weight,
+              lineHeight: t.display.lh,
+              letterSpacing: t.display.ls,
               color: color.ink,
               margin: '0 0 24px',
+              wordBreak: 'keep-all',
             }}
           >
             We Rebuild the Local Currency Experience

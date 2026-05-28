@@ -39,10 +39,10 @@ export default function Outro() {
           }}
         >
           <h2 style={{
-            fontSize: 'clamp(40px,6vw,96px)',
-            fontWeight: 800,
-            lineHeight: 1.1,
-            letterSpacing: '-0.04em',
+            fontSize: t.display.size,
+            fontWeight: t.display.weight,
+            lineHeight: t.display.lh,
+            letterSpacing: t.display.ls,
             color: color.white,
             margin: '0 0 clamp(16px,2vw,28px)',
             fontFamily: font.family,

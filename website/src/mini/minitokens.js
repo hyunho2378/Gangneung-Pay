@@ -12,7 +12,7 @@ export const colors = {
     400: '#60A5FA',
     500: '#3B82F6',
     600: '#2563EB',
-    700: color.brand,       // #1D4ED8 — exact match
+    700: color.brand,       // #1D4ED8, exact match
     800: '#1E3A8A',
     900: '#1E2D6B',
   },
@@ -24,7 +24,7 @@ export const colors = {
   error:     '#EF4444',
   errorDark: '#DC2626',
   warning:   '#F59E0B',
-  success:   color.ok,          // #10B981 — exact match
+  success:   color.ok,          // #10B981, exact match
   gray: {
     50:  '#F9FAFB',
     100: '#F3F4F6',
@@ -38,8 +38,8 @@ export const colors = {
   },
   surface: {
     background: color.bg,         // #F5F5F5
-    card:       color.white,      // #FFFFFF — exact match
-    darkCard:   color.brandStrong, // #1B4FD8 — exact match
+    card:       color.white,      // #FFFFFF, exact match
+    darkCard:   color.brandStrong, // #1B4FD8, exact match
     overlay:    'rgba(0,0,0,0.5)',
   },
   successBg:     '#F0FDF4',

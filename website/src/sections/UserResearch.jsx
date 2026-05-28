@@ -91,10 +91,10 @@ export default function UserResearch() {
               lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
               color: color.ink, margin: '0 0 16px', wordBreak: 'keep-all',
             }}>
-              사용자의 실제 행동에서 출발했습니다.
+              실제 사용자 행동과 맥락을 중심으로 조사했습니다.
             </h2>
             <p style={{ fontSize: t.lead.size, lineHeight: t.lead.lh, color: color.inkMuted, margin: 0 }}>
-              {project.period} · {project.scope}
+              {project.period}, {project.scope}
             </p>
           </div>
         </div>
@@ -142,9 +142,9 @@ export default function UserResearch() {
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16 }}>
                 <thead>
                   <tr style={{ background: color.ink }}>
-                    <th style={{ padding: '10px 16px', textAlign: 'left', color: '#fff', fontWeight: 700, fontSize: 14, width: 48 }}>No</th>
-                    <th style={{ padding: '10px 16px', textAlign: 'left', color: '#fff', fontWeight: 700, fontSize: 14 }}>연구 목표</th>
-                    <th style={{ padding: '10px 16px', textAlign: 'left', color: '#fff', fontWeight: 700, fontSize: 14 }}>기대 성과</th>
+                    <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14, width: 48 }}>No</th>
+                    <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14 }}>연구 목표</th>
+                    <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14 }}>기대 성과</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -485,9 +485,9 @@ export default function UserResearch() {
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16 }}>
                 <thead>
                   <tr style={{ background: color.ink }}>
-                    <th style={{ padding: '10px 16px', textAlign: 'left', color: '#fff', fontWeight: 700, fontSize: 14 }}>세그먼트</th>
-                    <th style={{ padding: '10px 16px', textAlign: 'left', color: '#fff', fontWeight: 700, fontSize: 14 }}>1순위 개선</th>
-                    <th style={{ padding: '10px 16px', textAlign: 'left', color: '#fff', fontWeight: 700, fontSize: 14 }}>2순위 개선</th>
+                    <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14 }}>세그먼트</th>
+                    <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14 }}>1순위 개선</th>
+                    <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14 }}>2순위 개선</th>
                   </tr>
                 </thead>
                 <tbody>

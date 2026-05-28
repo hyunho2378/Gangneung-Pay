@@ -1,10 +1,11 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 import HomeCoachMini from '../mini/HomeCoachMini.jsx';
 import RefundMini from '../mini/RefundMini.jsx';
 import iphone14Pro from '../assets/iPhone 14 Pro.svg';
 
-const SEC_PAD = `clamp(64px,8vw,112px) clamp(20px,5vw,80px)`;
+const SEC_PAD = `clamp(40px,6vw,80px) clamp(20px,5vw,80px)`;
 
 // iPhone 14 Pro.svg를 프레임으로 사용하는 AS-IS 플레이스홀더
 function IPhoneAsIs({ width = 200 }) {
@@ -17,7 +18,7 @@ function IPhoneAsIs({ width = 200 }) {
         width: '92.2%', height: '88.7%',
         overflow: 'hidden',
         borderRadius: '8%',
-        background: '#D1D5DB',
+        background: color.line,
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
         gap: 6,
@@ -40,7 +41,7 @@ function IPhoneToBe({ children, width = 200 }) {
         width: '92.2%', height: '88.7%',
         overflow: 'hidden',
         borderRadius: '8%',
-        background: '#F2F4F8',
+        background: color.brandSky,
       }}>
         <div style={{ width: 390, transform: 'scale(0.47)', transformOrigin: 'top left' }}>
           {children}
@@ -51,8 +52,9 @@ function IPhoneToBe({ children, width = 200 }) {
 }
 
 function AsIsToBeRow({ asIs, toBe }) {
+  const { isMobile } = useBreakpoint();
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(24px,4vw,64px)', alignItems: 'start' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'clamp(24px,4vw,64px)', alignItems: 'start' }}>
       <div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
           <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', color: color.inkMuted, fontFamily: font.family }}>AS-IS</span>
@@ -101,7 +103,7 @@ function ScreenBlock({ visible, bg, eyebrow, title, sub, flowProblem, flowSoluti
           {body && <p style={{ margin: '0 0 16px', fontSize: t.body.size, lineHeight: t.body.lh, color: color.inkMuted, fontFamily: font.family }}>{body}</p>}
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {implBadges && implBadges.map(label => (
-              <span key={label} style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: color.inkMuted, background: color.line, padding: '4px 10px', borderRadius: 100, fontFamily: font.family }}>{label}</span>
+              <span key={label} style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: color.inkMuted, background: color.brandSky, padding: '4px 10px', borderRadius: 100, fontFamily: font.family }}>{label}</span>
             ))}
             {urBadge && <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: color.brand, background: color.brandPale, padding: '4px 10px', borderRadius: 100, fontFamily: font.family }}>{urBadge}</span>}
           </div>
@@ -128,19 +130,19 @@ export default function TheBuild() {
         ref={headRef}
         style={{
           padding: `${layout.sectionY} clamp(20px,5vw,80px) clamp(48px,6vw,80px)`,
-          maxWidth: layout.container,
-          margin: '0 auto',
           opacity: headVisible ? 1 : 0,
           transform: headVisible ? 'none' : 'translateY(28px)',
           transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
         }}
       >
-        <p style={{ fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight, letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform, color: color.brand, margin: '0 0 24px', fontFamily: font.family }}>
-          KEY SCREENS
-        </p>
-        <h2 style={{ fontSize: t.h1.size, fontWeight: t.h1.weight, lineHeight: t.h1.lh, letterSpacing: t.h1.ls, color: color.ink, margin: 0, fontFamily: font.family, wordBreak: 'keep-all' }}>
-          4개의 전략이 화면이 됩니다.
-        </h2>
+        <div style={{ maxWidth: layout.container, margin: '0 auto' }}>
+          <p style={{ fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight, letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform, color: color.brand, margin: '0 0 24px', fontFamily: font.family }}>
+            KEY SCREENS
+          </p>
+          <h2 style={{ fontSize: t.h1.size, fontWeight: t.h1.weight, lineHeight: t.h1.lh, letterSpacing: t.h1.ls, color: color.ink, margin: 0, fontFamily: font.family, wordBreak: 'keep-all' }}>
+            4개의 전략이 화면이 됩니다.
+          </h2>
+        </div>
       </div>
 
       {/* S1: 위젯 잔액 노출 */}
@@ -152,8 +154,8 @@ export default function TheBuild() {
           title="위젯 잔액 노출"
           sub="앱을 열지 않아도 잔액이 보입니다."
           flowProblem="앱 실행해야만 잔액 확인"
-          flowSolution="홈 위젯·잠금화면 즉시 노출"
-          implBadges={['HomeCoachMini · BalanceCardExpanded']}
+          flowSolution="홈 위젯, 잠금화면 즉시 노출"
+          implBadges={['HomeCoachMini, BalanceCardExpanded']}
           urBadge="UR-U01"
           toBeContent={
             <IPhoneToBe><HomeCoachMini variant="charge" /></IPhoneToBe>
@@ -172,7 +174,7 @@ export default function TheBuild() {
           flowProblem="관찰 4인 전원 환불 메뉴 탐색 실패"
           flowSolution="잔액 카드 3슬롯 동일 크기"
           body="잔액 카드에 [충전 / 환불 / QR결제] 3슬롯을 동일 크기로 배치합니다."
-          implBadges={['RefundMini · BalanceCardExpanded']}
+          implBadges={['RefundMini, BalanceCardExpanded']}
           urBadge="UR-U03"
           toBeContent={
             <IPhoneToBe><RefundMini step="list" /></IPhoneToBe>
@@ -180,7 +182,7 @@ export default function TheBuild() {
         />
       </div>
 
-      {/* S4(코치마크) — 직전 지시에 따라 S3 위치 */}
+      {/* S4(코치마크): 직전 지시에 따라 S3 위치 */}
       <div ref={s3Ref}>
         <ScreenBlock
           visible={s3Visible}
@@ -191,7 +193,7 @@ export default function TheBuild() {
           flowProblem="카드 신청 과정 복잡해 포기"
           flowSolution="카드 등록 직후 충전→환불 자동 안내"
           body="ScreenContainer.getBoundingClientRect() 절대좌표 기반. 실제 버튼 위치에 말풍선이 정확히 얹힙니다."
-          implBadges={['CoachMarkOverlay · getBoundingClientRect']}
+          implBadges={['CoachMarkOverlay, getBoundingClientRect']}
           urBadge="UR-U03"
           toBeContent={
             <IPhoneToBe><HomeCoachMini variant="cardApply" /></IPhoneToBe>
@@ -199,7 +201,7 @@ export default function TheBuild() {
         />
       </div>
 
-      {/* S3(지도) — 직전 지시에 따라 S4 위치 */}
+      {/* S3(지도): 직전 지시에 따라 S4 위치 */}
       <div ref={s4Ref}>
         <ScreenBlock
           visible={s4Visible}
@@ -209,7 +211,7 @@ export default function TheBuild() {
           sub="지도에서 실시간으로 확인할 수 있습니다."
           flowProblem="가게 가서 직접 물어봐야 했던 불편"
           flowSolution="13,021개 전수 등록 + 12카테고리 필터"
-          implBadges={['StoreMapScreen · MarkerClusterer']}
+          implBadges={['StoreMapScreen, MarkerClusterer']}
           urBadge="UR-U06"
         />
       </div>

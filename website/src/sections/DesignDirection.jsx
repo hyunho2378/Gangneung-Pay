@@ -137,7 +137,7 @@ export default function DesignDirection() {
                       fontSize: 14, flexShrink: 0,
                       lineHeight: 1.65, fontFamily: font.family,
                     }}>
-                      ·
+                      , 
 </span>
                     <span style={{
                       fontSize: 'clamp(15px,1.4vw,18px)',

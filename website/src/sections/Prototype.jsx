@@ -4,14 +4,14 @@ import { useReveal } from '../lib/useReveal.js';
 const LINKS = [
   {
     label: 'iOS 버전',
-    sub: 'iPhone · Face ID · HIG',
+    sub: 'iPhone, Face ID, HIG',
     href: 'https://gangneung-pay.vercel.app',
     accent: color.brand,
     primary: true,
   },
   {
     label: 'Android 버전',
-    sub: 'Galaxy · 지문인증 · Google Material 3',
+    sub: 'Galaxy, 지문인증, Google Material 3',
     href: 'https://gangneung-pay-android.vercel.app',
     accent: color.brand,
     primary: false,
@@ -54,6 +54,7 @@ export default function Prototype() {
             fontSize: t.h1.size, fontWeight: t.h1.weight,
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
             color: color.ink, margin: '0 0 16px', fontFamily: font.family,
+            wordBreak: 'keep-all',
           }}>
             직접 사용해보세요.
           </h2>
@@ -62,7 +63,7 @@ export default function Prototype() {
             lineHeight: t.lead.lh, color: color.inkMuted,
             margin: 0, fontFamily: font.family,
           }}>
-            iOS · Android 플랫폼별 실제 작동 프로토타입
+            iOS, Android 플랫폼별 실제 작동 프로토타입
           </p>
         </div>
 
@@ -92,7 +93,7 @@ export default function Prototype() {
               <div style={{
                 background: color.white,
                 borderRadius: layout.rMd,
-                padding: 'clamp(40px,5vw,72px) clamp(32px,4vw,56px)',
+                padding: 'clamp(28px,3.5vw,48px) clamp(24px,3vw,40px)',
                 boxShadow: '0 8px 40px rgba(29,78,216,0.12), 0 2px 8px rgba(0,0,0,0.06)',
                 transition: 'box-shadow 0.2s ease',
               }}
@@ -126,7 +127,7 @@ export default function Prototype() {
                   fontFamily: font.family,
                   letterSpacing: '0.04em',
                 }}>
-                  열어보기
+                  확인하기
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>

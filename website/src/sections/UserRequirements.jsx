@@ -1,5 +1,6 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 
 const GROUPS = [
   {
@@ -9,7 +10,7 @@ const GROUPS = [
       { code: 'UR-U01', desc: '앱 미실행 → 위젯/잠금화면 잔액 즉시 확인' },
       { code: 'UR-U02', desc: '충전 화면 진입 즉시 현재 잔액 상단 표시' },
       { code: 'UR-U03', desc: '메인에서 2탭 이내 환불 접근' },
-      { code: 'UR-F01', desc: "충전잔액(내 돈) vs 캐시백(보상) 색상·레이블 명확 구분" },
+      { code: 'UR-F01', desc: "충전잔액(내 돈) vs 캐시백(보상) 색상, 레이블 명확 구분" },
       { code: 'UR-F02', desc: 'B2C 화면에 B2B 기능 미노출' },
       { code: 'UR-N02', desc: "사용자 언어 기준 메뉴명 ('강릉머니' 제거)" },
     ],
@@ -19,9 +20,9 @@ const GROUPS = [
     label: 'SHOULD HAVE',
     items: [
       { code: 'UR-U05', desc: '잔액 부족 예상 시 사전 알림' },
-      { code: 'UR-U06', desc: '가맹점 지도 영업시간·사진·결제가능 단일 화면' },
-      { code: 'UR-F03', desc: '월별 캐시백 이력·잔여한도 조회' },
-      { code: 'UR-N03', desc: '섹션 이동 시에도 색상·폰트 일관' },
+      { code: 'UR-U06', desc: '가맹점 지도 영업시간, 사진, 결제가능 단일 화면' },
+      { code: 'UR-F03', desc: '월별 캐시백 이력, 잔여한도 조회' },
+      { code: 'UR-N03', desc: '섹션 이동 시에도 색상, 폰트 일관' },
     ],
   },
 ];
@@ -67,6 +68,7 @@ export default function UserRequirements() {
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [p0Ref, p0Visible] = useReveal({ threshold: 0.03 });
   const [p1Ref, p1Visible] = useReveal({ threshold: 0.03 });
+  const { isMobile } = useBreakpoint();
 
   const groupRefs = [[p0Ref, p0Visible], [p1Ref, p1Visible]];
 
@@ -108,7 +110,8 @@ export default function UserRequirements() {
           </h2>
         </div>
 
-        {/* P0 + P1 groups */}
+        {/* P0 + P1 groups — 2-column grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'clamp(24px,3vw,48px)' }}>
         {GROUPS.map(({ priority, label, items }, gi) => {
           const [ref, visible] = groupRefs[gi];
           const isPrimary = priority === 'P0';
@@ -117,9 +120,6 @@ export default function UserRequirements() {
             <div
               key={priority}
               ref={ref}
-              style={{
-                marginBottom: gi < GROUPS.length - 1 ? 'clamp(48px,6vw,80px)' : 0,
-              }}
             >
               {/* Group header */}
               <div
@@ -179,6 +179,7 @@ export default function UserRequirements() {
             </div>
           );
         })}
+        </div>
 
       </div>
     </section>

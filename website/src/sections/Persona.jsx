@@ -1,5 +1,6 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 
 const PERSONA = {
   name: '김정숙',
@@ -25,7 +26,7 @@ const PERSONA = {
   ],
   needs: [
     '앱 없이도 잔액을 즉시 확인할 수 있는 방법',
-    '충전·환불이 같은 자리에 있는 직관적인 메뉴',
+    '충전, 환불이 같은 자리에 있는 직관적인 메뉴',
     '쉬운 우리말로 된 메뉴 명칭',
   ],
 };
@@ -37,7 +38,7 @@ function Slider({ label, lo, hi, val }) {
         <span style={{ fontSize: 13, fontWeight: 600, color: color.ink, fontFamily: font.family }}>{label}</span>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span style={{ fontSize: 11, color: color.inkFaint, fontFamily: font.family, flexShrink: 0, minWidth: 'auto', maxWidth: 90, whiteSpace: 'nowrap', textAlign: 'right' }}>{lo}</span>
+        <span style={{ fontSize: 11, color: color.inkMuted, fontFamily: font.family, flexShrink: 0, minWidth: 'auto', maxWidth: 90, whiteSpace: 'nowrap', textAlign: 'right' }}>{lo}</span>
         <div style={{ flex: 1, height: 6, background: color.line, borderRadius: 99, position: 'relative' }}>
           <div style={{
             position: 'absolute', left: 0, top: 0, bottom: 0,
@@ -51,7 +52,7 @@ function Slider({ label, lo, hi, val }) {
             boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
           }} />
         </div>
-        <span style={{ fontSize: 11, color: color.inkFaint, fontFamily: font.family, flexShrink: 0, minWidth: 'auto', maxWidth: 90, whiteSpace: 'nowrap' }}>{hi}</span>
+        <span style={{ fontSize: 11, color: color.inkMuted, fontFamily: font.family, flexShrink: 0, minWidth: 'auto', maxWidth: 90, whiteSpace: 'nowrap' }}>{hi}</span>
       </div>
     </div>
   );
@@ -60,6 +61,7 @@ function Slider({ label, lo, hi, val }) {
 export default function Persona() {
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [cardRef, cardVisible] = useReveal({ threshold: 0.05 });
+  const { isMobile } = useBreakpoint();
 
   return (
     <section
@@ -94,7 +96,7 @@ export default function Persona() {
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
             color: color.ink, margin: 0, wordBreak: 'keep-all',
           }}>
-            누가 강릉페이를 씁니까.
+            어떤 사람이 강릉페이를 사용할까요?
           </h2>
         </div>
 
@@ -123,7 +125,7 @@ export default function Persona() {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'clamp(140px,20%,200px) 1fr',
+            gridTemplateColumns: isMobile ? '1fr' : 'clamp(140px,20%,200px) 1fr',
             gap: 'clamp(24px,4vw,56px)',
             alignItems: 'flex-start',
           }}>
@@ -157,7 +159,7 @@ export default function Persona() {
                 fontSize: t.caption.size, color: color.inkMuted,
                 margin: '0 0 12px', fontFamily: font.family,
               }}>
-                {PERSONA.age} · {PERSONA.role}
+                {PERSONA.age}, {PERSONA.role}
               </p>
               <p style={{
                 fontSize: t.caption.size, color: color.inkMuted,
@@ -200,7 +202,7 @@ export default function Persona() {
 
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
+                gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
                 gap: 'clamp(20px,3vw,40px)',
                 marginBottom: 28,
               }}>
@@ -258,7 +260,7 @@ export default function Persona() {
                 </p>
                 <div style={{
                   display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
+                  gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
                   gap: '0 clamp(20px,3vw,40px)',
                 }}>
                   {PERSONA.behaviors.map(b => (
@@ -268,7 +270,7 @@ export default function Persona() {
               </div>
 
               {/* Pain points + Needs */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(20px,3vw,40px)' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'clamp(20px,3vw,40px)' }}>
                 <div>
                   <p style={{
                     fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
@@ -279,7 +281,7 @@ export default function Persona() {
                   </p>
                   {PERSONA.pains.map((pain, i) => (
                     <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'flex-start' }}>
-                      <span style={{ color: color.warn, fontWeight: 700, flexShrink: 0, lineHeight: 1.5, fontFamily: font.family }}>·</span>
+                      <span style={{ color: color.warn, fontWeight: 700, flexShrink: 0, lineHeight: 1.5, fontFamily: font.family }}>, </span>
                       <span style={{ fontSize: 13, color: color.inkMuted, lineHeight: 1.55, fontFamily: font.family, wordBreak: 'keep-all' }}>{pain}</span>
                     </div>
                   ))}
@@ -294,7 +296,7 @@ export default function Persona() {
                   </p>
                   {PERSONA.needs.map((need, i) => (
                     <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'flex-start' }}>
-                      <span style={{ color: color.brand, fontWeight: 700, flexShrink: 0, lineHeight: 1.5, fontFamily: font.family }}>·</span>
+                      <span style={{ color: color.brand, fontWeight: 700, flexShrink: 0, lineHeight: 1.5, fontFamily: font.family }}>, </span>
                       <span style={{ fontSize: 13, color: color.inkMuted, lineHeight: 1.55, fontFamily: font.family, wordBreak: 'keep-all' }}>{need}</span>
                     </div>
                   ))}

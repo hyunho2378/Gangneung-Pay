@@ -1,13 +1,14 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useParallax } from '../lib/useParallax.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 import hero1Img from '../assets/hero-1.png';
 
 const META = [
   { label: 'PROJECT', value: '강릉페이 UX 개선' },
   { label: 'TEAM', value: '마카모예' },
   { label: 'PERIOD', value: '2026.03 ~ 2026.06' },
-  { label: 'TOOL', value: 'Figma · Antigravity · Claude Code · Vercel · Neon DB' },
+  { label: 'TOOL', value: 'Figma, Antigravity, Claude Code, Vercel, Neon DB' },
 ];
 
 const IOS_URL = 'https://gangneung-pay.vercel.app';
@@ -18,6 +19,7 @@ export default function Hero() {
   const imgRef = useParallax(0.05);
   const [textRef, textVisible] = useReveal({ threshold: 0.05 });
   const [metaRef, metaVisible] = useReveal({ threshold: 0.1 });
+  const { isMobile } = useBreakpoint();
 
   return (
     <section
@@ -31,95 +33,96 @@ export default function Hero() {
       }}
     >
       <div style={{ padding: `clamp(48px,5vw,72px) clamp(20px,5vw,80px) clamp(32px,4vw,56px)` }}>
-      <div
-        style={{
-          maxWidth: layout.container,
-          margin: '0 auto',
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: 'clamp(32px,4vw,80px)',
-          alignItems: 'center',
-        }}
-      >
-        {/* LEFT: 텍스트 */}
         <div
-          ref={textRef}
           style={{
-            opacity: textVisible ? 1 : 0,
-            transform: textVisible ? 'none' : 'translateY(28px)',
-            transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
+            maxWidth: layout.container,
+            margin: '0 auto',
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+            gap: 'clamp(32px,4vw,80px)',
+            alignItems: 'center',
           }}
         >
-          <p
+          {/* LEFT: 텍스트 */}
+          <div
+            ref={textRef}
             style={{
-              fontSize: t.eyebrow.size,
-              fontWeight: t.eyebrow.weight,
-              letterSpacing: t.eyebrow.ls,
-              textTransform: t.eyebrow.transform,
-              color: color.brand,
-              margin: '0 0 24px',
+              opacity: textVisible ? 1 : 0,
+              transform: textVisible ? 'none' : 'translateY(28px)',
+              transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
             }}
           >
-            UX Project
-          </p>
+            <p
+              style={{
+                fontSize: t.eyebrow.size,
+                fontWeight: t.eyebrow.weight,
+                letterSpacing: t.eyebrow.ls,
+                textTransform: t.eyebrow.transform,
+                color: color.brand,
+                margin: '0 0 24px',
+              }}
+            >
+              UX Project
+            </p>
 
-          <h1
+            <h1
+              style={{
+                fontSize: t.display.size,
+                fontWeight: t.display.weight,
+                lineHeight: t.display.lh,
+                letterSpacing: t.display.ls,
+                color: color.ink,
+                margin: '0 0 20px',
+                wordBreak: 'keep-all',
+              }}
+            >
+              내 돈이 내 편인 앱, <span style={{ color: color.brand }}>강릉페이</span>
+            </h1>
+
+            <p
+              style={{
+                fontSize: t.lead.size,
+                fontWeight: t.lead.weight,
+                lineHeight: t.lead.lh,
+                color: color.inkMuted,
+                margin: '0 0 28px',
+                wordBreak: 'keep-all',
+              }}
+            >
+              강릉 시민을 위한 로컬 결제 경험 개선 프로젝트
+            </p>
+
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+              <HeroCTA href={IOS_URL} label="iOS 보기" primary />
+              <HeroCTA href={ANDROID_URL} label="Android 보기" />
+              <HeroCTA href={GITHUB_URL} icon />
+            </div>
+          </div>
+
+          {/* RIGHT: 히어로 이미지 (모바일에서도 표시) */}
+          <div
+            ref={isMobile ? null : imgRef}
             style={{
-              fontSize: t.display.size,
-              fontWeight: t.display.weight,
-              lineHeight: t.display.lh,
-              letterSpacing: t.display.ls,
-              color: color.ink,
-              margin: '0 0 20px',
-              wordBreak: 'keep-all',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
+            aria-hidden="true"
           >
-            내 돈이 내 편인 앱, <span style={{ color: color.brand }}>강릉페이</span>
-          </h1>
-
-          <p
-            style={{
-              fontSize: t.lead.size,
-              fontWeight: t.lead.weight,
-              lineHeight: t.lead.lh,
-              color: color.inkMuted,
-              margin: '0 0 28px',
-              wordBreak: 'keep-all',
-            }}
-          >
-            강릉 시민을 위한 로컬 결제 경험 개선 프로젝트.
-          </p>
-
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-            <HeroCTA href={IOS_URL} label="iOS 보기" primary />
-            <HeroCTA href={ANDROID_URL} label="Android 보기" />
-            <HeroCTA href={GITHUB_URL} icon />
+            <img
+              src={hero1Img}
+              alt="강릉페이 앱 화면"
+              style={{
+                width: '100%',
+                maxWidth: isMobile ? '320px' : 'clamp(420px,54vw,780px)',
+                transform: isMobile ? 'none' : 'translateX(8%)',
+                height: 'auto',
+                display: 'block',
+                margin: isMobile ? '0 auto' : undefined,
+              }}
+            />
           </div>
         </div>
-
-        {/* RIGHT: 히어로 이미지 */}
-        <div
-          ref={imgRef}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          aria-hidden="true"
-        >
-          <img
-            src={hero1Img}
-            alt="강릉페이 앱 화면"
-            style={{
-              width: '100%',
-              maxWidth: 'clamp(420px,54vw,780px)',
-              transform: 'translateX(8%)',
-              height: 'auto',
-              display: 'block',
-            }}
-          />
-        </div>
-      </div>
       </div>
 
       {/* 하단: PROJECT DETAIL 메타블록 */}
@@ -134,64 +137,66 @@ export default function Hero() {
         }}
       >
         <div style={{ padding: 'clamp(24px,3vw,40px) clamp(20px,5vw,80px)' }}>
-        <div
-          style={{
-            maxWidth: layout.container,
-            margin: '0 auto',
-          }}
-        >
           <div
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'auto repeat(4, 1fr)',
-              gap: 'clamp(16px,2.5vw,40px)',
-              alignItems: 'center',
-              width: '100%',
+              maxWidth: layout.container,
+              margin: '0 auto',
             }}
           >
-            <p
+            <div
               style={{
-                fontSize: t.eyebrow.size,
-                fontWeight: t.eyebrow.weight,
-                letterSpacing: t.eyebrow.ls,
-                textTransform: t.eyebrow.transform,
-                color: color.whiteA60,
-                margin: 0,
-                whiteSpace: 'nowrap',
+                display: 'grid',
+                gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'auto repeat(4, 1fr)',
+                gap: 'clamp(16px,2.5vw,40px)',
+                alignItems: 'center',
+                width: '100%',
               }}
             >
-              Project Detail
-            </p>
-            {META.map(({ label, value }) => (
-              <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                <span
+              {!isMobile && (
+                <p
                   style={{
-                    fontSize: 14,
-                    fontWeight: 800,
-                    letterSpacing: '0.07em',
-                    textTransform: 'uppercase',
-                    color: color.white,
-                    opacity: 0.7,
+                    fontSize: t.eyebrow.size,
+                    fontWeight: t.eyebrow.weight,
+                    letterSpacing: t.eyebrow.ls,
+                    textTransform: t.eyebrow.transform,
+                    color: color.whiteA60,
+                    margin: 0,
+                    whiteSpace: 'nowrap',
                   }}
                 >
-                  {label}
-                </span>
-                <span
-                  style={{
-                    fontSize: 18,
-                    fontWeight: 700,
-                    color: color.white,
-                    letterSpacing: '-0.01em',
-                    wordBreak: 'keep-all',
-                    lineHeight: 1.3,
-                  }}
-                >
-                  {value}
-                </span>
-              </div>
-            ))}
+                  Project Detail
+                </p>
+              )}
+              {META.map(({ label, value }) => (
+                <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                  <span
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 800,
+                      letterSpacing: '0.07em',
+                      textTransform: 'uppercase',
+                      color: color.white,
+                      opacity: 0.7,
+                    }}
+                  >
+                    {label}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: isMobile ? 15 : 18,
+                      fontWeight: 700,
+                      color: color.white,
+                      letterSpacing: '-0.01em',
+                      wordBreak: 'keep-all',
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    {value}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </section>
@@ -209,6 +214,7 @@ function HeroCTA({ href, label, primary = false, icon = false }) {
           display: 'inline-flex',
           alignItems: 'center',
           gap: 6,
+          minHeight: 44,
           padding: 'clamp(12px,1.2vw,16px) clamp(20px,2vw,28px)',
           borderRadius: 100,
           fontSize: 14,
@@ -245,6 +251,7 @@ function HeroCTA({ href, label, primary = false, icon = false }) {
       style={{
         display: 'inline-flex',
         alignItems: 'center',
+        minHeight: 44,
         padding: 'clamp(12px,1.2vw,16px) clamp(20px,2vw,28px)',
         borderRadius: 100,
         fontSize: 14,

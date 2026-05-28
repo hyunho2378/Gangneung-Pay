@@ -61,6 +61,7 @@ export default function ServiceSafari() {
               letterSpacing: t.h1.ls,
               color: color.ink,
               margin: 0,
+              wordBreak: 'keep-all',
             }}
           >
             사용자의 손가락이 멈추는 곳을 기록했습니다.

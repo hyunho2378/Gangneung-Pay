@@ -105,7 +105,7 @@ function CardApplyCTA() {
                         강릉페이 카드를<br />신청하세요
                     </h3>
                     <p style={{ margin: 0, fontSize: typography.size.sm, color: colors.onDark.secondary, fontFamily: typography.fontFamily }}>최대 10% 캐시백 혜택</p>
-                    {/* 신청하기 버튼 — 하이라이트 */}
+                    {/* 신청하기 버튼: 하이라이트 */}
                     <div style={{
                         alignSelf: 'flex-start',
                         backgroundColor: 'rgba(255,255,255,0.2)',

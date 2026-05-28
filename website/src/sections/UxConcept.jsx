@@ -15,11 +15,11 @@ export default function UxConcept() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        /* Photo placeholder — replace backgroundImage with url('/assets/photo/gangneung.jpg') */
+        /* Photo placeholder: replace backgroundImage with url('/assets/photo/gangneung.jpg') */
         background: color.ink,
       }}
     >
-      {/* Overlay — stays in place when real photo is set */}
+      {/* Overlay: stays in place when real photo is set */}
       <div
         aria-hidden="true"
         style={{
@@ -43,7 +43,7 @@ export default function UxConcept() {
           fontFamily: font.family,
         }}
       >
-        강릉 바다·하늘 사진 교체 예정
+        강릉 바다, 하늘 사진 교체 예정
       </div>
 
       {/* Content */}
@@ -53,7 +53,7 @@ export default function UxConcept() {
           position: 'relative',
           zIndex: 1,
           textAlign: 'center',
-          padding: 'clamp(48px,8vw,120px) clamp(20px,5vw,80px)',
+          padding: 'clamp(40px,6vw,80px) clamp(20px,5vw,80px)',
           opacity: visible ? 1 : 0,
           transform: visible ? 'none' : 'translateY(32px)',
           transition: 'opacity 0.9s ease-out, transform 0.9s ease-out',
@@ -79,6 +79,7 @@ export default function UxConcept() {
           color: color.white,
           margin: '0 0 clamp(20px,2.5vw,32px)',
           fontFamily: font.family,
+          wordBreak: 'keep-all',
         }}>
           내 돈이 내 편인 앱
         </h2>

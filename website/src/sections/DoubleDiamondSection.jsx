@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 
@@ -16,25 +15,25 @@ const S = 245 / 243;
 const CALLOUTS = [
   {
     id: 'D1', label: 'Discover',
-    detail: '데스크 리서치 · 서비스 사파리 · 유저 리서치 · 앱스토어 리뷰 분석',
+    detail: '데스크 리서치, 서비스 사파리, 유저 리서치, 앱스토어 리뷰 분석',
     dotX: 121.5, dotY: 350 - S * 121.5,     // upper-left edge of D1 ≈ 227.5
     lineEndY: 58, side: 'top',
   },
   {
     id: 'D2', label: 'Define',
-    detail: '어피니티 다이어그램 · Key Insight · AS-IS 감사 · 페르소나 · 유저 저니맵',
+    detail: '어피니티 다이어그램, Key Insight, AS-IS 감사, 페르소나, 유저 저니맵',
     dotX: 364.6, dotY: 595 - S * (364.6 - 243),  // lower-right edge of D1 ≈ 472.5
     lineEndY: 648, side: 'bottom',
   },
   {
     id: 'D3', label: 'Develop',
-    detail: '디자인 디렉션 · UX 컨셉·전략 · 정보 위계 재설계 · 듀얼 디자인 시스템',
+    detail: '디자인 디렉션, UX 컨셉, 전략, 정보 위계 재설계, 듀얼 디자인 시스템',
     dotX: 615.4, dotY: 350 - S * (615.4 - 494),  // upper-left edge of D2 ≈ 227.5
     lineEndY: 58, side: 'top',
   },
   {
     id: 'D4', label: 'Deliver',
-    detail: '핵심 화면 · 유저 테스트 · 프로토타입 배포',
+    detail: '핵심 화면, 유저 테스트, 프로토타입 배포',
     dotX: 858.5, dotY: 595 - S * (858.5 - 737),  // lower-right edge of D2 ≈ 472.5
     lineEndY: 648, side: 'bottom',
   },
@@ -146,7 +145,7 @@ function DesktopDiagram() {
           </div>
         ))}
 
-        {/* URQ label — below waist dot */}
+        {/* URQ label: below waist dot */}
         <div style={{
           position: 'absolute',
           left: '50%',
@@ -201,66 +200,10 @@ function DesktopDiagram() {
   );
 }
 
-function MobileDiagram() {
-  const d1Phases = CALLOUTS.filter(c => c.id === 'D1' || c.id === 'D2');
-  const d2Phases = CALLOUTS.filter(c => c.id === 'D3' || c.id === 'D4');
-  const urq = { id: 'URQ', label: 'User Requirements', detail: '리서치를 요구사항으로 수렴한 지점' };
-
-  const singleDiamond = (phases) => (
-    <div style={{ position: 'relative', paddingBottom: '100%' }}>
-      <div style={{ position: 'absolute', inset: 0 }}>
-        <svg viewBox="0 0 490 490" style={{ width: '100%', height: '100%', display: 'block' }} aria-hidden="true">
-          <line x1={245} y1={0} x2={245} y2={490}
-            stroke={BRAND_FAINT} strokeWidth={2} strokeDasharray="8 8" />
-          <polygon
-            points="0,245 245,0 490,245 245,490"
-            fill={color.white}
-            stroke={color.brand}
-            strokeWidth={4}
-          />
-        </svg>
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center' }}>
-          {phases.map(p => (
-            <div key={p.id} style={{ flex: 1, padding: '0 8px', textAlign: 'center' }}>
-              <span style={{ display: 'block', fontSize: 11, fontWeight: 800, color: color.brand, letterSpacing: '0.04em', fontFamily: font.family }}>{p.id}</span>
-              <span style={{ display: 'block', fontSize: t.caption.size, fontWeight: 800, color: color.ink, marginTop: 2, fontFamily: font.family }}>{p.label}</span>
-              <span style={{ display: 'block', fontSize: 10, color: color.inkMuted, lineHeight: 1.5, marginTop: 4, wordBreak: 'keep-all', fontFamily: font.family }}>{p.detail}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  return (
-    <div>
-      {singleDiamond(d1Phases)}
-      <div style={{
-        textAlign: 'center', padding: '16px 0',
-        borderTop: `1px dashed ${color.brand}`,
-        borderBottom: `1px dashed ${color.brand}`,
-        margin: '12px 0',
-      }}>
-        <span style={{ display: 'block', fontSize: 11, fontWeight: 800, color: color.brand, letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: font.family }}>{urq.id}</span>
-        <span style={{ display: 'block', fontSize: t.caption.size, fontWeight: 700, color: color.ink, marginTop: 2, fontFamily: font.family }}>{urq.label}</span>
-        <span style={{ display: 'block', fontSize: 10, color: color.inkMuted, marginTop: 4, fontFamily: font.family }}>{urq.detail}</span>
-      </div>
-      {singleDiamond(d2Phases)}
-    </div>
-  );
-}
 
 export default function DoubleDiamondSection() {
-  const [mobile, setMobile] = useState(false);
   const [headRef, headVisible] = useReveal({ threshold: 0.1 });
   const [diagramRef, diagramVisible] = useReveal({ threshold: 0.05 });
-
-  useEffect(() => {
-    const check = () => setMobile(window.innerWidth < 600);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
 
   return (
     <section
@@ -268,7 +211,7 @@ export default function DoubleDiamondSection() {
       style={{
         background: color.bg,
         fontFamily: font.family,
-        padding: `${layout.sectionY} clamp(20px,5vw,80px) clamp(100px,12vw,160px)`,
+        padding: `${layout.sectionY} clamp(20px,5vw,80px)`,
       }}
     >
       <div style={{ maxWidth: layout.container, margin: '0 auto' }}>
@@ -279,7 +222,7 @@ export default function DoubleDiamondSection() {
             opacity: headVisible ? 1 : 0,
             transform: headVisible ? 'none' : 'translateY(28px)',
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-            marginBottom: 'clamp(80px,10vw,128px)',
+            marginBottom: 'clamp(40px,5vw,64px)',
           }}
         >
           <p style={{
@@ -312,12 +255,13 @@ export default function DoubleDiamondSection() {
             opacity: diagramVisible ? 1 : 0,
             transform: diagramVisible ? 'none' : 'translateY(24px)',
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-            maxWidth: 580,
-            margin: '0 auto',
-            paddingTop: 'clamp(24px,3vw,40px)',
+            paddingTop: 32,
+            overflowX: 'auto',
           }}
         >
-          {mobile ? <MobileDiagram /> : <DesktopDiagram />}
+          <div style={{ width: 720, minWidth: 720, margin: '0 auto' }}>
+            <DesktopDiagram />
+          </div>
         </div>
 
       </div>

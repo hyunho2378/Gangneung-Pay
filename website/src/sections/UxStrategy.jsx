@@ -214,7 +214,7 @@ export default function UxStrategy() {
                             color: color.inkMuted, letterSpacing: '0.04em',
                             fontFamily: font.family,
                           }}>
-                            · {s.attribution}
+                           , {s.attribution}
                           </span>
                         </div>
                       )}
@@ -244,7 +244,7 @@ export default function UxStrategy() {
                               color: color.inkMuted, letterSpacing: '0.04em',
                               fontFamily: font.family,
                             }}>
-                              · {s.attribution}
+                             , {s.attribution}
                             </span>
                           )}
                         </div>

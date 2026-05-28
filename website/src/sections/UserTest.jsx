@@ -33,6 +33,7 @@ export default function UserTest() {
             fontSize: t.h1.size, fontWeight: t.h1.weight,
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
             color: color.ink, margin: '0 0 16px', fontFamily: font.family,
+            wordBreak: 'keep-all',
           }}>
             사용성 평가를 진행할 예정입니다.
           </h2>
@@ -48,7 +49,7 @@ export default function UserTest() {
           <div style={{
             border: `2px dashed ${color.line}`,
             borderRadius: layout.rMd,
-            padding: 'clamp(64px,10vw,120px) clamp(32px,5vw,80px)',
+            padding: 'clamp(40px,6vw,72px) clamp(24px,4vw,56px)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -68,7 +69,7 @@ export default function UserTest() {
               color: color.inkFaint, margin: 0, fontFamily: font.family,
               textAlign: 'center',
             }}>
-              사용성 테스트 결과 · 과업 성공률 · 오류 빈도 · SUS 점수. 평가 완료 후 채움.
+              사용성 테스트 결과, 과업 성공률, 오류 빈도, SUS 점수. 평가 완료 후 채움.
             </p>
           </div>
         </div>

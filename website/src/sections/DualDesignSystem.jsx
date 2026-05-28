@@ -7,42 +7,42 @@ const AND_COLOR = color.brand;
 const ROWS = [
   {
     feature: 'StatusBar',
-    ios: '44px · safe area 적용 · 흰 배경 · 검정 아이콘',
-    android: '42px (Samsung One UI) · 투명 오버레이 · 흰 아이콘',
+    ios: '44px, safe area 적용, 흰 배경, 검정 아이콘',
+    android: '42px (Samsung One UI), 투명 오버레이, 흰 아이콘',
   },
   {
     feature: '헤더',
-    ios: '제목 중앙 정렬 · 뒤로가기 <ChevronLeft> 좌상단',
-    android: '제목 좌측 정렬 · <ArrowLeft> 좌측 · 더보기 우측',
+    ios: '제목 중앙 정렬, 뒤로가기 <ChevronLeft> 좌상단',
+    android: '제목 좌측 정렬, <ArrowLeft> 좌측, 더보기 우측',
   },
   {
     feature: '버튼',
-    ios: 'radius 12px · height 52px · box-shadow · 4종 위계',
-    android: 'full pill · height 48px · 그림자 없음 · 4종 위계',
+    ios: 'radius 12px, height 52px, box-shadow, 4종 위계',
+    android: 'full pill, height 48px, 그림자 없음, 4종 위계',
   },
   {
     feature: '폰트',
-    ios: 'Pretendard Variable',
+    ios: 'SF Pro',
     android: 'Noto Sans KR',
   },
   {
     feature: '생체인증',
-    ios: 'Face ID · 중앙 Lottie · State Machine 19단계',
-    android: '지문 인증 · 하단 고정 + 텍스트 fallback',
+    ios: 'Face ID, 중앙 Lottie, State Machine 19단계',
+    android: '지문 인증, 하단 고정 + 텍스트 fallback',
   },
   {
     feature: '바텀시트',
-    ios: 'borderRadius 20px · 드래그 핸들 · 백드롭 없음',
-    android: 'borderRadius 28px · scrim 전체 · 밀어올리기',
+    ios: 'borderRadius 20px, 드래그 핸들, 백드롭 없음',
+    android: 'borderRadius 28px, scrim 전체, 밀어올리기',
   },
   {
     feature: '스낵바',
-    ios: '없음 (iOS HIG — 시스템 Alert·ActionSheet 사용)',
-    android: '슬라이드업 2.8초 자동 소멸 · 실행취소 버튼',
+    ios: '없음 (iOS HIG, 시스템 Alert, ActionSheet 사용)',
+    android: '슬라이드업 2.8초 자동 소멸, 실행취소 버튼',
   },
 ];
 
-const CODE = `// platform 분기 — URL ?platform=android 또는 VITE_PLATFORM 환경변수
+const CODE = `// platform 분기: URL ?platform=android 또는 VITE_PLATFORM 환경변수
 const getPlatform = () => {
   const param = new URLSearchParams(window.location.search).get('platform');
   if (param === 'android') return 'android';
@@ -130,7 +130,7 @@ export default function DualDesignSystem() {
               letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
               color: IOS_COLOR, fontFamily: font.family,
             }}>
-              iOS · HIG
+              iOS, HIG
             </div>
             <div style={{
               padding: '0 24px',
@@ -138,7 +138,7 @@ export default function DualDesignSystem() {
               letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
               color: AND_COLOR, fontFamily: font.family,
             }}>
-              Android · MD3
+              Android, MD3
             </div>
           </div>
 

@@ -5,7 +5,7 @@ const TABS = [
   { label: '홈',       Icon: Home },
   { label: '결제매장', Icon: Store },
   { label: '이용내역', Icon: Receipt },
-  { label: '지원금·혜택', Icon: Gift },
+  { label: '지원금, 혜택', Icon: Gift },
   { label: 'MY',       Icon: User },
 ];
 
@@ -42,13 +42,9 @@ export function AndroidBottomNav({ activeIndex = 0, onSelect }) {
         const col = active ? color.brand : color.inkFaint;
         return (
           <div key={label} onClick={() => onSelect?.(i)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, cursor: 'pointer' }}>
-            {active ? (
-              <div style={{ background: color.brandPale, borderRadius: 999, width: 56, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Icon size={20} strokeWidth={1.8} color={col} />
-              </div>
-            ) : (
-              <Icon size={22} strokeWidth={1.8} color={col} />
-            )}
+            <div style={{ background: active ? color.brandPale : 'transparent', borderRadius: 999, width: 56, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Icon size={20} strokeWidth={1.8} color={col} />
+            </div>
             <span style={{ fontSize: 10, color: col, fontWeight: active ? 700 : 400, fontFamily: "'Noto Sans KR', sans-serif" }}>{label}</span>
           </div>
         );

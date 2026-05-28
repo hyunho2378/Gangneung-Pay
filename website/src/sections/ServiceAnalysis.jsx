@@ -1,10 +1,11 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 
 const ITEMS = [
   {
     label: '서비스 소개',
-    content: '강릉시 지역 경제 활성화를 목적으로 운영되는 충전식 선불카드 기반의 로컬 금융·정책 앱',
+    content: '강릉시 지역 경제 활성화를 목적으로 운영되는 충전식 선불카드 기반의 로컬 금융, 정책 앱',
   },
   {
     label: '핵심 타겟',
@@ -19,6 +20,7 @@ const ITEMS = [
 export default function ServiceAnalysis() {
   const [headRef, headVisible] = useReveal({ threshold: 0.1 });
   const [listRef, listVisible] = useReveal({ threshold: 0.05 });
+  const { isMobile } = useBreakpoint();
 
   return (
     <section
@@ -53,7 +55,7 @@ export default function ServiceAnalysis() {
             color: color.ink, margin: 0,
             wordBreak: 'keep-all',
           }}>
-            강릉페이, 강릉 시민의 스마트한 일상 소비와<br/>지역 상권을 잇는 모바일 지갑.
+            강릉페이, 강릉 시민의 스마트한 일상 소비와 지역 상권을 잇는 모바일 지갑.
           </h2>
         </div>
 
@@ -63,7 +65,7 @@ export default function ServiceAnalysis() {
               key={label}
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'clamp(100px,14vw,180px) 1fr',
+                gridTemplateColumns: isMobile ? '1fr' : 'clamp(100px,14vw,180px) 1fr',
                 gap: '16px clamp(24px,3vw,48px)',
                 padding: 'clamp(20px,2.5vw,28px) 0',
                 borderTop: `1px solid ${color.line}`,

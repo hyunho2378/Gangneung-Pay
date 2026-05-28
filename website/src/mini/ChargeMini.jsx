@@ -8,7 +8,7 @@ import { ArrowLeft } from 'lucide-react'
 import { Delete } from 'lucide-react'
 import { colors, typography, layout, spacing, shadow } from './minitokens.js'
 
-// useTypography 대체 — 미니 렌더 전용 고정 사이즈 (실제 size 토큰 그대로)
+// useTypography 대체: 미니 렌더 전용 고정 사이즈 (실제 size 토큰 그대로)
 const sizes = {
     balanceLarge: typography.size.balanceLarge,
     xl: typography.size.xl,

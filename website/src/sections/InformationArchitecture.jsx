@@ -20,8 +20,8 @@ export default function InformationArchitecture() {
         ref={headRef}
         style={{
           padding: `0 clamp(20px,5vw,80px)`,
-          margin: `0 0 clamp(40px,5vw,64px)`,
-          textAlign: 'center',
+          maxWidth: layout.container,
+          margin: `0 auto clamp(40px,5vw,64px)`,
           opacity: headVisible ? 1 : 0,
           transform: headVisible ? 'none' : 'translateY(28px)',
           transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
@@ -50,7 +50,7 @@ export default function InformationArchitecture() {
         </p>
       </div>
 
-      {/* SVG — centered, responsive */}
+      {/* SVG: centered, responsive */}
       <div
         ref={imgRef}
         style={{

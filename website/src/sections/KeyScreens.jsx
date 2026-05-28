@@ -9,8 +9,8 @@ const SCREENS = [
     strategy: 'S2',
     title: '환불 동등 위계',
     problem: '환불 메뉴를 찾지 못해 탐색 실패',
-    solution: '잔액 카드에 충전·환불·QR결제 3슬롯 동일 위계 배치',
-    tobeLabel: '환불 화면 — 잔액 카드 + 환불 내역',
+    solution: '잔액 카드에 충전, 환불, QR결제 3슬롯 동일 위계 배치',
+    tobeLabel: '환불 화면: 잔액 카드 + 환불 내역',
   },
 ];
 

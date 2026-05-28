@@ -23,12 +23,12 @@ const FLOWS = [
   },
   {
     num: '③',
-    label: '충전 · 잔액확인 · 환불',
+    label: '충전, 잔액확인, 환불',
     nodes: ['홈\n(잔액카드)', '충전', '금액선택', '충전완료\n(잔액반영)'],
     branch: [
-      '이용내역',
-      '환불버튼',
+      '환불',
       '환불가능\n충전내역',
+      '환불 확인\n다이얼로그',
       '환불완료',
     ],
   },
@@ -227,7 +227,7 @@ function FlowRow({ flow, visible, delay }) {
           <div
             style={{
               display: 'flex',
-              alignItems: 'flex-start',
+              alignItems: 'center',
               overflowX: 'auto',
               paddingBottom: 4,
             }}
@@ -288,7 +288,7 @@ export default function UserFlow() {
             lineHeight: t.lead.lh, color: color.inkMuted,
             margin: 0,
           }}>
-            온보딩, QR결제, 충전 · 잔액확인 · 환불. 사용자가 실제로 거치는 경로를 재설계했습니다.
+            온보딩, QR결제, 충전, 잔액확인, 환불. 사용자가 실제로 거치는 경로를 재설계했습니다.
           </p>
         </div>
 

@@ -21,7 +21,6 @@ import DesignSystem from './sections/DesignSystem.jsx';
 import UserFlow from './sections/UserFlow.jsx';
 import InformationArchitecture from './sections/InformationArchitecture.jsx';
 import TheBuild from './sections/TheBuild.jsx';
-import DualDesignSystem from './sections/DualDesignSystem.jsx';
 import AiHarness from './sections/AiHarness.jsx';
 import Process from './sections/Process.jsx';
 import UserTest from './sections/UserTest.jsx';
@@ -34,6 +33,7 @@ export default function App() {
       style={{
         background: color.bg,
         fontFamily: font.family,
+        fontWeight: 500,
         minHeight: '100vh',
         WebkitFontSmoothing: 'antialiased',
         MozOsxFontSmoothing: 'grayscale',
@@ -49,8 +49,8 @@ export default function App() {
         <DoubleDiamondSection />
         <TheTwist />
         <DeskResearch />
-        <UserResearch />
         <InDepthInterview />
+        <UserResearch />
         <AffinityDiagram />
         <KeyInsights />
         <AsIsAudit />
@@ -64,7 +64,6 @@ export default function App() {
         <UserFlow />
         <InformationArchitecture />
         <TheBuild />
-        <DualDesignSystem />
         <AiHarness />
         <Process />
         <UserTest />

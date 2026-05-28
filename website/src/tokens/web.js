@@ -25,12 +25,12 @@ export const font = {
 export const type = {
   display: { size: 'clamp(32px,3.75vw,54px)', lh: 1.12, weight: 800, ls: '-0.03em' },
   h1:      { size: 'clamp(28px,3vw,44px)',    lh: 1.15, weight: 800, ls: '-0.02em' },
-  h2:      { size: 'clamp(24px,2.6vw,38px)',  lh: 1.2,  weight: 800, ls: '-0.02em' },
+  h2:      { size: 'clamp(24px,2.5vw,38px)',  lh: 1.22, weight: 800, ls: '-0.02em' },
   h3:      { size: 'clamp(16px,1.5vw,22px)',  lh: 1.3,  weight: 700, ls: '-0.01em' },
-  lead:    { size: 'clamp(14px,1.2vw,20px)',  lh: 1.55, weight: 700 },
-  body:    { size: 'clamp(16px,1.1vw,19px)',  lh: 1.65, weight: 600 },
-  caption: { size: 'clamp(14px,1vw,16px)',    lh: 1.5,  weight: 600 },
-  eyebrow: { size: 'clamp(16px,1.3vw,20px)',  weight: 800, ls: '0.04em', transform: 'uppercase', lh: 1.4 },
+  lead:    { size: 'clamp(14px,1.2vw,20px)',  lh: 1.55, weight: 600 },
+  body:    { size: 'clamp(16px,1.1vw,19px)',  lh: 1.65, weight: 500 },
+  caption: { size: 'clamp(14px,1vw,16px)',    lh: 1.5,  weight: 500 },
+  eyebrow: { size: '14px',                    weight: 800, ls: '0.04em', transform: 'uppercase', lh: 1.4 },
 };
 
 export const layout = {
