@@ -7,6 +7,7 @@ import DoubleDiamondSection from './sections/DoubleDiamondSection.jsx';
 import TheTwist from './sections/TheTwist.jsx';
 import DeskResearch from './sections/DeskResearch.jsx';
 import UserResearch from './sections/UserResearch.jsx';
+import InDepthInterview from './sections/InDepthInterview.jsx';
 import AffinityDiagram from './sections/AffinityDiagram.jsx';
 import KeyInsights from './sections/KeyInsights.jsx';
 import AsIsAudit from './sections/AsIsAudit.jsx';
@@ -49,6 +50,7 @@ export default function App() {
         <TheTwist />
         <DeskResearch />
         <UserResearch />
+        <InDepthInterview />
         <AffinityDiagram />
         <KeyInsights />
         <AsIsAudit />

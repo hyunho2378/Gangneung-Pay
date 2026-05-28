@@ -2,7 +2,7 @@ import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 
 const IOS_COLOR = color.brand;
-const AND_COLOR = color.ok;
+const AND_COLOR = color.brand;
 
 const ROWS = [
   {
@@ -89,11 +89,12 @@ export default function DualDesignSystem() {
             fontSize: t.h1.size, fontWeight: t.h1.weight,
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
             color: color.ink, margin: '0 0 16px', fontFamily: font.family,
+            wordBreak: 'keep-all',
           }}>
             iOS HIG × Android MD3
           </h2>
           <p style={{
-            fontSize: t.lead.size, fontWeight: 400,
+            fontSize: t.lead.size, fontWeight: 500,
             lineHeight: t.lead.lh, color: color.inkMuted,
             margin: 0, fontFamily: font.family,
           }}>
@@ -162,7 +163,7 @@ export default function DualDesignSystem() {
                 padding: 'clamp(14px,1.8vw,20px) 0',
                 fontSize: 12, fontWeight: 700,
                 letterSpacing: '0.04em', textTransform: 'uppercase',
-                color: color.inkFaint, fontFamily: font.family,
+                color: color.inkMuted, fontFamily: font.family,
                 display: 'flex', alignItems: 'center',
               }}>
                 {feature}
@@ -201,7 +202,7 @@ export default function DualDesignSystem() {
           <p style={{
             fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
             letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-            color: color.inkFaint, margin: '0 0 12px', fontFamily: font.family,
+            color: color.inkMuted, margin: '0 0 12px', fontFamily: font.family,
           }}>
             PLATFORM DETECTION
           </p>
@@ -224,8 +225,10 @@ export default function DualDesignSystem() {
           </div>
           <p style={{
             margin: '12px 0 0',
-            fontSize: t.caption.size, lineHeight: t.caption.lh,
-            color: color.inkFaint, fontFamily: font.family,
+            fontSize: t.lead.size, lineHeight: t.lead.lh,
+            fontWeight: 700,
+            color: color.brand, fontFamily: font.family,
+            wordBreak: 'keep-all',
           }}>
             지역화폐 앱은 SI 외주라 디자인시스템이 없었습니다. iOS HIG + Android MD3 양 플랫폼 네이티브를 동시 구현했습니다.
           </p>

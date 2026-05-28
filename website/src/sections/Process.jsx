@@ -130,7 +130,7 @@ export default function Process() {
             리서치 → 설계 → 구현
           </h2>
           <p style={{
-            fontSize: t.lead.size, fontWeight: 400,
+            fontSize: t.lead.size, fontWeight: 500,
             lineHeight: t.lead.lh, color: color.inkMuted,
             margin: 0, fontFamily: font.family,
           }}>
@@ -219,7 +219,7 @@ export default function Process() {
                   </h3>
                   <p style={{
                     fontSize: t.caption.size, lineHeight: t.caption.lh,
-                    color: color.inkFaint, fontFamily: font.family,
+                    color: color.inkMuted, fontFamily: font.family,
                     margin: '0 0 16px',
                   }}>
                     {phase.period}
@@ -240,7 +240,7 @@ export default function Process() {
                         <span style={{
                           fontSize: t.caption.size, lineHeight: 1.6,
                           color: phase.highlight === item ? color.warn : color.ink,
-                          fontWeight: phase.highlight === item ? 700 : 400,
+                          fontWeight: phase.highlight === item ? 700 : 500,
                           fontFamily: font.family,
                         }}>
                           {item}
@@ -266,7 +266,7 @@ export default function Process() {
           <p style={{
             fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
             letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-            color: color.inkFaint, margin: '0 0 20px', fontFamily: font.family,
+            color: color.inkMuted, margin: '0 0 20px', fontFamily: font.family,
           }}>
             HEURISTIC VIOLATIONS · BEFORE / AFTER
           </p>
@@ -274,7 +274,7 @@ export default function Process() {
           {/* Table header */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: '72px 96px 1fr 1fr 72px',
+            gridTemplateColumns: '80px 96px 1fr 1fr 88px',
             gap: 0,
             borderBottom: `2px solid ${color.line}`,
             paddingBottom: 10,
@@ -286,7 +286,7 @@ export default function Process() {
                 padding: '0 12px',
                 fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
                 letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-                color: color.inkFaint, fontFamily: font.family,
+                color: color.inkMuted, fontFamily: font.family,
               }}>
                 {h}
               </div>
@@ -299,7 +299,7 @@ export default function Process() {
                 key={code}
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: '72px 96px 1fr 1fr 72px',
+                  gridTemplateColumns: '80px 96px 1fr 1fr 88px',
                   gap: 0,
                   background: i % 2 === 0 ? color.white : 'transparent',
                   borderBottom: `1px solid ${color.line}`,
@@ -315,6 +315,7 @@ export default function Process() {
                   letterSpacing: '0.06em',
                   color: color.warn, fontFamily: font.family,
                   display: 'flex', alignItems: 'center',
+                  whiteSpace: 'nowrap',
                 }}>
                   {code}
                 </div>
@@ -347,6 +348,7 @@ export default function Process() {
                   color: color.brand, fontFamily: font.family,
                   display: 'flex', alignItems: 'center',
                   letterSpacing: '0.04em',
+                  whiteSpace: 'nowrap',
                 }}>
                   {ur}
                 </div>

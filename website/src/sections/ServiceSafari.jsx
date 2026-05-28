@@ -135,9 +135,9 @@ export default function ServiceSafari() {
                 <p
                   style={{
                     fontSize: 13,
-                    fontWeight: 400,
+                    fontWeight: 500,
                     lineHeight: 1.6,
-                    color: color.inkFaint,
+                    color: color.inkMuted,
                     fontStyle: 'italic',
                     margin: 0,
                     fontFamily: font.family,

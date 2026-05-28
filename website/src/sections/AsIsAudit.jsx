@@ -91,11 +91,11 @@ export default function AsIsAudit() {
         >
           {/* Screenshot */}
           <div style={{ flex: '0 0 clamp(160px,26%,320px)' }}>
-            <div style={{ aspectRatio: '9/16', overflow: 'hidden', borderRadius: layout.rMd }}>
+            <div style={{ aspectRatio: '9/16', borderRadius: layout.rMd, overflow: 'hidden', background: color.white }}>
               <img
                 src={beforeImg}
                 alt="강릉페이 AS-IS 화면"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
               />
             </div>
           </div>
@@ -132,7 +132,7 @@ export default function AsIsAudit() {
                 <p style={{
                   fontSize: t.body.size, lineHeight: t.body.lh,
                   color: color.inkMuted, margin: '0 0 12px',
-                  maxWidth: '52ch', fontFamily: font.family,
+                  fontFamily: font.family,
                 }}>
                   {body}
                 </p>

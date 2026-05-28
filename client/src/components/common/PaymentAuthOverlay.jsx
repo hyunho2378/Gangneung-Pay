@@ -40,6 +40,7 @@ export default function PaymentAuthOverlay({ open, onComplete, onCancel }) {
   const startTimeRef = useRef(null)
   const fallbackTimerRef = useRef(null)
   const cleanupListenersRef = useRef(null)
+  const setupDoneRef = useRef(false)
 
   const platform = usePlatform()
   const isAndroid = platform === 'android'
@@ -52,7 +53,6 @@ export default function PaymentAuthOverlay({ open, onComplete, onCancel }) {
     if (!open) {
       setShowFaceId(false)
       setFadingOut(false)
-      completedRef.current = false
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
       if (fallbackTimerRef.current) clearTimeout(fallbackTimerRef.current)
       if (cleanupListenersRef.current) cleanupListenersRef.current()
@@ -77,7 +77,24 @@ export default function PaymentAuthOverlay({ open, onComplete, onCancel }) {
 
   // CardBackModal 방식 — instance를 클로저로 캡처
   const handleLottieRef = (instance) => {
-    if (!instance) return
+    if (instance == null) {
+      if (fallbackTimerRef.current) {
+        clearTimeout(fallbackTimerRef.current)
+        fallbackTimerRef.current = null
+      }
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current)
+        rafRef.current = null
+      }
+      if (cleanupListenersRef.current) {
+        cleanupListenersRef.current()
+        cleanupListenersRef.current = null
+      }
+      setupDoneRef.current = false
+      return
+    }
+    if (setupDoneRef.current) return
+    setupDoneRef.current = true
 
     fallbackTimerRef.current = setTimeout(() => {
       if (completedRef.current) return

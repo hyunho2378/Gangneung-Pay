@@ -42,7 +42,7 @@ export default function InformationArchitecture() {
           정보를 다시 배열했습니다.
         </h2>
         <p style={{
-          fontSize: t.lead.size, fontWeight: 400,
+          fontSize: t.lead.size, fontWeight: 500,
           lineHeight: t.lead.lh, color: color.brand,
           margin: 0,
         }}>
@@ -65,7 +65,7 @@ export default function InformationArchitecture() {
         <img
           src={iaSvg}
           alt="강릉페이 정보 구조도"
-          style={{ width: 1100, height: 351, display: 'block', margin: '0 auto' }}
+          style={{ width: '100%', maxWidth: 1100, height: 'auto', display: 'block', margin: '0 auto' }}
         />
       </div>
     </section>

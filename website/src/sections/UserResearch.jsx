@@ -27,7 +27,7 @@ function HBar({ items, note }) {
   return (
     <div>
       {note && (
-        <p style={{ fontSize: 11, color: color.inkFaint, margin: '0 0 8px', fontFamily: font.family }}>{note}</p>
+        <p style={{ fontSize: 11, color: color.inkMuted, margin: '0 0 8px', fontFamily: font.family }}>{note}</p>
       )}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {items.map(([k, v]) => (
@@ -61,7 +61,7 @@ export default function UserResearch() {
   const [cRef0,  c0]  = useCountUp(0,   800);
 
   const [mRef70, m70] = useCountUp(70, 1500);
-  const [mRef2a, m2a] = useCountUp(2,  1000);
+  const [mRef2a, m2a] = useCountUp(6,  1000);
   const [mRef4,  m4]  = useCountUp(4,  1000);
   const [mRef2b, m2b] = useCountUp(2,  1000);
 
@@ -89,7 +89,7 @@ export default function UserResearch() {
             <h2 style={{
               fontSize: t.h1.size, fontWeight: t.h1.weight,
               lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
-              color: color.ink, margin: '0 0 16px',
+              color: color.ink, margin: '0 0 16px', wordBreak: 'keep-all',
             }}>
               사용자의 실제 행동에서 출발했습니다.
             </h2>
@@ -101,14 +101,14 @@ export default function UserResearch() {
       </div>
 
       {/* ── 01 Background + Purposes ── */}
-      <div style={{ background: color.bg, padding: SEC_PAD }}>
+      <div style={{ background: color.white, padding: SEC_PAD }}>
         <div style={{ maxWidth: layout.container, margin: '0 auto' }}>
           <div ref={ref1} style={reveal(vis1)}>
             <p style={{ ...eyebrowStyle(color.inkMuted), margin: '0 0 20px' }}>01 RESEARCH BACKGROUND</p>
             <p style={{
               fontSize: t.lead.size, lineHeight: 1.75,
               color: color.ink, margin: '0 0 clamp(32px,4vw,56px)',
-              maxWidth: '60ch', fontFamily: font.family,
+              fontFamily: font.family,
             }}>
               {why.background}
             </p>
@@ -117,7 +117,7 @@ export default function UserResearch() {
               {why.purposes.map((p, i) => (
                 <div key={i} style={{
                   display: 'flex', gap: 16, padding: '14px 20px',
-                  background: color.white, borderRadius: layout.rMd,
+                  background: color.bg, borderRadius: layout.rMd,
                 }}>
                   <span style={{
                     fontSize: 12, fontWeight: 800, color: color.brand,
@@ -163,7 +163,7 @@ export default function UserResearch() {
       </div>
 
       {/* ── 03 Segments ── */}
-      <div style={{ background: color.bg, padding: SEC_PAD }}>
+      <div style={{ background: color.white, padding: SEC_PAD }}>
         <div style={{ maxWidth: layout.container, margin: '0 auto' }}>
           <div ref={ref3} style={reveal(vis3)}>
             <p style={{ ...eyebrowStyle(color.inkMuted), margin: '0 0 20px' }}>03 SEGMENTS</p>
@@ -193,7 +193,7 @@ export default function UserResearch() {
                   </p>
                   <p style={{ fontSize: 20, lineHeight: 1.65, color: color.ink, margin: '0 0 12px', fontFamily: font.family }}>{s.trait}</p>
                   <p style={{ fontSize: 19, color: color.inkMuted, margin: '0 0 8px', fontFamily: font.family }}>
-                    <span style={{ fontWeight: 600, color: color.inkFaint }}>사용 목적: </span>{s.goal}
+                    <span style={{ fontWeight: 600, color: color.inkMuted }}>사용 목적: </span>{s.goal}
                   </p>
                   <span style={{
                     fontSize: 11, fontWeight: 700, color: color.white,
@@ -320,7 +320,7 @@ export default function UserResearch() {
                         </div>
                         <div>
                           <p style={{
-                            fontSize: 11, fontWeight: 800, color: color.inkFaint,
+                            fontSize: 11, fontWeight: 800, color: color.inkMuted,
                             margin: '0 0 6px', letterSpacing: '0em', textTransform: 'uppercase',
                             fontFamily: font.family,
                           }}>
@@ -330,7 +330,7 @@ export default function UserResearch() {
                         </div>
                         <div>
                           <p style={{
-                            fontSize: 11, fontWeight: 800, color: color.inkFaint,
+                            fontSize: 11, fontWeight: 800, color: color.inkMuted,
                             margin: '0 0 6px', letterSpacing: '0em', textTransform: 'uppercase',
                             fontFamily: font.family,
                           }}>
@@ -530,7 +530,7 @@ export default function UserResearch() {
                   </div>
                   <div>
                     <p style={{
-                      fontSize: 11, fontWeight: 800, color: color.inkFaint,
+                      fontSize: 11, fontWeight: 800, color: color.inkMuted,
                       margin: '0 0 4px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family,
                     }}>방향</p>
                     <p style={{ margin: 0, fontSize: 13, lineHeight: 1.55, color: color.inkMuted, fontFamily: font.family }}>{n.direction}</p>

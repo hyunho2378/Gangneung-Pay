@@ -157,7 +157,7 @@ export default function UxStrategy() {
                   {/* Expand indicator */}
                   <span style={{
                     fontSize: 'clamp(18px,2vw,24px)',
-                    fontWeight: 300,
+                    fontWeight: 500,
                     lineHeight: 1,
                     color: color.brand,
                     flexShrink: 0,
@@ -205,13 +205,13 @@ export default function UxStrategy() {
                             fontSize: t.lead.size, fontWeight: 500,
                             lineHeight: 1.65, color: color.ink,
                             fontStyle: 'italic', margin: '0 0 6px',
-                            maxWidth: '42ch', fontFamily: font.family,
+                            fontFamily: font.family,
                           }}>
                             &ldquo;{s.quote}&rdquo;
                           </p>
                           <span style={{
                             fontSize: 12, fontWeight: 600,
-                            color: color.inkFaint, letterSpacing: '0.04em',
+                            color: color.inkMuted, letterSpacing: '0.04em',
                             fontFamily: font.family,
                           }}>
                             · {s.attribution}
@@ -241,7 +241,7 @@ export default function UxStrategy() {
                           {s.attribution && (
                             <span style={{
                               fontSize: 11, fontWeight: 600,
-                              color: color.inkFaint, letterSpacing: '0.04em',
+                              color: color.inkMuted, letterSpacing: '0.04em',
                               fontFamily: font.family,
                             }}>
                               · {s.attribution}
@@ -254,7 +254,7 @@ export default function UxStrategy() {
                       <p style={{
                         fontSize: t.body.size, lineHeight: t.body.lh,
                         color: color.inkMuted, margin: '0 0 16px',
-                        maxWidth: '52ch', fontFamily: font.family,
+                        fontFamily: font.family,
                       }}>
                         {s.solution}
                       </p>

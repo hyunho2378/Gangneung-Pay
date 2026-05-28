@@ -153,9 +153,11 @@ function DesktopDiagram() {
           top: `${(435 / VH) * 100}%`,
           transform: 'translate(-50%, 0%)',
           textAlign: 'center',
-          maxWidth: '14%',
+          maxWidth: '22%',
           pointerEvents: 'none',
           paddingTop: 6,
+          width: 'max-content',
+          minWidth: '22%',
         }}>
           <span style={{
             display: 'block',
@@ -177,6 +179,7 @@ function DesktopDiagram() {
             marginTop: 3,
             fontFamily: font.family,
             lineHeight: 1.2,
+            whiteSpace: 'nowrap',
           }}>
             User Requirements
           </span>
@@ -276,7 +279,7 @@ export default function DoubleDiamondSection() {
             opacity: headVisible ? 1 : 0,
             transform: headVisible ? 'none' : 'translateY(28px)',
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-            marginBottom: 'clamp(64px,7vw,96px)',
+            marginBottom: 'clamp(80px,10vw,128px)',
           }}
         >
           <p style={{
@@ -295,7 +298,7 @@ export default function DoubleDiamondSection() {
             더블 다이아몬드 프로세스
           </h2>
           <p style={{
-            fontSize: t.lead.size, fontWeight: 400,
+            fontSize: t.lead.size, fontWeight: 500,
             lineHeight: t.lead.lh, color: color.inkMuted, margin: 0,
             wordBreak: 'keep-all',
           }}>
@@ -311,6 +314,7 @@ export default function DoubleDiamondSection() {
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
             maxWidth: 580,
             margin: '0 auto',
+            paddingTop: 'clamp(24px,3vw,40px)',
           }}
         >
           {mobile ? <MobileDiagram /> : <DesktopDiagram />}

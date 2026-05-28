@@ -46,7 +46,6 @@ export default function RefundPage() {
   const fmtDate = (iso) => formatDate(iso, { withTime: true })
 
   const handleRefund = (id) => {
-    console.log('[HANDLER] called', { id, timestamp: Date.now() })
     const tx = chargeList.find((t) => t.id === id)
     refundTransaction(id)
     if (tx) showSnackbar(`${tx.totalAmount.toLocaleString('ko-KR')}원 환불이 완료됐어요`)

@@ -40,7 +40,6 @@ function userReducer(state, action) {
     }
 
     case 'CHARGE_BALANCE': {
-      console.log('[CHARGE] reducer called', { amount: action.payload.amount, timestamp: Date.now() })
       const { id, amount, date } = action.payload
       const newBalance = state.balance + amount
       const newTransaction = {
@@ -103,7 +102,6 @@ function userReducer(state, action) {
     }
 
     case 'REFUND_TRANSACTION': {
-      console.log('[REFUND] dispatched', { transactionId: action.payload.transactionId, timestamp: Date.now() })
       const { transactionId } = action.payload
       const target = state.transactions.find((t) => t.id === transactionId)
 
@@ -125,7 +123,7 @@ function userReducer(state, action) {
         linkedTransactionId: transactionId,
       }
 
-      const nextState = {
+      return {
         ...state,
         balance: newBalance,
         transactions: [
@@ -135,8 +133,6 @@ function userReducer(state, action) {
           ),
         ],
       }
-      console.log('[REFUND] new transactions count:', nextState.transactions.length)
-      return nextState
     }
 
     case 'SET_CASHBACK_MODE': {
@@ -154,7 +150,6 @@ function userReducer(state, action) {
 // ─── Provider ────────────────────────────────────────────────────────────────
 
 export function UserProvider({ children }) {
-  console.log('[PROVIDER] render')
   const { sessionId } = useApp()
   const [hasCard, setHasCard] = useState(false)
   const [cardStatus, setCardStatus] = useState('none')

@@ -138,7 +138,6 @@ export default function AffinityDiagram() {
                     lineHeight: t.caption.lh,
                     color: color.inkMuted,
                     margin: 0,
-                    maxWidth: '60ch',
                     fontFamily: font.family,
                   }}
                 >

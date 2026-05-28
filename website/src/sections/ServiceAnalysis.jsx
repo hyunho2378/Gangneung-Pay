@@ -80,7 +80,7 @@ export default function ServiceAnalysis() {
                 {label}
               </span>
               <span style={{
-                fontSize: t.lead.size, fontWeight: 400,
+                fontSize: t.lead.size, fontWeight: 500,
                 lineHeight: t.lead.lh, color: color.ink,
               }}>
                 {content}

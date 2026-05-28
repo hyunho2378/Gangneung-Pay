@@ -86,11 +86,10 @@ export default function UxConcept() {
         {/* Statement */}
         <p style={{
           fontSize: 'clamp(16px,1.6vw,22px)',
-          fontWeight: 400,
+          fontWeight: 500,
           lineHeight: 1.75,
           color: color.whiteA60,
           margin: 0,
-          maxWidth: '36ch',
           marginLeft: 'auto',
           marginRight: 'auto',
           fontFamily: font.family,

@@ -26,7 +26,7 @@ const GROUPS = [
   },
 ];
 
-function UrRow({ code, desc, priority, visible, delay }) {
+function UrRow({ index, desc, priority, visible, delay }) {
   return (
     <div
       style={{
@@ -40,9 +40,9 @@ function UrRow({ code, desc, priority, visible, delay }) {
         transition: `opacity 0.55s ease-out ${delay}s, transform 0.55s ease-out ${delay}s`,
       }}
     >
-      {/* Code badge */}
-      <span style={{ fontSize: 12, fontWeight: 800, color: color.brand, background: color.brandPale, padding: '3px 10px', borderRadius: 100, fontFamily: font.family, whiteSpace: 'nowrap', flexShrink: 0 }}>
-        {code}
+      {/* Index badge */}
+      <span style={{ fontSize: 12, fontWeight: 800, color: color.brand, background: color.brandPale, padding: '3px 10px', borderRadius: 100, fontFamily: font.family, whiteSpace: 'nowrap', flexShrink: 0, minWidth: '2ch', textAlign: 'center' }}>
+        {String(index + 1).padStart(2, '0')}
       </span>
 
       {/* Description */}
@@ -50,7 +50,7 @@ function UrRow({ code, desc, priority, visible, delay }) {
         style={{
           flex: 1,
           fontSize: 'clamp(14px,1.3vw,16px)',
-          fontWeight: 400,
+          fontWeight: 500,
           lineHeight: 1.55,
           color: color.ink,
           fontFamily: font.family,
@@ -168,7 +168,7 @@ export default function UserRequirements() {
                 {items.map((item, ri) => (
                   <UrRow
                     key={item.code}
-                    code={item.code}
+                    index={ri}
                     desc={item.desc}
                     priority={priority}
                     visible={visible}

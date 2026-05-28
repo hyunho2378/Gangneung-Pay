@@ -55,7 +55,7 @@ function AsIsToBeRow({ asIs, toBe }) {
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(24px,4vw,64px)', alignItems: 'start' }}>
       <div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-          <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', color: color.inkFaint, fontFamily: font.family }}>AS-IS</span>
+          <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', color: color.inkMuted, fontFamily: font.family }}>AS-IS</span>
           <div style={{ flex: 1, height: 1, background: color.line }} />
         </div>
         {asIs}
@@ -85,23 +85,23 @@ function ScreenBlock({ visible, bg, eyebrow, title, sub, flowProblem, flowSoluti
           <p style={{ margin: '0 0 8px', fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight, letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform, color: color.brand, fontFamily: font.family }}>
             {eyebrow}
           </p>
-          <h3 style={{ margin: '0 0 8px', fontSize: t.h2.size, fontWeight: t.h2.weight, lineHeight: t.h2.lh, letterSpacing: t.h2.ls, color: color.ink, fontFamily: font.family }}>
+          <h3 style={{ margin: '0 0 8px', fontSize: t.h2.size, fontWeight: t.h2.weight, lineHeight: t.h2.lh, letterSpacing: t.h2.ls, color: color.ink, fontFamily: font.family, wordBreak: 'keep-all' }}>
             {title}
           </h3>
-          <p style={{ margin: '0 0 8px', fontSize: t.lead.size, fontWeight: 400, lineHeight: t.lead.lh, color: color.inkMuted, fontFamily: font.family }}>
+          <p style={{ margin: '0 0 8px', fontSize: t.lead.size, fontWeight: 500, lineHeight: t.lead.lh, color: color.inkMuted, fontFamily: font.family }}>
             {sub}
           </p>
           {flowProblem && (
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap', margin: 'clamp(16px,2vw,24px) 0' }}>
               <span style={{ fontSize: 13, fontWeight: 600, color: color.warn, background: 'rgba(229,72,77,0.08)', padding: '5px 12px', borderRadius: 100, fontFamily: font.family, lineHeight: 1.5 }}>AS-IS: {flowProblem}</span>
-              <span style={{ color: color.inkFaint, fontSize: 14, marginTop: 4 }}>→</span>
+              <span style={{ color: color.inkMuted, fontSize: 14, marginTop: 4 }}>→</span>
               <span style={{ fontSize: 13, fontWeight: 600, color: color.brand, background: color.brandPale, padding: '5px 12px', borderRadius: 100, fontFamily: font.family, lineHeight: 1.5 }}>TO-BE: {flowSolution}</span>
             </div>
           )}
-          {body && <p style={{ margin: '0 0 16px', fontSize: t.body.size, lineHeight: t.body.lh, color: color.inkMuted, maxWidth: '52ch', fontFamily: font.family }}>{body}</p>}
+          {body && <p style={{ margin: '0 0 16px', fontSize: t.body.size, lineHeight: t.body.lh, color: color.inkMuted, fontFamily: font.family }}>{body}</p>}
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {implBadges && implBadges.map(label => (
-              <span key={label} style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: color.inkFaint, background: color.line, padding: '4px 10px', borderRadius: 100, fontFamily: font.family }}>{label}</span>
+              <span key={label} style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: color.inkMuted, background: color.line, padding: '4px 10px', borderRadius: 100, fontFamily: font.family }}>{label}</span>
             ))}
             {urBadge && <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: color.brand, background: color.brandPale, padding: '4px 10px', borderRadius: 100, fontFamily: font.family }}>{urBadge}</span>}
           </div>
@@ -138,7 +138,7 @@ export default function TheBuild() {
         <p style={{ fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight, letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform, color: color.brand, margin: '0 0 24px', fontFamily: font.family }}>
           KEY SCREENS
         </p>
-        <h2 style={{ fontSize: t.h1.size, fontWeight: t.h1.weight, lineHeight: t.h1.lh, letterSpacing: t.h1.ls, color: color.ink, margin: 0, fontFamily: font.family }}>
+        <h2 style={{ fontSize: t.h1.size, fontWeight: t.h1.weight, lineHeight: t.h1.lh, letterSpacing: t.h1.ls, color: color.ink, margin: 0, fontFamily: font.family, wordBreak: 'keep-all' }}>
           4개의 전략이 화면이 됩니다.
         </h2>
       </div>

@@ -20,7 +20,6 @@ export default function AppOverview() {
             opacity: visible ? 1 : 0,
             transform: visible ? 'none' : 'translateY(28px)',
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-            maxWidth: 720,
           }}
         >
           <p style={{
@@ -38,14 +37,14 @@ export default function AppOverview() {
             강력한 혜택, 그러나 정착하지 못한 앱.
           </h2>
           <p style={{
-            fontSize: t.lead.size, fontWeight: 400,
+            fontSize: t.lead.size, fontWeight: 500,
             lineHeight: t.lead.lh, color: color.inkMuted,
             margin: '0 0 20px',
           }}>
             강릉페이는 10% 캐시백이라는 강력한 혜택에도 불구하고 시민의 일상 결제 수단으로 정착하지 못하고 있었습니다.
           </p>
           <p style={{
-            fontSize: t.lead.size, fontWeight: 400,
+            fontSize: t.lead.size, fontWeight: 500,
             lineHeight: t.lead.lh, color: color.inkMuted,
             margin: 0,
           }}>

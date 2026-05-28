@@ -39,7 +39,7 @@ export default function Outro() {
           }}
         >
           <h2 style={{
-            fontSize: t.h3.size,
+            fontSize: 'clamp(40px,6vw,96px)',
             fontWeight: 800,
             lineHeight: 1.1,
             letterSpacing: '-0.04em',
@@ -50,10 +50,11 @@ export default function Outro() {
             GANGNEUNG PAY
           </h2>
           <p style={{
-            fontSize: t.h3.size, fontWeight: 400,
-            lineHeight: t.h3.lh,
+            fontSize: t.lead.size, fontWeight: 600,
+            lineHeight: t.lead.lh,
             color: 'rgba(255,255,255,0.72)',
             margin: 0, fontFamily: font.family,
+            wordBreak: 'keep-all',
           }}>
             내 돈이 내 편인 앱, 강릉페이
           </p>
@@ -80,32 +81,32 @@ export default function Outro() {
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(6, 1fr)',
-            gap: '2px',
-            marginBottom: 'clamp(16px,2vw,28px)',
-            maxWidth: 640,
+            gap: 'clamp(4px,0.5vw,10px)',
+            marginBottom: 'clamp(24px,3vw,40px)',
           }}>
             {MEMBERS.map((m, i) => (
               <div
                 key={m.name}
                 style={{
-                  padding: 'clamp(10px,1.2vw,16px)',
-                  background: 'rgba(255,255,255,0.10)',
+                  padding: 'clamp(12px,1.5vw,20px) clamp(10px,1.2vw,16px)',
+                  borderLeft: '2px solid rgba(255,255,255,0.18)',
                   opacity: creditsVisible ? 1 : 0,
                   transition: `opacity 0.5s ease-out ${i * 0.08}s`,
                 }}
               >
                 <p style={{
-                  fontSize: 'clamp(15px,1.4vw,18px)', fontWeight: 700,
-                  color: color.white, margin: '0 0 4px',
-                  fontFamily: font.family, lineHeight: 1.3,
+                  fontSize: 'clamp(14px,1.1vw,17px)', fontWeight: 700,
+                  color: color.white, margin: '0 0 5px',
+                  fontFamily: font.family, lineHeight: 1.2,
                 }}>
                   {m.name}
                 </p>
                 {m.role ? (
                   <p style={{
-                    fontSize: t.caption.size, lineHeight: t.caption.lh,
+                    fontSize: 'clamp(10px,0.75vw,12px)', lineHeight: 1.5,
                     color: 'rgba(255,255,255,0.55)',
                     margin: 0, fontFamily: font.family,
+                    wordBreak: 'keep-all',
                   }}>
                     {m.role}
                   </p>

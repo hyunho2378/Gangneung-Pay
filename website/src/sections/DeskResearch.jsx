@@ -121,7 +121,7 @@ export default function DeskResearch() {
                       background: ci === 1 ? color.brandPale : color.white,
                       color: ci === 0 ? color.inkMuted : ci === 1 ? color.brand : color.ink,
                       fontSize: ci === 0 ? 18 : 18,
-                      fontWeight: ci === 0 ? 700 : ci === 1 ? 700 : 400,
+                      fontWeight: ci === 0 ? 700 : ci === 1 ? 700 : 500,
                       letterSpacing: ci === 0 ? '0em' : '-0.01em',
                       textTransform: ci === 0 ? 'uppercase' : 'none',
                       borderRight: ci < row.length - 1 ? `1px solid ${color.line}` : 'none',

@@ -105,7 +105,7 @@ export default function AiHarness() {
             color: color.ink, margin: '0 0 16px', fontFamily: font.family,
             wordBreak: 'keep-all',
           }}>
-            AI는 How를 잘한다. 사람은 Why를 결정합니다.
+            How를 잘하는 AI, Why를 잘하는 사람.
           </h2>
         </div>
 
@@ -174,7 +174,7 @@ export default function AiHarness() {
                         </span>
                       </span>
                       <span style={{
-                        fontSize: 16, fontWeight: 300, color: color.brand, flexShrink: 0,
+                        fontSize: 16, fontWeight: 500, color: color.brand, flexShrink: 0,
                         transition: 'transform 0.25s ease-out',
                         transform: isOpen ? 'rotate(45deg)' : 'none',
                         display: 'inline-block',
@@ -263,7 +263,7 @@ export default function AiHarness() {
               {/* Arrow */}
               <div style={{
                 textAlign: 'center',
-                fontSize: 18, color: color.inkFaint,
+                fontSize: 18, color: color.inkMuted,
               }}>
                 ↓
               </div>

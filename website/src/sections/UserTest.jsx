@@ -37,7 +37,7 @@ export default function UserTest() {
             사용성 평가를 진행할 예정입니다.
           </h2>
           <p style={{
-            fontSize: t.lead.size, fontWeight: 400,
+            fontSize: t.lead.size, fontWeight: 500,
             lineHeight: t.lead.lh, color: color.inkMuted,
             margin: '0 0 clamp(48px,6vw,80px)', fontFamily: font.family,
           }}>
@@ -66,7 +66,7 @@ export default function UserTest() {
             <p style={{
               fontSize: t.body.size, lineHeight: t.body.lh,
               color: color.inkFaint, margin: 0, fontFamily: font.family,
-              textAlign: 'center', maxWidth: '40ch',
+              textAlign: 'center',
             }}>
               사용성 테스트 결과 · 과업 성공률 · 오류 빈도 · SUS 점수. 평가 완료 후 채움.
             </p>

@@ -58,7 +58,7 @@ export default function Prototype() {
             직접 사용해보세요.
           </h2>
           <p style={{
-            fontSize: t.lead.size, fontWeight: 400,
+            fontSize: t.lead.size, fontWeight: 500,
             lineHeight: t.lead.lh, color: color.inkMuted,
             margin: 0, fontFamily: font.family,
           }}>

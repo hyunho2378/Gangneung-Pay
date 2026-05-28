@@ -42,14 +42,6 @@ function AsIsPlaceholder({ scale = 0.62, screenHeight = 600 }) {
           gap: 8,
         }}>
           <span style={{
-            fontSize: 10, fontWeight: 800,
-            letterSpacing: '0em', textTransform: 'uppercase',
-            color: 'rgba(0,0,0,0.3)', fontFamily: font.family,
-            textAlign: 'center',
-          }}>
-            AS-IS
-          </span>
-          <span style={{
             fontSize: 10, color: 'rgba(0,0,0,0.25)',
             fontFamily: font.family, textAlign: 'center',
             padding: '0 16px',
@@ -74,22 +66,16 @@ function ScreenPair({ screen, visible, delay }) {
         opacity: visible ? 1 : 0,
         transform: visible ? 'none' : 'translateY(32px)',
         transition: `opacity 0.65s ease-out ${delay}s, transform 0.65s ease-out ${delay}s`,
-        marginBottom: 'clamp(72px,9vw,120px)',
+        marginBottom: 'clamp(48px,6vw,80px)',
       }}
     >
       {/* Section label */}
       <div style={{ marginBottom: 'clamp(24px,3vw,40px)' }}>
-        <span style={{
-          fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
-          letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-          color: color.brand, fontFamily: font.family,
-        }}>
-          {screen.strategy}
-        </span>
         <h3 style={{
           fontSize: t.h2.size, fontWeight: t.h2.weight,
           lineHeight: t.h2.lh, letterSpacing: t.h2.ls,
-          color: color.ink, margin: '10px 0 0', fontFamily: font.family,
+          color: color.ink, margin: 0, fontFamily: font.family,
+          wordBreak: 'keep-all',
         }}>
           {screen.title}
         </h3>
@@ -105,19 +91,6 @@ function ScreenPair({ screen, visible, delay }) {
 
         {/* AS-IS */}
         <div>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-            marginBottom: 16,
-          }}>
-            <span style={{
-              fontSize: 11, fontWeight: 800,
-              letterSpacing: '0em', textTransform: 'uppercase',
-              color: color.inkFaint, fontFamily: font.family,
-            }}>AS-IS</span>
-            <div style={{ flex: 1, height: 1, background: color.line }} />
-          </div>
           <div style={{ filter: 'grayscale(1)', opacity: 0.7, transform: 'scale(0.9)', transformOrigin: 'top center' }}>
             <AsIsPlaceholder scale={0.62} screenHeight={640} />
           </div>
@@ -125,7 +98,7 @@ function ScreenPair({ screen, visible, delay }) {
             fontSize: t.caption.size, fontWeight: t.caption.weight,
             lineHeight: t.caption.lh, color: color.inkMuted,
             margin: '12px auto 0', textAlign: 'center',
-            maxWidth: '28ch', fontFamily: font.family,
+            fontFamily: font.family,
           }}>
             {screen.problem}
           </p>
@@ -151,7 +124,7 @@ function ScreenPair({ screen, visible, delay }) {
             fontSize: t.caption.size, fontWeight: t.caption.weight,
             lineHeight: t.caption.lh, color: color.inkMuted,
             margin: '12px auto 0', textAlign: 'center',
-            maxWidth: '28ch', fontFamily: font.family,
+            fontFamily: font.family,
           }}>
             {screen.solution}
           </p>
@@ -196,10 +169,10 @@ export default function KeyScreens() {
           <h2 style={{
             fontSize: t.h1.size, fontWeight: t.h1.weight,
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
-            color: color.ink, margin: 0, maxWidth: '22ch',
+            color: color.ink, margin: 0,
             wordBreak: 'keep-all',
           }}>
-            전략이 화면이 되는 순간.
+            4개의 전략이 화면이 됩니다.
           </h2>
         </div>
 

@@ -17,24 +17,20 @@ const FLOWS = [
   },
   {
     num: '②',
-    label: '결제',
+    label: 'QR결제',
     nodes: ['홈', 'QR결제', '카메라 스캔', '결제완료'],
     tag: { index: 3, text: '캐시백 자동적립' },
   },
   {
     num: '③',
-    label: '충전 · 잔액확인',
+    label: '충전 · 잔액확인 · 환불',
     nodes: ['홈\n(잔액카드)', '충전', '금액선택', '충전완료\n(잔액반영)'],
     branch: [
-      '카드 SVG 클릭',
-      'Face ID (HIG)\n지문 (Google Material 3)',
-      '카드뒷면\n(CVC)',
+      '이용내역',
+      '환불버튼',
+      '환불가능\n충전내역',
+      '환불완료',
     ],
-  },
-  {
-    num: '④',
-    label: '환불',
-    nodes: ['이용내역', '거래기록', '환불버튼', '환불가능\n충전내역', '환불완료'],
   },
 ];
 
@@ -285,14 +281,14 @@ export default function UserFlow() {
             lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
             color: color.ink, margin: '0 0 16px', wordBreak: 'keep-all',
           }}>
-            네 갈래의 핵심 흐름을 다시 그렸습니다.
+            세 갈래의 핵심 흐름을 다시 그렸습니다.
           </h2>
           <p style={{
-            fontSize: t.lead.size, fontWeight: 400,
+            fontSize: t.lead.size, fontWeight: 500,
             lineHeight: t.lead.lh, color: color.inkMuted,
             margin: 0,
           }}>
-            온보딩, 결제, 충전, 환불. 사용자가 실제로 거치는 경로를 재설계했습니다.
+            온보딩, QR결제, 충전 · 잔액확인 · 환불. 사용자가 실제로 거치는 경로를 재설계했습니다.
           </p>
         </div>
 

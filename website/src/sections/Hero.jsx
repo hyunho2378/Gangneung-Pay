@@ -70,7 +70,7 @@ export default function Hero() {
               lineHeight: t.display.lh,
               letterSpacing: t.display.ls,
               color: color.ink,
-              margin: '0 0 28px',
+              margin: '0 0 20px',
               wordBreak: 'keep-all',
             }}
           >
@@ -83,7 +83,7 @@ export default function Hero() {
               fontWeight: t.lead.weight,
               lineHeight: t.lead.lh,
               color: color.inkMuted,
-              margin: '0 0 40px',
+              margin: '0 0 28px',
               wordBreak: 'keep-all',
             }}
           >
@@ -142,10 +142,11 @@ export default function Hero() {
         >
           <div
             style={{
-              display: 'flex',
-              gap: 'clamp(24px,4vw,64px)',
-              flexWrap: 'wrap',
-              alignItems: 'flex-start',
+              display: 'grid',
+              gridTemplateColumns: 'auto repeat(4, 1fr)',
+              gap: 'clamp(16px,2.5vw,40px)',
+              alignItems: 'center',
+              width: '100%',
             }}
           >
             <p
@@ -156,31 +157,33 @@ export default function Hero() {
                 textTransform: t.eyebrow.transform,
                 color: color.whiteA60,
                 margin: 0,
-                flexShrink: 0,
-                alignSelf: 'center',
+                whiteSpace: 'nowrap',
               }}
             >
               Project Detail
             </p>
             {META.map(({ label, value }) => (
-              <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
                 <span
                   style={{
-                    fontSize: 10,
-                    fontWeight: 700,
-                    letterSpacing: '0em',
+                    fontSize: 14,
+                    fontWeight: 800,
+                    letterSpacing: '0.07em',
                     textTransform: 'uppercase',
-                    color: color.whiteA50,
+                    color: color.white,
+                    opacity: 0.7,
                   }}
                 >
                   {label}
                 </span>
                 <span
                   style={{
-                    fontSize: 13,
-                    fontWeight: 600,
+                    fontSize: 18,
+                    fontWeight: 700,
                     color: color.white,
                     letterSpacing: '-0.01em',
+                    wordBreak: 'keep-all',
+                    lineHeight: 1.3,
                   }}
                 >
                   {value}

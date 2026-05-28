@@ -195,17 +195,17 @@ const PLATFORM_SECTIONS = [
     group: 'Snackbar',
     rows: [
       { prop: '표시 여부',       ios: '없음',               and: '있음' },
-      { prop: '지속시간',        ios: '—',                  and: '2800ms' },
+      { prop: '지속시간',        ios: '없음',               and: '2800ms' },
     ],
   },
 ];
 
 const CONTRAST_PAIRS = [
-  { name: '주요 본문',   fg: '#111827', bg: '#FFFFFF', ratio: '—',      pass: true  },
-  { name: '보조 텍스트', fg: '#6B7280', bg: '#FFFFFF', ratio: '—',      pass: false },
+  { name: '주요 본문',   fg: '#111827', bg: '#FFFFFF', ratio: '미측정',  pass: true  },
+  { name: '보조 텍스트', fg: '#6B7280', bg: '#FFFFFF', ratio: '미측정',  pass: false },
   { name: 'CTA 버튼',   fg: '#FFFFFF', bg: '#1D4ED8', ratio: '8.59:1', pass: true  },
-  { name: '비활성',      fg: '#9CA3AF', bg: '#FFFFFF', ratio: '—',      pass: false },
-  { name: '다크카드',    fg: '#FFFFFF', bg: '#1B4FD8', ratio: '—',      pass: true  },
+  { name: '비활성',      fg: '#9CA3AF', bg: '#FFFFFF', ratio: '미측정',  pass: false },
+  { name: '다크카드',    fg: '#FFFFFF', bg: '#1B4FD8', ratio: '미측정',  pass: true  },
 ];
 
 const LARGE_TEXT = [
@@ -238,7 +238,7 @@ const h3Style = {
   lineHeight: t.h3.lh, letterSpacing: t.h3.ls,
   color: color.ink, margin: '0 0 clamp(32px,4vw,56px)',
 };
-const sectionGap = { marginBottom: 'clamp(80px,10vw,140px)' };
+const sectionGap = { marginBottom: 'clamp(48px,6vw,80px)' };
 const panelCard = {
   background: color.white, borderRadius: layout.rMd, padding: '20px',
   boxShadow: cardShadow,
@@ -393,31 +393,35 @@ export default function DesignSystem() {
               </div>
             </div>
 
-            {/* Right: SPACING + BORDER RADIUS */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(24px,3vw,40px)' }}>
-              {/* SPACING */}
+            {/* Right: SPACING (left) + BORDER RADIUS (right) — 가로 2-col */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(16px,2vw,32px)', alignItems: 'start' }}>
+              {/* Left of right-column: SPACING */}
               <div>
                 <p style={{ fontSize: 11, fontWeight: 700, color: color.inkMuted, margin: '0 0 12px', letterSpacing: '0em', textTransform: 'uppercase' }}>SPACING</p>
                 <div>
                   {SPACING.map(val => (
-                    <div key={val} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 0' }}>
-                      <span style={{ fontSize: t.caption.size, fontWeight: 600, color: color.inkMuted, minWidth: 80 }}>spacing[{val}]</span>
+                    <div key={val} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '7px 0' }}>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: color.inkMuted, minWidth: 72, flexShrink: 0 }}>spacing[{val}]</span>
                       <div style={{ height: 8, width: val, background: color.brand, borderRadius: 4, flexShrink: 0 }} />
-                      <span style={{ fontSize: t.caption.size, color: color.inkFaint }}>{val}px</span>
+                      <span style={{ fontSize: 11, color: color.inkFaint }}>{val}px</span>
                     </div>
                   ))}
                 </div>
               </div>
-              {/* BORDER RADIUS */}
+              {/* Right of right-column: BORDER RADIUS */}
               <div>
                 <p style={{ fontSize: 11, fontWeight: 700, color: color.inkMuted, margin: '0 0 12px', letterSpacing: '0em', textTransform: 'uppercase' }}>BORDER RADIUS</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(6px,0.8vw,10px)' }}>
                   {RADII.map(item => (
-                    <div key={item.name} style={{ background: color.white, borderRadius: layout.rMd, padding: '12px 16px', boxShadow: cardShadow, display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <div style={{ width: 40, height: 28, background: color.brandPale, borderRadius: item.value, flexShrink: 0 }} />
-                      <div style={{ flex: 1 }}>
-                        <p style={{ margin: 0, fontSize: t.caption.size, fontWeight: 600, color: color.ink }}>{item.name}</p>
-                        <p style={{ margin: 0, fontSize: 11, color: color.inkFaint, fontFamily: 'monospace' }}>{item.value}</p>
+                    <div key={item.name} style={{
+                      background: color.white, borderRadius: layout.rMd,
+                      padding: '10px 12px', boxShadow: cardShadow,
+                      display: 'flex', alignItems: 'center', gap: 10,
+                    }}>
+                      <div style={{ width: 32, height: 22, background: color.brandPale, borderRadius: item.value, flexShrink: 0 }} />
+                      <div style={{ minWidth: 0 }}>
+                        <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: color.ink, whiteSpace: 'nowrap' }}>{item.name}</p>
+                        <p style={{ margin: 0, fontSize: 10, color: color.inkFaint, fontFamily: 'monospace' }}>{item.value}</p>
                       </div>
                     </div>
                   ))}
@@ -476,7 +480,6 @@ export default function DesignSystem() {
           </div>
 
           {/* STATUS BAR - [1] SVG heights increased, [7] android card bg, [9] labels */}
-          {console.log('[DesignSystem] iosStatusBar:', iosStatusBar, '| androidStatusBar:', androidStatusBar)}
           <p style={{ fontSize: 11, fontWeight: 700, color: color.inkMuted, margin: '0 0 12px', letterSpacing: '0em', textTransform: 'uppercase' }}>STATUS BAR</p>
           <div style={{ ...panelGrid, marginBottom: 'clamp(32px,4vw,48px)' }}>
             <div style={panelCard}>
@@ -677,7 +680,7 @@ export default function DesignSystem() {
                 <p style={{ margin: '0 0 16px', fontSize: t.caption.size, lineHeight: 1.6, color: color.inkMuted, fontWeight: 700 }}>{p.sub}</p>
                 <ol style={{ margin: 0, paddingLeft: 18 }}>
                   {p.steps.map((step, si) => (
-                    <li key={si} style={{ fontSize: t.caption.size, lineHeight: 1.7, color: color.inkMuted, marginBottom: 4, fontWeight: 400 }}>{step}</li>
+                    <li key={si} style={{ fontSize: t.caption.size, lineHeight: 1.7, color: color.inkMuted, marginBottom: 4, fontWeight: 500 }}>{step}</li>
                   ))}
                 </ol>
               </div>

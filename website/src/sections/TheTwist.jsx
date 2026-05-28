@@ -63,7 +63,6 @@ export default function TheTwist() {
               lineHeight: t.lead.lh,
               color: color.inkMuted,
               margin: 0,
-              maxWidth: '52ch',
               wordBreak: 'keep-all',
             }}
           >
@@ -80,10 +79,11 @@ export default function TheTwist() {
             transition: 'opacity 0.7s ease-out 0.15s, transform 0.7s ease-out 0.15s',
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'center',
             gap: 'clamp(16px,3vw,40px)',
           }}
         >
-          <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ flex: '0 0 clamp(160px,26%,320px)' }}>
             <p style={{
               fontSize: 11, fontWeight: 700, color: color.inkMuted,
               textTransform: 'uppercase', letterSpacing: '0.04em',
@@ -91,11 +91,11 @@ export default function TheTwist() {
             }}>
               프로젝트 시작 화면
             </p>
-            <div style={{ aspectRatio: '9/16', overflow: 'hidden', borderRadius: layout.rMd }}>
+            <div style={{ aspectRatio: '9/16', borderRadius: layout.rMd, overflow: 'hidden', background: color.line }}>
               <img
                 src={bbeforeImg}
                 alt="프로젝트 시작 시점 강릉페이 화면"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
               />
             </div>
           </div>
@@ -107,7 +107,7 @@ export default function TheTwist() {
             </svg>
           </div>
 
-          <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ flex: '0 0 clamp(160px,26%,320px)' }}>
             <p style={{
               fontSize: 11, fontWeight: 700, color: color.brand,
               textTransform: 'uppercase', letterSpacing: '0.04em',
@@ -115,11 +115,11 @@ export default function TheTwist() {
             }}>
               리뉴얼 후 화면
             </p>
-            <div style={{ aspectRatio: '9/16', overflow: 'hidden', borderRadius: layout.rMd }}>
+            <div style={{ aspectRatio: '9/16', borderRadius: layout.rMd, overflow: 'hidden', background: color.line }}>
               <img
                 src={beforeImg}
                 alt="중간 리뉴얼 시점 강릉페이 화면"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
               />
             </div>
           </div>
