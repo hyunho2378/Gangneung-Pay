@@ -4,8 +4,8 @@ import { useReveal } from '../lib/useReveal.js';
 const CLUSTERS = [
   {
     letter: 'A',
-    name: '잔액 불안과 계산대 수치심',
-    desc: '계산대 앞 잔액 확인 실패 → 결제 포기, 민망 심리. 발화 집중도 최고.',
+    name: '잔액 불안과 결제 직전 불안',
+    desc: '계산대 앞 잔액 확인 실패 → 결제 포기, 결제 불안 심리. 발화 집중도 최고.',
     accent: true,
   },
   {

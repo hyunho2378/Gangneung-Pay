@@ -283,6 +283,9 @@ export default function DesignSystem() {
   const { isMobile } = useBreakpoint();
   const panelGridResp = { ...panelGrid, gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' };
   const [openCompMore, setOpenCompMore] = useState(false);
+  const [openPatterns, setOpenPatterns] = useState(false);
+  const [openPlatform, setOpenPlatform] = useState(false);
+  const [openA11y, setOpenA11y] = useState(false);
   const [iosNavActive, setIosNavActive] = useState(0);
   const [andNavActive, setAndNavActive] = useState(0);
   const [iosChipActive, setIosChipActive] = useState(0);
@@ -485,16 +488,16 @@ export default function DesignSystem() {
             </div>
           </div>
 
-          {/* STATUS BAR - [1] SVG heights increased, [7] android card bg, [9] labels */}
-          <p style={{ fontSize: 11, fontWeight: 700, color: color.inkMuted, margin: '0 0 12px', letterSpacing: '0em', textTransform: 'uppercase' }}>STATUS BAR</p>
+          {/* BOTTOM NAVIGATION */}
+          <p style={{ fontSize: 11, fontWeight: 700, color: color.inkMuted, margin: '0 0 12px', letterSpacing: '0em', textTransform: 'uppercase' }}>BOTTOM NAVIGATION</p>
           <div style={{ ...panelGridResp, marginBottom: 'clamp(32px,4vw,48px)' }}>
             <div style={panelCard}>
-              <p style={panelLabel}>HIG: 41px</p>
-              <img src={iosStatusBar} alt="" style={{ width: '100%', height: 'auto' }} />
+              <p style={panelLabel}>HIG</p>
+              <IOSBottomNav activeIndex={iosNavActive} onSelect={setIosNavActive} />
             </div>
             <div style={panelCard}>
-              <p style={panelLabel}>Google Material 3: 42px</p>
-              <img src={androidStatusBar} alt="" style={{ width: '100%', height: 'auto' }} />
+              <p style={panelLabel}>Google Material 3</p>
+              <AndroidBottomNav activeIndex={andNavActive} onSelect={setAndNavActive} />
             </div>
           </div>
 
@@ -506,6 +509,19 @@ export default function DesignSystem() {
             <ChevronDown size={16} color={color.brand} style={{ marginLeft: 'auto', transform: openCompMore ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s' }} />
           </button>
           {openCompMore && <>
+
+          {/* STATUS BAR */}
+          <p style={{ fontSize: 11, fontWeight: 700, color: color.inkMuted, margin: '0 0 12px', letterSpacing: '0em', textTransform: 'uppercase' }}>STATUS BAR</p>
+          <div style={{ ...panelGridResp, marginBottom: 'clamp(32px,4vw,48px)' }}>
+            <div style={panelCard}>
+              <p style={panelLabel}>HIG: 41px</p>
+              <img src={iosStatusBar} alt="" style={{ width: '100%', height: 'auto' }} />
+            </div>
+            <div style={panelCard}>
+              <p style={panelLabel}>Google Material 3: 42px</p>
+              <img src={androidStatusBar} alt="" style={{ width: '100%', height: 'auto' }} />
+            </div>
+          </div>
 
           {/* TOP APP BAR - [7] android card + inner bg, [9] labels, [10] visibility fix */}
           <p style={{ fontSize: 11, fontWeight: 700, color: color.inkMuted, margin: '0 0 12px', letterSpacing: '0em', textTransform: 'uppercase' }}>TOP APP BAR</p>
@@ -524,19 +540,6 @@ export default function DesignSystem() {
                 <span style={{ width: 44, fontSize: 17, color: color.brand }}>←</span>
                 <span style={{ flex: 1, textAlign: 'left', fontWeight: 700, fontSize: 17, fontFamily: "'Noto Sans KR', sans-serif" }}>강릉페이</span>
               </div>
-            </div>
-          </div>
-
-          {/* BOTTOM NAVIGATION - [2] use mini components */}
-          <p style={{ fontSize: 11, fontWeight: 700, color: color.inkMuted, margin: '0 0 12px', letterSpacing: '0em', textTransform: 'uppercase' }}>BOTTOM NAVIGATION</p>
-          <div style={{ ...panelGridResp, marginBottom: 'clamp(32px,4vw,48px)' }}>
-            <div style={panelCard}>
-              <p style={panelLabel}>HIG</p>
-              <IOSBottomNav activeIndex={iosNavActive} onSelect={setIosNavActive} />
-            </div>
-            <div style={panelCard}>
-              <p style={panelLabel}>Google Material 3</p>
-              <AndroidBottomNav activeIndex={andNavActive} onSelect={setAndNavActive} />
             </div>
           </div>
 
@@ -688,21 +691,30 @@ export default function DesignSystem() {
           }}
         >
           <p style={subEyebrowStyle}>03 PATTERNS</p>
-          <h3 style={h3Style}>패턴</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 'clamp(8px,1.5vw,20px)' }}>
-            {PATTERNS.map((p, i) => (
-              <div key={i} style={{ background: color.white, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)', boxShadow: cardShadow }}>
-                <p style={{ margin: '0 0 8px', fontSize: t.caption.size, fontWeight: 800, color: color.brand, letterSpacing: '0em', textTransform: 'uppercase' }}>{String(i + 1).padStart(2, '0')}</p>
-                <p style={{ margin: '0 0 8px', fontSize: 16, fontWeight: 700, color: color.ink }}>{p.title}</p>
-                <p style={{ margin: '0 0 16px', fontSize: t.caption.size, lineHeight: 1.6, color: color.inkMuted, fontWeight: 700 }}>{p.sub}</p>
-                <ol style={{ margin: 0, paddingLeft: 18 }}>
-                  {p.steps.map((step, si) => (
-                    <li key={si} style={{ fontSize: t.caption.size, lineHeight: 1.7, color: color.inkMuted, marginBottom: 4, fontWeight: 500 }}>{step}</li>
-                  ))}
-                </ol>
-              </div>
-            ))}
-          </div>
+          <h3 style={{ ...h3Style, marginBottom: 16 }}>패턴</h3>
+          <button
+            onClick={() => setOpenPatterns(o => !o)}
+            style={{ display: 'flex', alignItems: 'center', gap: 8, background: color.brandPale, border: 'none', cursor: 'pointer', padding: '8px 14px', borderRadius: layout.rSm, fontFamily: font.family, marginBottom: 24, width: '100%', textAlign: 'left' }}
+          >
+            <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', color: color.brand }}>자세히 보기</span>
+            <ChevronDown size={16} color={color.brand} style={{ marginLeft: 'auto', transform: openPatterns ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s' }} />
+          </button>
+          {openPatterns && (
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 'clamp(8px,1.5vw,20px)' }}>
+              {PATTERNS.map((p, i) => (
+                <div key={i} style={{ background: color.white, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)', boxShadow: cardShadow }}>
+                  <p style={{ margin: '0 0 8px', fontSize: t.caption.size, fontWeight: 800, color: color.brand, letterSpacing: '0em', textTransform: 'uppercase' }}>{String(i + 1).padStart(2, '0')}</p>
+                  <p style={{ margin: '0 0 8px', fontSize: 16, fontWeight: 700, color: color.ink }}>{p.title}</p>
+                  <p style={{ margin: '0 0 16px', fontSize: t.caption.size, lineHeight: 1.6, color: color.inkMuted, fontWeight: 700 }}>{p.sub}</p>
+                  <ol style={{ margin: 0, paddingLeft: 18 }}>
+                    {p.steps.map((step, si) => (
+                      <li key={si} style={{ fontSize: t.caption.size, lineHeight: 1.7, color: color.inkMuted, marginBottom: 4, fontWeight: 500 }}>{step}</li>
+                    ))}
+                  </ol>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* 04 PLATFORM COMPARISON - [7] table row alternating bg, [9] table headers */}
@@ -716,36 +728,45 @@ export default function DesignSystem() {
           }}
         >
           <p style={subEyebrowStyle}>04 PLATFORM COMPARISON</p>
-          <h3 style={h3Style}>플랫폼 비교</h3>
-          <div style={{ overflowX: 'auto' }}>
-          <div style={{ borderRadius: layout.rMd, overflow: 'hidden', boxShadow: cardShadow, minWidth: 480 }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
-              <thead>
-                <tr style={{ background: color.ink }}>
-                  <th style={{ padding: '14px 16px', textAlign: 'left', color: '#fff', fontWeight: 700, fontSize: 13 }}>컴포넌트, 속성</th>
-                  <th style={{ padding: '14px 16px', textAlign: 'left', color: '#fff', fontWeight: 700, fontSize: 13 }}>HIG</th>
-                  <th style={{ padding: '14px 16px', textAlign: 'left', color: '#fff', fontWeight: 700, fontSize: 13 }}>Google Material 3</th>
-                </tr>
-              </thead>
-              <tbody>
-                {PLATFORM_SECTIONS.map((sec, si) => (
-                  <>
-                    <tr key={`g-${si}`} style={{ background: color.brandPale }}>
-                      <td colSpan={3} style={{ padding: '8px 16px', color: color.brand, fontSize: 11, fontWeight: 800, letterSpacing: '0em', textTransform: 'uppercase' }}>{sec.group}</td>
-                    </tr>
-                    {sec.rows.map((row, ri) => (
-                      <tr key={`r-${si}-${ri}`} style={{ background: ri % 2 === 0 ? color.white : color.bg }}>
-                        <td style={{ padding: '10px 16px', color: color.inkMuted, fontSize: 13 }}>{row.prop}</td>
-                        <td style={{ padding: '10px 16px', color: color.ink, fontSize: 13 }}>{row.ios}</td>
-                        <td style={{ padding: '10px 16px', color: color.ink, fontSize: 13, fontFamily: "'Noto Sans KR', sans-serif" }}>{row.and}</td>
+          <h3 style={{ ...h3Style, marginBottom: 16 }}>플랫폼 비교</h3>
+          <button
+            onClick={() => setOpenPlatform(o => !o)}
+            style={{ display: 'flex', alignItems: 'center', gap: 8, background: color.brandPale, border: 'none', cursor: 'pointer', padding: '8px 14px', borderRadius: layout.rSm, fontFamily: font.family, marginBottom: 24, width: '100%', textAlign: 'left' }}
+          >
+            <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', color: color.brand }}>자세히 보기</span>
+            <ChevronDown size={16} color={color.brand} style={{ marginLeft: 'auto', transform: openPlatform ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s' }} />
+          </button>
+          {openPlatform && (
+            <div style={{ overflowX: 'auto' }}>
+            <div style={{ borderRadius: layout.rMd, overflow: 'hidden', boxShadow: cardShadow, minWidth: 480 }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+                <thead>
+                  <tr style={{ background: color.ink }}>
+                    <th style={{ padding: '14px 16px', textAlign: 'left', color: '#fff', fontWeight: 700, fontSize: 13 }}>컴포넌트, 속성</th>
+                    <th style={{ padding: '14px 16px', textAlign: 'left', color: '#fff', fontWeight: 700, fontSize: 13 }}>HIG</th>
+                    <th style={{ padding: '14px 16px', textAlign: 'left', color: '#fff', fontWeight: 700, fontSize: 13 }}>Google Material 3</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {PLATFORM_SECTIONS.map((sec, si) => (
+                    <>
+                      <tr key={`g-${si}`} style={{ background: color.brandPale }}>
+                        <td colSpan={3} style={{ padding: '8px 16px', color: color.brand, fontSize: 11, fontWeight: 800, letterSpacing: '0em', textTransform: 'uppercase' }}>{sec.group}</td>
                       </tr>
-                    ))}
-                  </>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          </div>
+                      {sec.rows.map((row, ri) => (
+                        <tr key={`r-${si}-${ri}`} style={{ background: ri % 2 === 0 ? color.white : color.bg }}>
+                          <td style={{ padding: '10px 16px', color: color.inkMuted, fontSize: 13 }}>{row.prop}</td>
+                          <td style={{ padding: '10px 16px', color: color.ink, fontSize: 13 }}>{row.ios}</td>
+                          <td style={{ padding: '10px 16px', color: color.ink, fontSize: 13, fontFamily: "'Noto Sans KR', sans-serif" }}>{row.and}</td>
+                        </tr>
+                      ))}
+                    </>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            </div>
+          )}
         </div>
 
         {/* 05 ACCESSIBILITY - [7] android card bg, [9] labels */}
@@ -758,7 +779,15 @@ export default function DesignSystem() {
           }}
         >
           <p style={subEyebrowStyle}>05 ACCESSIBILITY</p>
-          <h3 style={h3Style}>접근성</h3>
+          <h3 style={{ ...h3Style, marginBottom: 16 }}>접근성</h3>
+          <button
+            onClick={() => setOpenA11y(o => !o)}
+            style={{ display: 'flex', alignItems: 'center', gap: 8, background: color.brandPale, border: 'none', cursor: 'pointer', padding: '8px 14px', borderRadius: layout.rSm, fontFamily: font.family, marginBottom: 24, width: '100%', textAlign: 'left' }}
+          >
+            <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', color: color.brand }}>자세히 보기</span>
+            <ChevronDown size={16} color={color.brand} style={{ marginLeft: 'auto', transform: openA11y ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s' }} />
+          </button>
+          {openA11y && <>
 
           <p style={{ fontSize: 11, fontWeight: 700, color: color.inkMuted, margin: '0 0 12px', letterSpacing: '0em', textTransform: 'uppercase' }}>TOUCH TARGET</p>
           <div style={{ ...panelGridResp, marginBottom: 'clamp(32px,4vw,48px)' }}>
@@ -851,6 +880,7 @@ export default function DesignSystem() {
               </div>
             ))}
           </div>
+          </>}
         </div>
 
       </div>
