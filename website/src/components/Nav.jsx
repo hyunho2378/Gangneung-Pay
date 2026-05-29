@@ -1,16 +1,29 @@
 import { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import { color, font, layout } from '../tokens/web.js';
 import { useBreakpoint } from '../lib/useBreakpoint.js';
 
 const LINKS = [
-  { label: 'Discover', href: '#research' },
-  { label: 'Define', href: '#affinity' },
-  { label: 'Develop', href: '#direction' },
-  { label: 'Deliver', href: '#key-screens' },
+  { label: 'Intro',    to: '/' },
+  { label: 'Research', to: '/research' },
+  { label: 'Insights', to: '/insights' },
+  { label: 'Solution', to: '/solution' },
+  { label: 'System',   to: '/system' },
 ];
 
 const IOS_URL = 'https://gangneung-pay.vercel.app';
 const ANDROID_URL = 'https://gangneung-pay-android.vercel.app';
+
+function navLinkStyle({ isActive }) {
+  return {
+    textDecoration: 'none',
+    fontSize: 13,
+    fontWeight: isActive ? 700 : 500,
+    color: isActive ? color.brand : color.inkMuted,
+    letterSpacing: '-0.01em',
+    transition: 'color 0.18s',
+  };
+}
 
 export default function Nav() {
   const { isMobile, isTablet } = useBreakpoint();
@@ -42,8 +55,8 @@ export default function Nav() {
         }}
       >
         {/* Logo */}
-        <a
-          href="#hero"
+        <NavLink
+          to="/"
           style={{
             textDecoration: 'none',
             flexShrink: 0,
@@ -65,7 +78,7 @@ export default function Nav() {
               강릉페이 UX 개선 프로젝트
             </span>
           )}
-        </a>
+        </NavLink>
 
         {/* Desktop / Tablet: nav links */}
         {!isMobile && (
@@ -78,23 +91,15 @@ export default function Nav() {
               padding: 0,
             }}
           >
-            {LINKS.map(({ label, href }) => (
-              <li key={href}>
-                <a
-                  href={href}
-                  style={{
-                    textDecoration: 'none',
-                    fontSize: 13,
-                    fontWeight: 500,
-                    color: color.inkMuted,
-                    letterSpacing: '-0.01em',
-                    transition: 'color 0.18s',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = color.ink)}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = color.inkMuted)}
+            {LINKS.map(({ label, to }) => (
+              <li key={to}>
+                <NavLink
+                  to={to}
+                  end={to === '/'}
+                  style={navLinkStyle}
                 >
                   {label}
-                </a>
+                </NavLink>
               </li>
             ))}
           </ul>
@@ -188,24 +193,25 @@ export default function Nav() {
           }}
         >
           <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-            {LINKS.map(({ label, href }) => (
-              <li key={href}>
-                <a
-                  href={href}
+            {LINKS.map(({ label, to }) => (
+              <li key={to}>
+                <NavLink
+                  to={to}
+                  end={to === '/'}
                   onClick={() => setMenuOpen(false)}
-                  style={{
+                  style={({ isActive }) => ({
                     display: 'block',
                     padding: '12px 0',
                     textDecoration: 'none',
                     fontSize: 15,
-                    fontWeight: 600,
-                    color: color.ink,
+                    fontWeight: isActive ? 700 : 600,
+                    color: isActive ? color.brand : color.ink,
                     letterSpacing: '-0.01em',
                     borderBottom: `1px solid ${color.line}`,
-                  }}
+                  })}
                 >
                   {label}
-                </a>
+                </NavLink>
               </li>
             ))}
           </ul>
