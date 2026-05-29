@@ -1,5 +1,6 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 
 const FLOWS = [
   {
@@ -129,7 +130,86 @@ function DashedArrow() {
   );
 }
 
-function FlowRow({ flow, visible, delay }) {
+function DownArrow({ dashed = false }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center', height: 28, alignItems: 'center' }}>
+      <div style={{
+        width: 2,
+        height: 18,
+        background: dashed ? 'transparent' : color.brand,
+        borderLeft: dashed ? `2px dashed ${color.brand}` : 'none',
+        position: 'relative',
+      }}>
+        <div style={{
+          position: 'absolute',
+          bottom: -1,
+          left: -4,
+          width: 0,
+          height: 0,
+          borderLeft: '5px solid transparent',
+          borderRight: '5px solid transparent',
+          borderTop: `7px solid ${color.brand}`,
+        }} />
+      </div>
+    </div>
+  );
+}
+
+function FlowRow({ flow, visible, delay, isMobile }) {
+  const label = (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+      <span style={{ fontSize: t.caption.size, fontWeight: 800, color: color.brand, letterSpacing: '0.02em' }}>
+        {flow.num}
+      </span>
+      <span style={{ fontSize: t.caption.size, fontWeight: 700, color: color.inkMuted, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        {flow.label}
+      </span>
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <div style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'none' : 'translateY(16px)',
+        transition: `opacity 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
+        marginBottom: 'clamp(24px,3vw,40px)',
+      }}>
+        {label}
+        {/* Main flow: vertical */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {flow.nodes.map((node, i) => (
+            <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+              {flow.tag?.index === i && (
+                <div style={{
+                  background: color.brand, color: color.white,
+                  fontSize: 10, fontWeight: 700, padding: '2px 8px',
+                  borderRadius: 4, whiteSpace: 'nowrap', marginBottom: 4,
+                }}>
+                  {flow.tag.text}
+                </div>
+              )}
+              <Node text={node} />
+              {i < flow.nodes.length - 1 && <DownArrow />}
+            </div>
+          ))}
+        </div>
+        {/* Branch: vertical below main */}
+        {flow.branch && (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 4 }}>
+            <DownArrow dashed />
+            {flow.branch.map((node, i) => (
+              <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+                <Node text={node} dashed />
+                {i < flow.branch.length - 1 && <DownArrow dashed />}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div
       style={{
@@ -139,70 +219,22 @@ function FlowRow({ flow, visible, delay }) {
         marginBottom: 'clamp(24px,3vw,40px)',
       }}
     >
-      {/* Label */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10,
-          marginBottom: 12,
-        }}
-      >
-        <span
-          style={{
-            fontSize: t.caption.size,
-            fontWeight: 800,
-            color: color.brand,
-            letterSpacing: '0.02em',
-          }}
-        >
-          {flow.num}
-        </span>
-        <span
-          style={{
-            fontSize: t.caption.size,
-            fontWeight: 700,
-            color: color.inkMuted,
-            textTransform: 'uppercase',
-            letterSpacing: '0.06em',
-          }}
-        >
-          {flow.label}
-        </span>
-      </div>
+      {label}
 
       {/* Main flow nodes */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          overflowX: 'auto',
-          paddingBottom: flow.branch ? 0 : 4,
-        }}
-      >
+      <div style={{ display: 'flex', alignItems: 'center', overflowX: 'auto', paddingBottom: flow.branch ? 0 : 4 }}>
         {flow.nodes.map((node, i) => (
-          <div
-            key={i}
-            style={{ display: 'flex', alignItems: 'center', position: 'relative' }}
-          >
+          <div key={i} style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
             <div style={{ position: 'relative' }}>
               <Node text={node} />
               {flow.tag?.index === i && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: -22,
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    background: color.brand,
-                    color: color.white,
-                    fontSize: '10px',
-                    fontWeight: 700,
-                    padding: '2px 8px',
-                    borderRadius: 4,
-                    whiteSpace: 'nowrap',
-                  }}
-                >
+                <div style={{
+                  position: 'absolute', top: -22, left: '50%',
+                  transform: 'translateX(-50%)',
+                  background: color.brand, color: color.white,
+                  fontSize: '10px', fontWeight: 700, padding: '2px 8px',
+                  borderRadius: 4, whiteSpace: 'nowrap',
+                }}>
                   {flow.tag.text}
                 </div>
               )}
@@ -212,26 +244,11 @@ function FlowRow({ flow, visible, delay }) {
         ))}
       </div>
 
-      {/* Branch (dashed, starts below first node) */}
+      {/* Branch */}
       {flow.branch && (
         <div style={{ paddingLeft: 2, marginTop: 0 }}>
-          {/* Vertical dashed connector from first node */}
-          <div
-            style={{
-              height: 16,
-              borderLeft: `2px dashed ${color.brand}`,
-              marginLeft: 46,
-              marginBottom: 2,
-            }}
-          />
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              overflowX: 'auto',
-              paddingBottom: 4,
-            }}
-          >
+          <div style={{ height: 16, borderLeft: `2px dashed ${color.brand}`, marginLeft: 46, marginBottom: 2 }} />
+          <div style={{ display: 'flex', alignItems: 'center', overflowX: 'auto', paddingBottom: 4 }}>
             {flow.branch.map((node, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
                 <Node text={node} dashed />
@@ -248,6 +265,7 @@ function FlowRow({ flow, visible, delay }) {
 export default function UserFlow() {
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [flowRef, flowVisible] = useReveal({ threshold: 0.03 });
+  const { isMobile } = useBreakpoint();
 
   return (
     <section
@@ -299,6 +317,7 @@ export default function UserFlow() {
               flow={flow}
               visible={flowVisible}
               delay={i * 0.12}
+              isMobile={isMobile}
             />
           ))}
         </div>

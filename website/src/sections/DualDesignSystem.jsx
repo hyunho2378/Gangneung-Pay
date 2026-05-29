@@ -1,5 +1,6 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 
 const IOS_COLOR = color.brand;
 const AND_COLOR = color.brand;
@@ -56,6 +57,7 @@ export default function DualDesignSystem() {
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [tableRef, tableVisible] = useReveal({ threshold: 0.03 });
   const [codeRef, codeVisible] = useReveal({ threshold: 0.03 });
+  const { isMobile } = useBreakpoint();
 
   return (
     <section
@@ -110,84 +112,77 @@ export default function DualDesignSystem() {
             transform: tableVisible ? 'none' : 'translateY(24px)',
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
             marginBottom: 'clamp(48px,6vw,80px)',
-            overflowX: 'auto',
           }}
         >
-          {/* Table header */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '140px 1fr 1fr',
-            gap: 0,
-            borderBottom: `2px solid ${color.line}`,
-            paddingBottom: 12,
-            marginBottom: 0,
-            minWidth: 560,
-          }}>
-            <div />
-            <div style={{
-              padding: '0 24px',
-              fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
-              letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-              color: IOS_COLOR, fontFamily: font.family,
-            }}>
-              iOS, HIG
+          {isMobile ? (
+            /* Mobile: card per feature */
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {ROWS.map(({ feature, ios, android }, i) => (
+                <div
+                  key={feature}
+                  style={{
+                    borderRadius: layout.rMd,
+                    border: `1px solid ${color.line}`,
+                    overflow: 'hidden',
+                    opacity: tableVisible ? 1 : 0,
+                    transform: tableVisible ? 'none' : 'translateY(10px)',
+                    transition: `opacity 0.5s ease-out ${i * 0.06}s, transform 0.5s ease-out ${i * 0.06}s`,
+                  }}
+                >
+                  <div style={{
+                    padding: '8px 14px',
+                    background: color.ink,
+                    fontSize: 11, fontWeight: 700,
+                    color: color.white, textTransform: 'uppercase',
+                    letterSpacing: '0.06em', fontFamily: font.family,
+                  }}>
+                    {feature}
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+                    <div style={{ padding: '12px 14px', borderRight: `1px solid ${color.line}`, background: color.white }}>
+                      <p style={{ fontSize: 10, fontWeight: 800, color: IOS_COLOR, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 5px', fontFamily: font.family }}>iOS</p>
+                      <p style={{ fontSize: 13, lineHeight: 1.5, color: color.ink, margin: 0, fontFamily: font.family }}>{ios}</p>
+                    </div>
+                    <div style={{ padding: '12px 14px', background: color.white }}>
+                      <p style={{ fontSize: 10, fontWeight: 800, color: AND_COLOR, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 5px', fontFamily: font.family }}>Android</p>
+                      <p style={{ fontSize: 13, lineHeight: 1.5, color: color.ink, margin: 0, fontFamily: font.family }}>{android}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div style={{
-              padding: '0 24px',
-              fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
-              letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-              color: AND_COLOR, fontFamily: font.family,
-            }}>
-              Android, MD3
+          ) : (
+            /* Desktop: grid table */
+            <div style={{ overflowX: 'auto' }}>
+              {/* Table header */}
+              <div style={{
+                display: 'grid', gridTemplateColumns: '140px 1fr 1fr',
+                gap: 0, borderBottom: `2px solid ${color.line}`,
+                paddingBottom: 12, marginBottom: 0, minWidth: 560,
+              }}>
+                <div />
+                <div style={{ padding: '0 24px', fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight, letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform, color: IOS_COLOR, fontFamily: font.family }}>iOS, HIG</div>
+                <div style={{ padding: '0 24px', fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight, letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform, color: AND_COLOR, fontFamily: font.family }}>Android, MD3</div>
+              </div>
+              {/* Rows */}
+              {ROWS.map(({ feature, ios, android }, i) => (
+                <div
+                  key={feature}
+                  style={{
+                    display: 'grid', gridTemplateColumns: '140px 1fr 1fr',
+                    gap: 0, background: i % 2 === 0 ? color.white : 'transparent',
+                    borderBottom: `1px solid ${color.line}`, minWidth: 560,
+                    opacity: tableVisible ? 1 : 0, transform: tableVisible ? 'none' : 'translateY(10px)',
+                    transition: `opacity 0.5s ease-out ${i * 0.06}s, transform 0.5s ease-out ${i * 0.06}s`,
+                  }}
+                >
+                  <div style={{ padding: 'clamp(14px,1.8vw,20px) 0', fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: color.inkMuted, fontFamily: font.family, display: 'flex', alignItems: 'center' }}>{feature}</div>
+                  <div style={{ padding: `clamp(14px,1.8vw,20px) 24px`, fontSize: t.body.size, lineHeight: t.body.lh, color: color.ink, fontFamily: font.family }}>{ios}</div>
+                  <div style={{ padding: `clamp(14px,1.8vw,20px) 24px`, fontSize: t.body.size, lineHeight: t.body.lh, color: color.ink, fontFamily: font.family }}>{android}</div>
+                </div>
+              ))}
             </div>
-          </div>
-
-          {/* Rows */}
-          {ROWS.map(({ feature, ios, android }, i) => (
-            <div
-              key={feature}
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '140px 1fr 1fr',
-                gap: 0,
-                background: i % 2 === 0 ? color.white : 'transparent',
-                borderBottom: `1px solid ${color.line}`,
-                minWidth: 560,
-                opacity: tableVisible ? 1 : 0,
-                transform: tableVisible ? 'none' : 'translateY(10px)',
-                transition: `opacity 0.5s ease-out ${i * 0.06}s, transform 0.5s ease-out ${i * 0.06}s`,
-              }}
-            >
-              {/* Feature label */}
-              <div style={{
-                padding: 'clamp(14px,1.8vw,20px) 0',
-                fontSize: 12, fontWeight: 700,
-                letterSpacing: '0.04em', textTransform: 'uppercase',
-                color: color.inkMuted, fontFamily: font.family,
-                display: 'flex', alignItems: 'center',
-              }}>
-                {feature}
-              </div>
-
-              {/* iOS */}
-              <div style={{
-                padding: `clamp(14px,1.8vw,20px) 24px`,
-                fontSize: t.body.size, lineHeight: t.body.lh,
-                color: color.ink, fontFamily: font.family,
-              }}>
-                {ios}
-              </div>
-
-              {/* Android */}
-              <div style={{
-                padding: `clamp(14px,1.8vw,20px) 24px`,
-                fontSize: t.body.size, lineHeight: t.body.lh,
-                color: color.ink, fontFamily: font.family,
-              }}>
-                {android}
-              </div>
-            </div>
-          ))}
+          )}
         </div>
 
         {/* getPlatform() code snippet */}

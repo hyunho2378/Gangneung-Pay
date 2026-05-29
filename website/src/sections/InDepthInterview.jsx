@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 import { ChevronDown } from 'lucide-react';
 
 function Quote({ lines }) {
@@ -130,9 +131,56 @@ function QuestionBox({ children }) {
 }
 
 function CompareTable({ headers, rows }) {
+  const { isMobile } = useBreakpoint();
   const colCount = headers.length;
   const colW = colCount === 2 ? '1fr 1fr' : colCount === 3 ? '1fr 1fr 1fr' : `repeat(${colCount}, 1fr)`;
   const minW = colCount * 220;
+
+  if (isMobile) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, margin: 'clamp(14px,1.8vw,22px) 0' }}>
+        {rows.map((row, ri) => (
+          <div
+            key={ri}
+            style={{
+              borderRadius: layout.rSm,
+              border: `1px solid ${color.line}`,
+              overflow: 'hidden',
+              background: ri % 2 === 0 ? color.white : color.bg,
+            }}
+          >
+            {headers.map((h, ci) => (
+              <div
+                key={ci}
+                style={{
+                  display: 'flex', gap: 12,
+                  padding: '9px 14px',
+                  borderBottom: ci < headers.length - 1 ? `1px solid ${color.line}` : 'none',
+                }}
+              >
+                <span style={{
+                  fontSize: 11, fontWeight: 800, color: color.brand,
+                  letterSpacing: '0.04em', textTransform: 'uppercase',
+                  flexShrink: 0, minWidth: 72, fontFamily: font.family,
+                }}>
+                  {h}
+                </span>
+                <span style={{
+                  fontSize: 13, lineHeight: 1.55,
+                  fontWeight: ci === 0 ? 700 : 500,
+                  color: ci === 0 ? color.ink : color.inkMuted,
+                  fontFamily: font.family, wordBreak: 'keep-all',
+                }}>
+                  {row[ci]}
+                </span>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div style={{ overflowX: 'auto', margin: 'clamp(14px,1.8vw,22px) 0' }}>
       <div style={{ minWidth: minW }}>

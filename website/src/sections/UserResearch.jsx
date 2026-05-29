@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 import { useCountUp } from '../lib/useCountUp.js';
 import researchData from '../data/research.json';
 import surveyData from '../data/survey.json';
@@ -69,6 +70,7 @@ function Accordion({ label, children }) {
 }
 
 export default function UserResearch() {
+  const { isMobile } = useBreakpoint();
   const [ref0, vis0] = useReveal({ threshold: 0.05 });
   const [ref1, vis1] = useReveal({ threshold: 0.05 });
   const [ref2, vis2] = useReveal({ threshold: 0.05 });
@@ -406,7 +408,8 @@ export default function UserResearch() {
 
             {/* Charts: 결제수단 + 인지도 메인 노출 */}
             <div style={{
-              display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)',
+              display: 'grid',
+              gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
               gap: 'clamp(16px,2vw,32px)',
               marginBottom: 'clamp(8px,1vw,16px)',
             }}>
@@ -421,7 +424,11 @@ export default function UserResearch() {
             </div>
             {/* 연령대+기기 아코디언 */}
             <Accordion label="전체 설문 결과 분포 (연령대, 기기)">
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'clamp(16px,2vw,32px)' }}>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
+                gap: 'clamp(16px,2vw,32px)',
+              }}>
                 <div style={{ background: color.bg, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)' }}>
                   <p style={{ fontSize: 15, fontWeight: 800, color: color.brand, margin: '0 0 16px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>연령대 분포</p>
                   <HBar items={ageItems} note="n=70 단일 응답" />
@@ -461,7 +468,8 @@ export default function UserResearch() {
           <div ref={ref7} style={reveal(vis7)}>
             <p style={{ ...eyebrowStyle(color.inkMuted), margin: '0 0 20px' }}>07 SEGMENT PRIORITY</p>
             <Accordion label="세그먼트 개선 우선순위 전체">
-              <div style={{ borderRadius: layout.rMd, overflow: 'hidden', boxShadow: cardShadow, marginBottom: 'clamp(24px,3vw,40px)' }}>
+              <div style={{ overflowX: 'auto', marginBottom: 'clamp(24px,3vw,40px)' }}>
+              <div style={{ borderRadius: layout.rMd, overflow: 'hidden', boxShadow: cardShadow, minWidth: 360 }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16 }}>
                   <thead>
                     <tr style={{ background: color.ink }}>
@@ -481,10 +489,11 @@ export default function UserResearch() {
                   </tbody>
                 </table>
               </div>
+              </div>
               <p style={{ ...eyebrowStyle(color.inkMuted), margin: '0 0 16px' }}>사용자 니즈 종합</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {needs.map((n, i) => (
-                  <div key={i} style={{ background: color.bg, borderRadius: layout.rMd, padding: '16px 20px', display: 'grid', gridTemplateColumns: 'minmax(100px,1fr) minmax(140px,1.5fr) minmax(140px,1.5fr)', gap: 'clamp(12px,1.5vw,24px)', alignItems: 'start' }}>
+                  <div key={i} style={{ background: color.bg, borderRadius: layout.rMd, padding: '16px 20px', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'minmax(100px,1fr) minmax(140px,1.5fr) minmax(140px,1.5fr)', gap: isMobile ? 10 : 'clamp(12px,1.5vw,24px)', alignItems: 'start' }}>
                     <div>
                       <p style={{ fontSize: 11, fontWeight: 800, color: color.brand, margin: '0 0 4px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>니즈</p>
                       <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: color.ink, fontFamily: font.family }}>{n.need}</p>

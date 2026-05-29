@@ -1,9 +1,11 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 
 export default function UserJourneyMap() {
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [mapRef, mapVisible] = useReveal({ threshold: 0.03 });
+  const { isMobile } = useBreakpoint();
 
   return (
     <section
@@ -48,16 +50,22 @@ export default function UserJourneyMap() {
             opacity: mapVisible ? 1 : 0,
             transform: mapVisible ? 'none' : 'translateY(24px)',
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-            overflowX: 'auto',
-            scrollbarWidth: 'thin',
-            scrollbarColor: `${color.brand} ${color.brandPale}`,
-            paddingBottom: 8,
+            ...(isMobile ? {} : {
+              overflowX: 'auto',
+              scrollbarWidth: 'thin',
+              scrollbarColor: `${color.brand} ${color.brandPale}`,
+              paddingBottom: 8,
+            }),
           }}
         >
           <img
             src="/cjm.svg"
             alt="강릉페이 사용자 여정 지도"
-            style={{ width: 'max(100%, 1400px)', height: 'auto', display: 'block' }}
+            style={{
+              width: isMobile ? '100%' : 'max(100%, 1400px)',
+              height: 'auto',
+              display: 'block',
+            }}
           />
         </div>
 

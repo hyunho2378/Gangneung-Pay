@@ -1,5 +1,6 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 
 const TABLE = {
   headers: ['항목', '강릉페이', '삼성페이', '토스', '카카오페이'],
@@ -16,6 +17,7 @@ const COL = '1.2fr 1.5fr 1fr 1fr 1fr';
 export default function DeskResearch() {
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [tableRef, tableVisible] = useReveal({ threshold: 0.05 });
+  const { isMobile } = useBreakpoint();
 
   return (
     <section
@@ -75,69 +77,116 @@ export default function DeskResearch() {
             marginBottom: 0,
           }}
         >
-          <div
-            style={{
-              borderRadius: layout.rLg,
-              border: `1px solid ${color.brand}`,
-              overflow: 'hidden',
-            }}
-          >
-            <div style={{ overflowX: 'auto' }}>
-            {/* Header row */}
-            <div style={{ display: 'grid', gridTemplateColumns: COL, minWidth: 560 }}>
-              {TABLE.headers.map((h, i) => (
+          {isMobile ? (
+            /* Mobile: each row → card */
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {TABLE.rows.map((row, ri) => (
                 <div
-                  key={h}
+                  key={ri}
                   style={{
-                    padding: '14px 20px',
-                    background: i === 1 ? color.brand : color.bg,
-                    color: i === 1 ? color.white : color.inkMuted,
-                    fontSize: 15,
-                    fontWeight: 700,
-                    letterSpacing: '0em',
-                    textTransform: 'uppercase',
-                    borderRight: i < TABLE.headers.length - 1 ? `1px solid ${color.line}` : 'none',
-                    fontFamily: font.family,
+                    borderRadius: layout.rMd,
+                    border: `1px solid ${color.line}`,
+                    overflow: 'hidden',
                   }}
                 >
-                  {h}
+                  {/* Row label */}
+                  <div style={{
+                    padding: '10px 16px',
+                    background: color.bg,
+                    fontSize: 12, fontWeight: 800,
+                    color: color.inkMuted, textTransform: 'uppercase',
+                    letterSpacing: '0.06em', fontFamily: font.family,
+                  }}>
+                    {row[0]}
+                  </div>
+                  {/* Service values */}
+                  {TABLE.headers.slice(1).map((h, ci) => (
+                    <div
+                      key={ci}
+                      style={{
+                        padding: '11px 16px',
+                        display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8,
+                        background: ci === 0 ? color.brandPale : color.white,
+                        borderTop: `1px solid ${color.line}`,
+                      }}
+                    >
+                      <span style={{
+                        fontSize: 13, fontWeight: 700,
+                        color: ci === 0 ? color.brand : color.inkMuted,
+                        flexShrink: 0, fontFamily: font.family,
+                      }}>
+                        {h}
+                      </span>
+                      <span style={{
+                        fontSize: 14, fontWeight: ci === 0 ? 700 : 500,
+                        color: ci === 0 ? color.brand : color.ink,
+                        textAlign: 'right', fontFamily: font.family,
+                      }}>
+                        {row[ci + 1]}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
-
-            {/* Data rows */}
-            {TABLE.rows.map((row, ri) => (
-              <div
-                key={ri}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: COL,
-                  minWidth: 560,
-                }}
-              >
-                {row.map((cell, ci) => (
+          ) : (
+            /* Desktop: grid table */
+            <div
+              style={{
+                borderRadius: layout.rLg,
+                border: `1px solid ${color.brand}`,
+                overflow: 'hidden',
+              }}
+            >
+              <div style={{ overflowX: 'auto' }}>
+              {/* Header row */}
+              <div style={{ display: 'grid', gridTemplateColumns: COL, minWidth: 560 }}>
+                {TABLE.headers.map((h, i) => (
                   <div
-                    key={ci}
+                    key={h}
                     style={{
-                      padding: '16px 20px',
-                      background: ci === 1 ? color.brandPale : color.white,
-                      color: ci === 0 ? color.inkMuted : ci === 1 ? color.brand : color.ink,
-                      fontSize: ci === 0 ? 18 : 18,
-                      fontWeight: ci === 0 ? 700 : ci === 1 ? 700 : 500,
-                      letterSpacing: ci === 0 ? '0em' : '-0.01em',
-                      textTransform: ci === 0 ? 'uppercase' : 'none',
-                      borderRight: ci < row.length - 1 ? `1px solid ${color.line}` : 'none',
+                      padding: '14px 20px',
+                      background: i === 1 ? color.brand : color.bg,
+                      color: i === 1 ? color.white : color.inkMuted,
+                      fontSize: 15, fontWeight: 700,
+                      letterSpacing: '0em', textTransform: 'uppercase',
+                      borderRight: i < TABLE.headers.length - 1 ? `1px solid ${color.line}` : 'none',
                       fontFamily: font.family,
-                      lineHeight: 1.5,
                     }}
                   >
-                    {cell}
+                    {h}
                   </div>
                 ))}
               </div>
-            ))}
+              {/* Data rows */}
+              {TABLE.rows.map((row, ri) => (
+                <div
+                  key={ri}
+                  style={{ display: 'grid', gridTemplateColumns: COL, minWidth: 560 }}
+                >
+                  {row.map((cell, ci) => (
+                    <div
+                      key={ci}
+                      style={{
+                        padding: '16px 20px',
+                        background: ci === 1 ? color.brandPale : color.white,
+                        color: ci === 0 ? color.inkMuted : ci === 1 ? color.brand : color.ink,
+                        fontSize: 18,
+                        fontWeight: ci === 0 ? 700 : ci === 1 ? 700 : 500,
+                        letterSpacing: ci === 0 ? '0em' : '-0.01em',
+                        textTransform: ci === 0 ? 'uppercase' : 'none',
+                        borderRight: ci < row.length - 1 ? `1px solid ${color.line}` : 'none',
+                        fontFamily: font.family, lineHeight: 1.5,
+                      }}
+                    >
+                      {cell}
+                    </div>
+                  ))}
+                </div>
+              ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
 

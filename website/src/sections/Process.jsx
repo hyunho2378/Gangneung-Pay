@@ -276,92 +276,90 @@ export default function Process() {
             HEURISTIC VIOLATIONS, BEFORE / AFTER
           </p>
 
-          <div style={{ overflowX: 'auto' }}>
-          {/* Table header */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '80px 96px 1fr 1fr 88px',
-            gap: 0,
-            borderBottom: `2px solid ${color.line}`,
-            paddingBottom: 10,
-            marginBottom: 0,
-            minWidth: 600,
-          }}>
-            {['코드', '원칙', 'BEFORE', 'AFTER', 'UR'].map((h) => (
-              <div key={h} style={{
-                padding: '0 12px',
-                fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
-                letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-                color: color.inkMuted, fontFamily: font.family,
-              }}>
-                {h}
-              </div>
-            ))}
-          </div>
-
-          <div>
-            {VIOLATIONS.map(({ code, label, before, after, ur }, i) => (
-              <div
-                key={code}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '80px 96px 1fr 1fr 88px',
-                  gap: 0,
-                  background: i % 2 === 0 ? color.white : 'transparent',
-                  borderBottom: `1px solid ${color.line}`,
-                  minWidth: 600,
-                  opacity: tableVisible ? 1 : 0,
-                  transform: tableVisible ? 'none' : 'translateY(8px)',
-                  transition: `opacity 0.5s ease-out ${i * 0.06}s, transform 0.5s ease-out ${i * 0.06}s`,
-                }}
-              >
-                <div style={{
-                  padding: 'clamp(12px,1.5vw,16px) 12px',
-                  fontSize: 12, fontWeight: 800,
-                  letterSpacing: '0.06em',
-                  color: color.warn, fontFamily: font.family,
-                  display: 'flex', alignItems: 'center',
-                  whiteSpace: 'nowrap',
-                }}>
-                  {code}
+          {isMobile ? (
+            /* Mobile: card per violation */
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {VIOLATIONS.map(({ code, label, before, after, ur }, i) => (
+                <div
+                  key={code}
+                  style={{
+                    background: color.white,
+                    borderRadius: layout.rMd,
+                    padding: '14px 16px',
+                    border: `1px solid ${color.line}`,
+                    opacity: tableVisible ? 1 : 0,
+                    transform: tableVisible ? 'none' : 'translateY(8px)',
+                    transition: `opacity 0.5s ease-out ${i * 0.06}s, transform 0.5s ease-out ${i * 0.06}s`,
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
+                    <span style={{ fontSize: 12, fontWeight: 800, color: color.warn, letterSpacing: '0.06em' }}>{code}</span>
+                    <span style={{ fontSize: 12, color: color.inkMuted, fontFamily: font.family }}>{label}</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: color.brand, letterSpacing: '0.04em' }}>{ur}</span>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                    <div>
+                      <p style={{ fontSize: 10, fontWeight: 800, color: color.warn, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 4px', fontFamily: font.family }}>BEFORE</p>
+                      <p style={{ fontSize: 13, lineHeight: 1.5, color: color.inkMuted, margin: 0, fontFamily: font.family }}>{before}</p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: 10, fontWeight: 800, color: color.brand, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 4px', fontFamily: font.family }}>AFTER</p>
+                      <p style={{ fontSize: 13, lineHeight: 1.5, color: color.ink, fontWeight: 600, margin: 0, fontFamily: font.family }}>{after}</p>
+                    </div>
+                  </div>
                 </div>
-                <div style={{
-                  padding: 'clamp(12px,1.5vw,16px) 12px',
-                  fontSize: t.caption.size, lineHeight: t.caption.lh,
-                  color: color.inkMuted, fontFamily: font.family,
-                  display: 'flex', alignItems: 'center',
-                }}>
-                  {label}
-                </div>
-                <div style={{
-                  padding: 'clamp(12px,1.5vw,16px) 12px',
-                  fontSize: t.caption.size, lineHeight: t.caption.lh,
+              ))}
+            </div>
+          ) : (
+            /* Desktop: grid table */
+            <div style={{ overflowX: 'auto' }}>
+            {/* Table header */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '80px 96px 1fr 1fr 88px',
+              gap: 0,
+              borderBottom: `2px solid ${color.line}`,
+              paddingBottom: 10,
+              marginBottom: 0,
+              minWidth: 600,
+            }}>
+              {['코드', '원칙', 'BEFORE', 'AFTER', 'UR'].map((h) => (
+                <div key={h} style={{
+                  padding: '0 12px',
+                  fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
+                  letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
                   color: color.inkMuted, fontFamily: font.family,
                 }}>
-                  {before}
+                  {h}
                 </div>
-                <div style={{
-                  padding: 'clamp(12px,1.5vw,16px) 12px',
-                  fontSize: t.caption.size, lineHeight: t.caption.lh,
-                  color: color.ink, fontFamily: font.family,
-                  fontWeight: 600,
-                }}>
-                  {after}
+              ))}
+            </div>
+            <div>
+              {VIOLATIONS.map(({ code, label, before, after, ur }, i) => (
+                <div
+                  key={code}
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '80px 96px 1fr 1fr 88px',
+                    gap: 0,
+                    background: i % 2 === 0 ? color.white : 'transparent',
+                    borderBottom: `1px solid ${color.line}`,
+                    minWidth: 600,
+                    opacity: tableVisible ? 1 : 0,
+                    transform: tableVisible ? 'none' : 'translateY(8px)',
+                    transition: `opacity 0.5s ease-out ${i * 0.06}s, transform 0.5s ease-out ${i * 0.06}s`,
+                  }}
+                >
+                  <div style={{ padding: 'clamp(12px,1.5vw,16px) 12px', fontSize: 12, fontWeight: 800, letterSpacing: '0.06em', color: color.warn, fontFamily: font.family, display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}>{code}</div>
+                  <div style={{ padding: 'clamp(12px,1.5vw,16px) 12px', fontSize: t.caption.size, lineHeight: t.caption.lh, color: color.inkMuted, fontFamily: font.family, display: 'flex', alignItems: 'center' }}>{label}</div>
+                  <div style={{ padding: 'clamp(12px,1.5vw,16px) 12px', fontSize: t.caption.size, lineHeight: t.caption.lh, color: color.inkMuted, fontFamily: font.family }}>{before}</div>
+                  <div style={{ padding: 'clamp(12px,1.5vw,16px) 12px', fontSize: t.caption.size, lineHeight: t.caption.lh, color: color.ink, fontFamily: font.family, fontWeight: 600 }}>{after}</div>
+                  <div style={{ padding: 'clamp(12px,1.5vw,16px) 12px', fontSize: 13, fontWeight: 700, color: color.brand, fontFamily: font.family, display: 'flex', alignItems: 'center', letterSpacing: '0.04em', whiteSpace: 'nowrap' }}>{ur}</div>
                 </div>
-                <div style={{
-                  padding: 'clamp(12px,1.5vw,16px) 12px',
-                  fontSize: 13, fontWeight: 700,
-                  color: color.brand, fontFamily: font.family,
-                  display: 'flex', alignItems: 'center',
-                  letterSpacing: '0.04em',
-                  whiteSpace: 'nowrap',
-                }}>
-                  {ur}
-                </div>
-              </div>
-            ))}
-          </div>
-          </div>
+              ))}
+            </div>
+            </div>
+          )}
         </div>
 
       </div>

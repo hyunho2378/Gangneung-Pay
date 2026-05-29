@@ -218,7 +218,7 @@ export default function AiHarness() {
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {/* BN / MY / FX row */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 8 }}>
                 {AGENTS.slice(0, 3).map((ag) => (
                   <div
                     key={ag.id}
@@ -317,7 +317,7 @@ export default function AiHarness() {
             }}>
               모델 선택 기준
             </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
               {MODELS.map((m) => (
                 <div
                   key={m.name}
@@ -392,7 +392,7 @@ export default function AiHarness() {
             }}>
               Figma MCP 양방향 연결
             </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 10, marginBottom: 16 }}>
               {[
                 { dir: 'Figma → 코드', desc: '디자인 시안을 코드로 반영' },
                 { dir: '코드 → Figma', desc: '코드 변경사항을 디자인에 동기화' },
