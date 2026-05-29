@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 import { useCountUp } from '../lib/useCountUp.js';
@@ -42,6 +44,26 @@ function HBar({ items, note }) {
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+function Accordion({ label, children }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{ border: `1px solid ${color.line}`, borderRadius: layout.rMd, overflow: 'hidden', margin: 'clamp(12px,1.5vw,20px) 0' }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'clamp(14px,1.8vw,20px) clamp(16px,2vw,24px)', background: open ? color.brandPale : color.bg, border: 'none', cursor: 'pointer', fontFamily: font.family }}
+      >
+        <span style={{ fontSize: t.caption.size, fontWeight: 700, color: open ? color.brand : color.inkMuted, fontFamily: font.family, textAlign: 'left' }}>{label}</span>
+        <ChevronDown size={16} color={open ? color.brand : color.inkMuted} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s ease', flexShrink: 0, marginLeft: 12 }} />
+      </button>
+      {open && (
+        <div style={{ padding: 'clamp(16px,2vw,24px)', borderTop: `1px solid ${color.line}`, background: color.white }}>
+          {children}
+        </div>
+      )}
     </div>
   );
 }
@@ -112,23 +134,16 @@ export default function UserResearch() {
             }}>
               {why.background}
             </p>
-            <p style={{ ...eyebrowStyle(color.inkMuted), margin: '0 0 16px' }}>조사 목적</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {why.purposes.map((p, i) => (
-                <div key={i} style={{
-                  display: 'flex', gap: 16, padding: '14px 20px',
-                  background: color.bg, borderRadius: layout.rMd,
-                }}>
-                  <span style={{
-                    fontSize: 12, fontWeight: 800, color: color.brand,
-                    flexShrink: 0, lineHeight: 1.5, fontFamily: font.family,
-                  }}>
-                    0{i + 1}
-                  </span>
-                  <p style={{ margin: 0, fontSize: 14, lineHeight: 1.65, color: color.ink, fontFamily: font.family }}>{p}</p>
-                </div>
-              ))}
-            </div>
+            <Accordion label="조사 목적 상세">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {why.purposes.map((p, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 16, padding: '14px 20px', background: color.bg, borderRadius: layout.rMd }}>
+                    <span style={{ fontSize: 12, fontWeight: 800, color: color.brand, flexShrink: 0, lineHeight: 1.5, fontFamily: font.family }}>0{i + 1}</span>
+                    <p style={{ margin: 0, fontSize: 14, lineHeight: 1.65, color: color.ink, fontFamily: font.family }}>{p}</p>
+                  </div>
+                ))}
+              </div>
+            </Accordion>
           </div>
         </div>
       </div>
@@ -138,26 +153,28 @@ export default function UserResearch() {
         <div style={{ maxWidth: layout.container, margin: '0 auto' }}>
           <div ref={ref2} style={reveal(vis2)}>
             <p style={{ ...eyebrowStyle(color.inkMuted), margin: '0 0 20px' }}>02 RESEARCH GOALS</p>
-            <div style={{ borderRadius: layout.rMd, overflow: 'hidden', boxShadow: cardShadow }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16 }}>
-                <thead>
-                  <tr style={{ background: color.ink }}>
-                    <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14, width: 48 }}>No</th>
-                    <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14 }}>연구 목표</th>
-                    <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14 }}>기대 성과</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {why.goals.map((g, i) => (
-                    <tr key={g.no} style={{ background: i % 2 === 0 ? color.white : color.bg }}>
-                      <td style={{ padding: '10px 16px', color: color.brand, fontWeight: 800, fontSize: 14 }}>{g.no}</td>
-                      <td style={{ padding: '10px 16px', color: color.ink, fontSize: 16, lineHeight: 1.5 }}>{g.goal}</td>
-                      <td style={{ padding: '10px 16px', color: color.inkMuted, fontSize: 15, lineHeight: 1.5 }}>{g.outcome}</td>
+            <Accordion label="RESEARCH GOALS 전체">
+              <div style={{ borderRadius: layout.rMd, overflow: 'hidden', boxShadow: cardShadow }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16 }}>
+                  <thead>
+                    <tr style={{ background: color.ink }}>
+                      <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14, width: 48 }}>No</th>
+                      <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14 }}>연구 목표</th>
+                      <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14 }}>기대 성과</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {why.goals.map((g, i) => (
+                      <tr key={g.no} style={{ background: i % 2 === 0 ? color.white : color.bg }}>
+                        <td style={{ padding: '10px 16px', color: color.brand, fontWeight: 800, fontSize: 14 }}>{g.no}</td>
+                        <td style={{ padding: '10px 16px', color: color.ink, fontSize: 16, lineHeight: 1.5 }}>{g.goal}</td>
+                        <td style={{ padding: '10px 16px', color: color.inkMuted, fontSize: 15, lineHeight: 1.5 }}>{g.outcome}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </Accordion>
           </div>
         </div>
       </div>
@@ -262,14 +279,9 @@ export default function UserResearch() {
                       WHY
                     </p>
                     <p style={{ fontSize: 17, fontWeight: 500, lineHeight: 1.6, color: color.inkMuted, margin: '0 0 14px', fontFamily: font.family }}>{m.purpose}</p>
-                    <p style={{
-                      fontSize: 15, fontWeight: 800, color: color.brand,
-                      margin: '0 0 4px', letterSpacing: '0em', textTransform: 'uppercase',
-                      fontFamily: font.family,
-                    }}>
-                      HOW
-                    </p>
-                    <p style={{ fontSize: 17, fontWeight: 500, lineHeight: 1.6, color: color.inkMuted, margin: 0, fontFamily: font.family }}>{m.detail}</p>
+                    <Accordion label="HOW 상세">
+                      <p style={{ fontSize: 17, fontWeight: 500, lineHeight: 1.6, color: color.inkMuted, margin: 0, fontFamily: font.family, wordBreak: 'keep-all' }}>{m.detail}</p>
+                    </Accordion>
                   </div>
                 );
               })}
@@ -307,38 +319,22 @@ export default function UserResearch() {
                     </span>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <p style={{ fontSize: 20, fontWeight: 800, color: color.ink, margin: '0 0 16px', fontFamily: font.family }}>{m.title}</p>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px,1fr))', gap: 'clamp(12px,1.5vw,20px)' }}>
-                        <div>
-                          <p style={{
-                            fontSize: 11, fontWeight: 800, color: color.brand,
-                            margin: '0 0 6px', letterSpacing: '0em', textTransform: 'uppercase',
-                            fontFamily: font.family,
-                          }}>
-                            시나리오
-                          </p>
-                          <p style={{ margin: 0, fontSize: 17, fontWeight: 500, lineHeight: 1.6, color: color.inkMuted, fontFamily: font.family }}>{m.scenario}</p>
-                        </div>
-                        <div>
-                          <p style={{
-                            fontSize: 11, fontWeight: 800, color: color.inkMuted,
-                            margin: '0 0 6px', letterSpacing: '0em', textTransform: 'uppercase',
-                            fontFamily: font.family,
-                          }}>
-                            관찰 포인트
-                          </p>
-                          <p style={{ margin: 0, fontSize: 17, fontWeight: 500, lineHeight: 1.6, color: color.inkMuted, fontFamily: font.family }}>{m.observe}</p>
-                        </div>
-                        <div>
-                          <p style={{
-                            fontSize: 11, fontWeight: 800, color: color.inkMuted,
-                            margin: '0 0 6px', letterSpacing: '0em', textTransform: 'uppercase',
-                            fontFamily: font.family,
-                          }}>
-                            측정 지표
-                          </p>
-                          <p style={{ margin: 0, fontSize: 17, fontWeight: 500, lineHeight: 1.6, color: color.inkMuted, fontFamily: font.family }}>{m.metric}</p>
-                        </div>
+                      <div>
+                        <p style={{ fontSize: 11, fontWeight: 800, color: color.brand, margin: '0 0 6px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>시나리오</p>
+                        <p style={{ margin: 0, fontSize: 17, fontWeight: 500, lineHeight: 1.6, color: color.inkMuted, fontFamily: font.family, wordBreak: 'keep-all' }}>{m.scenario}</p>
                       </div>
+                      <Accordion label="관찰 포인트 및 측정 지표">
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px,1fr))', gap: 'clamp(12px,1.5vw,20px)' }}>
+                          <div>
+                            <p style={{ fontSize: 11, fontWeight: 800, color: color.inkMuted, margin: '0 0 6px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>관찰 포인트</p>
+                            <p style={{ margin: 0, fontSize: 17, fontWeight: 500, lineHeight: 1.6, color: color.inkMuted, fontFamily: font.family, wordBreak: 'keep-all' }}>{m.observe}</p>
+                          </div>
+                          <div>
+                            <p style={{ fontSize: 11, fontWeight: 800, color: color.inkMuted, margin: '0 0 6px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>측정 지표</p>
+                            <p style={{ margin: 0, fontSize: 17, fontWeight: 500, lineHeight: 1.6, color: color.inkMuted, fontFamily: font.family, wordBreak: 'keep-all' }}>{m.metric}</p>
+                          </div>
+                        </div>
+                      </Accordion>
                     </div>
                   </div>
                 </div>
@@ -408,49 +404,35 @@ export default function UserResearch() {
               </div>
             </div>
 
-            {/* Charts 2x2 */}
+            {/* Charts: 결제수단 + 인지도 메인 노출 */}
             <div style={{
-              display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
+              display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)',
               gap: 'clamp(16px,2vw,32px)',
-              marginBottom: 'clamp(24px,3vw,40px)',
+              marginBottom: 'clamp(8px,1vw,16px)',
             }}>
               <div style={{ background: color.bg, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)' }}>
-                <p style={{
-                  fontSize: 15, fontWeight: 800, color: color.brand,
-                  margin: '0 0 16px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family,
-                }}>
-                  연령대 분포
-                </p>
-                <HBar items={ageItems} note="n=70 단일 응답" />
-              </div>
-              <div style={{ background: color.bg, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)' }}>
-                <p style={{
-                  fontSize: 15, fontWeight: 800, color: color.brand,
-                  margin: '0 0 16px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family,
-                }}>
-                  사용 기기
-                </p>
-                <HBar items={deviceItems} note="n=70 단일 응답" />
-              </div>
-              <div style={{ background: color.bg, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)' }}>
-                <p style={{
-                  fontSize: 15, fontWeight: 800, color: color.brand,
-                  margin: '0 0 16px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family,
-                }}>
-                  결제 수단
-                </p>
+                <p style={{ fontSize: 15, fontWeight: 800, color: color.brand, margin: '0 0 16px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>결제 수단</p>
                 <HBar items={paymentItems} note="n=70 복수 응답" />
               </div>
               <div style={{ background: color.bg, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)' }}>
-                <p style={{
-                  fontSize: 15, fontWeight: 800, color: color.brand,
-                  margin: '0 0 16px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family,
-                }}>
-                  강릉페이 인지도
-                </p>
+                <p style={{ fontSize: 15, fontWeight: 800, color: color.brand, margin: '0 0 16px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>강릉페이 인지도</p>
                 <HBar items={awarenessItems} note="n=70 단일 응답" />
               </div>
             </div>
+            {/* 연령대+기기 아코디언 */}
+            <Accordion label="전체 설문 결과 분포 (연령대, 기기)">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'clamp(16px,2vw,32px)' }}>
+                <div style={{ background: color.bg, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)' }}>
+                  <p style={{ fontSize: 15, fontWeight: 800, color: color.brand, margin: '0 0 16px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>연령대 분포</p>
+                  <HBar items={ageItems} note="n=70 단일 응답" />
+                </div>
+                <div style={{ background: color.bg, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)' }}>
+                  <p style={{ fontSize: 15, fontWeight: 800, color: color.brand, margin: '0 0 16px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>사용 기기</p>
+                  <HBar items={deviceItems} note="n=70 단일 응답" />
+                </div>
+              </div>
+            </Accordion>
+            <div style={{ marginBottom: 'clamp(24px,3vw,40px)' }} />
 
             {/* Observation results */}
             <div style={{ background: color.bg, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)' }}>
@@ -478,66 +460,47 @@ export default function UserResearch() {
         <div style={{ maxWidth: layout.container, margin: '0 auto' }}>
           <div ref={ref7} style={reveal(vis7)}>
             <p style={{ ...eyebrowStyle(color.inkMuted), margin: '0 0 20px' }}>07 SEGMENT PRIORITY</p>
-            <div style={{
-              borderRadius: layout.rMd, overflow: 'hidden',
-              boxShadow: cardShadow, marginBottom: 'clamp(40px,5vw,64px)',
-            }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16 }}>
-                <thead>
-                  <tr style={{ background: color.ink }}>
-                    <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14 }}>세그먼트</th>
-                    <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14 }}>1순위 개선</th>
-                    <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14 }}>2순위 개선</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {segment_priority.map((s, i) => (
-                    <tr key={i} style={{ background: i % 2 === 0 ? color.white : color.bg }}>
-                      <td style={{ padding: '10px 16px', color: color.brand, fontWeight: 700, fontSize: 15 }}>{s.segment}</td>
-                      <td style={{ padding: '10px 16px', color: color.ink, fontSize: 16, lineHeight: 1.5 }}>{s.p1}</td>
-                      <td style={{ padding: '10px 16px', color: color.inkMuted, fontSize: 15, lineHeight: 1.5 }}>{s.p2}</td>
+            <Accordion label="세그먼트 개선 우선순위 전체">
+              <div style={{ borderRadius: layout.rMd, overflow: 'hidden', boxShadow: cardShadow, marginBottom: 'clamp(24px,3vw,40px)' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16 }}>
+                  <thead>
+                    <tr style={{ background: color.ink }}>
+                      <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14 }}>세그먼트</th>
+                      <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14 }}>1순위 개선</th>
+                      <th style={{ padding: '10px 16px', textAlign: 'left', color: color.white, fontWeight: 700, fontSize: 14 }}>2순위 개선</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <p style={{ ...eyebrowStyle(color.inkMuted), margin: '0 0 20px' }}>사용자 니즈 종합</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {needs.map((n, i) => (
-                <div key={i} style={{
-                  background: color.white, borderRadius: layout.rMd,
-                  padding: '16px 20px',
-                  display: 'grid',
-                  gridTemplateColumns: 'minmax(100px,1fr) minmax(140px,1.5fr) minmax(140px,1.5fr)',
-                  gap: 'clamp(12px,1.5vw,24px)',
-                  alignItems: 'start',
-                  boxShadow: cardShadow,
-                }}>
-                  <div>
-                    <p style={{
-                      fontSize: 11, fontWeight: 800, color: color.brand,
-                      margin: '0 0 4px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family,
-                    }}>니즈</p>
-                    <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: color.ink, fontFamily: font.family }}>{n.need}</p>
+                  </thead>
+                  <tbody>
+                    {segment_priority.map((s, i) => (
+                      <tr key={i} style={{ background: i % 2 === 0 ? color.white : color.bg }}>
+                        <td style={{ padding: '10px 16px', color: color.brand, fontWeight: 700, fontSize: 15 }}>{s.segment}</td>
+                        <td style={{ padding: '10px 16px', color: color.ink, fontSize: 16, lineHeight: 1.5 }}>{s.p1}</td>
+                        <td style={{ padding: '10px 16px', color: color.inkMuted, fontSize: 15, lineHeight: 1.5 }}>{s.p2}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p style={{ ...eyebrowStyle(color.inkMuted), margin: '0 0 16px' }}>사용자 니즈 종합</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {needs.map((n, i) => (
+                  <div key={i} style={{ background: color.bg, borderRadius: layout.rMd, padding: '16px 20px', display: 'grid', gridTemplateColumns: 'minmax(100px,1fr) minmax(140px,1.5fr) minmax(140px,1.5fr)', gap: 'clamp(12px,1.5vw,24px)', alignItems: 'start' }}>
+                    <div>
+                      <p style={{ fontSize: 11, fontWeight: 800, color: color.brand, margin: '0 0 4px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>니즈</p>
+                      <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: color.ink, fontFamily: font.family }}>{n.need}</p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: 11, fontWeight: 800, color: color.warn, margin: '0 0 4px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>문제</p>
+                      <p style={{ margin: 0, fontSize: 13, lineHeight: 1.55, color: color.inkMuted, fontFamily: font.family }}>{n.problem}</p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: 11, fontWeight: 800, color: color.inkMuted, margin: '0 0 4px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>방향</p>
+                      <p style={{ margin: 0, fontSize: 13, lineHeight: 1.55, color: color.inkMuted, fontFamily: font.family }}>{n.direction}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p style={{
-                      fontSize: 11, fontWeight: 800, color: color.warn,
-                      margin: '0 0 4px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family,
-                    }}>문제</p>
-                    <p style={{ margin: 0, fontSize: 13, lineHeight: 1.55, color: color.inkMuted, fontFamily: font.family }}>{n.problem}</p>
-                  </div>
-                  <div>
-                    <p style={{
-                      fontSize: 11, fontWeight: 800, color: color.inkMuted,
-                      margin: '0 0 4px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family,
-                    }}>방향</p>
-                    <p style={{ margin: 0, fontSize: 13, lineHeight: 1.55, color: color.inkMuted, fontFamily: font.family }}>{n.direction}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </Accordion>
           </div>
         </div>
       </div>

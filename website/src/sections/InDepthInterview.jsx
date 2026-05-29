@@ -906,12 +906,13 @@ export default function InDepthInterview() {
 
         <Divider />
 
-        {/* Step 5 - 그대로 유지 */}
+        {/* Step 5 */}
         <div ref={step5Ref} style={{
           ...revealStyle(step5Visible),
           marginBottom: 'clamp(40px,5vw,64px)',
         }}>
           <StepHeader step="5단계" title="설문조사 수정 제안 - 인사이트를 정량화할 3가지 핵심 질문" />
+          <Accordion label="5단계: 설문조사 추가 제안 전체 보기">
           <Body>
             인뎁스 인터뷰에서 도출된 가설을 대규모 표본으로 검증하기 위해, 현행 설문조사에 반드시 추가해야 할 질문 3가지를 제안합니다. 각 질문은 단일 인사이트가 아닌 특정 의사결정을 위한 임계치 데이터를 수집하는 것을 목적으로 합니다.
           </Body>
@@ -980,27 +981,30 @@ export default function InDepthInterview() {
           <Body>
             인터뷰에서 애플페이 수요가 삼성페이 수요만큼 강하게 드러났지만, 이는 소수 표본의 발화입니다. 이 질문에 스마트폰 기기 종류(갤럭시/아이폰/기타)를 크로스탭으로 분석하면, 기기별 결제 방식 수요를 정량화할 수 있습니다. 이를 통해 삼성페이와 애플페이 중 어느 것을 먼저 도입해야 더 큰 이탈 방지 효과를 거둘 수 있는지 데이터 기반으로 결정 가능해집니다.
           </Body>
+          </Accordion>
         </div>
 
         <Divider />
 
-        {/* 부록 - 그대로 유지 */}
+        {/* 부록 */}
         <div ref={appendixRef} style={{
           ...revealStyle(appendixVisible),
         }}>
           <StepHeader step="부록" title="발화 기반 개선 우선순위 매트릭스" />
-          <Body>
-            인터뷰에서 도출된 개선 과제를 '사용자 영향도'와 '구현 복잡도' 기준으로 분류한 매트릭스입니다. 단기 로드맵 수립의 출발점으로 활용할 것을 권고합니다.
-          </Body>
+          <Accordion label="부록: 개선 우선순위 매트릭스 전체 보기">
+            <Body>
+              인터뷰에서 도출된 개선 과제를 '사용자 영향도'와 '구현 복잡도' 기준으로 분류한 매트릭스입니다. 단기 로드맵 수립의 출발점으로 활용할 것을 권고합니다.
+            </Body>
 
-          <CompareTable
-            headers={['개선 과제', '사용자 영향도', '구현 복잡도', '근거 발화']}
-            rows={APPENDIX_ROWS}
-          />
+            <CompareTable
+              headers={['개선 과제', '사용자 영향도', '구현 복잡도', '근거 발화']}
+              rows={APPENDIX_ROWS}
+            />
 
-          <Body noMargin>
-            본 보고서는 8인 사용자의 발화 데이터만을 기반으로 작성되었으며, 정량적 대표성은 후속 설문조사를 통해 검증되어야 합니다. 특히 Group B 내 아이폰 사용자 비율에 따라 애플페이 도입의 우선순위가 삼성페이와 역전될 수 있으므로, 기기 분포 조사가 선행되어야 합니다.
-          </Body>
+            <Body noMargin>
+              본 보고서는 8인 사용자의 발화 데이터만을 기반으로 작성되었으며, 정량적 대표성은 후속 설문조사를 통해 검증되어야 합니다. 특히 Group B 내 아이폰 사용자 비율에 따라 애플페이 도입의 우선순위가 삼성페이와 역전될 수 있으므로, 기기 분포 조사가 선행되어야 합니다.
+            </Body>
+          </Accordion>
         </div>
 
       </div>

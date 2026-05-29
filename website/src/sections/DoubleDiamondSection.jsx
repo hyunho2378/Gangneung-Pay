@@ -85,11 +85,11 @@ function DesktopDiagram() {
             </g>
           ))}
 
-          {/* URQ waist dot + line */}
+          {/* URQ waist dot + horizontal dashed line between diamond tips */}
           <circle cx={490} cy={350} r={6} fill={color.brand} />
           <line
-            x1={490} y1={350} x2={490} y2={435}
-            stroke={color.brand} strokeWidth={1.5} strokeDasharray="4 4" opacity={0.45}
+            x1={486} y1={350} x2={494} y2={350}
+            stroke={color.brandPale} strokeWidth={2} strokeDasharray="2 2"
           />
         </svg>
 
@@ -259,7 +259,7 @@ export default function DoubleDiamondSection() {
             overflowX: 'auto',
           }}
         >
-          <div style={{ width: 720, minWidth: 720, margin: '0 auto' }}>
+          <div style={{ width: 480, minWidth: 480, margin: '0 auto' }}>
             <DesktopDiagram />
           </div>
         </div>
