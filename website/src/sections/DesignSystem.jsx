@@ -229,7 +229,7 @@ const CHECKLIST = [
 ];
 
 const cardShadow = '0 4px 24px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)';
-const panelGrid = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(4px,0.5vw,8px)', alignItems: 'start' };
+const panelGrid = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(4px,0.5vw,8px)' };
 const eyebrowStyle = {
   fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
   letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
@@ -246,6 +246,7 @@ const panelCard = {
   background: color.white, borderRadius: layout.rMd, padding: '20px',
   boxShadow: cardShadow, display: 'flex', flexDirection: 'column',
 };
+const demoWrap = { flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' };
 const panelLabel = {
   fontSize: 'clamp(20px,1.7vw,24px)', fontWeight: t.eyebrow.weight,
   letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
@@ -470,20 +471,24 @@ export default function DesignSystem() {
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'clamp(4px,0.5vw,8px)', marginBottom: 'clamp(32px,4vw,48px)' }}>
             <div style={{ background: color.white, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,36px)', border: `1px solid ${color.line}`, boxShadow: cardShadow, display: 'flex', flexDirection: 'column' }}>
               <p style={{ ...panelLabel, fontSize: '17px', fontWeight: 700, color: color.brand }}>HIG</p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-                <button style={{ background: color.brand, color: '#fff', borderRadius: 12, height: 52, padding: '0 24px', fontSize: 17, fontWeight: 600, border: 'none', cursor: 'pointer', boxShadow: '0 2px 6px rgba(29,78,216,0.25)', fontFamily: font.family }}>간편 신청하기</button>
-                <button style={{ background: color.brandPale, color: color.brand, borderRadius: 12, height: 52, padding: '0 24px', fontSize: 17, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: font.family }}>캐시백 충전</button>
-                <button style={{ background: 'transparent', color: color.brand, borderRadius: 12, height: 52, padding: '0 24px', fontSize: 17, fontWeight: 600, border: `1px solid ${color.brand}`, cursor: 'pointer', fontFamily: font.family }}>환불</button>
-                <button style={{ background: 'transparent', color: color.brand, borderRadius: 12, height: 52, padding: '0 24px', fontSize: 17, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: font.family }}>다음에 하기</button>
+              <div style={demoWrap}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+                  <button style={{ background: color.brand, color: '#fff', borderRadius: 12, height: 47, padding: '0 24px', fontSize: 17, fontWeight: 600, border: 'none', cursor: 'pointer', boxShadow: '0 2px 6px rgba(29,78,216,0.25)', fontFamily: font.family }}>간편 신청하기</button>
+                  <button style={{ background: color.brandPale, color: color.brand, borderRadius: 12, height: 47, padding: '0 24px', fontSize: 17, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: font.family }}>캐시백 충전</button>
+                  <button style={{ background: 'transparent', color: color.brand, borderRadius: 12, height: 47, padding: '0 24px', fontSize: 17, fontWeight: 600, border: `1px solid ${color.brand}`, cursor: 'pointer', fontFamily: font.family }}>환불</button>
+                  <button style={{ background: 'transparent', color: color.brand, borderRadius: 12, height: 47, padding: '0 24px', fontSize: 17, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: font.family }}>다음에 하기</button>
+                </div>
               </div>
             </div>
             <div style={{ background: color.white, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,36px)', border: `1px solid ${color.line}`, boxShadow: cardShadow, display: 'flex', flexDirection: 'column' }}>
               <p style={{ ...panelLabel, fontSize: '17px', fontWeight: 700, color: color.brand }}>Google Material 3</p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-                <button style={{ background: color.brand, color: '#fff', borderRadius: 999, height: 48, padding: '0 24px', fontSize: 16, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'Noto Sans KR', sans-serif" }}>간편 신청하기</button>
-                <button style={{ background: color.brandPale, color: color.brand, borderRadius: 999, height: 48, padding: '0 24px', fontSize: 16, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'Noto Sans KR', sans-serif" }}>캐시백 충전</button>
-                <button style={{ background: 'transparent', color: color.brand, borderRadius: 999, height: 48, padding: '0 24px', fontSize: 16, fontWeight: 600, border: `1px solid ${color.brand}`, cursor: 'pointer', fontFamily: "'Noto Sans KR', sans-serif" }}>환불</button>
-                <button style={{ background: 'transparent', color: color.brand, borderRadius: 999, height: 48, padding: '0 24px', fontSize: 16, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'Noto Sans KR', sans-serif" }}>다음에 하기</button>
+              <div style={demoWrap}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+                  <button style={{ background: color.brand, color: '#fff', borderRadius: 999, height: 43, padding: '0 24px', fontSize: 16, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'Noto Sans KR', sans-serif" }}>간편 신청하기</button>
+                  <button style={{ background: color.brandPale, color: color.brand, borderRadius: 999, height: 43, padding: '0 24px', fontSize: 16, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'Noto Sans KR', sans-serif" }}>캐시백 충전</button>
+                  <button style={{ background: 'transparent', color: color.brand, borderRadius: 999, height: 43, padding: '0 24px', fontSize: 16, fontWeight: 600, border: `1px solid ${color.brand}`, cursor: 'pointer', fontFamily: "'Noto Sans KR', sans-serif" }}>환불</button>
+                  <button style={{ background: 'transparent', color: color.brand, borderRadius: 999, height: 43, padding: '0 24px', fontSize: 16, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'Noto Sans KR', sans-serif" }}>다음에 하기</button>
+                </div>
               </div>
             </div>
           </div>
@@ -493,11 +498,15 @@ export default function DesignSystem() {
           <div style={{ ...panelGridResp, marginBottom: 'clamp(32px,4vw,48px)' }}>
             <div style={panelCard}>
               <p style={panelLabel}>HIG</p>
-              <IOSBottomNav activeIndex={iosNavActive} onSelect={setIosNavActive} />
+              <div style={demoWrap}>
+                <IOSBottomNav activeIndex={iosNavActive} onSelect={setIosNavActive} />
+              </div>
             </div>
             <div style={panelCard}>
               <p style={panelLabel}>Google Material 3</p>
-              <AndroidBottomNav activeIndex={andNavActive} onSelect={setAndNavActive} />
+              <div style={demoWrap}>
+                <AndroidBottomNav activeIndex={andNavActive} onSelect={setAndNavActive} />
+              </div>
             </div>
           </div>
 
@@ -515,11 +524,15 @@ export default function DesignSystem() {
           <div style={{ ...panelGridResp, marginBottom: 'clamp(32px,4vw,48px)' }}>
             <div style={panelCard}>
               <p style={panelLabel}>HIG: 41px</p>
-              <img src={iosStatusBar} alt="" style={{ width: '100%', height: 'auto' }} />
+              <div style={demoWrap}>
+                <img src={iosStatusBar} alt="" style={{ width: '100%', height: 'auto' }} />
+              </div>
             </div>
             <div style={panelCard}>
               <p style={panelLabel}>Google Material 3: 42px</p>
-              <img src={androidStatusBar} alt="" style={{ width: '100%', height: 'auto' }} />
+              <div style={demoWrap}>
+                <img src={androidStatusBar} alt="" style={{ width: '100%', height: 'auto' }} />
+              </div>
             </div>
           </div>
 
@@ -528,17 +541,21 @@ export default function DesignSystem() {
           <div style={{ ...panelGridResp, marginBottom: 'clamp(32px,4vw,48px)' }}>
             <div style={panelCard}>
               <p style={panelLabel}>HIG</p>
-              <div style={{ height: 44, borderRadius: 12, background: color.white, border: `1px solid ${color.line}`, display: 'flex', alignItems: 'center', padding: '0 16px' }}>
-                <span style={{ width: 44, fontSize: 17, color: color.brand }}>←</span>
-                <span style={{ flex: 1, textAlign: 'center', fontWeight: 700, fontSize: 17 }}>강릉페이</span>
-                <span style={{ width: 44 }} />
+              <div style={demoWrap}>
+                <div style={{ height: 39, borderRadius: 12, background: color.white, border: `1px solid ${color.line}`, display: 'flex', alignItems: 'center', padding: '0 16px' }}>
+                  <span style={{ width: 44, fontSize: 17, color: color.brand }}>←</span>
+                  <span style={{ flex: 1, textAlign: 'center', fontWeight: 700, fontSize: 17 }}>강릉페이</span>
+                  <span style={{ width: 44 }} />
+                </div>
               </div>
             </div>
             <div style={panelCard}>
               <p style={panelLabel}>Google Material 3</p>
-              <div style={{ height: 44, borderRadius: 12, background: color.bg, border: `1px solid ${color.line}`, display: 'flex', alignItems: 'center', padding: '0 16px' }}>
-                <span style={{ width: 44, fontSize: 17, color: color.brand }}>←</span>
-                <span style={{ flex: 1, textAlign: 'left', fontWeight: 700, fontSize: 17, fontFamily: "'Noto Sans KR', sans-serif" }}>강릉페이</span>
+              <div style={demoWrap}>
+                <div style={{ height: 39, borderRadius: 12, background: color.bg, border: `1px solid ${color.line}`, display: 'flex', alignItems: 'center', padding: '0 16px' }}>
+                  <span style={{ width: 44, fontSize: 17, color: color.brand }}>←</span>
+                  <span style={{ flex: 1, textAlign: 'left', fontWeight: 700, fontSize: 17, fontFamily: "'Noto Sans KR', sans-serif" }}>강릉페이</span>
+                </div>
               </div>
             </div>
           </div>
@@ -548,16 +565,20 @@ export default function DesignSystem() {
           <div style={{ ...panelGridResp, marginBottom: 'clamp(32px,4vw,48px)' }}>
             <div style={panelCard}>
               <p style={panelLabel}>HIG</p>
-              <div style={{ background: color.white, borderRadius: '20px 20px 0 0', padding: '12px 20px 20px', border: `1px solid ${color.line}` }}>
-                <div style={{ width: 40, height: 4, background: color.line, borderRadius: 999, margin: '0 auto 12px' }} />
-                <p style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>환불 금액을 확인해주세요</p>
+              <div style={demoWrap}>
+                <div style={{ background: color.white, borderRadius: '20px 20px 0 0', padding: '8px 20px 16px', border: `1px solid ${color.line}` }}>
+                  <div style={{ width: 40, height: 4, background: color.line, borderRadius: 999, margin: '0 auto 12px' }} />
+                  <p style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>환불 금액을 확인해주세요</p>
+                </div>
               </div>
             </div>
             <div style={panelCard}>
               <p style={panelLabel}>Google Material 3</p>
-              <div style={{ background: color.bg, borderRadius: '28px 28px 0 0', padding: '12px 20px 20px', border: `1px solid ${color.line}` }}>
-                <div style={{ width: 32, height: 4, background: '#9CA3AF', borderRadius: 999, margin: '0 auto 12px' }} />
-                <p style={{ margin: 0, fontSize: 16, fontWeight: 700, fontFamily: "'Noto Sans KR', sans-serif" }}>환불 금액을 확인해주세요</p>
+              <div style={demoWrap}>
+                <div style={{ background: color.bg, borderRadius: '28px 28px 0 0', padding: '8px 20px 16px', border: `1px solid ${color.line}` }}>
+                  <div style={{ width: 32, height: 4, background: '#9CA3AF', borderRadius: 999, margin: '0 auto 12px' }} />
+                  <p style={{ margin: 0, fontSize: 16, fontWeight: 700, fontFamily: "'Noto Sans KR', sans-serif" }}>환불 금액을 확인해주세요</p>
+                </div>
               </div>
             </div>
           </div>
@@ -567,22 +588,26 @@ export default function DesignSystem() {
           <div style={{ ...panelGridResp, marginBottom: 'clamp(32px,4vw,48px)' }}>
             <div style={panelCard}>
               <p style={panelLabel}>HIG</p>
-              <div style={{ background: color.white, borderRadius: 999, border: `1px solid ${color.line}`, height: 44, display: 'flex', alignItems: 'center', paddingLeft: 14, gap: 8 }}>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <circle cx="6.5" cy="6.5" r="5" stroke={color.inkFaint} strokeWidth="1.5" />
-                  <line x1="10.5" y1="10.5" x2="14" y2="14" stroke={color.inkFaint} strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
-                <span style={{ color: color.inkFaint, fontSize: 16 }}>검색</span>
+              <div style={demoWrap}>
+                <div style={{ background: color.white, borderRadius: 999, border: `1px solid ${color.line}`, height: 39, display: 'flex', alignItems: 'center', paddingLeft: 14, gap: 8 }}>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="6.5" cy="6.5" r="5" stroke={color.inkFaint} strokeWidth="1.5" />
+                    <line x1="10.5" y1="10.5" x2="14" y2="14" stroke={color.inkFaint} strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                  <span style={{ color: color.inkFaint, fontSize: 16 }}>검색</span>
+                </div>
               </div>
             </div>
             <div style={panelCard}>
               <p style={panelLabel}>Google Material 3</p>
-              <div style={{ background: '#F3F4F6', borderRadius: '8px 8px 0 0', borderBottom: `2px solid ${color.brand}`, height: 44, display: 'flex', alignItems: 'center', paddingLeft: 14, gap: 8 }}>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <circle cx="6.5" cy="6.5" r="5" stroke={color.inkFaint} strokeWidth="1.5" />
-                  <line x1="10.5" y1="10.5" x2="14" y2="14" stroke={color.inkFaint} strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
-                <span style={{ color: color.inkFaint, fontSize: 16, fontFamily: "'Noto Sans KR', sans-serif" }}>검색</span>
+              <div style={demoWrap}>
+                <div style={{ background: '#F3F4F6', borderRadius: '8px 8px 0 0', borderBottom: `2px solid ${color.brand}`, height: 39, display: 'flex', alignItems: 'center', paddingLeft: 14, gap: 8 }}>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="6.5" cy="6.5" r="5" stroke={color.inkFaint} strokeWidth="1.5" />
+                    <line x1="10.5" y1="10.5" x2="14" y2="14" stroke={color.inkFaint} strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                  <span style={{ color: color.inkFaint, fontSize: 16, fontFamily: "'Noto Sans KR', sans-serif" }}>검색</span>
+                </div>
               </div>
             </div>
           </div>
@@ -592,29 +617,33 @@ export default function DesignSystem() {
           <div style={{ ...panelGridResp, marginBottom: 'clamp(32px,4vw,48px)' }}>
             <div style={panelCard}>
               <p style={panelLabel}>HIG</p>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                {['전체', '충전', '환불', '결제'].map((chip, i) => (
-                  <span key={chip} onClick={() => setIosChipActive(i)} style={{
-                    padding: '6px 16px', borderRadius: 999, fontSize: 14, fontWeight: 600, cursor: 'pointer',
-                    background: i === iosChipActive ? color.brand : color.white,
-                    color: i === iosChipActive ? '#fff' : color.inkMuted,
-                    border: i === iosChipActive ? 'none' : `1px solid ${color.line}`,
-                  }}>{chip}</span>
-                ))}
+              <div style={demoWrap}>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {['전체', '충전', '환불', '결제'].map((chip, i) => (
+                    <span key={chip} onClick={() => setIosChipActive(i)} style={{
+                      padding: '3px 13px', borderRadius: 999, fontSize: 14, fontWeight: 600, cursor: 'pointer',
+                      background: i === iosChipActive ? color.brand : color.white,
+                      color: i === iosChipActive ? '#fff' : color.inkMuted,
+                      border: i === iosChipActive ? 'none' : `1px solid ${color.line}`,
+                    }}>{chip}</span>
+                  ))}
+                </div>
               </div>
             </div>
             <div style={panelCard}>
               <p style={panelLabel}>Google Material 3</p>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                {['전체', '충전', '환불', '결제'].map((chip, i) => (
-                  <span key={chip} onClick={() => setAndChipActive(i)} style={{
-                    padding: '6px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer',
-                    background: i === andChipActive ? color.brandPale : color.white,
-                    color: i === andChipActive ? color.brand : color.inkMuted,
-                    border: i === andChipActive ? 'none' : `1px solid ${color.line}`,
-                    fontFamily: "'Noto Sans KR', sans-serif",
-                  }}>{i === andChipActive ? chip : chip}</span>
-                ))}
+              <div style={demoWrap}>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {['전체', '충전', '환불', '결제'].map((chip, i) => (
+                    <span key={chip} onClick={() => setAndChipActive(i)} style={{
+                      padding: '3px 13px', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer',
+                      background: i === andChipActive ? color.brandPale : color.white,
+                      color: i === andChipActive ? color.brand : color.inkMuted,
+                      border: i === andChipActive ? 'none' : `1px solid ${color.line}`,
+                      fontFamily: "'Noto Sans KR', sans-serif",
+                    }}>{chip}</span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -624,13 +653,17 @@ export default function DesignSystem() {
           <div style={{ ...panelGridResp, marginBottom: 'clamp(32px,4vw,48px)' }}>
             <div style={panelCard}>
               <p style={panelLabel}>HIG</p>
-              <p style={{ margin: 0, color: color.inkFaint, fontStyle: 'italic', fontSize: 14, textAlign: 'center', padding: '12px 0' }}>iOS에서는 완료 화면으로 피드백을 제공합니다</p>
+              <div style={demoWrap}>
+                <p style={{ margin: 0, color: color.inkFaint, fontStyle: 'italic', fontSize: 14, textAlign: 'center', padding: '8px 0' }}>iOS에서는 완료 화면으로 피드백을 제공합니다</p>
+              </div>
             </div>
             <div style={panelCard}>
               <p style={panelLabel}>Google Material 3</p>
-              <div style={{ background: '#111827', borderRadius: 8, padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ color: '#fff', fontSize: 14, fontFamily: "'Noto Sans KR', sans-serif" }}>50,000원 환불이 완료됐어요</span>
-                <span style={{ color: '#93C5FD', fontWeight: 700, fontSize: 14, fontFamily: "'Noto Sans KR', sans-serif", cursor: 'pointer' }}>확인</span>
+              <div style={demoWrap}>
+                <div style={{ background: '#111827', borderRadius: 8, padding: '10px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: '#fff', fontSize: 14, fontFamily: "'Noto Sans KR', sans-serif" }}>50,000원 환불이 완료됐어요</span>
+                  <span style={{ color: '#93C5FD', fontWeight: 700, fontSize: 14, fontFamily: "'Noto Sans KR', sans-serif", cursor: 'pointer' }}>확인</span>
+                </div>
               </div>
             </div>
           </div>
@@ -644,20 +677,22 @@ export default function DesignSystem() {
             ].map(p => (
               <div key={p.label} style={panelCard}>
                 <p style={panelLabel}>{p.label}</p>
-                <div style={{ background: color.white, borderRadius: 14, padding: 14, boxShadow: cardShadow }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
-                    {[0, 1].map(d => (
-                      <div key={d} style={{ width: 8, height: 8, borderRadius: 999, background: d === 0 ? color.brand : color.line }} />
-                    ))}
-                    <span style={{ fontSize: 12, color: color.inkFaint, marginLeft: 4 }}>1/2</span>
-                  </div>
-                  <p style={{ margin: '0 0 12px', fontSize: 13, lineHeight: 1.6, color: color.ink }}>충전 버튼을 눌러 강릉페이 잔액을 충전할 수 있습니다.</p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: 13, color: color.inkFaint, cursor: 'pointer' }}>건너뛰기</span>
-                    <button style={{
-                      background: color.brand, color: '#fff', border: 'none', cursor: 'pointer',
-                      borderRadius: p.isIos ? 12 : 999, padding: '6px 16px', fontSize: 13, fontWeight: 600,
-                    }}>다음</button>
+                <div style={demoWrap}>
+                  <div style={{ background: color.white, borderRadius: 14, padding: 10, boxShadow: cardShadow }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+                      {[0, 1].map(d => (
+                        <div key={d} style={{ width: 8, height: 8, borderRadius: 999, background: d === 0 ? color.brand : color.line }} />
+                      ))}
+                      <span style={{ fontSize: 12, color: color.inkFaint, marginLeft: 4 }}>1/2</span>
+                    </div>
+                    <p style={{ margin: '0 0 12px', fontSize: 13, lineHeight: 1.6, color: color.ink }}>충전 버튼을 눌러 강릉페이 잔액을 충전할 수 있습니다.</p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: 13, color: color.inkFaint, cursor: 'pointer' }}>건너뛰기</span>
+                      <button style={{
+                        background: color.brand, color: '#fff', border: 'none', cursor: 'pointer',
+                        borderRadius: p.isIos ? 12 : 999, padding: '6px 16px', fontSize: 13, fontWeight: 600,
+                      }}>다음</button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -793,16 +828,20 @@ export default function DesignSystem() {
           <div style={{ ...panelGridResp, marginBottom: 'clamp(32px,4vw,48px)' }}>
             <div style={panelCard}>
               <p style={panelLabel}>HIG: 44×44pt</p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                <div style={{ width: 44, height: 44, background: color.brandPale, borderRadius: layout.rSm, flexShrink: 0 }} />
-                <p style={{ margin: 0, fontSize: t.caption.size, color: color.inkMuted }}>44pt × 44pt 최소 터치 영역</p>
+              <div style={demoWrap}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                  <div style={{ width: 39, height: 39, background: color.brandPale, borderRadius: layout.rSm, flexShrink: 0 }} />
+                  <p style={{ margin: 0, fontSize: t.caption.size, color: color.inkMuted }}>44pt × 44pt 최소 터치 영역</p>
+                </div>
               </div>
             </div>
             <div style={panelCard}>
               <p style={panelLabel}>Google Material 3: 48×48dp</p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                <div style={{ width: 48, height: 48, background: color.brandPale, borderRadius: layout.rSm, flexShrink: 0 }} />
-                <p style={{ margin: 0, fontSize: t.caption.size, color: color.inkMuted, fontFamily: "'Noto Sans KR', sans-serif" }}>48dp × 48dp 최소 터치 영역</p>
+              <div style={demoWrap}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                  <div style={{ width: 43, height: 43, background: color.brandPale, borderRadius: layout.rSm, flexShrink: 0 }} />
+                  <p style={{ margin: 0, fontSize: t.caption.size, color: color.inkMuted, fontFamily: "'Noto Sans KR', sans-serif" }}>48dp × 48dp 최소 터치 영역</p>
+                </div>
               </div>
             </div>
           </div>
