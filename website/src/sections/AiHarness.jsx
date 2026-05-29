@@ -10,11 +10,11 @@ const DOCS = [
   },
   {
     name: 'AGENTS.md', desc: '에이전트 역할, 경계',
-    preview: `# AGENTS.md :  에이전트 실행 구조\n\n## 실행 원칙\n에이전트는 명세를 벗어나는 결정을 스스로 내리지 않는다.\n명세에 없는 상황은 반드시 사용자에게 물어보고 대기한다.\n\nPHASE 0  초기 세팅     (1개 에이전트 단독)\nPHASE 1  병렬 구현     (3개 에이전트 동시 실행)\nPHASE 2  검증 및 연동  (1개 에이전트, PHASE 1 완료 후)\n\n## CHECKLIST\n- 빌드 오류 0건\n- localStorage 사용 0건\n- 하드코딩 색상 0건\n- 이모지 사용 없음\n- 명시 외 수정 없음\n\n커밋 규칙:\n[A0] chore: 초기 세팅\n[A1] feat: 기반 데이터 + 라우팅\n[A2] feat: 페이지 흐름\n[A3] feat: 재사용 컴포넌트\n[AR] fix: REVIEW 수정사항 반영`,
+    preview: `# AGENTS.md :  에이전트 실행 구조\n\n## 실행 원칙\n에이전트는 명세를 벗어나는 결정을 스스로 내리지 않는다.\n명세에 없는 상황은 반드시 사용자에게 물어보고 대기한다.\n\nPHASE 0  초기 세팅     (1개 에이전트 단독)\nPHASE 1  병렬 구현     (3개 에이전트 동시 실행)\nPHASE 2  검증 및 연동  (1개 에이전트, PHASE 1 완료 후)\n\n커밋 규칙:\n[A0] chore: 초기 세팅\n[A1] feat: 기반 데이터 + 라우팅\n[A2] feat: 페이지 흐름\n[A3] feat: 재사용 컴포넌트\n[AR] fix: REVIEW 수정사항 반영`,
   },
   {
     name: 'DESIGN.md', desc: '토큰, 컴포넌트 계약',
-    preview: `# DESIGN.md :  강릉페이 Phase 2 리디자인\n팀: 마카모예 | UX Concept: 내 돈이 내 편인 앱\n\n두 축:\n1. 투명한 정보 노출\n2. 막힘없는 직진형 프로세스\n\n## 7대 전략\nS1  앱 진입 전 잔액 선제 노출 (위젯)   :  투명\nS2  환불의 동등한 위계 노출           :  투명\nS3  혜택 현황의 즉각 체감 구조        :  투명\nS4  충전 플로우 3단계 압축            :  직진\nS5  잔액 부족 사전 차단 알림          :  직진\nS6  가맹점 정보 실시간 신뢰 구조       :  투명\nS7  첫 사용자 단계별 맥락 안내        :  직진\n\n절대 금지: 이모지, 색상 하드코딩,\nB2B 콘텐츠 B2C 화면 노출, localStorage`,
+    preview: `# DESIGN.md :  강릉페이 Phase 2 리디자인\n팀: 마카모예 | UX Concept: 내 돈이 내 편인 앱\n\n두 축:\n1. 투명한 정보 노출\n2. 막힘없는 직진형 프로세스\n\n## 4대 전략\nS1  금융앱은 금융에 집중합니다         :  덜어내기\nS2  숨겨진 권리를 동등하게 드러냅니다  :  다크패턴 해소\nS3  내 돈의 흐름을 투명하게 보여줍니다 :  투명성\nS4  헤매지 않는 직진 동선을 만듭니다   :  길찾기\n\n절대 금지: 이모지, 색상 하드코딩,\nB2B 콘텐츠 B2C 화면 노출, localStorage`,
   },
   {
     name: 'IA.md', desc: '라우트, 화면 계층',
@@ -38,7 +38,7 @@ const AGENTS = [
   { id: 'BN', label: '검색, 발견', desc: '상점 검색, 지도, 카테고리 필터', color: color.brand },
   { id: 'MY', label: 'MY, 카드', desc: 'MY 탭, 카드 관리, 설정 플로우', color: color.brand },
   { id: 'FX', label: '버그, 지도, 내역', desc: '버그 수정, 지도 통합, 거래 내역', color: color.brand },
-  { id: 'VR', label: '검증 에이전트', desc: '토큰, 접근성, 로직 점검', color: color.warn },
+  { id: 'VR', label: '검증 에이전트', desc: '토큰, 접근성, 로직 점검', color: color.brand },
 ];
 
 const MODELS = [

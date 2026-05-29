@@ -95,7 +95,7 @@ export default function UxConcept() {
           marginRight: 'auto',
           fontFamily: font.family,
         }}>
-          묻지 않아도 보이는, 헤매지 않는 금융 경험.
+          잔액이 앱 밖에서도 보이고, 환불이 충전 옆에 있습니다.
         </p>
       </div>
     </section>

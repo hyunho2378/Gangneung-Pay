@@ -378,7 +378,7 @@ export default function UserResearch() {
               <div style={{ textAlign: 'center' }}>
                 <span ref={cRef34} style={{
                   display: 'block', fontSize: 'clamp(40px,5vw,64px)', fontWeight: 800,
-                  letterSpacing: '-0.04em', color: color.warn, fontFamily: font.family, lineHeight: 1, marginBottom: 6,
+                  letterSpacing: '-0.04em', color: color.brand, fontFamily: font.family, lineHeight: 1, marginBottom: 6,
                 }}>
                   {c34}명
                 </span>

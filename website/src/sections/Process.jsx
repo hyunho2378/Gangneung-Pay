@@ -24,13 +24,11 @@ const PHASES = [
       '어피니티 다이어그램: 메모 87개, 5클러스터',
       'Key Insight 3개 도출',
       'AS-IS 휴리스틱 감사',
-      '29개 이슈 → 전부 해결',
       '페르소나 수립',
       '유저 저니맵 5단계',
-      '7대 UX 전략, UR 14개 정의',
+      'UX 전략 4개, UR 14개 정의',
       '정보 구조 재설계 (IA)',
     ],
-    highlight: '29개 이슈 → 전부 해결',
   },
   {
     num: '03',
@@ -39,8 +37,7 @@ const PHASES = [
     period: '05.01 – 05.31',
     items: [
       '듀얼 디자인 시스템 (HIG / Google Material 3)',
-      '핵심 화면 30페이지, 70+ 컴포넌트',
-      '상점 13,021개 데이터 등록',
+      '핵심 화면 구현 (iOS / Android)',
       'AI 하네스 병렬 구현',
       '프로토타입 (iOS / Android)',
       '유저 테스트 진행',
@@ -140,7 +137,7 @@ export default function Process() {
             lineHeight: t.lead.lh, color: color.inkMuted,
             margin: 0, fontFamily: font.family,
           }}>
-            3개 Phase, 29개 이슈, 전부 해결
+            3개 Phase, 리서치부터 구현까지
           </p>
         </div>
 

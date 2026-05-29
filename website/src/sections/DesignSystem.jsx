@@ -225,6 +225,7 @@ const CHECKLIST = [
   '색상 대비 4.5:1 이상 (WCAG AA)',
   '큰글씨 모드 자동 대응 (약 1.29배)',
   '생체인증 대체 PIN 항상 제공',
+  '이용약관 아코디언 전환 (PDF 확대 없이 읽기 쉽게, 정보 접근성 보조 개선)',
 ];
 
 const cardShadow = '0 4px 24px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)';
@@ -281,9 +282,6 @@ export default function DesignSystem() {
   const [a11yRef, a11yVisible] = useReveal({ threshold: 0.03 });
   const { isMobile } = useBreakpoint();
   const panelGridResp = { ...panelGrid, gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' };
-  const [openPatterns, setOpenPatterns] = useState(false);
-  const [openPlatform, setOpenPlatform] = useState(false);
-  const [openA11y, setOpenA11y] = useState(false);
   const [openCompMore, setOpenCompMore] = useState(false);
   const [iosNavActive, setIosNavActive] = useState(0);
   const [andNavActive, setAndNavActive] = useState(0);

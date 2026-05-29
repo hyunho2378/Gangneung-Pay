@@ -5,43 +5,56 @@ import { useReveal } from '../lib/useReveal.js';
 const STRATEGIES = [
   {
     id: 'S1', num: 'S1',
-    title: '위젯 잔액 노출',
-    oneliner: '앱을 열지 않아도 잔액이 보입니다',
-    quote: '식당 자리에서 먼저 확인하고 본 다음에 안심하고 갑니다',
-    attribution: '인터뷰 A2',
-    evidence: null,
-    solution: '홈 위젯과 잠금화면에서 잔액을 즉시 확인. 앱 실행 없이도 결제 전 불안을 해소합니다.',
-    ur: 'UR-U01',
+    title: '금융앱은 금융에 집중합니다',
+    summary: '과하게 들어간 비금융 기능을 덜어내 금융 본질로 돌아갑니다.',
+    insight: '비금융 기능 과부하(I6), B2C·B2B 기능 혼재(I2)',
+    actions: [
+      '생활편의 탭 삭제',
+      '소통참여 탭 삭제',
+      '인플루언서 챗봇 삭제',
+      '메인 서비스 바로가기 삭제',
+      '메인 최근 결제 삭제',
+      '메인 지원금 캐러셀 삭제',
+      '상단 햄버거바 삭제, MY 페이지로 이관',
+    ],
   },
   {
     id: 'S2', num: 'S2',
-    title: '환불 동등 위계',
-    oneliner: '충전과 환불을 같은 자리에 뒀습니다',
-    quote: null,
-    attribution: 'Service Safari 4인 전원',
-    evidence: '관찰 참여자 4인 전원 환불 메뉴 탐색 실패',
-    solution: '잔액 카드에 [충전 / 환불 / QR결제] 3슬롯을 동일 크기로 배치. 환불은 권리입니다.',
-    ur: 'UR-U03',
+    title: '숨겨진 권리를 동등하게 드러냅니다',
+    summary: '특정 모드에서만 보이던 기능을 누구에게나 같은 위계로 보여줍니다.',
+    insight: '환불 기능 큰글씨 전용 다크패턴(I5)',
+    actions: [
+      '환불을 충전, QR결제와 동등한 3슬롯으로 배치',
+      '강릉페이 이용안내를 일반 글씨 모드에서도 노출',
+      'QR결제를 바텀탭 중앙으로 이동',
+      '내부 시스템 용어를 사용자 언어로 교체',
+    ],
   },
   {
     id: 'S3', num: 'S3',
-    title: '가맹점 실시간 신뢰',
-    oneliner: '13,021개 실데이터로 신뢰를 만들었습니다',
-    quote: '가게 들어가서 여기 강릉페이 돼요? 라고 물어봐야',
-    attribution: '인터뷰 A1',
-    evidence: null,
-    solution: 'konacard 실데이터 13,021개 + Google Maps 클러스터링. 12카테고리 필터 + 216개 QR매장.',
-    ur: 'UR-U06',
+    title: '내 돈의 흐름을 투명하게 보여줍니다',
+    summary: '잔액, 캐시백, 결제 수단별 사용을 한눈에, 월별로 추적할 수 있게 했습니다.',
+    insight: '캐시백 정보 가시성과 충성도 상관(I3), 계산대 앞 잔액 불안(I4), 캐시백 단일 동인(I1)',
+    actions: [
+      '이용내역 탭 신설: 잔액, 캐시백, 페이별 사용 구분, 월별 칩 필터',
+      '캐시백 내역 페이지 신설: 적립, 사용, 소멸 예정 월별 추적',
+      '메인 캐시백 섹션에 자동, 수동 사용 통합',
+      '충전 화면에서 현재 잔액 동시 노출',
+    ],
   },
   {
     id: 'S4', num: 'S4',
-    title: '코치마크 단계 안내',
-    oneliner: '첫 사용자도 혼자 완주할 수 있습니다',
-    quote: null,
-    attribution: '인터뷰 참여자',
-    evidence: '카드 신청 과정 복잡해 포기',
-    solution: '카드 등록 직후 충전→환불 단계를 자동 안내. ScreenContainer 절대좌표 기반 코치마크.',
-    ur: 'UR-U03',
+    title: '헤매지 않는 직진 동선을 만듭니다',
+    summary: '찾기 쉬운 구조와 또렷한 안내로 목적지까지 바로 갑니다.',
+    insight: '계산대 앞 잔액 불안(I4), B2C·B2B 기능 혼재(I2)',
+    actions: [
+      '바텀 네비게이션 재편, primary 가시성 확보',
+      '가맹점 페이지 신설: 카테고리 클릭 노출, 선택 시 위치 이동',
+      '카카오, 네이버페이 앱 내 안내 후 하단 이동 버튼 하나로 통합',
+      '코치마크로 카드 신청, 충전, 환불 단계별 안내',
+      '큰글씨 모드 구현',
+      '전 화면 블루 primary 통일',
+    ],
   },
 ];
 
@@ -143,13 +156,13 @@ export default function UxStrategy() {
                     }}>
                       {s.title}
                     </p>
-                    {s.oneliner && (
+                    {s.summary && (
                       <p style={{
                         fontSize: 14, fontWeight: 500,
                         lineHeight: 1.5, color: color.inkMuted,
                         margin: 0, fontFamily: font.family,
                       }}>
-                        {s.oneliner}
+                        {s.summary}
                       </p>
                     )}
                   </div>
@@ -186,120 +199,55 @@ export default function UxStrategy() {
                   <div style={{
                     paddingLeft: 'clamp(64px,8vw,120px)',
                     paddingBottom: 'clamp(28px,3.5vw,48px)',
-                    display: 'flex',
-                    gap: 'clamp(24px,3.5vw,56px)',
-                    flexWrap: 'wrap',
-                    alignItems: 'flex-start',
                   }}>
 
-                    {/* Evidence + solution */}
-                    <div style={{ flex: '1 1 280px', minWidth: 0 }}>
-
-                      {/* Quoted evidence */}
-                      {s.quote && (
-                        <div style={{
-                          paddingLeft: 'clamp(12px,1.5vw,20px)',
-                          marginBottom: 20,
-                        }}>
-                          <p style={{
-                            fontSize: t.lead.size, fontWeight: 500,
-                            lineHeight: 1.65, color: color.ink,
-                            fontStyle: 'italic', margin: '0 0 6px',
-                            fontFamily: font.family,
-                          }}>
-                            &ldquo;{s.quote}&rdquo;
-                          </p>
-                          <span style={{
-                            fontSize: 12, fontWeight: 600,
-                            color: color.inkMuted, letterSpacing: '0.04em',
-                            fontFamily: font.family,
-                          }}>
-                           , {s.attribution}
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Factual evidence (no direct quote) */}
-                      {s.evidence && (
-                        <div style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: 8,
-                          marginBottom: 20,
-                          background: color.white,
-                          border: `1px solid ${color.line}`,
-                          borderRadius: layout.rSm,
-                          padding: '10px 14px',
-                        }}>
-                          <span style={{
-                            fontSize: 13, fontWeight: 700,
-                            color: color.inkMuted,
-                            letterSpacing: '-0.01em', fontFamily: font.family,
-                          }}>
-                            {s.evidence}
-                          </span>
-                          {s.attribution && (
-                            <span style={{
-                              fontSize: 11, fontWeight: 600,
-                              color: color.inkMuted, letterSpacing: '0.04em',
-                              fontFamily: font.family,
-                            }}>
-                             , {s.attribution}
-                            </span>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Solution text */}
-                      <p style={{
-                        fontSize: t.body.size, lineHeight: t.body.lh,
-                        color: color.inkMuted, margin: '0 0 16px',
-                        fontFamily: font.family,
-                      }}>
-                        {s.solution}
-                      </p>
-
-                      {/* UR tag */}
+                    {/* Insight connection */}
+                    <div style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      marginBottom: 20,
+                      background: color.brandPale,
+                      borderRadius: layout.rSm,
+                      padding: '8px 14px',
+                    }}>
                       <span style={{
                         fontSize: 11, fontWeight: 700,
-                        letterSpacing: '0.08em', textTransform: 'uppercase',
-                        color: color.brand, background: color.brandPale,
-                        padding: '4px 10px', borderRadius: 100,
-                        fontFamily: font.family,
+                        letterSpacing: '0.06em', textTransform: 'uppercase',
+                        color: color.brand, fontFamily: font.family,
+                        flexShrink: 0,
                       }}>
-                        {s.ur}
+                        리서치 인사이트
+                      </span>
+                      <span style={{
+                        fontSize: 13, fontWeight: 500,
+                        color: color.inkMuted, fontFamily: font.family,
+                      }}>
+                        {s.insight}
                       </span>
                     </div>
 
-                    {/* Mini-render placeholder */}
-                    <div style={{ flex: '0 0 clamp(90px,12vw,140px)' }}>
-                      <div style={{
-                        background: color.line,
-                        borderRadius: layout.rMd,
-                        aspectRatio: '9/16',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: 6,
-                      }}>
-                        <span style={{
-                          fontSize: 9, fontWeight: 800,
-                          letterSpacing: '0.08em', textTransform: 'uppercase',
-                          color: color.inkFaint, fontFamily: font.family,
-                          textAlign: 'center', padding: '0 6px',
+                    {/* Actions list */}
+                    <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+                      {s.actions.map((action, j) => (
+                        <li key={j} style={{
+                          display: 'flex', alignItems: 'flex-start', gap: 10,
+                          marginBottom: j < s.actions.length - 1 ? 10 : 0,
                         }}>
-                          미니렌더
-                        </span>
-                        <span style={{
-                          fontSize: 9, color: color.inkFaint,
-                          fontFamily: font.family, textAlign: 'center',
-                          padding: '0 6px',
-                        }}>
-                          STEP 10 교체
-                        </span>
-                      </div>
-                    </div>
+                          <div style={{
+                            width: 5, height: 5, borderRadius: '50%',
+                            background: color.brand, flexShrink: 0, marginTop: 7,
+                          }} />
+                          <span style={{
+                            fontSize: t.body.size, lineHeight: t.body.lh,
+                            fontWeight: 500, color: color.inkMuted,
+                            fontFamily: font.family,
+                          }}>
+                            {action}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
 
                   </div>
                 </div>

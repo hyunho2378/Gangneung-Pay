@@ -280,7 +280,7 @@ export default function Persona() {
                   </p>
                   {PERSONA.pains.map((pain, i) => (
                     <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'flex-start' }}>
-                      <span style={{ color: color.warn, fontWeight: 700, flexShrink: 0, lineHeight: 1.5, fontFamily: font.family }}>, </span>
+                      <span style={{ color: color.inkMuted, fontWeight: 700, flexShrink: 0, lineHeight: 1.5, fontFamily: font.family }}>•</span>
                       <span style={{ fontSize: 13, color: color.inkMuted, lineHeight: 1.55, fontFamily: font.family, wordBreak: 'keep-all' }}>{pain}</span>
                     </div>
                   ))}
@@ -295,7 +295,7 @@ export default function Persona() {
                   </p>
                   {PERSONA.needs.map((need, i) => (
                     <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'flex-start' }}>
-                      <span style={{ color: color.brand, fontWeight: 700, flexShrink: 0, lineHeight: 1.5, fontFamily: font.family }}>, </span>
+                      <span style={{ color: color.brand, fontWeight: 700, flexShrink: 0, lineHeight: 1.5, fontFamily: font.family }}>•</span>
                       <span style={{ fontSize: 13, color: color.inkMuted, lineHeight: 1.55, fontFamily: font.family, wordBreak: 'keep-all' }}>{need}</span>
                     </div>
                   ))}

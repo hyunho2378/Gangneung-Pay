@@ -471,7 +471,7 @@ export default function InDepthInterview() {
           }}>
             Executive Summary
           </p>
-          <KeyBox title="핵심 결론 (One-Liner)">
+          <KeyBox title="핵심 결론">
             <p style={{
               fontSize: t.body.size, lineHeight: t.body.lh,
               fontWeight: 600, color: color.ink, margin: 0, wordBreak: 'keep-all',
@@ -482,7 +482,7 @@ export default function InDepthInterview() {
           </KeyBox>
           <Accordion label="분석 개요">
             <Body>
-              이 보고서는 강릉페이 사용자 8인(Group A: 4050 사용자 2인, Group B: 2030 사용자 2인, Group C: 소상공인 2인)을 대상으로 실시한 인뎁스 인터뷰 데이터를 기반으로 작성되었습니다. 분석의 핵심 목표는 단순한 UX 불편 목록 작성이 아니라, 사용자가 '말하지 못한 것'과 서비스가 '플랫폼으로 성장하지 못하는 구조적 이유'를 규명하는 데 있습니다.
+              이 보고서는 강릉페이 사용자 8인(A조: 4050 사용자 2인, B조: 2030 사용자 2인, C조: 소상공인 2인)을 대상으로 진행한 인뎁스 인터뷰 데이터를 기반으로 작성했습니다. 분석의 핵심 목표는 단순한 불편 목록 작성이 아니라, 사용자가 '말하지 못한 것'과 서비스가 '플랫폼으로 성장하지 못하는 구조적 이유'를 규명하는 데 있습니다.
             </Body>
           </Accordion>
         </div>
@@ -494,13 +494,13 @@ export default function InDepthInterview() {
           ...revealStyle(step1Visible),
           marginBottom: 'clamp(40px,5vw,64px)',
         }}>
-          <StepHeader step="1단계" title="가설 검증 (Hypothesis vs. Reality Gap)" />
+          <StepHeader step="1단계" title="가설 검증" />
           <Body>
-            인터뷰 가이드에서 설정된 '예상 인사이트'와 실제 발화 데이터 사이의 간극을 그룹별로 대조합니다. 가설이 맞은 경우보다 빗나간 경우에서 더 중요한 인사이트가 도출됩니다.
+            인터뷰 가이드에서 설정된 '예상 인사이트'와 실제 발화 데이터 사이의 간극을 그룹별로 대조합니다. 가설이 맞은 경우보다 빗나간 경우에서 더 중요한 인사이트를 얻습니다.
           </Body>
 
-          {/* Group A 주요 발견 */}
-          <p style={eyebrowSmTop}>Group A (4050 사용자) 주요 발견</p>
+          {/* A조 주요 발견 */}
+          <p style={eyebrowSmTop}>A조 (4050 사용자) 주요 발견</p>
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
@@ -529,16 +529,16 @@ export default function InDepthInterview() {
               </div>
             ))}
           </div>
-          <Accordion label="Group A 전체 가설검증">
-            <SubTitle>1-1. Group A (4050 사용자) - 가설 검증</SubTitle>
+          <Accordion label="A조 전체 가설검증">
+            <SubTitle>1-1. A조 (4050 사용자) - 가설 검증</SubTitle>
             <CompareTable
               headers={['검증 항목', '예상 인사이트 (가설)', '실제 발화 데이터 (현실)']}
               rows={STEP1_A_ROWS}
             />
           </Accordion>
 
-          {/* Group B 주요 발견 */}
-          <p style={eyebrowSmTop}>Group B (2030 사용자) 주요 발견</p>
+          {/* B조 주요 발견 */}
+          <p style={eyebrowSmTop}>B조 (2030 사용자) 주요 발견</p>
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
@@ -567,16 +567,16 @@ export default function InDepthInterview() {
               </div>
             ))}
           </div>
-          <Accordion label="Group B 전체 가설검증">
-            <SubTitle>1-2. Group B (2030 사용자) - 가설 검증</SubTitle>
+          <Accordion label="B조 전체 가설검증">
+            <SubTitle>1-2. B조 (2030 사용자) - 가설 검증</SubTitle>
             <CompareTable
               headers={['검증 항목', '예상 인사이트 (가설)', '실제 발화 데이터 (현실)']}
               rows={STEP1_B_ROWS}
             />
           </Accordion>
 
-          {/* Group C 주요 발견 */}
-          <p style={eyebrowSmTop}>Group C (소상공인) 주요 발견</p>
+          {/* C조 주요 발견 */}
+          <p style={eyebrowSmTop}>C조 (소상공인) 주요 발견</p>
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
@@ -605,8 +605,8 @@ export default function InDepthInterview() {
               </div>
             ))}
           </div>
-          <Accordion label="Group C 전체 가설검증">
-            <SubTitle>1-3. Group C (소상공인) - 가설 검증</SubTitle>
+          <Accordion label="C조 전체 가설검증">
+            <SubTitle>1-3. C조 (소상공인) - 가설 검증</SubTitle>
             <CompareTable
               headers={['검증 항목', '예상 인사이트 (가설)', '실제 발화 데이터 (현실)']}
               rows={STEP1_C_ROWS}
@@ -621,7 +621,7 @@ export default function InDepthInterview() {
           ...revealStyle(step2Visible),
           marginBottom: 'clamp(40px,5vw,64px)',
         }}>
-          <StepHeader step="2단계" title="숨은 의도 (Unmet Needs) 파악" />
+          <StepHeader step="2단계" title="숨은 의도 파악" />
           <Body>
             사용자들이 '불편하다'고 발화한 지점을 액면 그대로 받아들이는 것은 리서치의 실패입니다. 불편 발화 너머에 있는 심리적 동기를 파악해야 진짜 개선 방향이 보입니다.
           </Body>
@@ -691,7 +691,7 @@ export default function InDepthInterview() {
             ]} />
             <p style={{ ...eyebrowSm, margin: 'clamp(16px,2vw,24px) 0 8px' }}>심리적 원형 분석</p>
             <Body>
-              잔액 부족 또는 로딩 지연으로 인해 계산대 앞에서 시간이 지체되는 경험은 단순한 기술적 불편이 아닙니다. 이는 타인의 시선을 의식하는 사회적 수치심(Social Embarrassment)으로 증폭됩니다. 이 경험이 한 번이라도 발생하면 사용자는 두 가지 방어적 행동 중 하나를 선택합니다.
+              잔액 부족 또는 로딩 지연으로 인해 계산대 앞에서 시간이 지체되는 경험은 단순한 기술적 불편이 아닙니다. 이는 타인의 시선을 의식하는 사회적 수치심으로 이어집니다. 이 경험이 한 번이라도 발생하면 사용자는 두 가지 방어적 행동 중 하나를 선택합니다.
             </Body>
             <div style={{
               display: 'grid',
@@ -776,7 +776,7 @@ export default function InDepthInterview() {
           ...revealStyle(step3Visible),
           marginBottom: 'clamp(40px,5vw,64px)',
         }}>
-          <StepHeader step="3단계" title="강릉머니 vs 캐시백 - 멘탈 모델 혼선 분석" />
+          <StepHeader step="3단계" title="내 돈과 혜택을 구분하지 못하는 문제" />
 
           <KeyBox title="핵심 문제: 두 화폐가 시각적으로 동일하게 표시됨">
             <p style={{
@@ -801,7 +801,7 @@ export default function InDepthInterview() {
               headers={['구분', '충전 잔액 (강릉머니)', '캐시백 적립금']}
               rows={STEP3_1_ROWS}
             />
-            <SubTitle>3-2. 멘탈 모델 혼선이 User Journey에 미치는 영향</SubTitle>
+            <SubTitle>3-2. 멘탈 모델 혼선이 사용자 여정에 미치는 영향</SubTitle>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(8px,1vw,14px)', margin: 'clamp(14px,1.8vw,22px) 0' }}>
               {[
                 "충전 과잉 발생: '예상보다 많이 충전이 돼서 그 부분을 옮겼으면 하는데'(4050 사용자 1) - 충전 화면에서 현재 잔액이 명확히 보이지 않아 중복 충전 유발",
@@ -887,7 +887,7 @@ export default function InDepthInterview() {
               강릉페이의 네트워크 가치는 가맹점 수에 달려 있습니다.
             </Body>
             <SolutionBox>
-              가맹점주 온보딩 프로세스에 '가맹점 지도 등록 및 관리' 교육을 의무화해야 합니다. 가맹점 스티커 배포를 적극적으로 진행하고, 앱 내에서 가맹점주가 직접 영업시간과 위치를 수정할 수 있는 셀프 관리 기능이 구축되어야 합니다. 네트워크 가치는 가맹점 수가 아니라 활성화된 가맹점 수로 결정됩니다.
+              가맹점주 온보딩 프로세스에 '가맹점 지도 등록 및 관리' 교육을 의무화해야 합니다. 가맹점 스티커 배포를 적극적으로 진행하고, 앱 내에서 가맹점주가 직접 영업시간과 위치를 수정할 수 있는 셀프 관리 기능을 구축해야 합니다. 네트워크 가치는 가맹점 수가 아니라 활성화된 가맹점 수에 달려 있습니다.
             </SolutionBox>
             <CompareTable
               headers={['소비자 측면의 정보 단절', '가맹점주 측면의 정보 단절']}
@@ -912,7 +912,7 @@ export default function InDepthInterview() {
             인뎁스 인터뷰에서 도출된 가설을 대규모 표본으로 검증하기 위해, 현행 설문조사에 반드시 추가해야 할 질문 3가지를 제안합니다. 각 질문은 단일 인사이트가 아닌 특정 의사결정을 위한 임계치 데이터를 수집하는 것을 목적으로 합니다.
           </Body>
 
-          <SubTitle>추가 질문 1. 불편함 인내의 임계치 측정 (Frustration Threshold Scale)</SubTitle>
+          <SubTitle>추가 질문 1. 불편함 인내의 임계치 측정</SubTitle>
           <QuestionBox>
             <p style={{ margin: '0 0 10px', fontSize: t.body.size, lineHeight: t.body.lh, fontWeight: 500, color: color.ink, fontFamily: font.family, wordBreak: 'keep-all' }}>
               강릉페이 앱을 이용할 때 다음 상황이 발생할 경우 어떻게 하시겠습니까? (결제를 위해 기다린다 / 다른 결제 수단으로 전환한다 중 선택)
@@ -930,10 +930,10 @@ export default function InDepthInterview() {
           </QuestionBox>
           <p style={eyebrowSm}>이 질문이 필요한 이유</p>
           <Body>
-            현재 인터뷰 데이터는 '로딩이 길어서 삼성페이로 전환했다'는 정성적 사실을 보여주지만, 몇 초의 로딩이 전환을 유발하는지는 알 수 없습니다. 이 질문을 통해 전환 임계치 시간을 정량화하면, 앱 성능 개선의 우선순위와 SLA(Service Level Agreement)를 구체적으로 설정할 수 있습니다. 동시에 D번 시나리오의 응답 분포는 '계산대 민망함 증후군'의 실질적 이탈 규모를 추정하는 데 활용됩니다.
+            현재 인터뷰 데이터는 '로딩이 길어서 삼성페이로 전환했다'는 정성적 사실을 보여주지만, 몇 초의 로딩이 전환을 유발하는지는 알 수 없습니다. 이 질문을 통해 전환 임계치 시간을 정량화하면, 앱 성능 개선의 우선순위와 기준을 구체적으로 설정할 수 있습니다. 동시에 D번 시나리오의 응답 분포로 '계산대 민망함 증후군'의 실질적 이탈 규모를 추정할 수 있습니다.
           </Body>
 
-          <SubTitle>추가 질문 2. 캐시백 의존도 vs 서비스 자립도 측정 (Lock-in Test)</SubTitle>
+          <SubTitle>추가 질문 2. 캐시백 의존도와 서비스 자립도 측정</SubTitle>
           <QuestionBox>
             <p style={{ margin: '0 0 10px', fontSize: t.body.size, lineHeight: t.body.lh, fontWeight: 500, color: color.ink, fontFamily: font.family, wordBreak: 'keep-all' }}>
               현재 강릉페이 10% 캐시백 혜택이 아래와 같이 변경된다면 강릉페이 사용 빈도가 어떻게 달라질 것 같습니까? (매우 감소 / 약간 감소 / 변화 없음 / 약간 증가 / 매우 증가 중 선택)
@@ -952,10 +952,10 @@ export default function InDepthInterview() {
           </QuestionBox>
           <p style={eyebrowSm}>이 질문이 필요한 이유</p>
           <Body>
-            4050 사용자 2의 경우 5%까지 사용 의향이 있다고 발화했지만, 이것이 일반적인 패턴인지 알 수 없습니다. E번 선택지에 대한 응답은 캐시백 이외의 기능이 사용자 잔류 동기로 작동할 수 있는지를 측정합니다. 만약 D나 E번에 대해 '변화 없음' 또는 '증가' 응답이 유의미하게 나온다면, 이는 플랫폼 확장 투자의 근거가 됩니다. 반대로 A번 조건에서도 다수가 '매우 감소'를 선택한다면, 서비스는 현재 혜택에 완전히 종속되어 있음이 증명됩니다.
+            4050 사용자 2의 경우 5%까지 사용 의향이 있다고 발화했지만, 이것이 일반적인 패턴인지 알 수 없습니다. E번 선택지에 대한 응답은 캐시백 이외의 기능이 사용자 잔류 동기로 작동할 수 있는지를 측정합니다. 만약 D나 E번에 대해 '변화 없음' 또는 '증가' 응답이 유의미하게 나온다면, 이는 플랫폼 확장 투자의 근거가 됩니다. 반대로 A번 조건에서도 다수가 '매우 감소'를 선택한다면, 서비스가 현재 혜택에만 의존하는 구조임이 드러납니다.
           </Body>
 
-          <SubTitle>추가 질문 3. 결제 방식 수용 의향 정밀 측정 (Payment Method Adoption Matrix)</SubTitle>
+          <SubTitle>추가 질문 3. 결제 방식 수용 의향 정밀 측정</SubTitle>
           <QuestionBox>
             <p style={{ margin: '0 0 10px', fontSize: t.body.size, lineHeight: t.body.lh, fontWeight: 500, color: color.ink, fontFamily: font.family, wordBreak: 'keep-all' }}>
               다음 각 결제 방식이 강릉페이에 도입된다면 사용 의향이 있으십니까? (각 항목에 대해 적극 사용 / 가끔 사용 / 사용 안 함 중 선택, 스마트폰 기기 종류 응답 필수)
@@ -997,7 +997,7 @@ export default function InDepthInterview() {
             />
 
             <Body noMargin>
-              본 보고서는 8인 사용자의 발화 데이터만을 기반으로 작성되었으며, 정량적 대표성은 후속 설문조사를 통해 검증되어야 합니다. 특히 Group B 내 아이폰 사용자 비율에 따라 애플페이 도입의 우선순위가 삼성페이와 역전될 수 있으므로, 기기 분포 조사가 선행되어야 합니다.
+              본 보고서는 8인 사용자의 발화 데이터만을 기반으로 작성했으며, 정량적 대표성은 후속 설문조사로 검증해야 합니다. 특히 B조 내 아이폰 사용자 비율에 따라 애플페이 도입의 우선순위가 삼성페이와 역전될 수 있으므로, 기기 분포 조사를 선행해야 합니다.
             </Body>
           </Accordion>
         </div>

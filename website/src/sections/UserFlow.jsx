@@ -17,7 +17,7 @@ const FLOWS = [
   },
   {
     num: '②',
-    label: 'QR결제',
+    label: 'QR결제 (바텀탭 중앙)',
     nodes: ['홈', 'QR결제', '카메라 스캔', '결제완료'],
     tag: { index: 3, text: '캐시백 자동적립' },
   },
@@ -300,6 +300,36 @@ export default function UserFlow() {
               visible={flowVisible}
               delay={i * 0.12}
             />
+          ))}
+        </div>
+
+        {/* 보조 개선 사항 */}
+        <div
+          style={{
+            marginTop: 'clamp(8px,1vw,16px)',
+            padding: 'clamp(16px,2vw,28px)',
+            background: color.bg,
+            borderRadius: layout.rMd,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 12,
+          }}
+        >
+          <p style={{
+            fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
+            letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
+            color: color.inkMuted, margin: 0,
+          }}>
+            보조 개선
+          </p>
+          {[
+            'QR결제를 바텀 탭 중앙에 배치했습니다. 항상 primary 색으로 강조해 결제 진입점을 명확히 합니다.',
+            '카카오/네이버페이는 앱 내 안내 페이지에서 단계별 설명 후 하단 이동 버튼 하나로 진입합니다. 기존에는 버튼을 누르면 앱 밖으로 즉시 이탈했습니다.',
+          ].map((note, i) => (
+            <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+              <div style={{ width: 5, height: 5, borderRadius: '50%', background: color.inkMuted, flexShrink: 0, marginTop: 7 }} />
+              <span style={{ fontSize: t.caption.size, lineHeight: 1.65, color: color.inkMuted }}>{note}</span>
+            </div>
           ))}
         </div>
 
