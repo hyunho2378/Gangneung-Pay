@@ -110,7 +110,7 @@ export default function UserRequirements() {
           </h2>
         </div>
 
-        {/* P0 + P1 groups — 2-column grid */}
+        {/* P0 + P1 groups, 2-column grid */}
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'clamp(24px,3vw,48px)' }}>
         {GROUPS.map(({ priority, label, items }, gi) => {
           const [ref, visible] = groupRefs[gi];

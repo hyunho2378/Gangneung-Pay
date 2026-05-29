@@ -28,7 +28,7 @@ const CLUSTERS = [
   },
   {
     letter: 'E',
-    name: '캐시백 단일 생존 의존 구조',
+    name: '캐시백 단일 의존 구조',
     desc: '캐시백 10% 외 사용 이유 없음. 혜택 감소 시 전 그룹 즉시 이탈.',
     accent: false,
   },
