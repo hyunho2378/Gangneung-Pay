@@ -87,15 +87,16 @@ export default function AffinityDiagram() {
         </div>
 
         {/* Cluster list */}
-        <div ref={clustersRef}>
+        <div ref={clustersRef} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 'clamp(32px,4vw,64px)' }}>
           {CLUSTERS.map(({ letter, name, desc }, i) => (
             <div
               key={letter}
               style={{
+                ...(i === 4 ? { gridColumn: '1 / -1' } : {}),
                 display: 'flex',
                 alignItems: 'flex-start',
-                gap: 'clamp(24px,3vw,48px)',
-                padding: 'clamp(24px,3vw,40px) 0',
+                gap: 'clamp(16px,2vw,32px)',
+                padding: 'clamp(16px,2vw,24px) 0',
                 opacity: clustersVisible ? 1 : 0,
                 transform: clustersVisible ? 'none' : 'translateY(24px)',
                 transition: `opacity 0.6s ease-out ${i * 0.08}s, transform 0.6s ease-out ${i * 0.08}s`,

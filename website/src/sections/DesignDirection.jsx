@@ -109,15 +109,6 @@ export default function DesignDirection() {
                 {title}
               </h3>
 
-              {/* Accent bar */}
-              <div style={{
-                width: 'clamp(28px,3.5vw,48px)',
-                height: 3,
-                background: color.brand,
-                borderRadius: 2,
-                marginBottom: 'clamp(24px,3vw,36px)',
-              }} />
-
               {/* Items */}
               <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
                 {items.map((item, j) => (

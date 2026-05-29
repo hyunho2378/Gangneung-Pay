@@ -6,7 +6,6 @@ import { ChevronDown } from 'lucide-react';
 function Quote({ lines }) {
   return (
     <div style={{
-      borderLeft: `3px solid ${color.brand}`,
       background: color.brandPale,
       padding: 'clamp(14px,1.8vw,20px) clamp(16px,2vw,24px)',
       borderRadius: `0 ${layout.rSm} ${layout.rSm} 0`,
@@ -30,7 +29,6 @@ function Quote({ lines }) {
 function SolutionBox({ children }) {
   return (
     <div style={{
-      borderLeft: `3px solid ${color.brand}`,
       background: color.brandSky,
       padding: 'clamp(14px,1.8vw,20px) clamp(16px,2vw,24px)',
       borderRadius: `0 ${layout.rSm} ${layout.rSm} 0`,
@@ -514,7 +512,6 @@ export default function InDepthInterview() {
                 background: color.bg,
                 borderRadius: layout.rMd,
                 padding: 'clamp(16px,2vw,24px)',
-                borderLeft: `3px solid ${color.brand}`,
               }}>
                 <p style={{
                   fontSize: 12, fontWeight: 800, color: color.brand,
@@ -553,7 +550,6 @@ export default function InDepthInterview() {
                 background: color.bg,
                 borderRadius: layout.rMd,
                 padding: 'clamp(16px,2vw,24px)',
-                borderLeft: `3px solid ${color.brand}`,
               }}>
                 <p style={{
                   fontSize: 12, fontWeight: 800, color: color.brand,
@@ -592,7 +588,6 @@ export default function InDepthInterview() {
                 background: color.bg,
                 borderRadius: layout.rMd,
                 padding: 'clamp(16px,2vw,24px)',
-                borderLeft: `3px solid ${color.brand}`,
               }}>
                 <p style={{
                   fontSize: 12, fontWeight: 800, color: color.brand,

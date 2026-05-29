@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 import { useBreakpoint } from '../lib/useBreakpoint.js';
@@ -280,6 +281,10 @@ export default function DesignSystem() {
   const [a11yRef, a11yVisible] = useReveal({ threshold: 0.03 });
   const { isMobile } = useBreakpoint();
   const panelGridResp = { ...panelGrid, gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' };
+  const [openPatterns, setOpenPatterns] = useState(false);
+  const [openPlatform, setOpenPlatform] = useState(false);
+  const [openA11y, setOpenA11y] = useState(false);
+  const [openCompMore, setOpenCompMore] = useState(false);
   const [iosNavActive, setIosNavActive] = useState(0);
   const [andNavActive, setAndNavActive] = useState(0);
   const [iosChipActive, setIosChipActive] = useState(0);
@@ -325,7 +330,7 @@ export default function DesignSystem() {
           }}
         >
           <p style={subEyebrowStyle}>01 FOUNDATION</p>
-          <h3 style={h3Style}>기반 토큰</h3>
+          <h3 style={h3Style}>Foundation 디자인 기초</h3>
 
           {/* COLOR */}
           <p style={{ fontSize: 11, fontWeight: 700, color: color.inkMuted, margin: '0 0 12px', letterSpacing: '0em', textTransform: 'uppercase' }}>COLOR</p>
@@ -495,6 +500,15 @@ export default function DesignSystem() {
             </div>
           </div>
 
+          <button
+            onClick={() => setOpenCompMore(c => !c)}
+            style={{ display: 'flex', alignItems: 'center', gap: 8, background: color.brandPale, border: 'none', cursor: 'pointer', padding: '8px 14px', borderRadius: layout.rSm, fontFamily: font.family, marginBottom: 24, width: '100%', textAlign: 'left' }}
+          >
+            <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', color: color.brand }}>더 보기</span>
+            <ChevronDown size={16} color={color.brand} style={{ marginLeft: 'auto', transform: openCompMore ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s' }} />
+          </button>
+          {openCompMore && <>
+
           {/* TOP APP BAR - [7] android card + inner bg, [9] labels, [10] visibility fix */}
           <p style={{ fontSize: 11, fontWeight: 700, color: color.inkMuted, margin: '0 0 12px', letterSpacing: '0em', textTransform: 'uppercase' }}>TOP APP BAR</p>
           <div style={{ ...panelGridResp, marginBottom: 'clamp(32px,4vw,48px)' }}>
@@ -661,6 +675,8 @@ export default function DesignSystem() {
               <span style={{ color: '#fff', fontSize: 13, fontFamily: "'Noto Sans KR', sans-serif" }}>지문을 인식해주세요</span>
             </div>
           </div>
+          </>}
+
         </div>
 
         {/* 03 PATTERNS */}

@@ -42,7 +42,7 @@ function UrRow({ index, desc, priority, visible, delay }) {
       }}
     >
       {/* Index badge */}
-      <span style={{ fontSize: 12, fontWeight: 800, color: color.brand, background: color.brandPale, padding: '3px 10px', borderRadius: 100, fontFamily: font.family, whiteSpace: 'nowrap', flexShrink: 0, minWidth: '2ch', textAlign: 'center' }}>
+      <span style={{ fontSize: 11, fontWeight: 800, color: color.brand, background: color.brandPale, padding: '3px 10px', borderRadius: 100, fontFamily: font.family, whiteSpace: 'nowrap', flexShrink: 0, minWidth: '2ch', textAlign: 'center' }}>
         {String(index + 1).padStart(2, '0')}
       </span>
 
@@ -50,7 +50,7 @@ function UrRow({ index, desc, priority, visible, delay }) {
       <span
         style={{
           flex: 1,
-          fontSize: 'clamp(14px,1.3vw,16px)',
+          fontSize: 13,
           fontWeight: 500,
           lineHeight: 1.55,
           color: color.ink,
@@ -146,7 +146,7 @@ export default function UserRequirements() {
                   {priority}
                 </span>
                 <span style={{
-                  fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
+                  fontSize: 13, fontWeight: t.eyebrow.weight,
                   letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
                   color: isPrimary ? color.brand : color.inkFaint,
                   fontFamily: font.family,
@@ -155,7 +155,7 @@ export default function UserRequirements() {
                 </span>
                 <span style={{
                   marginLeft: 'auto',
-                  fontSize: 12, fontWeight: 600,
+                  fontSize: 11, fontWeight: 600,
                   color: color.inkFaint,
                   fontFamily: font.family,
                 }}>

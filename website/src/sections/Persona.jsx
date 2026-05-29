@@ -188,8 +188,7 @@ export default function Persona() {
                 margin: '0 0 28px',
                 padding: '16px 20px',
                 background: color.white,
-                borderLeft: `4px solid ${color.brand}`,
-                borderRadius: `0 ${layout.rSm} ${layout.rSm} 0`,
+                borderRadius: layout.rSm,
               }}>
                 <p style={{
                   fontSize: t.lead.size, fontWeight: 600,
