@@ -8,9 +8,11 @@ export default function KeyInsights() {
   const [r1, v1] = useReveal({ threshold: 0.05 });
   const [r2, v2] = useReveal({ threshold: 0.05 });
   const [r3, v3] = useReveal({ threshold: 0.05 });
+  const [r4, v4] = useReveal({ threshold: 0.05 });
+  const [r5, v5] = useReveal({ threshold: 0.05 });
   const { isMobile } = useBreakpoint();
 
-  const revealPairs = [[r0, v0], [r1, v1], [r2, v2], [r3, v3]];
+  const revealPairs = [[r0, v0], [r1, v1], [r2, v2], [r3, v3], [r4, v4], [r5, v5]];
 
   return (
     <section id="insights" style={{ background: color.bg, fontFamily: font.family, padding: `${layout.sectionY} clamp(20px,5vw,80px)` }}>

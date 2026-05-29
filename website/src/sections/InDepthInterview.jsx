@@ -387,7 +387,8 @@ export default function InDepthInterview() {
       style={{
         background: color.white,
         fontFamily: font.family,
-        padding: `${layout.sectionY} clamp(20px,5vw,80px)`,
+        padding: `clamp(16px,2vw,24px) clamp(20px,5vw,80px) ${layout.sectionY}`,
+        borderTop: `1px solid ${color.line}`,
       }}
     >
       <div style={{ maxWidth: layout.container, margin: '0 auto' }}>
@@ -400,13 +401,13 @@ export default function InDepthInterview() {
           <p style={{
             fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
             letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-            color: color.brand, margin: '0 0 24px', fontFamily: font.family,
+            color: color.inkMuted, margin: '0 0 16px', fontFamily: font.family,
           }}>
             CONFIDENTIAL, UX RESEARCH REPORT
           </p>
           <h2 style={{
-            fontSize: t.h1.size, fontWeight: t.h1.weight,
-            lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
+            fontSize: t.h2.size, fontWeight: t.h2.weight,
+            lineHeight: t.h2.lh, letterSpacing: t.h2.ls,
             color: color.ink, margin: '0 0 16px', wordBreak: 'keep-all',
             fontFamily: font.family,
           }}>
@@ -845,13 +846,13 @@ export default function InDepthInterview() {
 
           {/* 결함 1 */}
           <SubTitle>구조적 결함 1. B2C와 B2B의 위험한 동거 - 인터페이스 정체성 위기</SubTitle>
-          <Body>
-            두 사용자(4050-1, 4050-2 모두)가 '가맹점 등록/신청, 가맹점 포탈, 사랑통, 강릉 관광' 등을 가장 쓸모없는 정보로 지목했습니다.
-          </Body>
-          <SolutionBox>
-            소비자용 앱과 가맹점주용 앱을 분리하거나, 로그인 단계에서 역할 기반 화면을 분기해야 합니다. 현재처럼 단일 앱에 모든 역할을 욱여넣는 구조는 양쪽 모두에게 최악의 경험을 제공합니다.
-          </SolutionBox>
           <Accordion label="구조적 결함 1 상세">
+            <Body>
+              두 사용자(4050-1, 4050-2 모두)가 '가맹점 등록/신청, 가맹점 포탈, 사랑통, 강릉 관광' 등을 가장 쓸모없는 정보로 지목했습니다.
+            </Body>
+            <SolutionBox>
+              소비자용 앱과 가맹점주용 앱을 분리하거나, 로그인 단계에서 역할 기반 화면을 분기해야 합니다. 현재처럼 단일 앱에 모든 역할을 욱여넣는 구조는 양쪽 모두에게 최악의 경험을 제공합니다.
+            </SolutionBox>
             <CompareTable
               headers={['소비자(B2C)가 경험하는 앱', '가맹점주(B2B)가 경험하는 앱']}
               rows={STEP4_1_ROWS}
@@ -863,13 +864,13 @@ export default function InDepthInterview() {
 
           {/* 결함 2 */}
           <SubTitle>구조적 결함 2. 캐시백에 종속된 단일 생존 의존 구조</SubTitle>
-          <Body>
-            인터뷰 전반에서 가장 일관되게 나타난 패턴은 모든 사용 동기가 캐시백 단 하나에 귀결된다는 것입니다.
-          </Body>
-          <SolutionBox>
-            지역 상권 발견(가맹점 추천, 리뷰), 지인 간 캐시백 선물, 스탬프 미션 등 캐시백 소비를 위한 '이유 있는 방문' 구조를 앱 안에 설계해야 합니다. 지역 화폐의 본질은 지역 내 소비 순환인데, 이를 위한 발견 경험(Discovery UX)이 현재 완전히 부재합니다.
-          </SolutionBox>
           <Accordion label="구조적 결함 2 상세">
+            <Body>
+              인터뷰 전반에서 가장 일관되게 나타난 패턴은 모든 사용 동기가 캐시백 단 하나에 귀결된다는 것입니다.
+            </Body>
+            <SolutionBox>
+              지역 상권 발견(가맹점 추천, 리뷰), 지인 간 캐시백 선물, 스탬프 미션 등 캐시백 소비를 위한 '이유 있는 방문' 구조를 앱 안에 설계해야 합니다. 지역 화폐의 본질은 지역 내 소비 순환인데, 이를 위한 발견 경험(Discovery UX)이 현재 완전히 부재합니다.
+            </SolutionBox>
             <Quote lines={[
               "4050 사용자 2: '그게 아니었다면 강릉페이를 굳이 쓰지 않았을 것'",
               "4050 사용자 1: '앱을 할인을 받기 위해서 사용하지만 앱은 잘 안 볼 것 같습니다'",
@@ -886,13 +887,13 @@ export default function InDepthInterview() {
 
           {/* 결함 3 */}
           <SubTitle>구조적 결함 3. 가맹점 생태계의 정보 단절 - 공급자와 수요자가 서로 보이지 않는 구조</SubTitle>
-          <Body>
-            강릉페이의 네트워크 가치는 가맹점 수에 달려 있습니다.
-          </Body>
-          <SolutionBox>
-            가맹점주 온보딩 프로세스에 '가맹점 지도 등록 및 관리' 교육을 의무화해야 합니다. 가맹점 스티커 배포를 적극적으로 진행하고, 앱 내에서 가맹점주가 직접 영업시간과 위치를 수정할 수 있는 셀프 관리 기능이 구축되어야 합니다. 네트워크 가치는 가맹점 수가 아니라 활성화된 가맹점 수로 결정됩니다.
-          </SolutionBox>
           <Accordion label="구조적 결함 3 상세">
+            <Body>
+              강릉페이의 네트워크 가치는 가맹점 수에 달려 있습니다.
+            </Body>
+            <SolutionBox>
+              가맹점주 온보딩 프로세스에 '가맹점 지도 등록 및 관리' 교육을 의무화해야 합니다. 가맹점 스티커 배포를 적극적으로 진행하고, 앱 내에서 가맹점주가 직접 영업시간과 위치를 수정할 수 있는 셀프 관리 기능이 구축되어야 합니다. 네트워크 가치는 가맹점 수가 아니라 활성화된 가맹점 수로 결정됩니다.
+            </SolutionBox>
             <CompareTable
               headers={['소비자 측면의 정보 단절', '가맹점주 측면의 정보 단절']}
               rows={STEP4_3_ROWS}
