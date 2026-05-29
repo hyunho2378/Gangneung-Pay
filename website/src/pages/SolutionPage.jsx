@@ -5,7 +5,6 @@ import UserRequirements from '../sections/UserRequirements.jsx';
 import TheBuild from '../sections/TheBuild.jsx';
 import UserFlow from '../sections/UserFlow.jsx';
 import InformationArchitecture from '../sections/InformationArchitecture.jsx';
-import DesignSystem from '../sections/DesignSystem.jsx';
 
 export default function SolutionPage() {
   return (
@@ -17,7 +16,6 @@ export default function SolutionPage() {
       <TheBuild />
       <UserFlow />
       <InformationArchitecture />
-      <DesignSystem />
     </>
   );
 }

@@ -4,11 +4,12 @@ import { color, font, layout } from '../tokens/web.js';
 import { useBreakpoint } from '../lib/useBreakpoint.js';
 
 const LINKS = [
-  { label: 'Intro',    to: '/' },
-  { label: 'Research', to: '/research' },
-  { label: 'Insights', to: '/insights' },
-  { label: 'Solution', to: '/solution' },
-  { label: 'System',   to: '/system' },
+  { label: 'Intro',         to: '/' },
+  { label: 'Research',      to: '/research' },
+  { label: 'Insights',      to: '/insights' },
+  { label: 'Solution',      to: '/solution' },
+  { label: 'Design System', to: '/design' },
+  { label: 'Build',         to: '/build' },
 ];
 
 const IOS_URL    = 'https://gangneung-pay.vercel.app';
@@ -121,7 +122,7 @@ export default function Nav() {
           <ul
             style={{
               display: 'flex',
-              gap: 'clamp(16px,2.5vw,36px)',
+              gap: 'clamp(10px,1.5vw,28px)',
               listStyle: 'none',
               margin: 0,
               padding: 0,

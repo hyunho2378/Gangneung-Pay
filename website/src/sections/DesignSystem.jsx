@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 import { useBreakpoint } from '../lib/useBreakpoint.js';
@@ -283,10 +282,6 @@ export default function DesignSystem() {
   const [a11yRef, a11yVisible] = useReveal({ threshold: 0.03 });
   const { isMobile } = useBreakpoint();
   const panelGridResp = { ...panelGrid, gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' };
-  const [openCompMore, setOpenCompMore] = useState(false);
-  const [openPatterns, setOpenPatterns] = useState(false);
-  const [openPlatform, setOpenPlatform] = useState(false);
-  const [openA11y, setOpenA11y] = useState(false);
   const [iosNavActive, setIosNavActive] = useState(0);
   const [andNavActive, setAndNavActive] = useState(0);
   const [iosChipActive, setIosChipActive] = useState(0);
@@ -510,14 +505,6 @@ export default function DesignSystem() {
             </div>
           </div>
 
-          <button
-            onClick={() => setOpenCompMore(c => !c)}
-            style={{ display: 'flex', alignItems: 'center', gap: 8, background: color.brandPale, border: 'none', cursor: 'pointer', padding: '8px 14px', borderRadius: layout.rSm, fontFamily: font.family, marginBottom: 24, width: '100%', textAlign: 'left' }}
-          >
-            <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', color: color.brand }}>더 보기</span>
-            <ChevronDown size={16} color={color.brand} style={{ marginLeft: 'auto', transform: openCompMore ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s' }} />
-          </button>
-          {openCompMore && <>
 
           {/* STATUS BAR */}
           <p style={{ fontSize: 11, fontWeight: 700, color: color.inkMuted, margin: '0 0 12px', letterSpacing: '0em', textTransform: 'uppercase' }}>STATUS BAR</p>
@@ -711,7 +698,6 @@ export default function DesignSystem() {
               <span style={{ color: '#fff', fontSize: 13, fontFamily: "'Noto Sans KR', sans-serif" }}>지문을 인식해주세요</span>
             </div>
           </div>
-          </>}
 
         </div>
 
@@ -727,29 +713,20 @@ export default function DesignSystem() {
         >
           <p style={subEyebrowStyle}>03 PATTERNS</p>
           <h3 style={{ ...h3Style, marginBottom: 16 }}>패턴</h3>
-          <button
-            onClick={() => setOpenPatterns(o => !o)}
-            style={{ display: 'flex', alignItems: 'center', gap: 8, background: color.brandPale, border: 'none', cursor: 'pointer', padding: '8px 14px', borderRadius: layout.rSm, fontFamily: font.family, marginBottom: 24, width: '100%', textAlign: 'left' }}
-          >
-            <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', color: color.brand }}>자세히 보기</span>
-            <ChevronDown size={16} color={color.brand} style={{ marginLeft: 'auto', transform: openPatterns ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s' }} />
-          </button>
-          {openPatterns && (
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 'clamp(8px,1.5vw,20px)' }}>
-              {PATTERNS.map((p, i) => (
-                <div key={i} style={{ background: color.white, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)', boxShadow: cardShadow }}>
-                  <p style={{ margin: '0 0 8px', fontSize: t.caption.size, fontWeight: 800, color: color.brand, letterSpacing: '0em', textTransform: 'uppercase' }}>{String(i + 1).padStart(2, '0')}</p>
-                  <p style={{ margin: '0 0 8px', fontSize: 16, fontWeight: 700, color: color.ink }}>{p.title}</p>
-                  <p style={{ margin: '0 0 16px', fontSize: t.caption.size, lineHeight: 1.6, color: color.inkMuted, fontWeight: 700 }}>{p.sub}</p>
-                  <ol style={{ margin: 0, paddingLeft: 18 }}>
-                    {p.steps.map((step, si) => (
-                      <li key={si} style={{ fontSize: t.caption.size, lineHeight: 1.7, color: color.inkMuted, marginBottom: 4, fontWeight: 500 }}>{step}</li>
-                    ))}
-                  </ol>
-                </div>
-              ))}
-            </div>
-          )}
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 'clamp(8px,1.5vw,20px)' }}>
+            {PATTERNS.map((p, i) => (
+              <div key={i} style={{ background: color.white, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)', boxShadow: cardShadow }}>
+                <p style={{ margin: '0 0 8px', fontSize: t.caption.size, fontWeight: 800, color: color.brand, letterSpacing: '0em', textTransform: 'uppercase' }}>{String(i + 1).padStart(2, '0')}</p>
+                <p style={{ margin: '0 0 8px', fontSize: 16, fontWeight: 700, color: color.ink }}>{p.title}</p>
+                <p style={{ margin: '0 0 16px', fontSize: t.caption.size, lineHeight: 1.6, color: color.inkMuted, fontWeight: 700 }}>{p.sub}</p>
+                <ol style={{ margin: 0, paddingLeft: 18 }}>
+                  {p.steps.map((step, si) => (
+                    <li key={si} style={{ fontSize: t.caption.size, lineHeight: 1.7, color: color.inkMuted, marginBottom: 4, fontWeight: 500 }}>{step}</li>
+                  ))}
+                </ol>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* 04 PLATFORM COMPARISON - [7] table row alternating bg, [9] table headers */}
@@ -764,15 +741,7 @@ export default function DesignSystem() {
         >
           <p style={subEyebrowStyle}>04 PLATFORM COMPARISON</p>
           <h3 style={{ ...h3Style, marginBottom: 16 }}>플랫폼 비교</h3>
-          <button
-            onClick={() => setOpenPlatform(o => !o)}
-            style={{ display: 'flex', alignItems: 'center', gap: 8, background: color.brandPale, border: 'none', cursor: 'pointer', padding: '8px 14px', borderRadius: layout.rSm, fontFamily: font.family, marginBottom: 24, width: '100%', textAlign: 'left' }}
-          >
-            <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', color: color.brand }}>자세히 보기</span>
-            <ChevronDown size={16} color={color.brand} style={{ marginLeft: 'auto', transform: openPlatform ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s' }} />
-          </button>
-          {openPlatform && (
-            <div style={{ overflowX: 'auto' }}>
+          <div style={{ overflowX: 'auto' }}>
             <div style={{ borderRadius: layout.rMd, overflow: 'hidden', boxShadow: cardShadow, minWidth: 480 }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
                 <thead>
@@ -800,8 +769,7 @@ export default function DesignSystem() {
                 </tbody>
               </table>
             </div>
-            </div>
-          )}
+          </div>
         </div>
 
         {/* 05 ACCESSIBILITY - [7] android card bg, [9] labels */}
@@ -815,14 +783,6 @@ export default function DesignSystem() {
         >
           <p style={subEyebrowStyle}>05 ACCESSIBILITY</p>
           <h3 style={{ ...h3Style, marginBottom: 16 }}>접근성</h3>
-          <button
-            onClick={() => setOpenA11y(o => !o)}
-            style={{ display: 'flex', alignItems: 'center', gap: 8, background: color.brandPale, border: 'none', cursor: 'pointer', padding: '8px 14px', borderRadius: layout.rSm, fontFamily: font.family, marginBottom: 24, width: '100%', textAlign: 'left' }}
-          >
-            <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', color: color.brand }}>자세히 보기</span>
-            <ChevronDown size={16} color={color.brand} style={{ marginLeft: 'auto', transform: openA11y ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s' }} />
-          </button>
-          {openA11y && <>
 
           <p style={{ fontSize: 11, fontWeight: 700, color: color.inkMuted, margin: '0 0 12px', letterSpacing: '0em', textTransform: 'uppercase' }}>TOUCH TARGET</p>
           <div style={{ ...panelGridResp, marginBottom: 'clamp(32px,4vw,48px)' }}>
@@ -919,7 +879,6 @@ export default function DesignSystem() {
               </div>
             ))}
           </div>
-          </>}
         </div>
 
       </div>
