@@ -38,7 +38,7 @@ const AGENTS = [
   { id: 'BN', label: '검색, 발견', desc: '상점 검색, 지도, 카테고리 필터', color: color.brand },
   { id: 'MY', label: 'MY, 카드', desc: 'MY 탭, 카드 관리, 설정 플로우', color: color.brand },
   { id: 'FX', label: '버그, 지도, 내역', desc: '버그 수정, 지도 통합, 거래 내역', color: color.brand },
-  { id: 'VR', label: '검증: 44항목', desc: '빌드, 토큰, 접근성, 로직 전수 검사', color: color.warn },
+  { id: 'VR', label: '검증 에이전트', desc: '토큰, 접근성, 로직 점검', color: color.warn },
 ];
 
 const MODELS = [
@@ -54,14 +54,6 @@ const MODELS = [
   },
 ];
 
-const CHECKS = [
-  { label: '빌드 오류', target: '0건' },
-  { label: 'localStorage 사용', target: '0건' },
-  { label: '하드코딩 색상', target: '0건' },
-  { label: 'TypeScript 오류', target: '0건' },
-  { label: '이모지 사용', target: '0건' },
-  { label: '명시 외 수정', target: '0건' },
-];
 
 export default function AiHarness() {
   const [openDoc, setOpenDoc] = useState(null);
@@ -375,7 +367,7 @@ export default function AiHarness() {
             </div>
           </div>
 
-          {/* Block 4: 자기검증 의무 */}
+          {/* Block 4: Figma MCP 양방향 연결 */}
           <div
             style={{
               opacity: blocksVisible ? 1 : 0,
@@ -398,53 +390,43 @@ export default function AiHarness() {
               lineHeight: t.h3.lh, letterSpacing: t.h3.ls,
               color: color.ink, margin: '0 0 20px', fontFamily: font.family,
             }}>
-              자기검증 의무
+              Figma MCP 양방향 연결
             </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {CHECKS.map((c, i) => (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 16 }}>
+              {[
+                { dir: 'Figma → 코드', desc: '디자인 시안을 코드로 반영' },
+                { dir: '코드 → Figma', desc: '코드 변경사항을 디자인에 동기화' },
+              ].map((item) => (
                 <div
-                  key={i}
+                  key={item.dir}
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '10px 14px',
+                    padding: '14px',
                     background: color.white,
                     borderRadius: layout.rSm,
+                    boxShadow: '0 4px 24px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{
-                      width: 18, height: 18,
-                      borderRadius: '50%',
-                      background: color.brand,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      flexShrink: 0,
-                    }}>
-                      <div style={{
-                        width: 8, height: 5,
-                        borderLeft: `2px solid ${color.white}`,
-                        borderBottom: `2px solid ${color.white}`,
-                        transform: 'rotate(-45deg) translateY(-1px)',
-                      }} />
-                    </div>
-                    <span style={{
-                      fontSize: t.body.size, lineHeight: t.body.lh,
-                      color: color.ink, fontFamily: font.family,
-                    }}>
-                      {c.label}
-                    </span>
-                  </div>
-                  <span style={{
-                    fontSize: 13, fontWeight: 800,
-                    color: color.brand, fontFamily: font.family,
-                    letterSpacing: '0.04em',
+                  <div style={{
+                    fontSize: 13, fontWeight: 700,
+                    color: color.brand, fontFamily: font.family, marginBottom: 6,
                   }}>
-                    {c.target}
-                  </span>
+                    {item.dir}
+                  </div>
+                  <div style={{
+                    fontSize: 13, lineHeight: 1.5,
+                    color: color.inkMuted, fontFamily: font.family,
+                  }}>
+                    {item.desc}
+                  </div>
                 </div>
               ))}
             </div>
+            <p style={{
+              fontSize: t.caption.size, lineHeight: t.caption.lh,
+              color: color.inkMuted, fontFamily: font.family, margin: 0,
+            }}>
+              Antigravity IDE에서 Claude Code로 구현을 진행했다.
+            </p>
           </div>
         </div>
 
