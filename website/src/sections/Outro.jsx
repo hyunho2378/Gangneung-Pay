@@ -1,5 +1,6 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 
 const MEMBERS = [
   { name: '김민경', role: 'PM, VISUAL DESIGNER' },
@@ -11,6 +12,7 @@ const MEMBERS = [
 ];
 
 export default function Outro() {
+  const { isMobile } = useBreakpoint();
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [creditsRef, creditsVisible] = useReveal({ threshold: 0.05 });
 
@@ -80,8 +82,9 @@ export default function Outro() {
 
           <div style={{
             display: 'flex',
-            flexDirection: 'column',
-            gap: 'clamp(4px,0.5vw,8px)',
+            flexDirection: isMobile ? 'column' : 'row',
+            flexWrap: isMobile ? 'nowrap' : 'wrap',
+            gap: isMobile ? 'clamp(4px,0.5vw,8px)' : 'clamp(8px,1.5vw,20px)',
             marginBottom: 'clamp(24px,3vw,40px)',
           }}>
             {MEMBERS.map((m, i) => (

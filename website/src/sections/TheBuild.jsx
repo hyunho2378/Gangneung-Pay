@@ -1,7 +1,6 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 import { useBreakpoint } from '../lib/useBreakpoint.js';
-import iphone14Pro from '../assets/iPhone 14 Pro.svg';
 import asIsHome from '../assets/asis-home.png';
 import toBeHome from '../assets/tobe-home.png';
 import asIsHistory from '../assets/asis-history.png';
@@ -114,52 +113,35 @@ const SCREENS = [
 function PhoneSlot({ variant = 'tobe', screenId }) {
   const isAsis = variant === 'asis';
   const imgSrc = SCREEN_IMGS[`${screenId}-${variant}`];
-  return (
-    <div style={{ position: 'relative' }}>
-      <img
-        src={iphone14Pro}
-        alt=""
-        aria-hidden="true"
-        style={{
-          width: '100%',
-          height: 'auto',
-          display: 'block',
-          filter: isAsis ? 'grayscale(1)' : 'none',
-          opacity: isAsis ? 0.52 : 1,
-        }}
-      />
-      <div style={{
-        position: 'absolute',
-        left: '3.9%', top: '8.8%',
-        width: '92.2%', height: '88.7%',
-        overflow: 'hidden',
-        borderRadius: '8%',
-        background: isAsis ? color.line : color.brandSky,
+  return imgSrc ? (
+    <img
+      src={imgSrc}
+      alt=""
+      aria-hidden="true"
+      style={{
+        width: '100%',
+        height: 'auto',
+        display: 'block',
+        borderRadius: layout.rMd,
+        filter: isAsis ? 'grayscale(0.7)' : 'none',
+        opacity: isAsis ? 0.75 : 1,
+      }}
+    />
+  ) : (
+    <div style={{
+      width: '100%',
+      aspectRatio: '9/19.5',
+      border: `1px dashed ${color.line}`,
+      borderRadius: layout.rMd,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }}>
+      <span style={{
+        fontSize: 9, fontWeight: 800,
+        letterSpacing: '0.08em', textTransform: 'uppercase',
+        fontFamily: font.family, color: color.inkFaint,
       }}>
-        {imgSrc ? (
-          <img
-            src={imgSrc}
-            alt=""
-            aria-hidden="true"
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-          />
-        ) : (
-          <div style={{
-            width: '100%', height: '100%',
-            display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center', gap: 8,
-          }}>
-            <span style={{
-              fontSize: 9, fontWeight: 800,
-              letterSpacing: '0.08em', textTransform: 'uppercase',
-              fontFamily: font.family,
-              color: isAsis ? color.inkFaint : color.brand,
-            }}>
-              {isAsis ? 'AS-IS' : 'TO-BE'}
-            </span>
-          </div>
-        )}
-      </div>
+        {isAsis ? 'AS-IS' : 'TO-BE'}
+      </span>
     </div>
   );
 }

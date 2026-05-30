@@ -8,7 +8,7 @@ export default function UserJourneyMap() {
     <section
       id="journey"
       style={{
-        background: color.bg,
+        background: color.white,
         fontFamily: font.family,
         padding: `${layout.sectionY} clamp(20px,5vw,80px)`,
       }}

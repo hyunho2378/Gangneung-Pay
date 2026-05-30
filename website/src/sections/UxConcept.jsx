@@ -19,7 +19,7 @@ export default function UxConcept() {
         backgroundImage: `url(${gangneungPhoto})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        background: color.ink,
+        backgroundColor: color.ink,
       }}
     >
       {/* Overlay */}
