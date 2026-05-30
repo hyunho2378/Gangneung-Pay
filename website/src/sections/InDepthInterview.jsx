@@ -255,7 +255,7 @@ function Body({ children, noMargin }) {
 }
 
 function Divider() {
-  return <div style={{ height: 1, background: color.line, margin: 'clamp(40px,5vw,72px) 0' }} />;
+  return <div style={{ height: 1, background: color.line, margin: 'clamp(24px,3vw,48px) 0' }} />;
 }
 
 function Accordion({ label, children }) {
@@ -284,7 +284,7 @@ function Accordion({ label, children }) {
         <span style={{
           fontSize: t.caption.size,
           fontWeight: 700,
-          color: open ? color.brand : color.inkMuted,
+          color: color.brand,
           fontFamily: font.family,
           textAlign: 'left',
         }}>
@@ -292,7 +292,7 @@ function Accordion({ label, children }) {
         </span>
         <ChevronDown
           size={16}
-          color={open ? color.brand : color.inkMuted}
+          color={color.brand}
           style={{
             transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
             transition: 'transform 0.25s ease',
@@ -403,7 +403,7 @@ export default function InDepthInterview() {
         {/* Header */}
         <div ref={headRef} style={{
           ...revealStyle(headVisible),
-          marginBottom: 'clamp(40px,5vw,64px)',
+          marginBottom: 'clamp(24px,3vw,48px)',
         }}>
           <p style={{
             fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
@@ -435,7 +435,7 @@ export default function InDepthInterview() {
           display: 'grid',
           gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)',
           gap: 'clamp(12px,1.5vw,24px)',
-          marginBottom: 'clamp(48px,6vw,80px)',
+          marginBottom: 'clamp(32px,4vw,56px)',
         }}>
           {[
             { label: '조사 그룹', value: '3개 그룹' },
@@ -471,7 +471,7 @@ export default function InDepthInterview() {
         {/* Executive Summary: One-Liner (항상 노출) + 분석 개요 아코디언 */}
         <div ref={execRef} style={{
           ...revealStyle(execVisible),
-          marginBottom: 'clamp(40px,5vw,64px)',
+          marginBottom: 'clamp(24px,3vw,48px)',
         }}>
           <p style={{
             fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
@@ -496,7 +496,7 @@ export default function InDepthInterview() {
         {/* Step 1 */}
         <div ref={step1Ref} style={{
           ...revealStyle(step1Visible),
-          marginBottom: 'clamp(40px,5vw,64px)',
+          marginBottom: 'clamp(24px,3vw,48px)',
         }}>
           <StepHeader step="1단계" title="가설 검증" />
           <Body>
@@ -533,7 +533,7 @@ export default function InDepthInterview() {
               </div>
             ))}
           </div>
-          <Accordion label="A조 전체 가설검증">
+          <Accordion label="A조 가설검증 자세히 보기">
             <SubTitle>1-1. A조 (4050 사용자) - 가설 검증</SubTitle>
             <CompareTable
               headers={['검증 항목', '예상 인사이트 (가설)', '실제 발화 데이터 (현실)']}
@@ -571,7 +571,7 @@ export default function InDepthInterview() {
               </div>
             ))}
           </div>
-          <Accordion label="B조 전체 가설검증">
+          <Accordion label="B조 가설검증 자세히 보기">
             <SubTitle>1-2. B조 (2030 사용자) - 가설 검증</SubTitle>
             <CompareTable
               headers={['검증 항목', '예상 인사이트 (가설)', '실제 발화 데이터 (현실)']}
@@ -609,7 +609,7 @@ export default function InDepthInterview() {
               </div>
             ))}
           </div>
-          <Accordion label="C조 전체 가설검증">
+          <Accordion label="C조 가설검증 자세히 보기">
             <SubTitle>1-3. C조 (소상공인) - 가설 검증</SubTitle>
             <CompareTable
               headers={['검증 항목', '예상 인사이트 (가설)', '실제 발화 데이터 (현실)']}
@@ -623,7 +623,7 @@ export default function InDepthInterview() {
         {/* Step 2 */}
         <div ref={step2Ref} style={{
           ...revealStyle(step2Visible),
-          marginBottom: 'clamp(40px,5vw,64px)',
+          marginBottom: 'clamp(24px,3vw,48px)',
         }}>
           <StepHeader step="2단계" title="숨은 의도 파악" />
           <Body>
@@ -686,7 +686,7 @@ export default function InDepthInterview() {
           </div>
 
           {/* 2-1 아코디언 */}
-          <Accordion label="2-1 결제 직전 잔액 불안 상세">
+          <Accordion label="2-1 잔액 불안 자세히 보기">
             <p style={eyebrowSm}>발화 데이터</p>
             <Quote lines={[
               "4050 사용자 2: '민망한 사건이 있었기 때문에 식당 자리에서 먼저 확인하고 들고 이제 이렇게 본 다음에 안심하고 갑니다.'",
@@ -742,7 +742,7 @@ export default function InDepthInterview() {
           </Accordion>
 
           {/* 2-2 아코디언 */}
-          <Accordion label="2-2 충전의 부담 상세">
+          <Accordion label="2-2 충전 부담 자세히 보기">
             <p style={eyebrowSm}>발화 데이터</p>
             <Quote lines={[
               "4050 사용자 2: '항상 저는 교통카드를 충전해서 쓸 때처럼, 잔액을 좀 생각해 줘야 합니다. 반대로 신용카드는 막 써도 되니까 편하다고 생각합니다.'",
@@ -759,7 +759,7 @@ export default function InDepthInterview() {
           </Accordion>
 
           {/* 2-3 아코디언 */}
-          <Accordion label="2-3 굳어진 실물 카드 습관 상세">
+          <Accordion label="2-3 실물 카드 습관 자세히 보기">
             <p style={eyebrowSm}>발화 데이터</p>
             <Quote lines={[
               "4050 사용자 1: '결제할 때 전혀 앱을 사용하지 않습니다. 뭔가 앱에서 뭘 할 수 있으면 들어가는데 오로지 실물 카드로만 가능해서 직접적으로 들어가지는 않습니다.'",
@@ -778,7 +778,7 @@ export default function InDepthInterview() {
         {/* Step 3 */}
         <div ref={step3Ref} style={{
           ...revealStyle(step3Visible),
-          marginBottom: 'clamp(40px,5vw,64px)',
+          marginBottom: 'clamp(24px,3vw,48px)',
         }}>
           <StepHeader step="3단계" title="내 돈과 혜택을 구분하지 못하는 문제" />
 
@@ -796,7 +796,7 @@ export default function InDepthInterview() {
             메인 화면에서 '충전 잔액'과 '적립 캐시백'을 색상과 레이블로 명확히 구분하여 표시해야 합니다. 이 단순한 시각적 분리만으로도 환불 기능 인지율 상승, 충전 과잉 감소, 신규 페이 연동 활성화의 세 가지 효과를 동시에 기대할 수 있습니다.
           </ImprovBox>
 
-          <Accordion label="멘탈 모델 상세 분석">
+          <Accordion label="멘탈 모델 자세히 보기">
             <Body>
               사용자들은 강릉페이 앱 내에서 두 가지 다른 개념의 화폐를 동시에 다루고 있습니다. 그러나 이 두 개념이 앱 내에서 명확히 분리되지 않아 사용자의 금융 멘탈 모델과 충돌합니다.
             </Body>
@@ -836,7 +836,7 @@ export default function InDepthInterview() {
         {/* Step 4 */}
         <div ref={step4Ref} style={{
           ...revealStyle(step4Visible),
-          marginBottom: 'clamp(40px,5vw,64px)',
+          marginBottom: 'clamp(24px,3vw,48px)',
         }}>
           <StepHeader step="4단계" title="진짜 문제 규명 - 플랫폼 성장을 가로막는 3가지 구조적 결함" />
           <Body>
@@ -845,7 +845,7 @@ export default function InDepthInterview() {
 
           {/* 결함 1 */}
           <SubTitle>구조적 결함 1. B2C와 B2B 기능 혼재 - 인터페이스 역할 혼선</SubTitle>
-          <Accordion label="구조적 결함 1 상세">
+          <Accordion label="구조적 결함 1 자세히 보기">
             <Body>
               두 사용자(4050-1, 4050-2 모두)가 '가맹점 등록/신청, 가맹점 포탈, 사랑통, 강릉 관광' 등을 가장 쓸모없는 정보로 지목했습니다.
             </Body>
@@ -863,7 +863,7 @@ export default function InDepthInterview() {
 
           {/* 결함 2 */}
           <SubTitle>구조적 결함 2. 캐시백 단일 의존 구조</SubTitle>
-          <Accordion label="구조적 결함 2 상세">
+          <Accordion label="구조적 결함 2 자세히 보기">
             <Body>
               인터뷰 전반에서 가장 일관되게 나타난 패턴은 모든 사용 동기가 결국 캐시백 하나로 모인다는 것입니다.
             </Body>
@@ -886,7 +886,7 @@ export default function InDepthInterview() {
 
           {/* 결함 3 */}
           <SubTitle>구조적 결함 3. 가맹점 생태계의 정보 단절 - 공급자와 수요자가 서로 보이지 않는 구조</SubTitle>
-          <Accordion label="구조적 결함 3 상세">
+          <Accordion label="구조적 결함 3 자세히 보기">
             <Body>
               강릉페이의 네트워크 가치는 가맹점 수에 달려 있습니다.
             </Body>

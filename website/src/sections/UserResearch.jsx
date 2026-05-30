@@ -14,7 +14,7 @@ const {
 } = researchData;
 const sq = surveyData['집계'];
 
-const SEC_PAD = `clamp(28px,4vw,56px) clamp(20px,5vw,80px)`;
+const SEC_PAD = `clamp(16px,2vw,32px) clamp(20px,5vw,80px)`;
 const cardShadow = '0 2px 12px rgba(0,0,0,0.06)';
 
 const eyebrowStyle = (clr = color.brand) => ({
@@ -57,8 +57,8 @@ function Accordion({ label, children }) {
         onClick={() => setOpen(o => !o)}
         style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'clamp(14px,1.8vw,20px) clamp(16px,2vw,24px)', background: open ? color.brandPale : color.bg, border: 'none', cursor: 'pointer', fontFamily: font.family }}
       >
-        <span style={{ fontSize: t.caption.size, fontWeight: 700, color: open ? color.brand : color.inkMuted, fontFamily: font.family, textAlign: 'left' }}>{label}</span>
-        <ChevronDown size={16} color={open ? color.brand : color.inkMuted} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s ease', flexShrink: 0, marginLeft: 12 }} />
+        <span style={{ fontSize: t.caption.size, fontWeight: 700, color: color.brand, fontFamily: font.family, textAlign: 'left' }}>{label}</span>
+        <ChevronDown size={16} color={color.brand} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s ease', flexShrink: 0, marginLeft: 12 }} />
       </button>
       {open && (
         <div style={{ padding: 'clamp(16px,2vw,24px)', borderTop: `1px solid ${color.line}`, background: color.white }}>
@@ -136,7 +136,7 @@ export default function UserResearch() {
             }}>
               {why.background}
             </p>
-            <Accordion label="조사 목적 상세">
+            <Accordion label="조사 목적 자세히 보기">
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {why.purposes.map((p, i) => (
                   <div key={i} style={{ display: 'flex', gap: 16, padding: '14px 20px', background: color.bg, borderRadius: layout.rMd }}>
@@ -155,7 +155,7 @@ export default function UserResearch() {
         <div style={{ maxWidth: layout.container, margin: '0 auto' }}>
           <div ref={ref2} style={reveal(vis2)}>
             <p style={{ ...eyebrowStyle(color.inkMuted), margin: '0 0 20px' }}>02 RESEARCH GOALS</p>
-            <Accordion label="RESEARCH GOALS 전체">
+            <Accordion label="RESEARCH GOALS 자세히 보기">
               <div style={{ borderRadius: layout.rMd, overflow: 'hidden', boxShadow: cardShadow }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16 }}>
                   <thead>
@@ -189,7 +189,7 @@ export default function UserResearch() {
             <h3 style={{
               fontSize: t.h2.size, fontWeight: t.h2.weight,
               lineHeight: t.h2.lh, letterSpacing: t.h2.ls,
-              color: color.ink, margin: '0 0 clamp(24px,3vw,40px)',
+              color: color.ink, margin: '0 0 clamp(16px,2vw,28px)',
             }}>
               4개 세그먼트를 조사했습니다.
             </h3>
@@ -236,7 +236,7 @@ export default function UserResearch() {
             <h3 style={{
               fontSize: t.h2.size, fontWeight: t.h2.weight,
               lineHeight: t.h2.lh, letterSpacing: t.h2.ls,
-              color: color.ink, margin: '0 0 clamp(24px,3vw,40px)',
+              color: color.ink, margin: '0 0 clamp(16px,2vw,28px)',
             }}>
               4가지 방법으로 데이터를 수집했습니다.
             </h3>
@@ -281,7 +281,7 @@ export default function UserResearch() {
                       WHY
                     </p>
                     <p style={{ fontSize: 17, fontWeight: 500, lineHeight: 1.6, color: color.inkMuted, margin: '0 0 14px', fontFamily: font.family }}>{m.purpose}</p>
-                    <Accordion label="HOW 상세">
+                    <Accordion label="HOW 자세히 보기">
                       <p style={{ fontSize: 17, fontWeight: 500, lineHeight: 1.6, color: color.inkMuted, margin: 0, fontFamily: font.family, wordBreak: 'keep-all' }}>{m.detail}</p>
                     </Accordion>
                   </div>
@@ -300,7 +300,7 @@ export default function UserResearch() {
             <h3 style={{
               fontSize: t.h2.size, fontWeight: t.h2.weight,
               lineHeight: t.h2.lh, letterSpacing: t.h2.ls,
-              color: color.ink, margin: '0 0 clamp(24px,3vw,40px)',
+              color: color.ink, margin: '0 0 clamp(16px,2vw,28px)',
             }}>
               3개 미션으로 행동 데이터를 포착했습니다.
             </h3>
@@ -325,7 +325,7 @@ export default function UserResearch() {
                         <p style={{ fontSize: 11, fontWeight: 800, color: color.brand, margin: '0 0 6px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>시나리오</p>
                         <p style={{ margin: 0, fontSize: 17, fontWeight: 500, lineHeight: 1.6, color: color.inkMuted, fontFamily: font.family, wordBreak: 'keep-all' }}>{m.scenario}</p>
                       </div>
-                      <Accordion label="관찰 포인트 및 측정 지표">
+                      <Accordion label="관찰 포인트 자세히 보기">
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px,1fr))', gap: 'clamp(12px,1.5vw,20px)' }}>
                           <div>
                             <p style={{ fontSize: 11, fontWeight: 800, color: color.inkMuted, margin: '0 0 6px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>관찰 포인트</p>
@@ -423,7 +423,7 @@ export default function UserResearch() {
               </div>
             </div>
             {/* 연령대+기기 아코디언 */}
-            <Accordion label="전체 설문 결과 분포 (연령대, 기기)">
+            <Accordion label="전체 분포 자세히 보기">
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
@@ -467,7 +467,7 @@ export default function UserResearch() {
         <div style={{ maxWidth: layout.container, margin: '0 auto' }}>
           <div ref={ref7} style={reveal(vis7)}>
             <p style={{ ...eyebrowStyle(color.inkMuted), margin: '0 0 20px' }}>07 SEGMENT PRIORITY</p>
-            <Accordion label="세그먼트 개선 우선순위 전체">
+            <Accordion label="세그먼트 우선순위 자세히 보기">
               <div style={{ overflowX: 'auto', marginBottom: 'clamp(24px,3vw,40px)' }}>
               <div style={{ borderRadius: layout.rMd, overflow: 'hidden', boxShadow: cardShadow, minWidth: 360 }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16 }}>
