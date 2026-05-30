@@ -139,7 +139,7 @@ export default function UserTest() {
             margin: '0 0 clamp(20px,2.5vw,32px)', fontFamily: font.family,
             wordBreak: 'keep-all',
           }}>
-            강릉시청 강릉페이 담당자와 운영대행사(코나아이) 실무 자문을 통해 개선 방향을 검증했습니다.
+            강릉시청 강릉페이 담당자와 운영대행사(코나아이) 실무 자문을 통해 개선 방향을 검증 중에 있습니다.
           </p>
           <div style={{ maxWidth: isMobile ? '100%' : 520 }}>
             <img

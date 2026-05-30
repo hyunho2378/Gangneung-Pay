@@ -79,7 +79,7 @@ export default function UserResearch() {
   const [ref5, vis5] = useReveal({ threshold: 0.05 });
   const [ref6, vis6] = useReveal({ threshold: 0.03 });
   const [ref7, vis7] = useReveal({ threshold: 0.03 });
-  const [cRef70, c70] = useCountUp(70, 1500);
+  const [cRef70, c70] = useCountUp(68, 1500);
   const [cRef34, c34] = useCountUp(34, 1500);
   const [cRef9,  c9]  = useCountUp(9,  1200);
   const [cRef0,  c0]  = useCountUp(0,   800);
