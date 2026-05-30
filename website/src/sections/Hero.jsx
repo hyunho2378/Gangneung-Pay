@@ -2,7 +2,7 @@ import { color, font, type as t, layout } from '../tokens/web.js';
 import { useParallax } from '../lib/useParallax.js';
 import { useReveal } from '../lib/useReveal.js';
 import { useBreakpoint } from '../lib/useBreakpoint.js';
-import hero1Img from '../assets/hero-1.png';
+import hero1Img from '../assets/hero-1.webp';
 
 const META = [
   { label: 'PROJECT', value: '강릉페이 UX 개선' },
