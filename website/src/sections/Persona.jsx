@@ -96,7 +96,7 @@ export default function Persona() {
           <p style={{
             fontSize: t.h2.size, fontWeight: 800,
             lineHeight: t.h2.lh, letterSpacing: t.h2.ls,
-            color: color.brand, margin: 0,
+            color: color.ink, margin: 0,
             wordBreak: 'keep-all', fontFamily: font.family,
           }}>
             "{PERSONA.quote}"
