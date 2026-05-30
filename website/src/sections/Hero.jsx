@@ -146,7 +146,7 @@ export default function Hero() {
               style={{
                 display: 'grid',
                 gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'auto repeat(5, 1fr)',
-                gap: 'clamp(16px,2.5vw,40px)',
+                gap: '24px',
                 alignItems: 'center',
                 width: '100%',
               }}
