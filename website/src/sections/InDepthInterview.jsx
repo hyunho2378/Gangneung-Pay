@@ -103,32 +103,6 @@ function ImprovBox({ children }) {
   );
 }
 
-function QuestionBox({ children }) {
-  return (
-    <div style={{
-      background: color.bg,
-      border: `1px solid ${color.line}`,
-      borderRadius: layout.rMd,
-      padding: 'clamp(16px,2vw,24px)',
-      margin: 'clamp(12px,1.5vw,18px) 0',
-    }}>
-      <p style={{
-        fontSize: 11, fontWeight: 800, letterSpacing: '0.06em',
-        textTransform: 'uppercase', color: color.brand,
-        fontFamily: font.family, margin: '0 0 12px',
-      }}>
-        질문 설계
-      </p>
-      <div style={{
-        fontSize: t.body.size, lineHeight: t.body.lh,
-        fontWeight: 500, color: color.ink,
-        fontFamily: font.family, wordBreak: 'keep-all',
-      }}>
-        {children}
-      </div>
-    </div>
-  );
-}
 
 function CompareTable({ headers, rows }) {
   const { isMobile } = useBreakpoint();
@@ -382,18 +356,6 @@ const STEP4_3_ROWS = [
   ["소비자가 가맹점 스티커로 강릉페이 여부를 확인하길 원하나, 스티커 없는 가맹점 다수", "편의점: '그런 스티커가 붙여지면 소통의 오류가 줄어들지 않을까' - 가맹점주도 홍보물 원함"],
 ];
 
-const APPENDIX_ROWS = [
-  ['메인 화면 충전 잔액과 캐시백 분리 표시', '최상', '낮음', '사용자 1: 충전금 과잉 혼동 / 전원 환불 기능 미인지'],
-  ['앱 홈 화면 위젯 또는 잠금 화면 잔액 표시', '높음', '중간', "4050-2: '항상 잔액 신경 쓴다' / 결제 전 불안 방지 행동"],
-  ['결제 전 잔액 부족 사전 알림 (푸시)', '높음', '낮음', "4050-2: '잔액 부족이라는 상황이 온다' 반복 발화"],
-  ['가맹점 스티커/안내물 배포 체계화', '높음', '낮음', "편의점: 하루 5명이 '강릉페이 되나요?' 질문"],
-  ['B2C 앱에서 B2B 메뉴 분리(또는 역할 분기)', '높음', '중간', "전원 '가맹점 등록, 가맹점 포탈'을 불필요 정보로 지목"],
-  ['월별 캐시백 이용/잔액 내역 화면 구현', '중간', '낮음', "4050-2: '월별 이용 내역이 있으면 좋겠다' 직접 요청"],
-  ['카카오/네이버페이 도입 인지도 향상 캠페인', '중간', '낮음', '다수: 도입 사실을 몰랐거나 캐시백 동일 적용 미인지'],
-  ['충전 화면 내 현재 잔액 표시', '중간', '낮음', '4050-2: 충전 전 잔액 확인 후 충전 금액 결정 패턴'],
-  ['삼성페이/애플페이 NFC 결제 도입', '최상', '높음', "2030-2: '애플페이 협업 해주시면 감사' / 2030-1: '삼성페이면 편할 텐데'"],
-  ['고객센터 운영 시간 확대 및 채널 다양화', '중간', '중간', "2030-1: 'IC칩 오류 해결 위해 시청 직접 방문' 경험"],
-];
 
 const STEP1_A_HIGHLIGHTS = [STEP1_A_ROWS[3], STEP1_A_ROWS[1]];
 const STEP1_B_HIGHLIGHTS = [STEP1_B_ROWS[0], STEP1_B_ROWS[3]];
@@ -418,8 +380,6 @@ export default function InDepthInterview() {
   const [step2Ref, step2Visible] = useReveal({ threshold: 0.03 });
   const [step3Ref, step3Visible] = useReveal({ threshold: 0.03 });
   const [step4Ref, step4Visible] = useReveal({ threshold: 0.03 });
-  const [step5Ref, step5Visible] = useReveal({ threshold: 0.03 });
-  const [appendixRef, appendixVisible] = useReveal({ threshold: 0.03 });
 
   const revealStyle = (visible, delay = 0) => ({
     opacity: visible ? 1 : 0,
@@ -528,11 +488,6 @@ export default function InDepthInterview() {
               강릉페이는 현재 10% 캐시백이라는 단일 동인에 의해 생명을 유지하는 '혜택 의존형 충전 도구'입니다. 앱은 결제 수단이 아니라 캐시백 잔액 확인 창구로 기능 축소되어 있으며, 이 구조가 유지되는 한 어떤 기능을 추가해도 근본적 성장을 기대하기 어렵습니다.
             </p>
           </KeyBox>
-          <Accordion label="분석 개요">
-            <Body>
-              이 보고서는 강릉페이 사용자 8인(A조: 4050 사용자 2인, B조: 2030 사용자 2인, C조: 소상공인 2인)을 대상으로 진행한 인뎁스 인터뷰 데이터를 기반으로 작성했습니다. 분석의 핵심 목표는 단순한 불편 목록 작성이 아니라, 사용자가 '말하지 못한 것'과 서비스가 '플랫폼으로 성장하지 못하는 구조적 이유'를 규명하는 데 있습니다.
-            </Body>
-          </Accordion>
         </div>
 
         <Divider />
@@ -947,108 +902,6 @@ export default function InDepthInterview() {
           </Accordion>
         </div>
 
-        <Divider />
-
-        {/* Step 5 */}
-        <div ref={step5Ref} style={{
-          ...revealStyle(step5Visible),
-          marginBottom: 'clamp(40px,5vw,64px)',
-        }}>
-          <StepHeader step="5단계" title="설문조사 수정 제안 - 인사이트를 정량화할 3가지 핵심 질문" />
-          <Accordion label="5단계: 설문조사 추가 제안 전체 보기">
-          <Body>
-            인뎁스 인터뷰에서 도출된 가설을 대규모 표본으로 검증하기 위해, 현행 설문조사에 반드시 추가해야 할 질문 3가지를 제안합니다. 각 질문은 단일 인사이트가 아닌 특정 의사결정을 위한 임계치 데이터를 수집하는 것을 목적으로 합니다.
-          </Body>
-
-          <SubTitle>추가 질문 1. 불편함 인내의 임계치 측정</SubTitle>
-          <QuestionBox>
-            <p style={{ margin: '0 0 10px', fontSize: t.body.size, lineHeight: t.body.lh, fontWeight: 500, color: color.ink, fontFamily: font.family, wordBreak: 'keep-all' }}>
-              강릉페이 앱을 이용할 때 다음 상황이 발생할 경우 어떻게 하시겠습니까? (결제를 위해 기다린다 / 다른 결제 수단으로 전환한다 중 선택)
-            </p>
-            {[
-              'A. 앱 실행 후 메인 화면 로딩에 3초 이상 걸린다',
-              'B. 앱 실행 후 메인 화면 로딩에 5초 이상 걸린다',
-              'C. 충전 완료까지 10초 이상 걸린다',
-              'D. 계산대 앞에서 잔액이 부족하여 즉시 충전이 필요한 상황이다',
-            ].map((opt, i) => (
-              <p key={i} style={{ margin: i < 3 ? '0 0 6px' : 0, fontSize: t.caption.size, lineHeight: 1.6, fontWeight: 600, color: color.brand, fontFamily: font.family }}>
-                {opt}
-              </p>
-            ))}
-          </QuestionBox>
-          <p style={eyebrowSm}>이 질문이 필요한 이유</p>
-          <Body>
-            현재 인터뷰 데이터는 '로딩이 길어서 삼성페이로 전환했다'는 정성적 사실을 보여주지만, 몇 초의 로딩이 전환을 유발하는지는 알 수 없습니다. 이 질문을 통해 전환 임계치 시간을 정량화하면, 앱 성능 개선의 우선순위와 기준을 구체적으로 설정할 수 있습니다. 동시에 D번 시나리오의 응답 분포로 '결제 직전 잔액 불안'의 실질적 이탈 규모를 추정할 수 있습니다.
-          </Body>
-
-          <SubTitle>추가 질문 2. 캐시백 의존도와 서비스 자립도 측정</SubTitle>
-          <QuestionBox>
-            <p style={{ margin: '0 0 10px', fontSize: t.body.size, lineHeight: t.body.lh, fontWeight: 500, color: color.ink, fontFamily: font.family, wordBreak: 'keep-all' }}>
-              현재 강릉페이 10% 캐시백 혜택이 아래와 같이 변경된다면 강릉페이 사용 빈도가 어떻게 달라질 것 같습니까? (매우 감소 / 약간 감소 / 변화 없음 / 약간 증가 / 매우 증가 중 선택)
-            </p>
-            {[
-              'A. 캐시백이 7%로 조정된다',
-              'B. 캐시백이 5%로 조정된다',
-              'C. 캐시백이 3%로 조정된다',
-              'D. 캐시백이 완전히 폐지되고 강릉 내 독점 할인 혜택(특정 가맹점 추가 할인 등)으로 대체된다',
-              'E. 캐시백은 유지되지만 앱에 지역 맛집 추천, 이벤트 티켓 구매 기능이 추가된다',
-            ].map((opt, i) => (
-              <p key={i} style={{ margin: i < 4 ? '0 0 6px' : 0, fontSize: t.caption.size, lineHeight: 1.6, fontWeight: 600, color: color.brand, fontFamily: font.family }}>
-                {opt}
-              </p>
-            ))}
-          </QuestionBox>
-          <p style={eyebrowSm}>이 질문이 필요한 이유</p>
-          <Body>
-            4050 사용자 2의 경우 5%까지 사용 의향이 있다고 발화했지만, 이것이 일반적인 패턴인지 알 수 없습니다. E번 선택지에 대한 응답은 캐시백 이외의 기능이 사용자 잔류 동기로 작동할 수 있는지를 측정합니다. 만약 D나 E번에 대해 '변화 없음' 또는 '증가' 응답이 유의미하게 나온다면, 이는 플랫폼 확장 투자의 근거가 됩니다. 반대로 A번 조건에서도 다수가 '매우 감소'를 선택한다면, 서비스가 현재 혜택에만 의존하는 구조임이 드러납니다.
-          </Body>
-
-          <SubTitle>추가 질문 3. 결제 방식 수용 의향 정밀 측정</SubTitle>
-          <QuestionBox>
-            <p style={{ margin: '0 0 10px', fontSize: t.body.size, lineHeight: t.body.lh, fontWeight: 500, color: color.ink, fontFamily: font.family, wordBreak: 'keep-all' }}>
-              다음 각 결제 방식이 강릉페이에 도입된다면 사용 의향이 있으십니까? (각 항목에 대해 적극 사용 / 가끔 사용 / 사용 안 함 중 선택, 스마트폰 기기 종류 응답 필수)
-            </p>
-            {[
-              'A. 카카오페이 연동 바코드 결제 (현재 시행 중)',
-              'B. 네이버페이 연동 바코드 결제 (4월 도입 예정)',
-              'C. 삼성페이 NFC 결제 (실물 카드 불필요)',
-              'D. 애플페이 NFC 결제 (실물 카드 불필요)',
-              'E. 앱 없이 실물 카드만으로 NFC 결제',
-            ].map((opt, i) => (
-              <p key={i} style={{ margin: i < 4 ? '0 0 6px' : 0, fontSize: t.caption.size, lineHeight: 1.6, fontWeight: 600, color: color.brand, fontFamily: font.family }}>
-                {opt}
-              </p>
-            ))}
-          </QuestionBox>
-          <p style={eyebrowSm}>이 질문이 필요한 이유</p>
-          <Body>
-            인터뷰에서 애플페이 수요가 삼성페이 수요만큼 강하게 드러났지만, 이는 소수 표본의 발화입니다. 이 질문에 스마트폰 기기 종류(갤럭시/아이폰/기타)를 크로스탭으로 분석하면, 기기별 결제 방식 수요를 정량화할 수 있습니다. 이를 통해 삼성페이와 애플페이 중 어느 것을 먼저 도입해야 더 큰 이탈 방지 효과를 거둘 수 있는지 데이터 기반으로 결정 가능해집니다.
-          </Body>
-          </Accordion>
-        </div>
-
-        <Divider />
-
-        {/* 부록 */}
-        <div ref={appendixRef} style={{
-          ...revealStyle(appendixVisible),
-        }}>
-          <StepHeader step="부록" title="발화 기반 개선 우선순위 매트릭스" />
-          <Accordion label="부록: 개선 우선순위 매트릭스 전체 보기">
-            <Body>
-              인터뷰에서 도출된 개선 과제를 '사용자 영향도'와 '구현 복잡도' 기준으로 분류한 매트릭스입니다. 단기 로드맵 수립의 출발점으로 활용할 것을 권고합니다.
-            </Body>
-
-            <CompareTable
-              headers={['개선 과제', '사용자 영향도', '구현 복잡도', '근거 발화']}
-              rows={APPENDIX_ROWS}
-            />
-
-            <Body noMargin>
-              본 보고서는 8인 사용자의 발화 데이터만을 기반으로 작성했으며, 정량적 대표성은 후속 설문조사로 검증해야 합니다. 특히 B조 내 아이폰 사용자 비율에 따라 애플페이 도입의 우선순위가 삼성페이와 역전될 수 있으므로, 기기 분포 조사를 선행해야 합니다.
-            </Body>
-          </Accordion>
-        </div>
 
       </div>
     </section>

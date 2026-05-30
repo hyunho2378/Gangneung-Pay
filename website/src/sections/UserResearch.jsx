@@ -357,7 +357,7 @@ export default function UserResearch() {
               color: color.ink, margin: '0 0 clamp(16px,2vw,28px)',
               wordBreak: 'keep-all',
             }}>
-              설문 70명의 실제 데이터.
+              정량적 설문조사 결과.
             </h3>
 
             {/* Key numbers */}

@@ -1,6 +1,7 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 import { useBreakpoint } from '../lib/useBreakpoint.js';
+import before1Img from '../assets/before-1.png';
 
 const STRATEGY_LABELS = {
   S1: 'S1 덜어내기',
@@ -15,6 +16,7 @@ const SCREENS = [
     num: '01',
     name: '메인 홈',
     badge: null,
+    asIsImg: before1Img,
     asIs: '서비스 바로가기, 최근 결제, 지원금 캐러셀 등 비금융 정보가 메인을 차지합니다. 상단 캐러셀에 빨간색 등 잡색이 섞이고 캐시백 설정이 사라져 있습니다.',
     toBe: '비금융 정보를 삭제해 금융 핵심만 남깁니다. 블루 primary로 통일하고 캐시백 자동, 수동 사용을 복원합니다.',
     annotations: [
@@ -89,7 +91,7 @@ const SCREENS = [
 
 const SCREEN_H = 700;
 
-function PhoneMock({ variant = 'tobe', scale = 0.56 }) {
+function PhoneMock({ variant = 'tobe', scale = 0.56, src = null }) {
   const fw = Math.round(390 * scale);
   const fh = Math.round(SCREEN_H * scale);
   const isAsis = variant === 'asis';
@@ -99,8 +101,6 @@ function PhoneMock({ variant = 'tobe', scale = 0.56 }) {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      filter: isAsis ? 'grayscale(1)' : 'none',
-      opacity: isAsis ? 0.58 : 1,
     }}>
       <p style={{
         fontSize: 11, fontWeight: 800,
@@ -131,14 +131,18 @@ function PhoneMock({ variant = 'tobe', scale = 0.56 }) {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-          <span style={{
-            fontSize: 9, fontWeight: 600,
-            color: isAsis ? 'rgba(0,0,0,0.22)' : color.inkFaint,
-            fontFamily: font.family, textAlign: 'center', padding: '0 14px',
-            lineHeight: 1.6,
-          }}>
-            스크린샷{'\n'}교체 예정
-          </span>
+          {src ? (
+            <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          ) : (
+            <span style={{
+              fontSize: 9, fontWeight: 600,
+              color: isAsis ? 'rgba(0,0,0,0.22)' : color.inkFaint,
+              fontFamily: font.family, textAlign: 'center', padding: '0 14px',
+              lineHeight: 1.6,
+            }}>
+              스크린샷{'\n'}교체 예정
+            </span>
+          )}
         </div>
       </div>
     </div>
@@ -283,7 +287,7 @@ function BigScreenBlock({ screen, visible, isMobile }) {
         justifyItems: 'center',
         marginBottom: 'clamp(32px,4vw,48px)',
       }}>
-        <PhoneMock variant="asis" scale={0.62} />
+        <PhoneMock variant="asis" scale={0.62} src={screen.asIsImg || null} />
         <PhoneMock variant="tobe" scale={0.62} />
       </div>
 
