@@ -93,13 +93,14 @@ export default function Persona() {
           }}>
             PERSONA
           </p>
-          <h2 style={{
-            fontSize: t.h1.size, fontWeight: t.h1.weight,
-            lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
-            color: color.ink, margin: 0, wordBreak: 'keep-all',
+          <p style={{
+            fontSize: t.lead.size, fontWeight: 700,
+            fontStyle: 'italic', lineHeight: t.lead.lh,
+            color: color.brand, margin: 0,
+            wordBreak: 'keep-all', fontFamily: font.family,
           }}>
-            어떤 사람이 강릉페이를 사용할까요?
-          </h2>
+            "{PERSONA.quote}"
+          </p>
         </div>
 
         {/* Persona visual */}
