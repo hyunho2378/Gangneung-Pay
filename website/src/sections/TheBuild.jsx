@@ -45,10 +45,10 @@ const SCREENS = [
     asIs: '서비스 바로가기, 최근 결제, 지원금 캐러셀 등 비금융 정보가 메인을 차지합니다. 상단 캐러셀에 빨간색 등 잡색이 섞이고 캐시백 설정이 사라져 있습니다. 환불 메뉴가 큰글씨 모드에서만 노출되는 다크패턴이었습니다. 관찰 참여자 4인 전원이 환불 메뉴 탐색에 실패했습니다.',
     toBe: '비금융 정보를 삭제해 금융 핵심만 남깁니다. 블루 primary로 통일하고 캐시백 자동, 수동 사용을 복원합니다. 잔액카드에 충전, 환불, QR결제를 3슬롯으로 동등 배치했습니다.',
     annotations: [
-      '잡정보 3종 삭제(서비스 바로가기, 최근 결제, 지원금 캐러셀)',
-      '빨간 캐러셀 제거, 블루 primary 통일',
-      '캐시백 자동, 수동 사용 통합 복원',
-      '내부 시스템 용어를 사용자 언어로 교체',
+      '비금융 정보 3종 삭제(서비스 바로가기, 최근 결제, 지원금 캐러셀)',
+      '잡색 제거, 블루 primary 통일',
+      '캐시백 자동, 수동 사용 복원',
+      '내부 용어의 사용자 언어 전환',
       '큰글씨 전용 다크패턴 해소, 환불 동등 위계',
     ],
     proves: ['S1', 'S3', 'S4'],
@@ -79,7 +79,7 @@ const SCREENS = [
     annotations: [
       '잔액, 캐시백, 페이별 사용 분리',
       '월별 칩 필터(충전, 환불, 결제)',
-      '깊이를 줄여 시니어가 직관적으로 보게',
+      '정보 깊이 축소로 시니어 직관성 확보',
     ],
     proves: ['S3'],
     big: false,
@@ -92,8 +92,8 @@ const SCREENS = [
     asIs: '환불 가능 여부와 조건을 한곳에서 확인할 수 없어, 무엇을 환불할 수 있는지 파악하기 어려웠습니다.',
     toBe: '환불 가능한 충전내역과 가능 조건을 함께 보여주고, 조건을 충족한 항목만 환불하도록 했습니다.',
     annotations: [
-      '환불 가능 충전내역 + 가능 조건 안내',
-      '조건을 만족하는 항목만 환불 가능하게',
+      '환불 가능 충전내역, 가능 조건 표시',
+      '조건 충족 항목 한정 환불',
     ],
     proves: ['S2', 'S3'],
     big: false,
@@ -106,7 +106,7 @@ const SCREENS = [
     asIs: "'얼마 받았어요' 모달만 있었습니다. 적립, 사용, 소멸 추적이 불가능합니다.",
     toBe: '캐시백 내역 전용 페이지를 신설합니다. 적립, 사용, 소멸 예정을 월별로 추적합니다.',
     annotations: [
-      '모달에서 전용 페이지로',
+      '모달에서 전용 페이지로 전환',
       '적립, 사용, 소멸 예정 월별 추적',
     ],
     proves: ['S3', 'S1'],
@@ -121,8 +121,8 @@ const SCREENS = [
     toBe: '결제매장 페이지를 신설합니다. 카테고리 클릭 시 노출하고 선택 시 해당 위치로 이동합니다. 상세에 사진 자리를 마련합니다.',
     annotations: [
       '카테고리 클릭 노출, 선택 시 위치 이동',
-      '드래그 모달의 낮은 접근성 개선',
-      '상세에 사진 자리로 친절한 정보 제공',
+      '드래그 모달 접근성 개선',
+      '상세 사진 영역 제공',
     ],
     proves: ['S4'],
     big: false,
@@ -145,7 +145,6 @@ function PhoneSlot({ variant = 'tobe', screenId, label }) {
             height: 'auto',
             display: 'block',
             borderRadius: layout.rMd,
-            opacity: isAsis ? 0.75 : 1,
           }}
         />
       ) : (
@@ -159,9 +158,9 @@ function PhoneSlot({ variant = 'tobe', screenId, label }) {
       )}
       <p style={{
         textAlign: 'center',
-        fontSize: 10, fontWeight: 700,
+        fontSize: 20, fontWeight: 800,
         letterSpacing: '0.08em', textTransform: 'uppercase',
-        color: isAsis ? color.inkFaint : color.brand,
+        color: isAsis ? color.inkMuted : color.brand,
         margin: '8px 0 0',
         fontFamily: font.family,
       }}>
@@ -266,7 +265,7 @@ function BigScreenBlock({ screen, visible, isMobile }) {
       <div style={{ marginBottom: 'clamp(32px,4vw,48px)' }}>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
           gap: 'clamp(16px,4vw,56px)',
           maxWidth: isMobile ? '100%' : 560,
           marginLeft: 'auto',
@@ -389,8 +388,8 @@ function ScreenBlock({ screen, visible, delay, isMobile, isLast }) {
         {/* Phones */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: 'clamp(8px,1.5vw,16px)',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+          gap: 'clamp(16px,2vw,32px)',
         }}>
           {screen.dualTobe ? (
             <>

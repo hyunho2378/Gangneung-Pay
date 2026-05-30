@@ -312,7 +312,7 @@ export default function UserFlow() {
             lineHeight: t.lead.lh, color: color.inkMuted,
             margin: 0,
           }}>
-            온보딩, QR결제, 충전, 잔액확인, 환불 등 사용자가 실제로 거치는 경로를 재설계했습니다.
+            온보딩과 QR결제, 충전, 잔액확인, 환불 등 사용자가 실제로 거치는 경로를 재설계했습니다.
           </p>
         </div>
 
