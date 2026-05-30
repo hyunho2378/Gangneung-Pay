@@ -1,7 +1,6 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 import { useBreakpoint } from '../lib/useBreakpoint.js';
-import testImg from '../assets/test-1.png';
 
 const TABLE = {
   headers: ['항목', '강릉페이', '삼성페이', '토스', '카카오페이'],
@@ -18,8 +17,7 @@ const COL = '1.2fr 1.5fr 1fr 1fr 1fr';
 export default function DeskResearch() {
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [tableRef, tableVisible] = useReveal({ threshold: 0.05 });
-  const [verifyRef, verifyVisible] = useReveal({ threshold: 0.05 });
-  const { isMobile } = useBreakpoint();
+const { isMobile } = useBreakpoint();
 
   return (
     <section
@@ -189,46 +187,6 @@ export default function DeskResearch() {
               </div>
             </div>
           )}
-        </div>
-
-        {/* 실무 검증 */}
-        <div
-          ref={verifyRef}
-          style={{
-            opacity: verifyVisible ? 1 : 0,
-            transform: verifyVisible ? 'none' : 'translateY(28px)',
-            transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-            marginTop: 'clamp(40px,5vw,64px)',
-          }}
-        >
-          <p style={{
-            fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
-            letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-            color: color.inkMuted, margin: '0 0 12px', fontFamily: font.family,
-          }}>
-            실무 검증
-          </p>
-          <p style={{
-            fontSize: t.body.size, fontWeight: 500,
-            lineHeight: t.body.lh, color: color.inkMuted,
-            margin: '0 0 clamp(20px,2.5vw,32px)', fontFamily: font.family,
-            wordBreak: 'keep-all',
-          }}>
-            강릉시청 강릉페이 담당자와 운영대행사(코나아이) 실무 자문을 통해 개선 방향을 검증했습니다.
-          </p>
-          <div style={{ maxWidth: isMobile ? '100%' : 520 }}>
-            <img
-              src={testImg}
-              alt="강릉시청 강릉페이 담당자 회신"
-              style={{ width: '100%', height: 'auto', display: 'block', borderRadius: layout.rMd }}
-            />
-            <p style={{
-              fontSize: t.caption.size, lineHeight: t.caption.lh,
-              color: color.inkMuted, margin: '8px 0 0', fontFamily: font.family,
-            }}>
-              강릉시청 강릉페이 담당자 회신
-            </p>
-          </div>
         </div>
 
       </div>
