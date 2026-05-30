@@ -2,6 +2,29 @@ import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 import { useBreakpoint } from '../lib/useBreakpoint.js';
 import iphone14Pro from '../assets/iPhone 14 Pro.svg';
+import asIsHome from '../assets/asis-home.png';
+import toBeHome from '../assets/tobe-home.png';
+import asIsHistory from '../assets/asis-history.png';
+import toBeHistory from '../assets/tobe-history.png';
+import asIsRefund from '../assets/asis-refund.png';
+import toBeRefund from '../assets/tobe-refund.png';
+import asIsCashback from '../assets/asis-cashback.png';
+import toBeCashback from '../assets/tobe-cashback.png';
+import asIsStore from '../assets/asis-store.png';
+import toBeStore from '../assets/tobe-store.png';
+
+const SCREEN_IMGS = {
+  'home-asis': asIsHome,
+  'home-tobe': toBeHome,
+  'history-asis': asIsHistory,
+  'history-tobe': toBeHistory,
+  'refund-asis': asIsRefund,
+  'refund-tobe': toBeRefund,
+  'cashback-asis': asIsCashback,
+  'cashback-tobe': toBeCashback,
+  'store-asis': asIsStore,
+  'store-tobe': toBeStore,
+};
 
 const STRATEGY_LABELS = {
   S1: 'S1 덜어내기',
@@ -88,8 +111,9 @@ const SCREENS = [
   },
 ];
 
-function PhoneSlot({ variant = 'tobe' }) {
+function PhoneSlot({ variant = 'tobe', screenId }) {
   const isAsis = variant === 'asis';
+  const imgSrc = SCREEN_IMGS[`${screenId}-${variant}`];
   return (
     <div style={{ position: 'relative' }}>
       <img
@@ -111,27 +135,30 @@ function PhoneSlot({ variant = 'tobe' }) {
         overflow: 'hidden',
         borderRadius: '8%',
         background: isAsis ? color.line : color.brandSky,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 8,
       }}>
-        <span style={{
-          fontSize: 9, fontWeight: 800,
-          letterSpacing: '0.08em', textTransform: 'uppercase',
-          fontFamily: font.family,
-          color: isAsis ? color.inkFaint : color.brand,
-        }}>
-          {isAsis ? 'AS-IS' : 'TO-BE'}
-        </span>
-        <span style={{
-          fontSize: 8, fontFamily: font.family,
-          color: color.inkFaint,
-          textAlign: 'center', padding: '0 12px', lineHeight: 1.5,
-        }}>
-          {'스크린샷\n삽입 예정'}
-        </span>
+        {imgSrc ? (
+          <img
+            src={imgSrc}
+            alt=""
+            aria-hidden="true"
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          />
+        ) : (
+          <div style={{
+            width: '100%', height: '100%',
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center', gap: 8,
+          }}>
+            <span style={{
+              fontSize: 9, fontWeight: 800,
+              letterSpacing: '0.08em', textTransform: 'uppercase',
+              fontFamily: font.family,
+              color: isAsis ? color.inkFaint : color.brand,
+            }}>
+              {isAsis ? 'AS-IS' : 'TO-BE'}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -187,6 +214,7 @@ function AnnotationList({ annotations }) {
 }
 
 function BigScreenBlock({ screen, visible, isMobile }) {
+  const sid = screen.id;
   return (
     <div style={{
       opacity: visible ? 1 : 0,
@@ -237,8 +265,8 @@ function BigScreenBlock({ screen, visible, isMobile }) {
           marginLeft: 'auto',
           marginRight: 'auto',
         }}>
-          <PhoneSlot variant="asis" />
-          <PhoneSlot variant="tobe" />
+          <PhoneSlot variant="asis" screenId={sid} />
+          <PhoneSlot variant="tobe" screenId={sid} />
         </div>
       </div>
 
@@ -289,6 +317,7 @@ function BigScreenBlock({ screen, visible, isMobile }) {
 }
 
 function ScreenBlock({ screen, visible, delay, isMobile, isLast }) {
+  const sid = screen.id;
   return (
     <div style={{
       opacity: visible ? 1 : 0,
@@ -356,8 +385,8 @@ function ScreenBlock({ screen, visible, delay, isMobile, isLast }) {
           gridTemplateColumns: '1fr 1fr',
           gap: 'clamp(8px,1.5vw,16px)',
         }}>
-          <PhoneSlot variant="asis" />
-          <PhoneSlot variant="tobe" />
+          <PhoneSlot variant="asis" screenId={sid} />
+          <PhoneSlot variant="tobe" screenId={sid} />
         </div>
 
         {/* AS-IS / TO-BE text + divider + annotations */}

@@ -292,17 +292,17 @@ export default function Process() {
                     transition: `opacity 0.5s ease-out ${i * 0.06}s, transform 0.5s ease-out ${i * 0.06}s`,
                   }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
-                    <span style={{ fontSize: 12, fontWeight: 800, color: color.warn, letterSpacing: '0.06em' }}>{code}</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                    <span style={{ fontSize: 12, fontWeight: 800, color: color.brand, letterSpacing: '0.06em', fontFamily: font.family }}>{code}</span>
                     <span style={{ fontSize: 12, color: color.inkMuted, fontFamily: font.family }}>{label}</span>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: color.brand, letterSpacing: '0.04em' }}>{ur}</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: color.brand, letterSpacing: '0.04em', fontFamily: font.family }}>{ur}</span>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                    <div>
-                      <p style={{ fontSize: 10, fontWeight: 800, color: color.warn, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 4px', fontFamily: font.family }}>BEFORE</p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    <div style={{ background: color.bg, borderRadius: layout.rSm, padding: '8px 12px' }}>
+                      <p style={{ fontSize: 10, fontWeight: 800, color: color.inkMuted, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 4px', fontFamily: font.family }}>BEFORE</p>
                       <p style={{ fontSize: 13, lineHeight: 1.5, color: color.inkMuted, margin: 0, fontFamily: font.family }}>{before}</p>
                     </div>
-                    <div>
+                    <div style={{ background: color.brandPale, borderRadius: layout.rSm, padding: '8px 12px' }}>
                       <p style={{ fontSize: 10, fontWeight: 800, color: color.brand, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 4px', fontFamily: font.family }}>AFTER</p>
                       <p style={{ fontSize: 13, lineHeight: 1.5, color: color.ink, fontWeight: 600, margin: 0, fontFamily: font.family }}>{after}</p>
                     </div>
@@ -350,7 +350,7 @@ export default function Process() {
                     transition: `opacity 0.5s ease-out ${i * 0.06}s, transform 0.5s ease-out ${i * 0.06}s`,
                   }}
                 >
-                  <div style={{ padding: 'clamp(12px,1.5vw,16px) 12px', fontSize: 12, fontWeight: 800, letterSpacing: '0.06em', color: color.warn, fontFamily: font.family, display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}>{code}</div>
+                  <div style={{ padding: 'clamp(12px,1.5vw,16px) 12px', fontSize: 12, fontWeight: 800, letterSpacing: '0.06em', color: color.brand, fontFamily: font.family, display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}>{code}</div>
                   <div style={{ padding: 'clamp(12px,1.5vw,16px) 12px', fontSize: t.caption.size, lineHeight: t.caption.lh, color: color.inkMuted, fontFamily: font.family, display: 'flex', alignItems: 'center' }}>{label}</div>
                   <div style={{ padding: 'clamp(12px,1.5vw,16px) 12px', fontSize: t.caption.size, lineHeight: t.caption.lh, color: color.inkMuted, fontFamily: font.family }}>{before}</div>
                   <div style={{ padding: 'clamp(12px,1.5vw,16px) 12px', fontSize: t.caption.size, lineHeight: t.caption.lh, color: color.ink, fontFamily: font.family, fontWeight: 600 }}>{after}</div>

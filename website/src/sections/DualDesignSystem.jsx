@@ -138,14 +138,14 @@ export default function DualDesignSystem() {
                   }}>
                     {feature}
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
-                    <div style={{ padding: '12px 14px', borderRight: `1px solid ${color.line}`, background: color.white }}>
-                      <p style={{ fontSize: 10, fontWeight: 800, color: IOS_COLOR, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 5px', fontFamily: font.family }}>iOS</p>
-                      <p style={{ fontSize: 13, lineHeight: 1.5, color: color.ink, margin: 0, fontFamily: font.family }}>{ios}</p>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ padding: '10px 14px', borderBottom: `1px solid ${color.line}`, background: color.white }}>
+                      <p style={{ fontSize: 10, fontWeight: 800, color: IOS_COLOR, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 4px', fontFamily: font.family }}>iOS HIG</p>
+                      <p style={{ fontSize: 12, lineHeight: 1.5, color: color.ink, margin: 0, fontFamily: font.family }}>{ios}</p>
                     </div>
-                    <div style={{ padding: '12px 14px', background: color.white }}>
-                      <p style={{ fontSize: 10, fontWeight: 800, color: AND_COLOR, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 5px', fontFamily: font.family }}>Android</p>
-                      <p style={{ fontSize: 13, lineHeight: 1.5, color: color.ink, margin: 0, fontFamily: font.family }}>{android}</p>
+                    <div style={{ padding: '10px 14px', background: color.white }}>
+                      <p style={{ fontSize: 10, fontWeight: 800, color: AND_COLOR, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 4px', fontFamily: font.family }}>Android MD3</p>
+                      <p style={{ fontSize: 12, lineHeight: 1.5, color: color.ink, margin: 0, fontFamily: font.family }}>{android}</p>
                     </div>
                   </div>
                 </div>

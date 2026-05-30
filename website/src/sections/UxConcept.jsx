@@ -1,5 +1,6 @@
 import { color, font, type as t } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import gangneungPhoto from '../assets/photo/gangneung.jpeg';
 
 export default function UxConcept() {
   const [ref, visible] = useReveal({ threshold: 0.15 });
@@ -15,11 +16,13 @@ export default function UxConcept() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        /* Photo placeholder: replace backgroundImage with url('/assets/photo/gangneung.jpg') */
+        backgroundImage: `url(${gangneungPhoto})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
         background: color.ink,
       }}
     >
-      {/* Overlay: stays in place when real photo is set */}
+      {/* Overlay */}
       <div
         aria-hidden="true"
         style={{
@@ -29,22 +32,6 @@ export default function UxConcept() {
           pointerEvents: 'none',
         }}
       />
-
-      {/* Photo placeholder label */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          bottom: 'clamp(16px,2vw,24px)',
-          right: 'clamp(16px,2vw,24px)',
-          fontSize: 11, fontWeight: 700,
-          letterSpacing: '0.08em', textTransform: 'uppercase',
-          color: color.whiteA50,
-          fontFamily: font.family,
-        }}
-      >
-        강릉 바다, 하늘 사진 교체 예정
-      </div>
 
       {/* Content */}
       <div

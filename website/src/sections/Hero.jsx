@@ -6,6 +6,7 @@ import hero1Img from '../assets/hero-1.png';
 
 const META = [
   { label: 'PROJECT', value: '강릉페이 UX 개선' },
+  { label: 'ADVISOR', value: '김성우 교수' },
   { label: 'TEAM', value: '마카모예' },
   { label: 'PERIOD', value: '2026.03 ~ 2026.06' },
   { label: 'TOOL', value: 'Figma, Antigravity, Claude Code, Vercel, Neon DB' },
@@ -144,7 +145,7 @@ export default function Hero() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'auto repeat(4, 1fr)',
+                gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'auto repeat(5, 1fr)',
                 gap: 'clamp(16px,2.5vw,40px)',
                 alignItems: 'center',
                 width: '100%',

@@ -1,6 +1,7 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 import { useBreakpoint } from '../lib/useBreakpoint.js';
+import personaSvg from '../assets/persona.svg';
 
 const PERSONA = {
   name: '김정숙',
@@ -61,7 +62,8 @@ function Slider({ label, lo, hi, val }) {
 export default function Persona() {
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [cardRef, cardVisible] = useReveal({ threshold: 0.05 });
-  const { isMobile } = useBreakpoint();
+  const { isMobile, isTablet } = useBreakpoint();
+  const isDesktop = !isMobile && !isTablet;
 
   return (
     <section
@@ -100,18 +102,27 @@ export default function Persona() {
           </h2>
         </div>
 
-        {/* Persona card */}
+        {/* Persona visual */}
         <div
           ref={cardRef}
           style={{
             opacity: cardVisible ? 1 : 0,
             transform: cardVisible ? 'none' : 'translateY(28px)',
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
+          }}
+        >
+        {isDesktop ? (
+          <img
+            src={personaSvg}
+            alt="강릉페이 페르소나 — 김정숙"
+            style={{ width: '100%', height: 'auto', display: 'block' }}
+          />
+        ) : (
+          <div style={{
             background: color.brandPale,
             borderRadius: layout.rLg,
             padding: 'clamp(28px,4vw,48px)',
-          }}
-        >
+          }}>
           <span style={{
             display: 'inline-block',
             fontSize: 13, fontWeight: 800, letterSpacing: '0em',
@@ -303,6 +314,8 @@ export default function Persona() {
               </div>
             </div>
           </div>
+        </div>
+        )}
         </div>
 
       </div>

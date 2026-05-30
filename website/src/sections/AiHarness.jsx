@@ -95,7 +95,7 @@ export default function AiHarness() {
             color: color.ink, margin: '0 0 16px', fontFamily: font.family,
             wordBreak: 'keep-all',
           }}>
-            How를 잘하는 AI, Why를 잘하는 사람.
+            AI와 협업한 과정
           </h2>
         </div>
 

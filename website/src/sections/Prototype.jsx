@@ -83,7 +83,7 @@ export default function Prototype() {
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                display: 'block',
+                display: 'flex',
                 textDecoration: 'none',
                 opacity: ctaVisible ? 1 : 0,
                 transform: ctaVisible ? 'none' : 'translateY(24px)',
@@ -91,6 +91,7 @@ export default function Prototype() {
               }}
             >
               <div style={{
+                width: '100%',
                 background: color.white,
                 borderRadius: layout.rMd,
                 padding: 'clamp(28px,3.5vw,48px) clamp(24px,3vw,40px)',

@@ -202,11 +202,11 @@ const PLATFORM_SECTIONS = [
 ];
 
 const CONTRAST_PAIRS = [
-  { name: '주요 본문',   fg: '#111827', bg: '#FFFFFF', ratio: '미측정',  pass: true  },
-  { name: '보조 텍스트', fg: '#6B7280', bg: '#FFFFFF', ratio: '미측정',  pass: false },
-  { name: 'CTA 버튼',   fg: '#FFFFFF', bg: '#1D4ED8', ratio: '8.59:1', pass: true  },
-  { name: '비활성',      fg: '#9CA3AF', bg: '#FFFFFF', ratio: '미측정',  pass: false },
-  { name: '다크카드',    fg: '#FFFFFF', bg: '#1B4FD8', ratio: '미측정',  pass: true  },
+  { name: '주요 본문',   fg: '#111827', bg: '#FFFFFF', pass: true  },
+  { name: '보조 텍스트', fg: '#6B7280', bg: '#FFFFFF', pass: false },
+  { name: 'CTA 버튼',   fg: '#FFFFFF', bg: '#1D4ED8', pass: true  },
+  { name: '비활성',      fg: '#9CA3AF', bg: '#FFFFFF', pass: false },
+  { name: '다크카드',    fg: '#FFFFFF', bg: '#1B4FD8', pass: true  },
 ];
 
 const LARGE_TEXT = [
@@ -814,7 +814,6 @@ export default function DesignSystem() {
                 <tr style={{ background: color.ink }}>
                   <th style={{ padding: '12px 16px', textAlign: 'left', color: '#fff', fontWeight: 700, fontSize: 13 }}>용도</th>
                   <th style={{ padding: '12px 16px', textAlign: 'left', color: '#fff', fontWeight: 700, fontSize: 13 }}>색상</th>
-                  <th style={{ padding: '12px 16px', textAlign: 'left', color: '#fff', fontWeight: 700, fontSize: 13 }}>비율</th>
                   <th style={{ padding: '12px 16px', textAlign: 'left', color: '#fff', fontWeight: 700, fontSize: 13 }}>WCAG AA</th>
                 </tr>
               </thead>
@@ -830,7 +829,6 @@ export default function DesignSystem() {
                         <span style={{ fontSize: 12, color: color.inkFaint, fontFamily: 'monospace' }}>{pair.fg} on {pair.bg}</span>
                       </div>
                     </td>
-                    <td style={{ padding: '10px 16px', color: color.ink, fontSize: 13, fontFamily: 'monospace' }}>{pair.ratio}</td>
                     <td style={{ padding: '10px 16px' }}>
                       <span style={{ fontSize: 12, fontWeight: 700, color: pair.pass ? color.brand : color.inkFaint }}>{pair.pass ? 'PASS' : ''}</span>
                     </td>

@@ -1,12 +1,9 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
-import { useBreakpoint } from '../lib/useBreakpoint.js';
-
+import cjmSvg from '../assets/cjm.svg';
 export default function UserJourneyMap() {
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [mapRef, mapVisible] = useReveal({ threshold: 0.03 });
-  const { isMobile } = useBreakpoint();
-
   return (
     <section
       id="journey"
@@ -50,19 +47,13 @@ export default function UserJourneyMap() {
             opacity: mapVisible ? 1 : 0,
             transform: mapVisible ? 'none' : 'translateY(24px)',
             transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-            ...(isMobile ? {} : {
-              overflowX: 'auto',
-              scrollbarWidth: 'thin',
-              scrollbarColor: `${color.brand} ${color.brandPale}`,
-              paddingBottom: 8,
-            }),
           }}
         >
           <img
-            src="/cjm.svg"
+            src={cjmSvg}
             alt="강릉페이 사용자 여정 지도"
             style={{
-              width: isMobile ? '100%' : 'max(100%, 1400px)',
+              width: '100%',
               height: 'auto',
               display: 'block',
             }}

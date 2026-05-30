@@ -79,34 +79,40 @@ export default function Outro() {
           </p>
 
           <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(6, 1fr)',
-            gap: 'clamp(4px,0.5vw,10px)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'clamp(4px,0.5vw,8px)',
             marginBottom: 'clamp(24px,3vw,40px)',
           }}>
             {MEMBERS.map((m, i) => (
               <div
                 key={m.name}
                 style={{
-                  padding: 'clamp(12px,1.5vw,20px) clamp(10px,1.2vw,16px)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 16,
+                  padding: 'clamp(8px,1vw,12px) clamp(10px,1.2vw,16px)',
                   borderLeft: '2px solid rgba(255,255,255,0.18)',
                   opacity: creditsVisible ? 1 : 0,
                   transition: `opacity 0.5s ease-out ${i * 0.08}s`,
+                  minWidth: 0,
                 }}
               >
                 <p style={{
                   fontSize: 'clamp(14px,1.1vw,17px)', fontWeight: 700,
-                  color: color.white, margin: '0 0 5px',
+                  color: color.white, margin: 0,
                   fontFamily: font.family, lineHeight: 1.2,
+                  flexShrink: 0,
+                  minWidth: 72,
                 }}>
                   {m.name}
                 </p>
                 {m.role ? (
                   <p style={{
-                    fontSize: 'clamp(10px,0.75vw,12px)', lineHeight: 1.5,
+                    fontSize: 'clamp(11px,0.8vw,13px)', lineHeight: 1.4,
                     color: 'rgba(255,255,255,0.55)',
                     margin: 0, fontFamily: font.family,
-                    wordBreak: 'keep-all',
+                    whiteSpace: 'nowrap',
                   }}>
                     {m.role}
                   </p>
