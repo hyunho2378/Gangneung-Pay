@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 import { useBreakpoint } from '../lib/useBreakpoint.js';
@@ -61,6 +62,31 @@ const MODELS = [
   },
 ];
 
+const DATA_SUMMARY = [
+  '결제매장 13,021개: 강릉시청 공식 가맹점 검색(konacard) API를 분석해 자동 수집 스크립트로 확보.',
+  'QR결제 매장 216개: 강릉시청 안내 페이지 스크린샷을 NotebookLM으로 추출, 매칭.',
+  '모든 매장 위경도 포함으로 별도 Geocoding 불필요.',
+];
+
+const DATA_DETAIL = [
+  {
+    label: '결제매장',
+    text: 'Network 탭에서 API endpoint 발견 → 응답 구조 분석(30개씩) → 1~455페이지 자동 순회 → 13,643개 수집 → 좌표 없는 매장 제외 → 13,021개 확정.',
+  },
+  {
+    label: 'AI 기여',
+    text: 'API endpoint 분석, 페이지네이션 자동 수집 스크립트 작성, konacard 200여 분류를 12개 카테고리로 매핑, 이름 부분 일치로 QR 매장 매칭.',
+  },
+  {
+    label: 'QR결제',
+    text: '스크린샷 캡처 → NotebookLM 업로드 → 상호명/업종/주소 추출 → 193개 추출 후 매칭으로 216개 확정.',
+  },
+  {
+    label: '좌표',
+    text: 'konacard 데이터에 위경도 포함. 지도 기본 center는 강릉역(37.7647, 128.8990).',
+  },
+];
+
 const TOOLS = [
   { name: 'Figma', icon: figmaIcon },
   { name: 'Claude Code', icon: claudeCodeIcon },
@@ -74,9 +100,11 @@ const TOOLS = [
 
 export default function AiHarness() {
   const [openDoc, setOpenDoc] = useState(null);
+  const [dataOpen, setDataOpen] = useState(false);
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [blocksRef, blocksVisible] = useReveal({ threshold: 0.03 });
   const [toolsRef, toolsVisible] = useReveal({ threshold: 0.05 });
+  const [dataRef, dataVisible] = useReveal({ threshold: 0.05 });
   const { isMobile } = useBreakpoint();
 
   return (
@@ -508,6 +536,107 @@ export default function AiHarness() {
                 </span>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Block 06: 실데이터 수집 */}
+        <div
+          ref={dataRef}
+          style={{
+            opacity: dataVisible ? 1 : 0,
+            transform: dataVisible ? 'none' : 'translateY(24px)',
+            transition: 'opacity 0.65s ease-out 0.1s, transform 0.65s ease-out 0.1s',
+            background: color.bg,
+            borderRadius: layout.rMd,
+            padding: 'clamp(24px,3vw,40px)',
+            marginTop: 'clamp(20px,2.5vw,40px)',
+          }}
+        >
+          <p style={{
+            fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
+            letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
+            color: color.brand, margin: '0 0 12px', fontFamily: font.family,
+          }}>
+            06
+          </p>
+          <h3 style={{
+            fontSize: t.h3.size, fontWeight: t.h3.weight,
+            lineHeight: t.h3.lh, letterSpacing: t.h3.ls,
+            color: color.ink, margin: '0 0 20px', fontFamily: font.family,
+          }}>
+            실데이터 수집
+          </h3>
+
+          {/* 요약: 항상 펼침 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24 }}>
+            {DATA_SUMMARY.map((item, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                <div style={{
+                  width: 6, height: 6, borderRadius: '50%',
+                  background: color.brand, flexShrink: 0, marginTop: 7,
+                }} />
+                <span style={{
+                  fontSize: t.body.size, fontWeight: 500, lineHeight: 1.65,
+                  color: color.ink, fontFamily: font.family, wordBreak: 'keep-all',
+                }}>
+                  {item}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* 아코디언: 수집 과정 상세 */}
+          <div style={{
+            background: color.white,
+            borderRadius: layout.rSm,
+          }}>
+            <button
+              onClick={() => setDataOpen(!dataOpen)}
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                width: '100%', gap: 12, padding: '12px 16px',
+                background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left',
+              }}
+            >
+              <span style={{
+                fontSize: t.caption.size, fontWeight: 700,
+                color: color.brand, fontFamily: font.family, letterSpacing: '0.02em',
+              }}>
+                수집 과정 자세히 보기
+              </span>
+              <ChevronDown
+                size={16}
+                color={color.brand}
+                style={{
+                  flexShrink: 0,
+                  transition: 'transform 0.25s ease-out',
+                  transform: dataOpen ? 'rotate(180deg)' : 'none',
+                }}
+              />
+            </button>
+            {dataOpen && (
+              <div style={{
+                padding: '0 16px 16px',
+                display: 'flex', flexDirection: 'column', gap: 14,
+              }}>
+                {DATA_DETAIL.map((item, i) => (
+                  <div key={i}>
+                    <span style={{
+                      fontSize: t.caption.size, fontWeight: 700,
+                      color: color.brand, fontFamily: font.family,
+                    }}>
+                      {item.label}
+                    </span>
+                    <span style={{
+                      fontSize: t.caption.size, fontWeight: 500, lineHeight: 1.7,
+                      color: color.inkMuted, fontFamily: font.family,
+                    }}>
+                      {' '}{item.text}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 

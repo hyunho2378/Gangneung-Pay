@@ -61,6 +61,7 @@ const STRATEGIES = [
 
 export default function UxStrategy() {
   const [openId, setOpenId] = useState(null);
+  const [hoverId, setHoverId] = useState(null);
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [listRef, listVisible] = useReveal({ threshold: 0.02 });
   const { isMobile } = useBreakpoint();
@@ -107,20 +108,23 @@ export default function UxStrategy() {
         {/* Accordion */}
         <div ref={listRef}>
           {STRATEGIES.map((s, i) => {
-            const isOpen = openId === s.id;
+            const isOpen = isMobile ? openId === s.id : hoverId === s.id;
 
             return (
               <div
                 key={s.id}
+                onMouseEnter={!isMobile ? () => setHoverId(s.id) : undefined}
+                onMouseLeave={!isMobile ? () => setHoverId(null) : undefined}
                 style={{
                   opacity: listVisible ? 1 : 0,
                   transform: listVisible ? 'none' : 'translateY(20px)',
                   transition: `opacity 0.6s ease-out ${i * 0.06}s, transform 0.6s ease-out ${i * 0.06}s`,
+                  cursor: !isMobile ? 'pointer' : 'default',
                 }}
               >
                 {/* Toggle row */}
                 <button
-                  onClick={() => toggle(s.id)}
+                  onClick={isMobile ? () => toggle(s.id) : undefined}
                   aria-expanded={isOpen}
                   style={{
                     display: 'flex',
@@ -129,13 +133,10 @@ export default function UxStrategy() {
                     padding: 'clamp(18px,2.5vw,32px) 0',
                     background: 'none',
                     border: 'none',
-                    cursor: 'pointer',
+                    cursor: 'inherit',
                     textAlign: 'left',
                     gap: 'clamp(16px,2.5vw,40px)',
-                    transition: 'background 0.2s ease-out',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = color.bg; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'none'; }}
                 >
                   {/* Strategy number */}
                   <span style={{
