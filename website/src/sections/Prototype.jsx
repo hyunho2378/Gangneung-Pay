@@ -12,7 +12,7 @@ const LINKS = [
   },
   {
     label: 'Android 버전',
-    sub: 'Galaxy, 지문인증, Google Material 3',
+    sub: 'Galaxy, Fingerprint, Google Material 3',
     href: 'https://gangneung-pay-android.vercel.app',
     accent: color.brand,
     primary: false,

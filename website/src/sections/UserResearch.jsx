@@ -415,11 +415,11 @@ export default function UserResearch() {
             }}>
               <div style={{ background: color.bg, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)' }}>
                 <p style={{ fontSize: 15, fontWeight: 800, color: color.brand, margin: '0 0 16px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>결제 수단</p>
-                <HBar items={paymentItems} note="n=70 복수 응답" />
+                <HBar items={paymentItems} note="n=68 복수 응답" />
               </div>
               <div style={{ background: color.bg, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)' }}>
                 <p style={{ fontSize: 15, fontWeight: 800, color: color.brand, margin: '0 0 16px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>강릉페이 인지도</p>
-                <HBar items={awarenessItems} note="n=70 단일 응답" />
+                <HBar items={awarenessItems} note="n=68 단일 응답" />
               </div>
             </div>
             {/* 연령대+기기 아코디언 */}
@@ -431,11 +431,11 @@ export default function UserResearch() {
               }}>
                 <div style={{ background: color.bg, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)' }}>
                   <p style={{ fontSize: 15, fontWeight: 800, color: color.brand, margin: '0 0 16px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>연령대 분포</p>
-                  <HBar items={ageItems} note="n=70 단일 응답" />
+                  <HBar items={ageItems} note="n=68 단일 응답" />
                 </div>
                 <div style={{ background: color.bg, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)' }}>
                   <p style={{ fontSize: 15, fontWeight: 800, color: color.brand, margin: '0 0 16px', letterSpacing: '0em', textTransform: 'uppercase', fontFamily: font.family }}>사용 기기</p>
-                  <HBar items={deviceItems} note="n=70 단일 응답" />
+                  <HBar items={deviceItems} note="n=68 단일 응답" />
                 </div>
               </div>
             </Accordion>

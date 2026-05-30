@@ -312,7 +312,7 @@ export default function DesignSystem() {
             듀얼 디자인 시스템
           </h2>
           <p style={{ fontSize: t.lead.size, lineHeight: t.lead.lh, color: color.inkMuted, margin: 0 }}>
-            HIG (iOS), Google Material 3 (Android), tokens.js 단일 출처
+            HIG (iOS), Google Material 3 (Android)
           </p>
         </div>
 

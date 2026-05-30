@@ -11,7 +11,7 @@ const PHASES = [
     items: [
       '데스크 리서치: 경쟁 서비스 4종 비교',
       '서비스 사파리: 현장 관찰 4인, 5개 미션',
-      '설문조사 70명',
+      '설문조사 68명',
       '심층 인터뷰 (IDI) 6인',
     ],
   },
@@ -126,20 +126,13 @@ export default function Process() {
           }}>
             PROCESS
           </p>
-          <h2 style={{
-            fontSize: t.h1.size, fontWeight: t.h1.weight,
-            lineHeight: t.h1.lh, letterSpacing: t.h1.ls,
-            color: color.ink, margin: '0 0 16px', fontFamily: font.family,
-            wordBreak: 'keep-all',
-          }}>
-            사용자를 직접 만나 문제를 찾고, 7개 전략으로 설계하고, 화면으로 구현했습니다.
-          </h2>
           <p style={{
             fontSize: t.lead.size, fontWeight: 500,
             lineHeight: t.lead.lh, color: color.inkMuted,
             margin: 0, fontFamily: font.family,
+            wordBreak: 'keep-all',
           }}>
-            3개 Phase, 리서치부터 구현까지
+            리서치로 문제를 정의하고, 전략으로 설계해, 화면으로 구현했습니다.
           </p>
         </div>
 
