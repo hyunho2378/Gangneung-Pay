@@ -108,8 +108,8 @@ function DashedArrow() {
       <div
         style={{
           flex: 1,
-          height: 0,
-          borderTop: `2px dashed ${color.brand}`,
+          height: 2,
+          background: `repeating-linear-gradient(to right, ${color.brand} 0, ${color.brand} 4px, transparent 4px, transparent 8px)`,
           position: 'relative',
         }}
       >
@@ -246,8 +246,14 @@ function FlowRow({ flow, visible, delay, isMobile }) {
 
       {/* Branch */}
       {flow.branch && (
-        <div style={{ paddingLeft: 2, marginTop: 0 }}>
-          <div style={{ height: 16, borderLeft: `2px dashed ${color.brand}`, marginLeft: 46, marginBottom: 2 }} />
+        <div style={{ position: 'relative', marginTop: 20 }}>
+          <div style={{
+            position: 'absolute',
+            top: -20,
+            left: 48,
+            height: 20,
+            borderLeft: `2px dashed ${color.brand}`,
+          }} />
           <div style={{ display: 'flex', alignItems: 'center', overflowX: 'auto', paddingBottom: 4 }}>
             {flow.branch.map((node, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center' }}>

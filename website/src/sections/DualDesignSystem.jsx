@@ -130,22 +130,22 @@ export default function DualDesignSystem() {
                   }}
                 >
                   <div style={{
-                    padding: '8px 14px',
+                    padding: '6px 10px',
                     background: color.ink,
-                    fontSize: 11, fontWeight: 700,
+                    fontSize: 10, fontWeight: 700,
                     color: color.white, textTransform: 'uppercase',
                     letterSpacing: '0.06em', fontFamily: font.family,
                   }}>
                     {feature}
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ padding: '10px 14px', borderBottom: `1px solid ${color.line}`, background: color.white }}>
-                      <p style={{ fontSize: 10, fontWeight: 800, color: IOS_COLOR, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 4px', fontFamily: font.family }}>iOS HIG</p>
-                      <p style={{ fontSize: 12, lineHeight: 1.5, color: color.ink, margin: 0, fontFamily: font.family }}>{ios}</p>
+                    <div style={{ padding: '7px 10px', borderBottom: `1px solid ${color.line}`, background: color.white }}>
+                      <p style={{ fontSize: 9, fontWeight: 800, color: IOS_COLOR, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 3px', fontFamily: font.family }}>iOS HIG</p>
+                      <p style={{ fontSize: 11, lineHeight: 1.5, color: color.ink, margin: 0, fontFamily: font.family, wordBreak: 'break-word' }}>{ios}</p>
                     </div>
-                    <div style={{ padding: '10px 14px', background: color.white }}>
-                      <p style={{ fontSize: 10, fontWeight: 800, color: AND_COLOR, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 4px', fontFamily: font.family }}>Android MD3</p>
-                      <p style={{ fontSize: 12, lineHeight: 1.5, color: color.ink, margin: 0, fontFamily: font.family }}>{android}</p>
+                    <div style={{ padding: '7px 10px', background: color.white }}>
+                      <p style={{ fontSize: 9, fontWeight: 800, color: AND_COLOR, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 3px', fontFamily: font.family }}>Android MD3</p>
+                      <p style={{ fontSize: 11, lineHeight: 1.5, color: color.ink, margin: 0, fontFamily: font.family, wordBreak: 'break-word' }}>{android}</p>
                     </div>
                   </div>
                 </div>

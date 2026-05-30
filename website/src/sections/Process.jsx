@@ -7,11 +7,11 @@ const PHASES = [
     num: '01',
     label: 'Phase 1',
     title: '리서치',
-    period: '2026.03.29 – 04.06',
+    period: '2026.03 - 04',
     items: [
       '데스크 리서치: 경쟁 서비스 4종 비교',
       '서비스 사파리: 현장 관찰 4인, 5개 미션',
-      '설문조사 68명',
+      '설문조사 70명',
       '심층 인터뷰 (IDI) 6인',
     ],
   },
@@ -19,7 +19,7 @@ const PHASES = [
     num: '02',
     label: 'Phase 2',
     title: '설계',
-    period: '04.06 – 05.01',
+    period: '2026.04 - 05',
     items: [
       '어피니티 다이어그램: 메모 87개, 5클러스터',
       'Key Insight 3개 도출',
@@ -34,11 +34,13 @@ const PHASES = [
     num: '03',
     label: 'Phase 3',
     title: '구현',
-    period: '05.01 – 05.31',
+    period: '2026.05 - 2026.05.31',
     items: [
       '듀얼 디자인 시스템 (HIG / Google Material 3)',
-      '핵심 화면 구현 (iOS / Android)',
-      'AI 하네스 병렬 구현',
+      '비금융 기능 덜어내기 (생활편의, 소통참여, 챗봇 삭제)',
+      '이용내역, 캐시백 내역, 환불내역 신설',
+      '환불 동등 위계 (큰글씨 전용 다크패턴 해소)',
+      '가맹점 페이지, 지도 개선',
       '프로토타입 (iOS / Android)',
       '유저 테스트 진행',
     ],
@@ -158,18 +160,6 @@ export default function Process() {
             gap: 'clamp(16px,2.5vw,40px)',
             position: 'relative',
           }}>
-            {/* Background connector (desktop only) */}
-            {!isMobile && (
-              <div style={{
-                position: 'absolute',
-                top: 28,
-                left: '16.67%',
-                right: '16.67%',
-                height: 2,
-                background: color.line,
-                zIndex: 0,
-              }} />
-            )}
 
             {PHASES.map((phase, i) => (
               <div
@@ -183,7 +173,7 @@ export default function Process() {
                 }}
               >
                 {/* Node */}
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
                   <div style={{
                     width: 56, height: 56,
                     borderRadius: '50%',

@@ -2,6 +2,13 @@ import { useState } from 'react';
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 import { useBreakpoint } from '../lib/useBreakpoint.js';
+import figmaIcon from '../assets/figma.svg';
+import claudeCodeIcon from '../assets/claudecode.svg';
+import antigravityIcon from '../assets/antigravity.svg';
+import viteIcon from '../assets/vite.svg';
+import reactIcon from '../assets/react.svg';
+import tailwindIcon from '../assets/tailwind.svg';
+import vercelIcon from '../assets/versel.svg';
 
 const DOCS = [
   {
@@ -54,11 +61,22 @@ const MODELS = [
   },
 ];
 
+const TOOLS = [
+  { name: 'Figma', icon: figmaIcon },
+  { name: 'Claude Code', icon: claudeCodeIcon },
+  { name: 'Antigravity', icon: antigravityIcon },
+  { name: 'Vite', icon: viteIcon },
+  { name: 'React', icon: reactIcon },
+  { name: 'Tailwind', icon: tailwindIcon },
+  { name: 'Vercel', icon: vercelIcon },
+];
+
 
 export default function AiHarness() {
   const [openDoc, setOpenDoc] = useState(null);
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [blocksRef, blocksVisible] = useReveal({ threshold: 0.03 });
+  const [toolsRef, toolsVisible] = useReveal({ threshold: 0.05 });
   const { isMobile } = useBreakpoint();
 
   return (
@@ -227,6 +245,7 @@ export default function AiHarness() {
                       background: color.white,
                       borderRadius: layout.rSm,
                       boxShadow: '0 4px 24px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)',
+                      textAlign: 'center',
                     }}
                   >
                     <div style={{
@@ -266,7 +285,9 @@ export default function AiHarness() {
                   boxShadow: '0 4px 24px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)',
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   gap: 12,
+                  textAlign: 'center',
                 }}
               >
                 <span style={{
@@ -427,6 +448,71 @@ export default function AiHarness() {
             }}>
               Antigravity IDE에서 Claude Code로 구현을 진행했다.
             </p>
+          </div>
+        </div>
+
+        {/* Block 5: 사용 툴 */}
+        <div
+          ref={toolsRef}
+          style={{
+            opacity: toolsVisible ? 1 : 0,
+            transform: toolsVisible ? 'none' : 'translateY(24px)',
+            transition: 'opacity 0.65s ease-out 0.4s, transform 0.65s ease-out 0.4s',
+            background: color.bg,
+            borderRadius: layout.rMd,
+            padding: 'clamp(24px,3vw,40px)',
+            marginTop: 'clamp(20px,2.5vw,40px)',
+          }}
+        >
+          <p style={{
+            fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,
+            letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
+            color: color.brand, margin: '0 0 12px', fontFamily: font.family,
+          }}>
+            05
+          </p>
+          <h3 style={{
+            fontSize: t.h3.size, fontWeight: t.h3.weight,
+            lineHeight: t.h3.lh, letterSpacing: t.h3.ls,
+            color: color.ink, margin: '0 0 24px', fontFamily: font.family,
+          }}>
+            사용 툴
+          </h3>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? 'repeat(4, 1fr)' : 'repeat(7, 1fr)',
+            gap: 'clamp(12px,2vw,24px)',
+          }}>
+            {TOOLS.map((tool) => (
+              <div
+                key={tool.name}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                <img
+                  src={tool.icon}
+                  alt={tool.name}
+                  style={{
+                    width: 'clamp(40px,5vw,56px)',
+                    height: 'clamp(40px,5vw,56px)',
+                    objectFit: 'contain',
+                    display: 'block',
+                  }}
+                />
+                <span style={{
+                  fontSize: 11, fontWeight: 600,
+                  color: color.ink, fontFamily: font.family,
+                  textAlign: 'center', lineHeight: 1.3,
+                  wordBreak: 'keep-all',
+                }}>
+                  {tool.name}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
 
