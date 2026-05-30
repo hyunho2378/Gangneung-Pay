@@ -1,7 +1,7 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 import { useBreakpoint } from '../lib/useBreakpoint.js';
-import personaSvg from '../assets/persona.svg';
+import personaSvg from '../assets/persona-1.svg';
 
 const PERSONA = {
   name: '김정숙',
@@ -94,8 +94,8 @@ export default function Persona() {
             PERSONA
           </p>
           <p style={{
-            fontSize: t.lead.size, fontWeight: 700,
-            fontStyle: 'italic', lineHeight: t.lead.lh,
+            fontSize: t.h2.size, fontWeight: 800,
+            lineHeight: t.h2.lh, letterSpacing: t.h2.ls,
             color: color.brand, margin: 0,
             wordBreak: 'keep-all', fontFamily: font.family,
           }}>
