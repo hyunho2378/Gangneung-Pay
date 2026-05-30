@@ -1,7 +1,7 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
 import { useBreakpoint } from '../lib/useBreakpoint.js';
-import asIsHome from '../assets/asis-home.png';
+import asIsHome from '../assets/before-1.png';
 import toBeHome from '../assets/tobe-home.png';
 import asIsHistory from '../assets/asis-history.png';
 import toBeHistory from '../assets/tobe-history.png';
@@ -125,7 +125,6 @@ function PhoneSlot({ variant = 'tobe', screenId }) {
             height: 'auto',
             display: 'block',
             borderRadius: layout.rMd,
-            filter: isAsis ? 'grayscale(0.7)' : 'none',
             opacity: isAsis ? 0.75 : 1,
           }}
         />
