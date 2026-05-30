@@ -38,20 +38,36 @@ const SCREENS = [
     num: '01',
     name: '메인 홈',
     badge: null,
-    asIs: '서비스 바로가기, 최근 결제, 지원금 캐러셀 등 비금융 정보가 메인을 차지합니다. 상단 캐러셀에 빨간색 등 잡색이 섞이고 캐시백 설정이 사라져 있습니다.',
-    toBe: '비금융 정보를 삭제해 금융 핵심만 남깁니다. 블루 primary로 통일하고 캐시백 자동, 수동 사용을 복원합니다.',
+    asIs: '서비스 바로가기, 최근 결제, 지원금 캐러셀 등 비금융 정보가 메인을 차지합니다. 상단 캐러셀에 빨간색 등 잡색이 섞이고 캐시백 설정이 사라져 있습니다. 환불 메뉴가 큰글씨 모드에서만 노출되는 다크패턴이었습니다. 관찰 참여자 4인 전원이 환불 메뉴 탐색에 실패했습니다.',
+    toBe: '비금융 정보를 삭제해 금융 핵심만 남깁니다. 블루 primary로 통일하고 캐시백 자동, 수동 사용을 복원합니다. 잔액카드에 충전, 환불, QR결제를 3슬롯으로 동등 배치했습니다.',
     annotations: [
       '잡정보 3종 삭제(서비스 바로가기, 최근 결제, 지원금 캐러셀)',
       '빨간 캐러셀 제거, 블루 primary 통일',
       '캐시백 자동, 수동 사용 통합 복원',
       '내부 시스템 용어를 사용자 언어로 교체',
+      '큰글씨 전용 다크패턴 해소, 환불 동등 위계',
     ],
     proves: ['S1', 'S3', 'S4'],
     big: true,
   },
   {
-    id: 'history',
+    id: 'coach',
     num: '02',
+    name: '코치마크',
+    badge: '신설',
+    asIs: '첫 사용자를 위한 안내가 없어 기능을 스스로 더듬어 찾아야 했습니다.',
+    toBe: '주요 동작마다 단계별 코치마크를 제공해 처음 쓰는 사용자도 막힘없이 따라오게 했습니다.',
+    annotations: [
+      '발견성(Discoverability) 부재',
+      '단계별 온보딩 가이드',
+    ],
+    proves: [],
+    big: false,
+    dualTobe: true,
+  },
+  {
+    id: 'history',
+    num: '03',
     name: '이용내역 탭',
     badge: '신설',
     asIs: '결제 위주로만 나열되고 잔액, 캐시백, 페이별 사용이 뒤섞이거나 보이지 않습니다.',
@@ -66,13 +82,12 @@ const SCREENS = [
   },
   {
     id: 'refund',
-    num: '03',
+    num: '04',
     name: '환불내역',
     badge: '동등 위계, 신설',
-    asIs: '환불 메뉴가 큰글씨 모드에서만 노출되는 다크패턴입니다. 관찰 참여자 4인 전원이 환불 메뉴 탐색에 실패했습니다.',
-    toBe: '잔액카드에 충전, 환불, QR결제를 3슬롯 동등 배치합니다. 환불 가능한 충전내역과 가능 조건을 함께 보여줍니다.',
+    asIs: '환불 가능 여부와 조건을 한곳에서 확인할 수 없어, 무엇을 환불할 수 있는지 파악하기 어려웠습니다.',
+    toBe: '환불 가능한 충전내역과 가능 조건을 함께 보여주고, 조건을 충족한 항목만 환불하도록 했습니다.',
     annotations: [
-      '큰글씨 전용 다크패턴 해소, 동등 위계',
       '환불 가능 충전내역 + 가능 조건 안내',
       '조건을 만족하는 항목만 환불 가능하게',
     ],
@@ -81,7 +96,7 @@ const SCREENS = [
   },
   {
     id: 'cashback',
-    num: '04',
+    num: '05',
     name: '캐시백 내역',
     badge: '신설',
     asIs: "'얼마 받았어요' 모달만 있었습니다. 적립, 사용, 소멸 추적이 불가능합니다.",
@@ -95,11 +110,11 @@ const SCREENS = [
   },
   {
     id: 'store',
-    num: '05',
-    name: '가맹점 페이지 + 지도',
+    num: '06',
+    name: '결제매장',
     badge: '신설, 개선',
     asIs: '아래에서 드래그해야 올라오는 모달이라 접근성이 낮습니다. 상세 정보가 부족합니다.',
-    toBe: '가맹점 페이지를 신설합니다. 카테고리 클릭 시 노출하고 선택 시 해당 위치로 이동합니다. 상세에 사진 자리를 마련합니다.',
+    toBe: '결제매장 페이지를 신설합니다. 카테고리 클릭 시 노출하고 선택 시 해당 위치로 이동합니다. 상세에 사진 자리를 마련합니다.',
     annotations: [
       '카테고리 클릭 노출, 선택 시 위치 이동',
       '드래그 모달의 낮은 접근성 개선',
@@ -110,9 +125,10 @@ const SCREENS = [
   },
 ];
 
-function PhoneSlot({ variant = 'tobe', screenId }) {
+function PhoneSlot({ variant = 'tobe', screenId, label }) {
   const isAsis = variant === 'asis';
   const imgSrc = SCREEN_IMGS[`${screenId}-${variant}`];
+  const displayLabel = label ?? (isAsis ? 'AS-IS' : 'TO-BE');
   return (
     <div>
       {imgSrc ? (
@@ -145,7 +161,7 @@ function PhoneSlot({ variant = 'tobe', screenId }) {
         margin: '8px 0 0',
         fontFamily: font.family,
       }}>
-        {isAsis ? 'AS-IS' : 'TO-BE'}
+        {displayLabel}
       </p>
     </div>
   );
@@ -372,8 +388,17 @@ function ScreenBlock({ screen, visible, delay, isMobile, isLast }) {
           gridTemplateColumns: '1fr 1fr',
           gap: 'clamp(8px,1.5vw,16px)',
         }}>
-          <PhoneSlot variant="asis" screenId={sid} />
-          <PhoneSlot variant="tobe" screenId={sid} />
+          {screen.dualTobe ? (
+            <>
+              <PhoneSlot variant="tobe1" screenId={sid} label="카드 신청" />
+              <PhoneSlot variant="tobe2" screenId={sid} label="충전" />
+            </>
+          ) : (
+            <>
+              <PhoneSlot variant="asis" screenId={sid} />
+              <PhoneSlot variant="tobe" screenId={sid} />
+            </>
+          )}
         </div>
 
         {/* AS-IS / TO-BE text + divider + annotations */}
