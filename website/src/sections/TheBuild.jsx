@@ -11,6 +11,8 @@ import asIsCashback from '../assets/asis-cashback.png';
 import toBeCashback from '../assets/tobe-cashback.png';
 import asIsStore from '../assets/asis-store.png';
 import toBeStore from '../assets/tobe-store.png';
+import coachCard from '../assets/coach-card.png';
+import coachCharge from '../assets/coach-charge.png';
 
 const SCREEN_IMGS = {
   'home-asis': asIsHome,
@@ -23,6 +25,8 @@ const SCREEN_IMGS = {
   'cashback-tobe': toBeCashback,
   'store-asis': asIsStore,
   'store-tobe': toBeStore,
+  'coach-tobe1': coachCard,
+  'coach-tobe2': coachCharge,
 };
 
 const STRATEGY_LABELS = {
@@ -55,13 +59,13 @@ const SCREENS = [
     num: '02',
     name: '코치마크',
     badge: '신설',
-    asIs: '첫 사용자를 위한 안내가 없어 기능을 스스로 더듬어 찾아야 했습니다.',
-    toBe: '주요 동작마다 단계별 코치마크를 제공해 처음 쓰는 사용자도 막힘없이 따라오게 했습니다.',
+    asIs: '첫 사용자를 위한 안내가 없어 기능을 스스로 더듬어 찾아야 했습니다. (발견성 부재)',
+    toBe: '주요 동작마다 단계별 코치마크를 제공해 처음 쓰는 사용자도 막힘없이 따라오게 했습니다. (단계별 온보딩 가이드)',
     annotations: [
       '발견성(Discoverability) 부재',
       '단계별 온보딩 가이드',
     ],
-    proves: [],
+    proves: ['S4'],
     big: false,
     dualTobe: true,
   },
@@ -390,8 +394,8 @@ function ScreenBlock({ screen, visible, delay, isMobile, isLast }) {
         }}>
           {screen.dualTobe ? (
             <>
-              <PhoneSlot variant="tobe1" screenId={sid} label="카드 신청" />
-              <PhoneSlot variant="tobe2" screenId={sid} label="충전" />
+              <PhoneSlot variant="tobe1" screenId={sid} label="카드 신청 단계 안내" />
+              <PhoneSlot variant="tobe2" screenId={sid} label="충전 단계 안내" />
             </>
           ) : (
             <>
