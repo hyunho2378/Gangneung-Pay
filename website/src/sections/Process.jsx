@@ -299,7 +299,7 @@ export default function Process() {
             {/* Table header */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: '80px 96px 1fr 1fr 88px',
+              gridTemplateColumns: '80px 96px 1fr 1fr 120px',
               gap: 0,
               borderBottom: `2px solid ${color.line}`,
               paddingBottom: 10,
@@ -323,7 +323,7 @@ export default function Process() {
                   key={code}
                   style={{
                     display: 'grid',
-                    gridTemplateColumns: '80px 96px 1fr 1fr 88px',
+                    gridTemplateColumns: '80px 96px 1fr 1fr 120px',
                     gap: 0,
                     background: i % 2 === 0 ? color.white : 'transparent',
                     borderBottom: `1px solid ${color.line}`,

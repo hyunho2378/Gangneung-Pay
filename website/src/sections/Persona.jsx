@@ -74,7 +74,7 @@ export default function Persona() {
         padding: `${layout.sectionY} clamp(20px,5vw,80px)`,
       }}
     >
-      <div style={{ maxWidth: layout.container, margin: '0 auto' }}>
+      <div style={{ maxWidth: layout.container, margin: '0 auto', overflow: 'hidden' }}>
 
         {/* Header */}
         <div
@@ -116,7 +116,7 @@ export default function Persona() {
             <img
               src={personaSvg}
               alt="강릉페이 페르소나 — 김정숙"
-              style={{ width: '100%', height: 'auto', display: 'block' }}
+              style={{ width: '100%', maxWidth: '100%', height: 'auto', display: 'block' }}
             />
           ) : (
             <img

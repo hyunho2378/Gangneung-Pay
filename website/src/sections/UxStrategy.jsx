@@ -132,7 +132,10 @@ export default function UxStrategy() {
                     cursor: 'pointer',
                     textAlign: 'left',
                     gap: 'clamp(16px,2.5vw,40px)',
+                    transition: 'background 0.2s ease-out',
                   }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = color.bg; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'none'; }}
                 >
                   {/* Strategy number */}
                   <span style={{
@@ -170,21 +173,30 @@ export default function UxStrategy() {
                   </div>
 
                   {/* Expand indicator */}
-                  <span style={{
-                    fontSize: 'clamp(18px,2vw,24px)',
-                    fontWeight: 500,
-                    lineHeight: 1,
-                    color: color.brand,
+                  <div style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: '50%',
+                    background: isOpen ? color.brand : color.brandPale,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     flexShrink: 0,
-                    width: '1em',
-                    textAlign: 'center',
-                    fontFamily: font.family,
-                    transition: 'transform 0.35s ease-out',
+                    transition: 'background 0.25s ease-out, transform 0.35s ease-out',
                     transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
-                    display: 'inline-block',
                   }}>
-                    +
-                  </span>
+                    <span style={{
+                      fontSize: 18,
+                      fontWeight: 700,
+                      lineHeight: 1,
+                      color: isOpen ? color.white : color.brand,
+                      fontFamily: font.family,
+                      transition: 'color 0.25s ease-out',
+                      userSelect: 'none',
+                    }}>
+                      +
+                    </span>
+                  </div>
                 </button>
 
                 {/* Expanded content */}
