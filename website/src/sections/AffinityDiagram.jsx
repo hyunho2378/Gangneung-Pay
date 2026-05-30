@@ -1,5 +1,6 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 
 const CLUSTERS = [
   {
@@ -37,6 +38,7 @@ const CLUSTERS = [
 export default function AffinityDiagram() {
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [clustersRef, clustersVisible] = useReveal({ threshold: 0.03 });
+  const { isMobile } = useBreakpoint();
 
   return (
     <section
@@ -87,7 +89,7 @@ export default function AffinityDiagram() {
         </div>
 
         {/* Cluster list */}
-        <div ref={clustersRef} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 'clamp(32px,4vw,64px)' }}>
+        <div ref={clustersRef} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', columnGap: 'clamp(32px,4vw,64px)' }}>
           {CLUSTERS.map(({ letter, name, desc }, i) => (
             <div
               key={letter}

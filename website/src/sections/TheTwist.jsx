@@ -1,11 +1,13 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 import bbeforeImg from '../assets/bbefore.png';
 import beforeImg from '../assets/before.png';
 
 export default function TheTwist() {
   const [ref, visible] = useReveal({ threshold: 0.1 });
   const [imgRef, imgVisible] = useReveal({ threshold: 0.05 });
+  const { isMobile } = useBreakpoint();
 
   return (
     <section
@@ -78,12 +80,13 @@ export default function TheTwist() {
             transform: imgVisible ? 'none' : 'translateY(24px)',
             transition: 'opacity 0.7s ease-out 0.15s, transform 0.7s ease-out 0.15s',
             display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
             alignItems: 'center',
             justifyContent: 'center',
             gap: 'clamp(16px,3vw,40px)',
           }}
         >
-          <div style={{ flex: '0 0 clamp(160px,26%,320px)' }}>
+          <div style={isMobile ? { width: '100%', maxWidth: 220 } : { flex: '0 0 clamp(160px,26%,320px)' }}>
             <p style={{
               fontSize: 11, fontWeight: 700, color: color.inkMuted,
               textTransform: 'uppercase', letterSpacing: '0.04em',
@@ -101,13 +104,13 @@ export default function TheTwist() {
           </div>
 
           {/* 화살표 */}
-          <div style={{ flexShrink: 0, color: color.brand }}>
+          <div style={{ flexShrink: 0, color: color.brand, transform: isMobile ? 'rotate(90deg)' : 'none' }}>
             <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
 
-          <div style={{ flex: '0 0 clamp(160px,26%,320px)' }}>
+          <div style={isMobile ? { width: '100%', maxWidth: 220 } : { flex: '0 0 clamp(160px,26%,320px)' }}>
             <p style={{
               fontSize: 11, fontWeight: 700, color: color.brand,
               textTransform: 'uppercase', letterSpacing: '0.04em',

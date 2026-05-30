@@ -380,6 +380,7 @@ export default function InDepthInterview() {
   const [step2Ref, step2Visible] = useReveal({ threshold: 0.03 });
   const [step3Ref, step3Visible] = useReveal({ threshold: 0.03 });
   const [step4Ref, step4Visible] = useReveal({ threshold: 0.03 });
+  const { isMobile } = useBreakpoint();
 
   const revealStyle = (visible, delay = 0) => ({
     opacity: visible ? 1 : 0,
@@ -432,7 +433,7 @@ export default function InDepthInterview() {
         <div ref={metaRef} style={{
           ...revealStyle(metaVisible),
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
+          gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)',
           gap: 'clamp(12px,1.5vw,24px)',
           marginBottom: 'clamp(48px,6vw,80px)',
         }}>

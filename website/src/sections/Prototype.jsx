@@ -1,5 +1,6 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 
 const LINKS = [
   {
@@ -21,6 +22,7 @@ const LINKS = [
 export default function Prototype() {
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [ctaRef, ctaVisible] = useReveal({ threshold: 0.05 });
+  const { isMobile } = useBreakpoint();
 
   return (
     <section
@@ -72,7 +74,7 @@ export default function Prototype() {
           ref={ctaRef}
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(2,1fr)',
             gap: 'clamp(20px,3vw,48px)',
           }}
         >

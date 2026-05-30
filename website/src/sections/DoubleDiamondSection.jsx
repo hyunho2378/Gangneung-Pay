@@ -1,5 +1,6 @@
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 
 const PHASES = [
   {
@@ -25,6 +26,7 @@ const PHASES = [
 ];
 
 function DiagramBlock() {
+  const { isMobile } = useBreakpoint();
   return (
     <div style={{ maxWidth: 560, margin: '0 auto' }}>
       <img
@@ -43,7 +45,7 @@ function DiagramBlock() {
       </p>
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)',
+        gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)',
         gap: 'clamp(6px,1.2vw,16px)',
       }}>
         {PHASES.map(p => (
