@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { color, font, type as t, layout } from '../tokens/web.js';
+import { color, font, layout } from '../tokens/web.js';
 
 export default function NextStepCTA({ label, to }) {
   return (
@@ -38,17 +38,6 @@ export default function NextStepCTA({ label, to }) {
         }}
       >
         <div>
-          <p style={{
-            fontSize: t.eyebrow.size,
-            fontWeight: t.eyebrow.weight,
-            letterSpacing: t.eyebrow.ls,
-            textTransform: t.eyebrow.transform,
-            color: color.whiteA60,
-            margin: '0 0 4px',
-            fontFamily: font.family,
-          }}>
-            다음
-          </p>
           <p style={{
             fontSize: 'clamp(15px,1.4vw,20px)',
             fontWeight: 700,

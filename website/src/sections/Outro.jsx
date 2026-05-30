@@ -83,8 +83,8 @@ export default function Outro() {
           <div style={{
             display: 'flex',
             flexDirection: isMobile ? 'column' : 'row',
-            flexWrap: isMobile ? 'nowrap' : 'wrap',
-            gap: isMobile ? 'clamp(4px,0.5vw,8px)' : 'clamp(8px,1.5vw,20px)',
+            flexWrap: 'nowrap',
+            gap: isMobile ? 'clamp(4px,0.5vw,8px)' : 'clamp(4px,0.6vw,10px)',
             marginBottom: 'clamp(24px,3vw,40px)',
           }}>
             {MEMBERS.map((m, i) => (
@@ -92,30 +92,29 @@ export default function Outro() {
                 key={m.name}
                 style={{
                   display: 'flex',
-                  alignItems: 'center',
-                  gap: 16,
-                  padding: 'clamp(8px,1vw,12px) clamp(10px,1.2vw,16px)',
+                  flexDirection: 'column',
+                  gap: 4,
+                  padding: 'clamp(8px,1vw,12px) clamp(8px,1vw,14px)',
                   borderLeft: '2px solid rgba(255,255,255,0.18)',
                   opacity: creditsVisible ? 1 : 0,
                   transition: `opacity 0.5s ease-out ${i * 0.08}s`,
+                  flex: isMobile ? 'none' : 1,
                   minWidth: 0,
                 }}
               >
                 <p style={{
-                  fontSize: 'clamp(14px,1.1vw,17px)', fontWeight: 700,
+                  fontSize: 'clamp(13px,1vw,15px)', fontWeight: 700,
                   color: color.white, margin: 0,
                   fontFamily: font.family, lineHeight: 1.2,
-                  flexShrink: 0,
-                  minWidth: 72,
                 }}>
                   {m.name}
                 </p>
                 {m.role ? (
                   <p style={{
-                    fontSize: 'clamp(11px,0.8vw,13px)', lineHeight: 1.4,
+                    fontSize: 'clamp(9px,0.7vw,11px)', lineHeight: 1.4,
                     color: 'rgba(255,255,255,0.55)',
                     margin: 0, fontFamily: font.family,
-                    whiteSpace: 'nowrap',
+                    wordBreak: 'break-word',
                   }}>
                     {m.role}
                   </p>

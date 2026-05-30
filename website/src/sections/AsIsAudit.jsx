@@ -91,7 +91,7 @@ export default function AsIsAudit() {
         >
           {/* Screenshot */}
           <div style={{ flex: '0 0 clamp(160px,26%,320px)' }}>
-            <div style={{ aspectRatio: '9/16', borderRadius: layout.rMd, overflow: 'hidden', background: color.white }}>
+            <div style={{ aspectRatio: '9/16', borderRadius: layout.rMd, overflow: 'hidden' }}>
               <img
                 src={beforeImg}
                 alt="강릉페이 AS-IS 화면"

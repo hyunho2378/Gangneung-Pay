@@ -113,35 +113,41 @@ const SCREENS = [
 function PhoneSlot({ variant = 'tobe', screenId }) {
   const isAsis = variant === 'asis';
   const imgSrc = SCREEN_IMGS[`${screenId}-${variant}`];
-  return imgSrc ? (
-    <img
-      src={imgSrc}
-      alt=""
-      aria-hidden="true"
-      style={{
-        width: '100%',
-        height: 'auto',
-        display: 'block',
-        borderRadius: layout.rMd,
-        filter: isAsis ? 'grayscale(0.7)' : 'none',
-        opacity: isAsis ? 0.75 : 1,
-      }}
-    />
-  ) : (
-    <div style={{
-      width: '100%',
-      aspectRatio: '9/19.5',
-      border: `1px dashed ${color.line}`,
-      borderRadius: layout.rMd,
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-    }}>
-      <span style={{
-        fontSize: 9, fontWeight: 800,
+  return (
+    <div>
+      {imgSrc ? (
+        <img
+          src={imgSrc}
+          alt=""
+          aria-hidden="true"
+          style={{
+            width: '100%',
+            height: 'auto',
+            display: 'block',
+            borderRadius: layout.rMd,
+            filter: isAsis ? 'grayscale(0.7)' : 'none',
+            opacity: isAsis ? 0.75 : 1,
+          }}
+        />
+      ) : (
+        <div style={{
+          width: '100%',
+          aspectRatio: '9/19.5',
+          border: `1px dashed ${color.line}`,
+          borderRadius: layout.rMd,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }} />
+      )}
+      <p style={{
+        textAlign: 'center',
+        fontSize: 10, fontWeight: 700,
         letterSpacing: '0.08em', textTransform: 'uppercase',
-        fontFamily: font.family, color: color.inkFaint,
+        color: isAsis ? color.inkFaint : color.brand,
+        margin: '8px 0 0',
+        fontFamily: font.family,
       }}>
         {isAsis ? 'AS-IS' : 'TO-BE'}
-      </span>
+      </p>
     </div>
   );
 }

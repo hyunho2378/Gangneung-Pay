@@ -61,7 +61,7 @@ export default function TheTwist() {
               fontSize: t.lead.size,
               fontWeight: t.lead.weight,
               lineHeight: t.lead.lh,
-              color: color.inkMuted,
+              color: color.ink,
               margin: 0,
               wordBreak: 'keep-all',
             }}
@@ -91,7 +91,7 @@ export default function TheTwist() {
             }}>
               프로젝트 시작 화면
             </p>
-            <div style={{ aspectRatio: '9/16', borderRadius: '36px', overflow: 'hidden', background: color.line }}>
+            <div style={{ aspectRatio: '9/16', borderRadius: '36px', overflow: 'hidden' }}>
               <img
                 src={bbeforeImg}
                 alt="프로젝트 시작 시점 강릉페이 화면"
@@ -115,7 +115,7 @@ export default function TheTwist() {
             }}>
               리뉴얼 후 화면
             </p>
-            <div style={{ aspectRatio: '9/16', borderRadius: '36px', overflow: 'hidden', background: color.line }}>
+            <div style={{ aspectRatio: '9/16', borderRadius: '36px', overflow: 'hidden' }}>
               <img
                 src={beforeImg}
                 alt="중간 리뉴얼 시점 강릉페이 화면"
