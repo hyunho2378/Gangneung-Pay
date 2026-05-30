@@ -62,7 +62,7 @@ const SCREENS = [
     asIs: '첫 사용자를 위한 안내가 없어 기능을 스스로 더듬어 찾아야 했습니다. (발견성 부재)',
     toBe: '주요 동작마다 단계별 코치마크를 제공해 처음 쓰는 사용자도 막힘없이 따라오게 했습니다. (단계별 온보딩 가이드)',
     annotations: [
-      '발견성(Discoverability) 부재',
+      '발견성(Discoverability) 부재 해결',
       '단계별 온보딩 가이드',
     ],
     proves: ['S4'],
@@ -194,15 +194,15 @@ function AnnotationList({ annotations }) {
       {annotations.map((ann, i) => (
         <li key={i} style={{
           display: 'flex',
-          alignItems: 'flex-start',
+          alignItems: 'center',
           gap: 12,
           marginBottom: i < annotations.length - 1 ? 14 : 0,
         }}>
           <span style={{
-            fontSize: 11, fontWeight: 800,
+            fontSize: t.body.size, fontWeight: 800,
             color: color.brand, fontFamily: font.family,
-            flexShrink: 0, lineHeight: 1.65,
-            width: '1.4em', textAlign: 'right',
+            flexShrink: 0,
+            width: '1.6em', textAlign: 'right',
           }}>
             {i + 1}
           </span>

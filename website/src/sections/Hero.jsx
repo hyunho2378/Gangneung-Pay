@@ -9,7 +9,7 @@ const META = [
   { label: 'ADVISOR', value: '김성우 교수' },
   { label: 'TEAM', value: '마카모예' },
   { label: 'PERIOD', value: '2026.03 ~ 2026.06' },
-  { label: 'TOOL', value: 'Figma, Antigravity, Claude Code, Vercel, Neon DB' },
+  { label: 'TOOL', value: 'Figma, Antigravity, Claude Code, Vercel' },
 ];
 
 const IOS_URL = 'https://gangneung-pay.vercel.app';
@@ -136,38 +136,33 @@ export default function Hero() {
         }}
       >
         <div style={{ padding: 'clamp(24px,3vw,40px) clamp(20px,5vw,80px)' }}>
-          <div
-            style={{
-              maxWidth: layout.container,
-              margin: '0 auto',
-            }}
-          >
+          <div style={{ maxWidth: layout.container, margin: '0 auto' }}>
+            {!isMobile && (
+              <p
+                style={{
+                  fontSize: t.eyebrow.size,
+                  fontWeight: t.eyebrow.weight,
+                  letterSpacing: t.eyebrow.ls,
+                  textTransform: t.eyebrow.transform,
+                  color: color.whiteA60,
+                  margin: '0 0 clamp(12px,1.5vw,20px)',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                Project Detail
+              </p>
+            )}
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'auto repeat(5, 1fr)',
-                gap: '24px',
-                alignItems: 'center',
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(5, 1fr)',
+                gap: isMobile ? '20px' : '24px',
+                alignItems: 'start',
                 width: '100%',
               }}
             >
-              {!isMobile && (
-                <p
-                  style={{
-                    fontSize: t.eyebrow.size,
-                    fontWeight: t.eyebrow.weight,
-                    letterSpacing: t.eyebrow.ls,
-                    textTransform: t.eyebrow.transform,
-                    color: color.whiteA60,
-                    margin: 0,
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  Project Detail
-                </p>
-              )}
               {META.map(({ label, value }) => (
-                <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   <span
                     style={{
                       fontSize: 14,
@@ -182,12 +177,12 @@ export default function Hero() {
                   </span>
                   <span
                     style={{
-                      fontSize: isMobile ? 15 : 18,
-                      fontWeight: 700,
+                      fontSize: isMobile ? 13 : 16,
+                      fontWeight: 500,
                       color: color.white,
                       letterSpacing: '-0.01em',
                       wordBreak: label === 'TOOL' ? 'break-word' : 'keep-all',
-                      lineHeight: 1.3,
+                      lineHeight: 1.4,
                     }}
                   >
                     {value}

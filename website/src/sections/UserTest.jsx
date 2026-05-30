@@ -151,7 +151,7 @@ export default function UserTest() {
               fontSize: t.caption.size, lineHeight: t.caption.lh,
               color: color.inkMuted, margin: '8px 0 0', fontFamily: font.family,
             }}>
-              강릉시청 강릉페이 담당자 회신
+
             </p>
           </div>
         </div>
