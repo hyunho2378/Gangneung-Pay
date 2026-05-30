@@ -28,54 +28,64 @@ const PHASES = [
 function DiagramBlock() {
   const { isMobile } = useBreakpoint();
   return (
-    <div style={{ maxWidth: 560, margin: '0 auto' }}>
-      <img
-        src="/ddp.svg"
-        alt="더블 다이아몬드 프로세스"
-        style={{ width: '100%', height: 'auto', display: 'block', margin: '0 auto clamp(10px,1.5vw,16px)' }}
-      />
-      <p style={{
-        textAlign: 'center',
-        fontSize: 11, fontWeight: 800,
-        color: color.brand, letterSpacing: '0.06em', textTransform: 'uppercase',
-        margin: '0 0 clamp(12px,1.5vw,18px)',
-        fontFamily: font.family,
-      }}>
-        URQ : 리서치를 요구사항으로 수렴한 지점
-      </p>
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)',
-        gap: 'clamp(6px,1.2vw,16px)',
-      }}>
-        {PHASES.map(p => (
-          <div key={p.id} style={{ textAlign: 'center' }}>
-            <span style={{
-              display: 'block',
-              fontSize: t.eyebrow.size, fontWeight: 800,
-              color: color.brand, letterSpacing: '0.04em',
-              fontFamily: font.family, lineHeight: 1.2,
-            }}>
-              {p.id}
-            </span>
-            <span style={{
-              display: 'block',
-              fontSize: 13, fontWeight: 700,
-              color: color.ink, margin: '3px 0 5px',
-              fontFamily: font.family,
-            }}>
-              {p.label}
-            </span>
-            <span style={{
-              display: 'block',
-              fontSize: 11, color: color.inkMuted,
-              lineHeight: 1.55, wordBreak: 'keep-all',
-              fontFamily: font.family,
-            }}>
-              {p.detail}
-            </span>
-          </div>
-        ))}
+    <div>
+      <div style={{ maxWidth: 560, margin: '0 auto' }}>
+        <img
+          src="/ddp.svg"
+          alt="더블 다이아몬드 프로세스"
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div>
+
+      <div style={{ marginTop: 40 }}>
+        <p style={{
+          textAlign: 'center',
+          fontSize: t.body.size, fontWeight: 700,
+          color: color.brand,
+          margin: '0 0 clamp(20px,2.5vw,32px)',
+          fontFamily: font.family,
+          wordBreak: 'keep-all',
+        }}>
+          URQ : 리서치를 요구사항으로 수렴한 지점
+        </p>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)',
+          gap: 'clamp(16px,2.5vw,32px)',
+        }}>
+          {PHASES.map(p => (
+            <div key={p.id}>
+              <span style={{
+                display: 'block',
+                fontSize: t.eyebrow.size, fontWeight: 800,
+                color: color.brand, letterSpacing: '0.04em',
+                fontFamily: font.family, lineHeight: 1.2,
+                marginBottom: 4,
+              }}>
+                {p.id}
+              </span>
+              <span style={{
+                display: 'block',
+                fontSize: t.body.size, fontWeight: 700,
+                color: color.ink,
+                margin: '0 0 6px',
+                fontFamily: font.family,
+                lineHeight: t.body.lh,
+              }}>
+                {p.label}
+              </span>
+              <span style={{
+                display: 'block',
+                fontSize: t.body.size, fontWeight: 500,
+                color: color.inkMuted,
+                lineHeight: t.body.lh, wordBreak: 'keep-all',
+                fontFamily: font.family,
+              }}>
+                {p.detail}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
