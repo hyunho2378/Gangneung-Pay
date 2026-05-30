@@ -53,42 +53,42 @@ const VIOLATIONS = [
     label: '사용자 언어',
     before: "'강릉머니', 4인 전원 미인지",
     after: '메뉴명 사용자 언어 통일',
-    ur: 'UR-N02',
+    ur: 'P0-06',
   },
   {
     code: 'N#4',
     label: '일관성',
     before: 'B2C에 B2B 메뉴 혼재',
     after: 'B2C / B2B 완전 분리',
-    ur: 'UR-F02',
+    ur: 'P0-05',
   },
   {
     code: 'N#6',
     label: '인식 보조',
     before: '환불이 큰글씨 모드에서만 노출',
     after: '잔액카드 3슬롯 동등 위계',
-    ur: 'UR-U03',
+    ur: 'P0-03',
   },
   {
     code: 'N#10',
     label: '도움말',
     before: '충전, 환불 절차 안내 없음',
     after: '코치마크 단계별 자동 안내',
-    ur: 'UR-U03',
+    ur: '신규',
   },
   {
     code: 'S#3',
     label: '단순성',
     before: 'B2C/B2B 혼재로 탐색 복잡',
     after: 'B2C 전용 단순 구조',
-    ur: 'UR-F02',
+    ur: 'P0-05',
   },
   {
     code: 'S#8',
     label: '단순 오류',
     before: "'강릉머니', 내부 용어 사용",
     after: '일관된 브랜드 언어 적용',
-    ur: 'UR-N02',
+    ur: 'P0-06',
   },
 ];
 
@@ -313,7 +313,7 @@ export default function Process() {
               marginBottom: 0,
               minWidth: 600,
             }}>
-              {['코드', '원칙', 'BEFORE', 'AFTER', 'UR'].map((h) => (
+              {['코드', '원칙', 'BEFORE', 'AFTER', 'UR(P0/P1)'].map((h) => (
                 <div key={h} style={{
                   padding: '0 12px',
                   fontSize: t.eyebrow.size, fontWeight: t.eyebrow.weight,

@@ -1,4 +1,5 @@
 import AffinityDiagram from '../sections/AffinityDiagram.jsx';
+import UserRequirements from '../sections/UserRequirements.jsx';
 import KeyInsights from '../sections/KeyInsights.jsx';
 import AsIsAudit from '../sections/AsIsAudit.jsx';
 import Persona from '../sections/Persona.jsx';
@@ -9,6 +10,7 @@ export default function InsightsPage() {
   return (
     <>
       <AffinityDiagram />
+      <UserRequirements />
       <KeyInsights />
       <AsIsAudit />
       <Persona />

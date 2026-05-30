@@ -415,8 +415,8 @@ export default function AiHarness() {
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 10, marginBottom: 16 }}>
               {[
-                { dir: 'Figma → 코드', desc: '디자인 시안을 코드로 반영' },
-                { dir: '코드 → Figma', desc: '코드 변경사항을 디자인에 동기화' },
+                { dir: 'Claude Code → Figma', desc: 'Claude Code로 빠른 프로토타입 완성 후 피그마로 변환' },
+                { dir: 'Figma → 코드', desc: '디자인 수정 후 코드로 변환' },
               ].map((item) => (
                 <div
                   key={item.dir}
@@ -442,12 +442,6 @@ export default function AiHarness() {
                 </div>
               ))}
             </div>
-            <p style={{
-              fontSize: t.caption.size, lineHeight: t.caption.lh,
-              color: color.inkMuted, fontFamily: font.family, margin: 0,
-            }}>
-              Antigravity IDE에서 Claude Code로 구현을 진행했다.
-            </p>
           </div>
         </div>
 
