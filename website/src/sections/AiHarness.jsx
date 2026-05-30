@@ -480,10 +480,10 @@ export default function AiHarness() {
           </h3>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: isMobile ? 'repeat(4, 1fr)' : 'repeat(7, 1fr)',
+            gridTemplateColumns: isMobile ? 'repeat(3,1fr)' : 'repeat(7,1fr)',
             gap: 'clamp(12px,2vw,24px)',
           }}>
-            {TOOLS.map((tool) => (
+            {TOOLS.map((tool, i) => (
               <div
                 key={tool.name}
                 style={{
@@ -491,6 +491,7 @@ export default function AiHarness() {
                   flexDirection: 'column',
                   alignItems: 'center',
                   gap: 8,
+                  ...(isMobile && i === TOOLS.length - 1 ? { gridColumn: '1 / -1', justifySelf: 'center' } : {}),
                 }}
               >
                 <img

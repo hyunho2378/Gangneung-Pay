@@ -186,7 +186,7 @@ export default function Hero() {
                       fontWeight: 700,
                       color: color.white,
                       letterSpacing: '-0.01em',
-                      wordBreak: 'keep-all',
+                      wordBreak: label === 'TOOL' ? 'break-word' : 'keep-all',
                       lineHeight: 1.3,
                     }}
                   >

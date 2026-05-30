@@ -688,7 +688,7 @@ export default function DesignSystem() {
 
           {/* AUTH (BIOMETRIC) - [3] iOS → face-id-ios.json, [9] labels */}
           <p style={{ fontSize: 11, fontWeight: 700, color: color.inkMuted, margin: '0 0 12px', letterSpacing: '0em', textTransform: 'uppercase' }}>AUTH (BIOMETRIC)</p>
-          <div style={panelGrid}>
+          <div style={panelGridResp}>
             <div style={{ background: '#111111', borderRadius: layout.rMd, padding: 32, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 120, gap: 8, boxShadow: cardShadow }}>
               <DotLottieReact src="/lottie/face-id-ios.json" autoplay loop style={{ width: 80, height: 80 }} />
               <span style={{ color: '#fff', fontSize: 12, opacity: 0.7 }}>HIG: Face ID</span>

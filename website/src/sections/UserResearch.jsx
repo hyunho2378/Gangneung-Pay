@@ -210,8 +210,8 @@ export default function UserResearch() {
                   }}>
                     {s.group}
                   </p>
-                  <p style={{ fontSize: 20, lineHeight: 1.65, color: color.ink, margin: '0 0 12px', fontFamily: font.family }}>{s.trait}</p>
-                  <p style={{ fontSize: 19, color: color.inkMuted, margin: '0 0 8px', fontFamily: font.family }}>
+                  <p style={{ fontSize: t.body.size, lineHeight: 1.65, color: color.ink, margin: '0 0 12px', fontFamily: font.family }}>{s.trait}</p>
+                  <p style={{ fontSize: t.body.size, color: color.inkMuted, margin: '0 0 8px', fontFamily: font.family }}>
                     <span style={{ fontWeight: 600, color: color.inkMuted }}>사용 목적: </span>{s.goal}
                   </p>
                   <span style={{
@@ -250,8 +250,8 @@ export default function UserResearch() {
                 return (
                   <div key={i} style={{ background: color.bg, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
-                      <div>
-                        <p style={{ fontSize: 19, fontWeight: 800, color: color.ink, margin: '0 0 6px', fontFamily: font.family }}>{m.name}</p>
+                      <div style={{ minWidth: 0 }}>
+                        <p style={{ fontSize: t.body.size, fontWeight: 800, color: color.ink, margin: '0 0 6px', fontFamily: font.family }}>{m.name}</p>
                         <span style={{
                           fontSize: 11, fontWeight: 700, color: color.brand,
                           background: color.brandPale, padding: '3px 10px',
@@ -261,7 +261,7 @@ export default function UserResearch() {
                         </span>
                       </div>
                       {nRef ? (
-                        <div ref={nRef} style={{ textAlign: 'right' }}>
+                        <div ref={nRef} style={{ textAlign: 'right', flexShrink: 0 }}>
                           <span style={{
                             display: 'block',
                             fontSize: t.display.size, fontWeight: 800,

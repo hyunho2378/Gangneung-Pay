@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { color, font, type as t, layout } from '../tokens/web.js';
 import { useReveal } from '../lib/useReveal.js';
+import { useBreakpoint } from '../lib/useBreakpoint.js';
 
 const STRATEGIES = [
   {
@@ -62,6 +63,7 @@ export default function UxStrategy() {
   const [openId, setOpenId] = useState(null);
   const [headRef, headVisible] = useReveal({ threshold: 0.05 });
   const [listRef, listVisible] = useReveal({ threshold: 0.02 });
+  const { isMobile } = useBreakpoint();
 
   const toggle = (id) => setOpenId((prev) => (prev === id ? null : id));
 
@@ -197,7 +199,7 @@ export default function UxStrategy() {
                   }}
                 >
                   <div style={{
-                    paddingLeft: 'clamp(64px,8vw,120px)',
+                    paddingLeft: isMobile ? 'clamp(20px,5vw,40px)' : 'clamp(64px,8vw,120px)',
                     paddingBottom: 'clamp(28px,3.5vw,48px)',
                   }}>
 
