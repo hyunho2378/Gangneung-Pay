@@ -416,7 +416,7 @@ export default function AiHarness() {
             <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 10, marginBottom: 16 }}>
               {[
                 { dir: 'Claude Code → Figma', desc: 'Claude Code로 빠른 프로토타입 완성 후 피그마로 변환' },
-                { dir: 'Figma → 코드', desc: '디자인 수정 후 코드로 변환' },
+                { dir: 'Figma → Claude Code', desc: '디자인 수정 후 코드로 변환' },
               ].map((item) => (
                 <div
                   key={item.dir}

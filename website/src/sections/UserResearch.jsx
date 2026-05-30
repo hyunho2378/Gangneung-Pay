@@ -84,7 +84,7 @@ export default function UserResearch() {
   const [cRef9,  c9]  = useCountUp(9,  1200);
   const [cRef0,  c0]  = useCountUp(0,   800);
 
-  const [mRef70, m70] = useCountUp(70, 1500);
+  const [mRef70, m70] = useCountUp(68, 1500);
   const [mRef2a, m2a] = useCountUp(6,  1000);
   const [mRef4,  m4]  = useCountUp(4,  1000);
   const [mRef2b, m2b] = useCountUp(2,  1000);
