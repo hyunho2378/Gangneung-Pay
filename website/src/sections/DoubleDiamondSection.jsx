@@ -11,7 +11,7 @@ const PHASES = [
   {
     id: 'D2',
     label: 'Define',
-    detail: '어피니티, Key Insight, AS-IS 감사, 페르소나, 저니맵',
+    detail: '어피니티 다이어그램, Key Insight, AS-IS 감사, 페르소나, 저니맵',
   },
   {
     id: 'D3',
