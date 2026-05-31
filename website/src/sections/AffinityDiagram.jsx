@@ -84,7 +84,7 @@ export default function AffinityDiagram() {
               wordBreak: 'keep-all',
             }}
           >
-            87개 메모에서 5개의 패턴이 나왔습니다.
+            87개의 다이어그램에서 5개의 패턴이 나왔습니다.
           </h2>
         </div>
 

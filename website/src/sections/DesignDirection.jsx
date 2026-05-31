@@ -60,7 +60,7 @@ export default function DesignDirection() {
             color: color.ink, margin: 0,
             wordBreak: 'keep-all',
           }}>
-            두 개의 축으로 방향을 잡았습니다.
+            디자인 방향을 두 개의 축으로 잡았습니다.
           </h2>
         </div>
 

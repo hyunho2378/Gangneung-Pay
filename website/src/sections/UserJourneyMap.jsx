@@ -44,7 +44,7 @@ export default function UserJourneyMap() {
               color: color.ink, margin: 0,
               wordBreak: 'keep-all',
             }}>
-              사용자가 겪는 5단계 여정과 마찰점.
+              사용자가 겪는 5단계 여정과 마찰점을 나타냈습니다.
             </h2>
           </div>
 

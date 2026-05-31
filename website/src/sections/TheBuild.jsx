@@ -487,7 +487,7 @@ export default function TheBuild() {
             color: color.ink, margin: 0,
             fontFamily: font.family, wordBreak: 'keep-all',
           }}>
-            전략이 실제 화면으로 이어집니다.
+            UX 전략을 실제 화면에 구현했습니다.
           </h2>
         </div>
 

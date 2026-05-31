@@ -379,7 +379,7 @@ export default function DesignSystem() {
                       borderBottom: `1px solid ${color.line}`,
                     }}
                   >
-                    <div style={{ minWidth: 80, flexShrink: 0 }}>
+                    <div style={{ width: 130, flexShrink: 0 }}>
                       <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: color.ink }}>{row.label}</p>
                       <p style={{ margin: 0, fontSize: 10, color: color.inkFaint, lineHeight: 1.5 }}>{row.spec}</p>
                     </div>

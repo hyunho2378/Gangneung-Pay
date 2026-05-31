@@ -58,7 +58,7 @@ export default function Prototype() {
             color: color.ink, margin: '0 0 16px', fontFamily: font.family,
             wordBreak: 'keep-all',
           }}>
-            직접 사용해보세요.
+            iOS와 Android 버전을 직접 사용해 보세요.
           </h2>
           <p style={{
             fontSize: t.lead.size, fontWeight: 500,
@@ -132,7 +132,7 @@ export default function Prototype() {
                 }}>
                   확인하기
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
               </div>

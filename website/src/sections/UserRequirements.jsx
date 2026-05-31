@@ -106,79 +106,79 @@ export default function UserRequirements() {
             color: color.ink, margin: 0,
             wordBreak: 'keep-all',
           }}>
-            사용자 행동 데이터에서 도출한 요구사항.
+            사용자 행동 데이터에서 요구사항을 도출했습니다.
           </h2>
         </div>
 
         {/* P0 + P1 groups, 2-column grid */}
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'clamp(24px,3vw,48px)' }}>
-        {GROUPS.map(({ priority, label, items }, gi) => {
-          const [ref, visible] = groupRefs[gi];
-          const isPrimary = priority === 'P0';
+          {GROUPS.map(({ priority, label, items }, gi) => {
+            const [ref, visible] = groupRefs[gi];
+            const isPrimary = priority === 'P0';
 
-          return (
-            <div
-              key={priority}
-              ref={ref}
-            >
-              {/* Group header */}
+            return (
               <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'baseline',
-                  gap: 16,
-                  marginBottom: 'clamp(16px,2vw,24px)',
-                  paddingBottom: 'clamp(16px,2vw,24px)',
-                  borderBottom: `2px solid ${isPrimary ? color.brand : color.line}`,
-                  opacity: visible ? 1 : 0,
-                  transform: visible ? 'none' : 'translateY(20px)',
-                  transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-                }}
+                key={priority}
+                ref={ref}
               >
-                <span style={{
-                  fontSize: 'clamp(40px,5.5vw,72px)',
-                  fontWeight: 800,
-                  lineHeight: 1,
-                  letterSpacing: '-0.04em',
-                  color: isPrimary ? color.brand : color.inkMuted,
-                  fontFamily: font.family,
-                }}>
-                  {priority}
-                </span>
-                <span style={{
-                  fontSize: 13, fontWeight: t.eyebrow.weight,
-                  letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
-                  color: isPrimary ? color.brand : color.inkFaint,
-                  fontFamily: font.family,
-                }}>
-                  {label}
-                </span>
-                <span style={{
-                  marginLeft: 'auto',
-                  fontSize: 11, fontWeight: 600,
-                  color: color.inkFaint,
-                  fontFamily: font.family,
-                }}>
-                  {items.length}개 항목
-                </span>
-              </div>
+                {/* Group header */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'baseline',
+                    gap: 16,
+                    marginBottom: 'clamp(16px,2vw,24px)',
+                    paddingBottom: 'clamp(16px,2vw,24px)',
+                    borderBottom: `2px solid ${isPrimary ? color.brand : color.line}`,
+                    opacity: visible ? 1 : 0,
+                    transform: visible ? 'none' : 'translateY(20px)',
+                    transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
+                  }}
+                >
+                  <span style={{
+                    fontSize: 'clamp(40px,5.5vw,72px)',
+                    fontWeight: 800,
+                    lineHeight: 1,
+                    letterSpacing: '-0.04em',
+                    color: isPrimary ? color.brand : color.inkMuted,
+                    fontFamily: font.family,
+                  }}>
+                    {priority}
+                  </span>
+                  <span style={{
+                    fontSize: 13, fontWeight: t.eyebrow.weight,
+                    letterSpacing: t.eyebrow.ls, textTransform: t.eyebrow.transform,
+                    color: isPrimary ? color.brand : color.inkFaint,
+                    fontFamily: font.family,
+                  }}>
+                    {label}
+                  </span>
+                  <span style={{
+                    marginLeft: 'auto',
+                    fontSize: 11, fontWeight: 600,
+                    color: color.inkFaint,
+                    fontFamily: font.family,
+                  }}>
+                    {items.length}개 항목
+                  </span>
+                </div>
 
-              {/* Rows */}
-              <div>
-                {items.map((item, ri) => (
-                  <UrRow
-                    key={item.code}
-                    index={ri}
-                    desc={item.desc}
-                    priority={priority}
-                    visible={visible}
-                    delay={ri * 0.05}
-                  />
-                ))}
+                {/* Rows */}
+                <div>
+                  {items.map((item, ri) => (
+                    <UrRow
+                      key={item.code}
+                      index={ri}
+                      desc={item.desc}
+                      priority={priority}
+                      visible={visible}
+                      delay={ri * 0.05}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
         </div>
 
       </div>

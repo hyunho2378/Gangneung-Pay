@@ -71,7 +71,7 @@ export default function AsIsAudit() {
             color: color.ink, margin: 0,
             wordBreak: 'keep-all',
           }}>
-            리뉴얼 이후에도 살아남은 구조적 결함.
+            리뉴얼 이후에도 구조적 결함은 여전히 존재했습니다.
           </h2>
         </div>
 
