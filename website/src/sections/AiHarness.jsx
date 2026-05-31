@@ -226,7 +226,12 @@ export default function AiHarness() {
                         fontSize: 11, lineHeight: 1.75,
                         color: '#D4D4D4',
                         fontFamily: "'SFMono-Regular','Consolas','Monaco',monospace",
-                        overflowX: 'auto', whiteSpace: 'pre',
+                        overflowX: 'auto',
+                        overflowY: 'auto',
+                        maxHeight: 280,
+                        whiteSpace: 'pre',
+                        maxWidth: '100%',
+                        boxSizing: 'border-box',
                       }}>
                         {doc.preview}
                       </pre>

@@ -18,7 +18,7 @@ const FLOWS = [
   },
   {
     num: '②',
-    label: 'QR결제 (바텀탭 중앙)',
+    label: 'QR결제',
     nodes: ['홈', 'QR결제', '카메라 스캔', '결제완료'],
     tag: { index: 3, text: '캐시백 자동적립' },
   },
@@ -26,12 +26,7 @@ const FLOWS = [
     num: '③',
     label: '충전, 잔액확인, 환불',
     nodes: ['홈\n(잔액카드)', '충전', '금액선택', '충전완료\n(잔액반영)'],
-    branch: [
-      '환불',
-      '환불가능\n충전내역',
-      '환불 확인\n다이얼로그',
-      '환불완료',
-    ],
+    branch: ['환불', '환불가능\n충전내역', '환불 확인\n다이얼로그', '환불완료'],
   },
 ];
 
@@ -62,34 +57,15 @@ function Node({ text, dashed = false }) {
 
 function SolidArrow() {
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        flexShrink: 0,
-        width: 36,
-      }}
-    >
-      <div
-        style={{
-          flex: 1,
-          height: 2,
-          background: color.brand,
-          position: 'relative',
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            right: -1,
-            top: -4,
-            width: 0,
-            height: 0,
-            borderTop: '5px solid transparent',
-            borderBottom: '5px solid transparent',
-            borderLeft: `7px solid ${color.brand}`,
-          }}
-        />
+    <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0, width: 36 }}>
+      <div style={{ flex: 1, height: 2, background: color.brand, position: 'relative' }}>
+        <div style={{
+          position: 'absolute', right: -1, top: -4,
+          width: 0, height: 0,
+          borderTop: '5px solid transparent',
+          borderBottom: '5px solid transparent',
+          borderLeft: `7px solid ${color.brand}`,
+        }} />
       </div>
     </div>
   );
@@ -97,34 +73,19 @@ function SolidArrow() {
 
 function DashedArrow() {
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        flexShrink: 0,
-        width: 36,
-      }}
-    >
-      <div
-        style={{
-          flex: 1,
-          height: 2,
-          background: `repeating-linear-gradient(to right, ${color.brand} 0, ${color.brand} 4px, transparent 4px, transparent 8px)`,
-          position: 'relative',
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            right: -1,
-            top: -4,
-            width: 0,
-            height: 0,
-            borderTop: '5px solid transparent',
-            borderBottom: '5px solid transparent',
-            borderLeft: `7px solid ${color.brand}`,
-          }}
-        />
+    <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0, width: 36 }}>
+      <div style={{
+        flex: 1, height: 2,
+        background: `repeating-linear-gradient(to right, ${color.brand} 0, ${color.brand} 4px, transparent 4px, transparent 8px)`,
+        position: 'relative',
+      }}>
+        <div style={{
+          position: 'absolute', right: -1, top: -4,
+          width: 0, height: 0,
+          borderTop: '5px solid transparent',
+          borderBottom: '5px solid transparent',
+          borderLeft: `7px solid ${color.brand}`,
+        }} />
       </div>
     </div>
   );
@@ -134,18 +95,14 @@ function DownArrow({ dashed = false }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', height: 28, alignItems: 'center' }}>
       <div style={{
-        width: 2,
-        height: 18,
+        width: 2, height: 18,
         background: dashed ? 'transparent' : color.brand,
         borderLeft: dashed ? `2px dashed ${color.brand}` : 'none',
         position: 'relative',
       }}>
         <div style={{
-          position: 'absolute',
-          bottom: -1,
-          left: -4,
-          width: 0,
-          height: 0,
+          position: 'absolute', bottom: -1, left: -4,
+          width: 0, height: 0,
           borderLeft: '5px solid transparent',
           borderRight: '5px solid transparent',
           borderTop: `7px solid ${color.brand}`,
@@ -176,30 +133,20 @@ function FlowRow({ flow, visible, delay, isMobile }) {
         marginBottom: 'clamp(24px,3vw,40px)',
       }}>
         {label}
-        {/* Main flow: vertical */}
+        {/* 충전 플로우: 세로, 중앙정렬 */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {flow.nodes.map((node, i) => (
-            <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-              {flow.tag?.index === i && (
-                <div style={{
-                  background: color.brand, color: color.white,
-                  fontSize: 10, fontWeight: 700, padding: '2px 8px',
-                  borderRadius: 4, whiteSpace: 'nowrap', marginBottom: 4,
-                }}>
-                  {flow.tag.text}
-                </div>
-              )}
+            <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <Node text={node} />
               {i < flow.nodes.length - 1 && <DownArrow />}
             </div>
           ))}
         </div>
-        {/* Branch: vertical below main */}
+        {/* 환불 플로우: 홈에서 별도 분기, 충전완료와 연결 없음 */}
         {flow.branch && (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 4 }}>
-            <DownArrow dashed />
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 24 }}>
             {flow.branch.map((node, i) => (
-              <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+              <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Node text={node} dashed />
                 {i < flow.branch.length - 1 && <DownArrow dashed />}
               </div>
@@ -210,51 +157,74 @@ function FlowRow({ flow, visible, delay, isMobile }) {
     );
   }
 
+  // 데스크탑
   return (
-    <div
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'none' : 'translateY(16px)',
-        transition: `opacity 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
-        marginBottom: 'clamp(24px,3vw,40px)',
-      }}
-    >
+    <div style={{
+      opacity: visible ? 1 : 0,
+      transform: visible ? 'none' : 'translateY(16px)',
+      transition: `opacity 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
+      marginBottom: 'clamp(24px,3vw,40px)',
+    }}>
       {label}
 
-      {/* Main flow nodes */}
-      <div style={{ display: 'flex', alignItems: 'center', overflowX: 'auto', paddingBottom: flow.branch ? 0 : 4 }}>
-        {flow.nodes.map((node, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
-            <div style={{ position: 'relative' }}>
-              <Node text={node} />
-              {flow.tag?.index === i && (
-                <div style={{
-                  position: 'absolute', top: -22, left: '50%',
-                  transform: 'translateX(-50%)',
-                  background: color.brand, color: color.white,
-                  fontSize: '10px', fontWeight: 700, padding: '2px 8px',
-                  borderRadius: 4, whiteSpace: 'nowrap',
-                }}>
-                  {flow.tag.text}
-                </div>
-              )}
+      {/* 단일 스크롤 컨테이너: 두 줄이 함께 스크롤 */}
+      <div style={{ overflowX: 'auto', paddingBottom: 4 }}>
+        {/* 윗줄: 홈 → 충전 → 금액선택 → 충전완료 */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          paddingBottom: flow.branch ? 32 : 0,
+          minWidth: 'max-content',
+        }}>
+          {flow.nodes.map((node, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ position: 'relative' }}>
+                <Node text={node} />
+                {flow.tag?.index === i && (
+                  <div style={{
+                    position: 'absolute', top: -22, left: '50%',
+                    transform: 'translateX(-50%)',
+                    background: color.brand, color: color.white,
+                    fontSize: '10px', fontWeight: 700, padding: '2px 8px',
+                    borderRadius: 4, whiteSpace: 'nowrap',
+                  }}>
+                    {flow.tag.text}
+                  </div>
+                )}
+                {/* 홈(첫 번째 노드) 하단에서 환불 줄로 내려가는 점선 */}
+                {i === 0 && flow.branch && (
+                  <div style={{
+                    position: 'absolute',
+                    bottom: -32,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    height: 32,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                  }}>
+                    <div style={{
+                      flex: 1,
+                      width: 2,
+                      backgroundImage: `repeating-linear-gradient(to bottom, ${color.brand} 0, ${color.brand} 4px, transparent 4px, transparent 8px)`,
+                    }} />
+                    <div style={{
+                      width: 0, height: 0,
+                      borderLeft: '5px solid transparent',
+                      borderRight: '5px solid transparent',
+                      borderTop: `7px solid ${color.brand}`,
+                    }} />
+                  </div>
+                )}
+              </div>
+              {i < flow.nodes.length - 1 && <SolidArrow />}
             </div>
-            {i < flow.nodes.length - 1 && <SolidArrow />}
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      {/* Branch */}
-      {flow.branch && (
-        <div style={{ position: 'relative', marginTop: 20 }}>
-          <div style={{
-            position: 'absolute',
-            top: -20,
-            left: 48,
-            height: 20,
-            borderLeft: `2px dashed ${color.brand}`,
-          }} />
-          <div style={{ display: 'flex', alignItems: 'center', overflowX: 'auto', paddingBottom: 4 }}>
+        {/* 아랫줄: 환불 → 환불가능충전내역 → ... (홈 박스와 세로 정렬) */}
+        {flow.branch && (
+          <div style={{ display: 'flex', alignItems: 'center', minWidth: 'max-content' }}>
             {flow.branch.map((node, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
                 <Node text={node} dashed />
@@ -262,8 +232,8 @@ function FlowRow({ flow, visible, delay, isMobile }) {
               </div>
             ))}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
@@ -327,7 +297,6 @@ export default function UserFlow() {
             />
           ))}
         </div>
-
 
       </div>
     </section>

@@ -119,11 +119,78 @@ export default function Persona() {
               style={{ width: '100%', maxWidth: '100%', height: 'auto', display: 'block' }}
             />
           ) : (
-            <img
-              src={personaMobileImg}
-              alt="강릉페이 페르소나 — 김정숙"
-              style={{ width: '100%', height: 'auto', display: 'block' }}
-            />
+            <div>
+              {/* 프로필 사진 */}
+              <img
+                src={personaMobileImg}
+                alt="강릉페이 페르소나 — 김정숙"
+                style={{ width: '100%', maxWidth: 280, height: 'auto', display: 'block', margin: '0 auto', borderRadius: layout.rMd }}
+              />
+              {/* 기본 정보 */}
+              <div style={{ marginTop: 24, marginBottom: 12 }}>
+                <p style={{ fontSize: t.h3.size, fontWeight: 800, color: color.ink, margin: '0 0 4px', fontFamily: font.family }}>
+                  {PERSONA.name} · {PERSONA.age} · {PERSONA.role}
+                </p>
+                <p style={{ fontSize: t.caption.size, color: color.inkMuted, margin: 0, fontFamily: font.family }}>
+                  {PERSONA.location}
+                </p>
+              </div>
+              {/* 태그 */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 20 }}>
+                {PERSONA.tags.map(tag => (
+                  <span key={tag} style={{
+                    background: color.brandPale, color: color.brand,
+                    fontSize: 12, fontWeight: 700,
+                    padding: '4px 10px', borderRadius: 99,
+                    fontFamily: font.family,
+                  }}>{tag}</span>
+                ))}
+              </div>
+              {/* 내러티브 */}
+              <p style={{
+                fontSize: t.body.size, color: color.inkMuted,
+                lineHeight: t.body.lh, margin: '0 0 24px',
+                wordBreak: 'keep-all', fontFamily: font.family,
+              }}>
+                {PERSONA.narrative}
+              </p>
+              {/* Pain Points */}
+              <div style={{ marginBottom: 20 }}>
+                <p style={{
+                  fontSize: t.eyebrow.size, fontWeight: 800,
+                  color: color.brand, letterSpacing: '0.04em', textTransform: 'uppercase',
+                  margin: '0 0 10px', fontFamily: font.family,
+                }}>Pain Points</p>
+                <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+                  {PERSONA.pains.map((p, i) => (
+                    <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 8 }}>
+                      <span style={{ color: color.brand, fontWeight: 800, flexShrink: 0, fontFamily: font.family }}>!</span>
+                      <span style={{ fontSize: t.body.size, color: color.ink, lineHeight: t.body.lh, fontFamily: font.family }}>
+                        {p}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              {/* Needs */}
+              <div>
+                <p style={{
+                  fontSize: t.eyebrow.size, fontWeight: 800,
+                  color: color.brand, letterSpacing: '0.04em', textTransform: 'uppercase',
+                  margin: '0 0 10px', fontFamily: font.family,
+                }}>Needs</p>
+                <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+                  {PERSONA.needs.map((n, i) => (
+                    <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 8 }}>
+                      <span style={{ color: color.brand, fontWeight: 800, flexShrink: 0, fontFamily: font.family }}>+</span>
+                      <span style={{ fontSize: t.body.size, color: color.ink, lineHeight: t.body.lh, fontFamily: font.family }}>
+                        {n}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           )}
         </div>
 

@@ -267,7 +267,7 @@ function BigScreenBlock({ screen, visible, isMobile }) {
           display: 'grid',
           gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
           gap: 'clamp(16px,4vw,56px)',
-          maxWidth: isMobile ? '100%' : 560,
+          maxWidth: isMobile ? 220 : 560,
           marginLeft: 'auto',
           marginRight: 'auto',
         }}>
@@ -390,6 +390,8 @@ function ScreenBlock({ screen, visible, delay, isMobile, isLast }) {
           display: 'grid',
           gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
           gap: 'clamp(16px,2vw,32px)',
+          maxWidth: isMobile ? 220 : undefined,
+          margin: isMobile ? '0 auto' : undefined,
         }}>
           {screen.dualTobe ? (
             <>

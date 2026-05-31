@@ -70,7 +70,7 @@ export default function Nav() {
         WebkitBackdropFilter: 'blur(12px)',
         borderBottom: `1px solid ${color.line}`,
         fontFamily: font.family,
-        padding: `0 ${layout.gut}`,
+        padding: isMobile ? '0 clamp(20px,5vw,80px)' : `0 ${layout.gut}`,
       }}
     >
       <div

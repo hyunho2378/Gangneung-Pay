@@ -11,7 +11,7 @@ const PHASES = [
   {
     id: 'D2',
     label: 'Define',
-    detail: '어피니티 다이어그램, Key Insight, AS-IS 감사, 페르소나, 저니맵',
+    detail: '어피니티 다이어그램, 핵심 인사이트, URQ, 퍼소나, 사용자 여정 지도',
   },
   {
     id: 'D3',
@@ -38,22 +38,46 @@ function DiagramBlock() {
       </div>
 
       <div style={{ marginTop: 40 }}>
-        <p style={{
-          textAlign: 'center',
-          fontSize: t.body.size, fontWeight: 700,
-          color: color.brand,
-          margin: '0 0 clamp(20px,2.5vw,32px)',
-          fontFamily: font.family,
-          wordBreak: 'keep-all',
-        }}>
-          URQ : 리서치를 요구사항으로 수렴한 지점
-        </p>
         <div style={{
           display: 'grid',
           gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)',
           gap: 'clamp(16px,2.5vw,32px)',
         }}>
-          {PHASES.map(p => (
+          {/* D1, D2 */}
+          {PHASES.slice(0, 2).map(p => (
+            <div key={p.id}>
+              <span style={{
+                display: 'block',
+                fontSize: t.eyebrow.size, fontWeight: 800,
+                color: color.brand, letterSpacing: '0.04em',
+                fontFamily: font.family, lineHeight: 1.2,
+                marginBottom: 4,
+              }}>
+                {p.id}
+              </span>
+              <span style={{
+                display: 'block',
+                fontSize: t.body.size, fontWeight: 700,
+                color: color.ink,
+                margin: '0 0 6px',
+                fontFamily: font.family,
+                lineHeight: t.body.lh,
+              }}>
+                {p.label}
+              </span>
+              <span style={{
+                display: 'block',
+                fontSize: t.body.size, fontWeight: 500,
+                color: color.inkMuted,
+                lineHeight: t.body.lh, wordBreak: 'keep-all',
+                fontFamily: font.family,
+              }}>
+                {p.detail}
+              </span>
+            </div>
+          ))}
+          {/* D3, D4 */}
+          {PHASES.slice(2).map(p => (
             <div key={p.id}>
               <span style={{
                 display: 'block',
