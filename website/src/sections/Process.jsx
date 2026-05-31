@@ -126,6 +126,14 @@ export default function Process() {
           }}>
             PROCESS
           </p>
+          <h2 style={{
+            fontSize: t.h2.size, fontWeight: t.h2.weight,
+            lineHeight: t.h2.lh, letterSpacing: t.h2.ls,
+            color: color.ink, margin: '0 0 16px',
+            wordBreak: 'keep-all', fontFamily: font.family,
+          }}>
+            문제에서 화면까지
+          </h2>
           <p style={{
             fontSize: t.lead.size, fontWeight: 500,
             lineHeight: t.lead.lh, color: color.inkMuted,
