@@ -124,12 +124,13 @@ export default function DesignDirection() {
                     }}
                   >
                     <span style={{
-                      color: color.brand, fontWeight: 800,
-                      fontSize: 14, flexShrink: 0,
-                      lineHeight: 1.65, fontFamily: font.family,
-                    }}>
-                      , 
-</span>
+                      width: 7, height: 7,
+                      borderRadius: '50%',
+                      background: color.brand,
+                      flexShrink: 0,
+                      marginTop: 8,
+                      display: 'inline-block',
+                    }} />
                     <span style={{
                       fontSize: 'clamp(15px,1.4vw,18px)',
                       fontWeight: 500,

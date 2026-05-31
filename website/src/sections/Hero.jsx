@@ -62,7 +62,7 @@ export default function Hero() {
                 margin: '0 0 24px',
               }}
             >
-              UX Project
+              UX DESIGN Project
             </p>
 
             <h1
