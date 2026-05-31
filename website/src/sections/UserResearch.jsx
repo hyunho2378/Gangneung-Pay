@@ -248,7 +248,7 @@ export default function UserResearch() {
               {methods.map((m, i) => {
                 const [nRef, nVal] = methodCounters[i];
                 return (
-                  <div key={i} style={{ background: color.bg, borderRadius: layout.rMd, padding: 'clamp(20px,2.5vw,32px)' }}>
+                  <div key={i} style={{ background: color.bg, borderRadius: layout.rMd, padding: isMobile ? '14px 16px' : 'clamp(20px,2.5vw,32px)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
                       <div style={{ minWidth: 0 }}>
                         <p style={{ fontSize: t.body.size, fontWeight: 800, color: color.ink, margin: '0 0 6px', fontFamily: font.family }}>{m.name}</p>
@@ -264,7 +264,7 @@ export default function UserResearch() {
                         <div ref={nRef} style={{ textAlign: 'right', flexShrink: 0 }}>
                           <span style={{
                             display: 'block',
-                            fontSize: t.display.size, fontWeight: 800,
+                            fontSize: isMobile ? '24px' : t.display.size, fontWeight: 800,
                             letterSpacing: '-0.04em', color: color.brand,
                             lineHeight: 1, fontFamily: font.family,
                           }}>
@@ -274,16 +274,13 @@ export default function UserResearch() {
                       ) : null}
                     </div>
                     <p style={{
-                      fontSize: 15, fontWeight: 800, color: color.brand,
+                      fontSize: isMobile ? 12 : 15, fontWeight: 800, color: color.brand,
                       margin: '0 0 4px', letterSpacing: '0em', textTransform: 'uppercase',
                       fontFamily: font.family,
                     }}>
                       WHY
                     </p>
-                    <p style={{ fontSize: 17, fontWeight: 500, lineHeight: 1.6, color: color.inkMuted, margin: '0 0 14px', fontFamily: font.family }}>{m.purpose}</p>
-                    <Accordion label="HOW 자세히 보기">
-                      <p style={{ fontSize: 17, fontWeight: 500, lineHeight: 1.6, color: color.inkMuted, margin: 0, fontFamily: font.family, wordBreak: 'keep-all' }}>{m.detail}</p>
-                    </Accordion>
+                    <p style={{ fontSize: isMobile ? 14 : 17, fontWeight: 500, lineHeight: 1.6, color: color.inkMuted, margin: 0, fontFamily: font.family }}>{m.purpose}</p>
                   </div>
                 );
               })}
