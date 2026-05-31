@@ -164,6 +164,7 @@ export default function AiHarness() {
               background: color.bg,
               borderRadius: layout.rMd,
               padding: 'clamp(24px,3vw,40px)',
+              overflow: 'hidden',
             }}
           >
             <p style={{
@@ -230,6 +231,7 @@ export default function AiHarness() {
                         overflowY: 'auto',
                         maxHeight: 280,
                         whiteSpace: 'pre',
+                        width: '100%',
                         maxWidth: '100%',
                         boxSizing: 'border-box',
                       }}>

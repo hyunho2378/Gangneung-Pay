@@ -333,8 +333,8 @@ export default function DesignSystem() {
           <p style={{ fontSize: 11, fontWeight: 700, color: color.inkMuted, margin: '0 0 12px', letterSpacing: '0em', textTransform: 'uppercase' }}>COLOR</p>
 
           {/* [4] paddingTop/Bottom added to give outlineOffset:2 on p700 breathing room */}
-          <div style={{ overflowX: 'auto', marginBottom: 24 }}>
-            <div style={{ display: 'flex', flexWrap: 'nowrap', gap: 6, minWidth: 'max-content', paddingTop: 6, paddingBottom: 6 }}>
+          <div style={{ overflowX: isMobile ? 'visible' : 'auto', marginBottom: 24 }}>
+            <div style={{ display: 'flex', flexWrap: isMobile ? 'wrap' : 'nowrap', gap: 6, minWidth: isMobile ? 'auto' : 'max-content', paddingTop: 6, paddingBottom: 6 }}>
               {PRIMARY.map(item => (
                 <div key={item.token} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
                   <div style={{
@@ -374,7 +374,7 @@ export default function DesignSystem() {
                     style={{
                       display: 'flex',
                       alignItems: 'baseline',
-                      gap: 12,
+                      gap: 32,
                       padding: 'clamp(10px,1.2vw,16px) 0',
                       borderBottom: `1px solid ${color.line}`,
                     }}

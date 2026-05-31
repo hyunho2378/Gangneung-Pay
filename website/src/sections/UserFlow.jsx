@@ -96,8 +96,9 @@ function DownArrow({ dashed = false }) {
     <div style={{ display: 'flex', justifyContent: 'center', height: 28, alignItems: 'center' }}>
       <div style={{
         width: 2, height: 18,
-        background: dashed ? 'transparent' : color.brand,
-        borderLeft: dashed ? `2px dashed ${color.brand}` : 'none',
+        background: dashed
+          ? `repeating-linear-gradient(to bottom, ${color.brand} 0, ${color.brand} 4px, transparent 4px, transparent 8px)`
+          : color.brand,
         position: 'relative',
       }}>
         <div style={{
@@ -125,15 +126,49 @@ function FlowRow({ flow, visible, delay, isMobile }) {
   );
 
   if (isMobile) {
+    const wrapStyle = {
+      opacity: visible ? 1 : 0,
+      transform: visible ? 'none' : 'translateY(16px)',
+      transition: `opacity 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
+      marginBottom: 'clamp(24px,3vw,40px)',
+    };
+
+    if (flow.branch) {
+      return (
+        <div style={wrapStyle}>
+          {label}
+          {/* 홈(잔액카드): 두 열의 공통 출발점 */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Node text={flow.nodes[0]} />
+          </div>
+          {/* 충전(실선) / 환불(점선) 두 열 분기 */}
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', alignItems: 'flex-start' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <DownArrow />
+              {flow.nodes.slice(1).map((node, i, arr) => (
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <Node text={node} />
+                  {i < arr.length - 1 && <DownArrow />}
+                </div>
+              ))}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <DownArrow dashed />
+              {flow.branch.map((node, i, arr) => (
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <Node text={node} dashed />
+                  {i < arr.length - 1 && <DownArrow dashed />}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <div style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'none' : 'translateY(16px)',
-        transition: `opacity 0.6s ease-out ${delay}s, transform 0.6s ease-out ${delay}s`,
-        marginBottom: 'clamp(24px,3vw,40px)',
-      }}>
+      <div style={wrapStyle}>
         {label}
-        {/* 충전 플로우: 세로, 중앙정렬 */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {flow.nodes.map((node, i) => (
             <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -142,17 +177,6 @@ function FlowRow({ flow, visible, delay, isMobile }) {
             </div>
           ))}
         </div>
-        {/* 환불 플로우: 홈에서 별도 분기, 충전완료와 연결 없음 */}
-        {flow.branch && (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 24 }}>
-            {flow.branch.map((node, i) => (
-              <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Node text={node} dashed />
-                {i < flow.branch.length - 1 && <DownArrow dashed />}
-              </div>
-            ))}
-          </div>
-        )}
       </div>
     );
   }
